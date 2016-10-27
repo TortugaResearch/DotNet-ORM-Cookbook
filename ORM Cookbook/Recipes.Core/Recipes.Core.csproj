@@ -58,8 +58,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\IEmployeeClassification.cs" />
+    <Compile Include="Models\IDepartment.cs" />
+    <Compile Include="Models\IDepartment`1.cs" />
+    <Compile Include="Models\IDivision.cs" />
+    <Compile Include="Models\IDivision`1.cs" />
+    <Compile Include="Models\IEmployeeClassification.cs" />
+    <Compile Include="Repositories\IDepartmentWithChildRepository.cs" />
+    <Compile Include="Repositories\IDivisionWithChildrenRepository.cs" />
     <Compile Include="Repositories\IEmployeeClassificationRepository.cs" />
+    <Compile Include="Repositories\ISimpleDepartmentRepository.cs" />
+    <Compile Include="UseCases\ModelWithForeignKey.cs" />
+    <Compile Include="UseCases\ModelWithMultipleChildren.cs" />
+    <Compile Include="UseCases\ModelWithSingleChild.cs" />
     <Compile Include="UseCases\SingleModelCrud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

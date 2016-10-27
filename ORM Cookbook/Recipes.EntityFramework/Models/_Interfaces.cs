@@ -1,8 +1,18 @@
-using Recipes.Repositories;
+using Recipes.Models;
 
 namespace Recipes.EF.Models
 {
-    public partial class EmployeeClassification : IEmployeeClassification
+    partial class EmployeeClassification : IEmployeeClassification
     {
+    }
+
+    partial class Department : IDepartment, IDepartment<Division>
+    {
+
+    }
+
+    partial class Division : IDivision, IDivision<Department>
+    {
+
     }
 }

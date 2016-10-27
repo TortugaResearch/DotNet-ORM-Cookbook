@@ -2,6 +2,7 @@ using Recipes.Repositories;
 using System;
 using System.Linq;
 using Xunit;
+using Recipes.Models;
 
 namespace Recipes.UseCases
 {

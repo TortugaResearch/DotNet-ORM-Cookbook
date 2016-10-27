@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Recipes.Repositories
 {
-    public interface IEmployeeClassificationRepository<TModel>
-        where TModel : IEmployeeClassification, new()
+    public interface ISimpleDepartmentRepository<TModel>
+        where TModel : IDepartment, new()
     {
         TModel GetByKey(int employeeClassificationKey);
 

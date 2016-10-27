@@ -58,7 +58,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                return context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == employeeClassificationKey).SingleOrDefault();
+                return context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == employeeClassificationKey).Single();
             }
         }
 

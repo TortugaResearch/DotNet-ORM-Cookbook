@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System;
-
-namespace Recipes.Repositories
+namespace Recipes.Models
 {
     public interface IEmployeeClassification
     {
