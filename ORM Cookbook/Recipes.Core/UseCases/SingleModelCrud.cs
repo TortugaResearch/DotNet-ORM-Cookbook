@@ -1,8 +1,8 @@
+using Recipes.Models;
 using Recipes.Repositories;
 using System;
 using System.Linq;
 using Xunit;
-using Recipes.Models;
 
 namespace Recipes.UseCases
 {
@@ -30,6 +30,11 @@ namespace Recipes.UseCases
             var echo = repository.GetByKey(newKey);
             Assert.Equal(newKey, echo.EmployeeClassificationKey);
             Assert.Equal(newRecord.EmployeeClassificationName, echo.EmployeeClassificationName);
+
+
+            var search = repository.FindByName(newRecord.EmployeeClassificationName);
+            Assert.Equal(newKey, search.EmployeeClassificationKey);
+            Assert.Equal(newRecord.EmployeeClassificationName, search.EmployeeClassificationName);
         }
 
         [Fact]

@@ -51,16 +51,16 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Tortuga.Anchor, Version=0.9.6126.5816, Culture=neutral, PublicKeyToken=f554488cb4f278bd, processorArchitecture=MSIL">
-      <HintPath>..\packages\Tortuga.Anchor.0.9.6126.5816\lib\net46\Tortuga.Anchor.dll</HintPath>
+    <Reference Include="Tortuga.Anchor, Version=1.0.6144.42409, Culture=neutral, PublicKeyToken=f554488cb4f278bd, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tortuga.Anchor.1.0.6144.42409\lib\net46\Tortuga.Anchor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Tortuga.Chain.Core, Version=0.23.6126.18337, Culture=neutral, PublicKeyToken=8769fd32a2872cf0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Tortuga.Chain.Core.0.23.6126.18304\lib\net46\Tortuga.Chain.Core.dll</HintPath>
+    <Reference Include="Tortuga.Chain.Core, Version=1.0.6144.43080, Culture=neutral, PublicKeyToken=8769fd32a2872cf0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tortuga.Chain.Core.1.0.6144.43048\lib\net46\Tortuga.Chain.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Tortuga.Chain.SqlServer, Version=0.24.6126.34584, Culture=neutral, PublicKeyToken=8769fd32a2872cf0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Tortuga.Chain.SqlServer.0.24.6126.34579\lib\net46\Tortuga.Chain.SqlServer.dll</HintPath>
+    <Reference Include="Tortuga.Chain.SqlServer, Version=1.0.6145.986, Culture=neutral, PublicKeyToken=8769fd32a2872cf0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tortuga.Chain.SqlServer.1.0.6145.981\lib\net46\Tortuga.Chain.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
@@ -90,9 +90,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Models\EmployeeClassification.cs" />
+    <Compile Include="Repositories\EmployeeClassificationAsynchronousRepository.cs" />
     <Compile Include="Repositories\EmployeeClassificationRepository.cs" />
     <Compile Include="SingleModelCrud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleModelCrudAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

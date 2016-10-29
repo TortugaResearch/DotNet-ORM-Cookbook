@@ -9,56 +9,27 @@ namespace Recipes.EF
 
         public override void CreateAndReadBack()
         {
-            CreateAndReadBack(new EmployeeClassificationRepository_Novice());
+            CreateAndReadBack(new EmployeeClassificationRepository());
         }
 
         public override void CreateAndDelete()
         {
-            CreateAndDelete(new EmployeeClassificationRepository_Novice());
+            CreateAndDelete(new EmployeeClassificationRepository());
         }
 
         public override void GetAll()
         {
-            GetAll(new EmployeeClassificationRepository_Novice());
+            GetAll(new EmployeeClassificationRepository());
         }
 
         public override void GetByKey()
         {
-            GetByKey(new EmployeeClassificationRepository_Novice());
+            GetByKey(new EmployeeClassificationRepository());
         }
 
         public override void CreateAndUpdate()
         {
-            CreateAndUpdate(new EmployeeClassificationRepository_Novice());
-        }
-    }
-
-    public class SingleModelCrud_Intermediate : SingleModelCrud<EmployeeClassification>
-    {
-
-        public override void CreateAndReadBack()
-        {
-            CreateAndReadBack(new EmployeeClassificationRepository_Intermediate());
-        }
-
-        public override void CreateAndDelete()
-        {
-            CreateAndDelete(new EmployeeClassificationRepository_Intermediate());
-        }
-
-        public override void GetAll()
-        {
-            GetAll(new EmployeeClassificationRepository_Intermediate());
-        }
-
-        public override void GetByKey()
-        {
-            GetByKey(new EmployeeClassificationRepository_Intermediate());
-        }
-
-        public override void CreateAndUpdate()
-        {
-            CreateAndUpdate(new EmployeeClassificationRepository_Novice());
+            CreateAndUpdate(new EmployeeClassificationRepository());
         }
     }
 }

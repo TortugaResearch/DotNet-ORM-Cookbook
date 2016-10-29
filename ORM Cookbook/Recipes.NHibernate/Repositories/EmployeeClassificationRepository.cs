@@ -1,8 +1,10 @@
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Criterion;
 using Recipes.NHibernate.Models;
 using Recipes.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Recipes.NHibernate.Repositories
 {
@@ -11,10 +13,9 @@ namespace Recipes.NHibernate.Repositories
         public int Create(EmployeeClassification classification)
         {
             using (ISession session = NHibernateHelper.OpenSession())
-            using (ITransaction transaction = session.BeginTransaction())
             {
                 session.Save(classification);
-                transaction.Commit();
+                session.Flush();
                 return classification.EmployeeClassificationKey;
             }
         }
@@ -23,22 +24,31 @@ namespace Recipes.NHibernate.Repositories
         {
 
             using (ISession session = NHibernateHelper.OpenSession())
-            using (ITransaction transaction = session.BeginTransaction())
             {
                 var temp = session.Get<EmployeeClassification>(employeeClassificationKey);
-
                 session.Delete(temp);
-                transaction.Commit();
+                session.Flush();
             }
         }
 
         public void Delete(EmployeeClassification classification)
         {
             using (ISession session = NHibernateHelper.OpenSession())
-            using (ITransaction transaction = session.BeginTransaction())
             {
                 session.Delete(classification);
-                transaction.Commit();
+                session.Flush();
+            }
+        }
+
+        public EmployeeClassification FindByName(string employeeClassificationName)
+        {
+            using (ISession session = NHibernateHelper.OpenSession())
+            {
+                return session
+                    .CreateCriteria(typeof(EmployeeClassification))
+                    .Add(Restrictions.Eq("EmployeeClassificationName", employeeClassificationName))
+                    .List<EmployeeClassification>()
+                    .SingleOrDefault();
             }
         }
 
@@ -61,36 +71,10 @@ namespace Recipes.NHibernate.Repositories
         public void Update(EmployeeClassification classification)
         {
             using (ISession session = NHibernateHelper.OpenSession())
-            using (ITransaction transaction = session.BeginTransaction())
             {
                 session.Update(classification);
-                transaction.Commit();
+                session.Flush();
             }
-        }
-    }
-
-    public class NHibernateHelper
-    {
-        private static ISessionFactory _sessionFactory;
-
-        private static ISessionFactory SessionFactory
-        {
-            get
-            {
-                if (_sessionFactory == null)
-                {
-                    var configuration = new Configuration();
-                    configuration.Configure();
-                    configuration.AddAssembly(typeof(EmployeeClassificationRepository).Assembly);
-                    _sessionFactory = configuration.BuildSessionFactory();
-                }
-                return _sessionFactory;
-            }
-        }
-
-        public static ISession OpenSession()
-        {
-            return SessionFactory.OpenSession();
         }
     }
 }

@@ -1,5 +1,6 @@
 using Recipes.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Recipes.Repositories
 {
@@ -7,6 +8,8 @@ namespace Recipes.Repositories
         where TModel : IEmployeeClassification, new()
     {
         TModel GetByKey(int employeeClassificationKey);
+
+        TModel FindByName(string employeeClassificationName);
 
         IList<TModel> GetAll();
 

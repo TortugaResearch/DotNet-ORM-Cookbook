@@ -18,11 +18,27 @@ namespace Recipes.Dapper.Repositories
 
         public int Create(EmployeeClassification classification)
         {
-            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) OUTPUT Inserted.EmployeeClassificationKey VALUES	(@EmployeeClassificationName )";
+            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) 
+                        OUTPUT Inserted.EmployeeClassificationKey 
+                        VALUES (@EmployeeClassificationName )";
             using (var con = new SqlConnection(m_ConnectionString))
             {
                 con.Open();
                 return con.ExecuteScalar<int>(sql, classification);
+            }
+        }
+
+        public EmployeeClassification FindByName(string employeeClassificationName)
+        {
+            var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName 
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
+
+            using (var con = new SqlConnection(m_ConnectionString))
+            {
+                con.Open();
+
+                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationName = employeeClassificationName });
             }
         }
 
@@ -63,10 +79,9 @@ namespace Recipes.Dapper.Repositories
 
         public EmployeeClassification GetByKey(int employeeClassificationKey)
         {
-            var sql = @"SELECT	ec.EmployeeClassificationKey, 
-		ec.EmployeeClassificationName
-FROM	HR.EmployeeClassification ec
-WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
+            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = new SqlConnection(m_ConnectionString))
             {
@@ -77,7 +92,10 @@ WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
         public void Update(EmployeeClassification classification)
         {
-            var sql = @"UPDATE HR.EmployeeClassification SET EmployeeClassificationName = @EmployeeClassificationName WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            var sql = @"UPDATE HR.EmployeeClassification 
+                        SET EmployeeClassificationName = @EmployeeClassificationName 
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+
             using (var con = new SqlConnection(m_ConnectionString))
             {
                 con.Open();

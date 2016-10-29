@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.EntityFramework", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.NHibernate", "Recipes.NHibernate\Recipes.NHibernate.csproj", "{F90B76EE-EFA0-48BC-88DB-29782187C1C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentation\Documentation.csproj", "{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,9 @@ Global
 		{F90B76EE-EFA0-48BC-88DB-29782187C1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F90B76EE-EFA0-48BC-88DB-29782187C1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F90B76EE-EFA0-48BC-88DB-29782187C1C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,19 @@
+﻿{
+  "title": "The ORM Cookbook",
+  "template-html": "template.html",
+  "template-pdf": "template-pdf.html",
+  "output-html": "orm-cookbook.html",
+  "output-pdf": "orm-cookbook-pdf.html",
+  "section-title-base": 1,
+  "pages": [
+    {
+      "title": "Introduction",
+      "path": "Page/Introduction.md"
+    },
+    {
+      "title": "Single Model Repositories",
+      "path": "Page/SingleModelRepositories.md"
+    }
+
+  ]
+}

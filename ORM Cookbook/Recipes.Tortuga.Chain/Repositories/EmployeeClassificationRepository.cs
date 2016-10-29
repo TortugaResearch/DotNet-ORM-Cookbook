@@ -1,5 +1,3 @@
-
-
 using Recipes.Chain.Models;
 using Recipes.Repositories;
 using System.Collections.Generic;
@@ -29,6 +27,11 @@ namespace Recipes.Chain.Repositories
         public void Delete(EmployeeClassification classification)
         {
             m_DataSource.Delete(classification).Execute();
+        }
+
+        public EmployeeClassification FindByName(string employeeClassificationName)
+        {
+            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>().Execute();
         }
 
         public IList<EmployeeClassification> GetAll()

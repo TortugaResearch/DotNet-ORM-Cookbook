@@ -3,7 +3,6 @@ using Recipes.Repositories;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
-
 namespace Recipes.Ado.Repositories
 {
     public class EmployeeClassificationRepository : IEmployeeClassificationRepository<EmployeeClassification>
@@ -17,7 +16,10 @@ namespace Recipes.Ado.Repositories
 
         public int Create(EmployeeClassification classification)
         {
-            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) OUTPUT Inserted.EmployeeClassificationKey VALUES	(@EmployeeClassificationName )";
+            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) 
+                        OUTPUT Inserted.EmployeeClassificationKey 
+                        VALUES(@EmployeeClassificationName )";
+
             using (var con = new SqlConnection(m_ConnectionString))
             {
                 con.Open();
@@ -61,6 +63,34 @@ namespace Recipes.Ado.Repositories
             }
         }
 
+        public EmployeeClassification FindByName(string employeeClassificationName)
+        {
+            var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName 
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
+
+            using (var con = new SqlConnection(m_ConnectionString))
+            {
+                con.Open();
+
+                using (var cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@EmployeeClassificationName", employeeClassificationName);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                            return null;
+
+                        return new EmployeeClassification()
+                        {
+                            EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal("EmployeeClassificationKey")),
+                            EmployeeClassificationName = reader.GetString(reader.GetOrdinal("EmployeeClassificationName"))
+                        };
+                    }
+                }
+            }
+        }
+
         public IList<EmployeeClassification> GetAll()
         {
             var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;";
@@ -91,10 +121,9 @@ namespace Recipes.Ado.Repositories
 
         public EmployeeClassification GetByKey(int employeeClassificationKey)
         {
-            var sql = @"SELECT	ec.EmployeeClassificationKey,
-		ec.EmployeeClassificationName
-FROM	HR.EmployeeClassification ec
-WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
+            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = new SqlConnection(m_ConnectionString))
             {
@@ -105,7 +134,9 @@ WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
                     cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
                     using (var reader = cmd.ExecuteReader())
                     {
-                        reader.Read();
+                        if (!reader.Read())
+                            return null;
+
                         return new EmployeeClassification()
                         {
                             EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal("EmployeeClassificationKey")),
@@ -117,7 +148,10 @@ WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
         }
         public void Update(EmployeeClassification classification)
         {
-            var sql = @"UPDATE HR.EmployeeClassification SET EmployeeClassificationName = @EmployeeClassificationName WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            var sql = @"UPDATE HR.EmployeeClassification 
+                        SET EmployeeClassificationName = @EmployeeClassificationName 
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+
             using (var con = new SqlConnection(m_ConnectionString))
             {
                 con.Open();

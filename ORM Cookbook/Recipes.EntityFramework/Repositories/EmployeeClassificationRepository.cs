@@ -8,9 +8,9 @@ namespace Recipes.Dapper.Repositories
 
 
 
-    public class EmployeeClassificationRepository_Novice : IEmployeeClassificationRepository<EmployeeClassification>
+    public class EmployeeClassificationRepository : IEmployeeClassificationRepository<EmployeeClassification>
     {
-        public int Create(EmployeeClassification classification)
+        public virtual int Create(EmployeeClassification classification)
         {
             using (var context = new OrmCookbook())
             {
@@ -20,7 +20,7 @@ namespace Recipes.Dapper.Repositories
             }
         }
 
-        public void Delete(int employeeClassificationKey)
+        public virtual void Delete(int employeeClassificationKey)
         {
             using (var context = new OrmCookbook())
             {
@@ -33,7 +33,7 @@ namespace Recipes.Dapper.Repositories
             }
         }
 
-        public void Delete(EmployeeClassification classification)
+        public virtual void Delete(EmployeeClassification classification)
         {
             using (var context = new OrmCookbook())
             {
@@ -46,7 +46,15 @@ namespace Recipes.Dapper.Repositories
             }
         }
 
-        public IList<EmployeeClassification> GetAll()
+        public virtual EmployeeClassification FindByName(string employeeClassificationName)
+        {
+            using (var context = new OrmCookbook())
+            {
+                return context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+            }
+        }
+
+        public virtual IList<EmployeeClassification> GetAll()
         {
             using (var context = new OrmCookbook())
             {
@@ -54,7 +62,7 @@ namespace Recipes.Dapper.Repositories
             }
         }
 
-        public EmployeeClassification GetByKey(int employeeClassificationKey)
+        public virtual EmployeeClassification GetByKey(int employeeClassificationKey)
         {
             using (var context = new OrmCookbook())
             {
@@ -62,7 +70,7 @@ namespace Recipes.Dapper.Repositories
             }
         }
 
-        public void Update(EmployeeClassification classification)
+        public virtual void Update(EmployeeClassification classification)
         {
             using (var context = new OrmCookbook())
             {
