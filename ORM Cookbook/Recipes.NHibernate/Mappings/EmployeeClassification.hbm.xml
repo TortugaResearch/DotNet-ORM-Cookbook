@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Recipes.NHibernate"
+                   namespace="Recipes.NHibernate.Models">
+
+  <!-- more mapping info here -->
+
+  <class name="EmployeeClassification" table="EmployeeClassification" schema="HR">
+
+    <id name="EmployeeClassificationKey" >
+      <generator class="native"/>
+    </id>
+    <property name="EmployeeClassificationName" />
+  </class>
+
+</hibernate-mapping>
