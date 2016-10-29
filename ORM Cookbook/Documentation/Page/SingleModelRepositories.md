@@ -1,6 +1,6 @@
-﻿# Single Model Repositories
+﻿# Use Case: Single Model Repositories
 
-This section demonstrates CRUD operations on a single model mapped to a class. 
+This use case demonstrates CRUD operations on a single model mapped to a class. 
 
 ## Prototype Repository
 
@@ -23,14 +23,14 @@ This is the interface that every example repository will implement.
     }
 ```
 
-The class EmployeeClassification is defined as such:
+The class `EmployeeClassification` is defined as such:
 ```csharp [../Recipes.Core/Models/IEmployeeClassification.cs] IEmployeeClassification
 ```
 
 
 ## ADO.NET
 
-With ADO.NET, the model does not acutally participate in database operations so it needs no adornment.
+With ADO.NET, the model does not actually participate in database operations so it needs no adornment.
 
 ```csharp [../Recipes.Ado/Models/EmployeeClassification.cs] EmployeeClassification
 ```
