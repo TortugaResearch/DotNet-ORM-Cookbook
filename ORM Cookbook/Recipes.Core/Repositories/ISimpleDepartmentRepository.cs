@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace Recipes.Repositories
 {
-    public interface ISimpleDepartmentRepository<TModel>
-        where TModel : IDepartment, new()
+    public interface ISimpleDepartmentRepository<TDepartment>
+        where TDepartment : IDepartment, new()
     {
-        TModel GetByKey(int employeeClassificationKey);
+        TDepartment GetByKey(int employeeClassificationKey);
 
-        IList<TModel> GetAll();
+        IList<TDepartment> GetAll();
 
-        int Create(TModel classification);
-        void Update(TModel classification);
-        void Delete(TModel classification);
+        int Create(TDepartment classification);
+        void Update(TDepartment classification);
+        void Delete(TDepartment classification);
         void Delete(int employeeClassificationKey);
 
     }

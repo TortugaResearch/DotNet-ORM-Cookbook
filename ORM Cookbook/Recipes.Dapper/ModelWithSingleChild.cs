@@ -1,4 +1,5 @@
 ﻿using Recipes.Dapper.Models;
+using Recipes.Dapper.Repositories;
 using Recipes.UseCases;
 using System.Configuration;
 
@@ -14,7 +15,7 @@ namespace Recipes.Dapper
 
         public override void CreateAndUpdate()
         {
-            CreateAndUpdate(new Recipes.Dapper.Repositories.DepartmentWithChildRepository(ConnectionString));
+            CreateAndUpdate(new DepartmentWithChildRepository(ConnectionString));
         }
 
     }

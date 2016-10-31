@@ -187,5 +187,6 @@
   -->
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>copy "$(TargetDir)orm-cookbook-pdf.pdf" "$(SolutionDir)..\orm-cookbook.pdf"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)orm-cookbook.html" "$(SolutionDir)..\docs\index.html"</PostBuildEvent>
   </PropertyGroup>
 </Project>

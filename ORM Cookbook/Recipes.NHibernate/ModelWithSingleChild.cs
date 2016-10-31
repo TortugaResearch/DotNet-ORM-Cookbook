@@ -1,16 +1,18 @@
-﻿using Recipes.EF.Models;
+﻿using Recipes.NHibernate.Models;
+using Recipes.NHibernate.Repositories;
 using Recipes.UseCases;
-using Recipes.EF.Repositories;
 
-namespace Recipes.EF
+namespace Recipes.NHibernate
 {
     public class ModelWithSingleChild : ModelWithSingleChild<Department, Division>
     {
-
         public override void CreateAndUpdate()
         {
             CreateAndUpdate(new DepartmentWithChildRepository());
         }
 
+
     }
+
+
 }

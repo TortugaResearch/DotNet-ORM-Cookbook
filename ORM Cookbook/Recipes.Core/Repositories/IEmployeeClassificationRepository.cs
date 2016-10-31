@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 
 namespace Recipes.Repositories
 {
-    public interface IEmployeeClassificationRepository<TModel>
-        where TModel : IEmployeeClassification, new()
+    public interface IEmployeeClassificationRepository<TEmployeeClassification>
+        where TEmployeeClassification : IEmployeeClassification, new()
     {
-        TModel GetByKey(int employeeClassificationKey);
+        TEmployeeClassification GetByKey(int employeeClassificationKey);
 
-        TModel FindByName(string employeeClassificationName);
+        TEmployeeClassification FindByName(string employeeClassificationName);
 
-        IList<TModel> GetAll();
+        IList<TEmployeeClassification> GetAll();
 
-        int Create(TModel classification);
-        void Update(TModel classification);
-        void Delete(TModel classification);
+        int Create(TEmployeeClassification classification);
+        void Update(TEmployeeClassification classification);
+        void Delete(TEmployeeClassification classification);
         void Delete(int employeeClassificationKey);
 
     }

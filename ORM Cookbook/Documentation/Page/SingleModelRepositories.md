@@ -97,6 +97,7 @@ Finally, there is the repository itself:
 
 ```csharp [../Recipes.EntityFramework/Repositories/EmployeeClassificationRepository.cs] EmployeeClassificationRepository
 ```
+
 *Note that the repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.*
 
 ### Entity Framework Intermediate

@@ -17,6 +17,10 @@
     {
       "title": "Asynchronous Repositories",
       "path": "Page/AsynchronousRepositories.md"
+    },
+    {
+      "title": "Model with Single Child",
+      "path": "Page/ModelWithSingleChild.md"
     }
   ]
 }

@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Recipes.Repositories
 {
-    public interface IDepartmentWithChildRepository<TModel, TDivision>
-            where TModel : IDepartment<TDivision>, new()
+    public interface IDepartmentWithChildRepository<TDepartment, TDivision>
+            where TDepartment : IDepartment<TDivision>, new()
             where TDivision : IDivision
     {
-        TModel GetByKey(int departmentKey);
+        TDepartment GetByKey(int departmentKey);
 
-        IList<TModel> GetAll();
+        IList<TDepartment> GetAll();
 
-        int Create(TModel department);
-        void Update(TModel department);
-        void Delete(TModel department);
+        int Create(TDepartment department);
+        void Update(TDepartment department);
+        void Delete(TDepartment department);
         void Delete(int departmentKey);
         IList<TDivision> GetAllDivisions();
     }

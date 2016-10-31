@@ -90,6 +90,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\SimpleDepartment.cs" />
+    <Compile Include="ModelWithForeignKey.cs" />
+    <Compile Include="Repositories\SimpleDepartmentRepository.cs" />
     <Compile Include="Repositories\DepartmentWithChildRepository.cs" />
     <Compile Include="Models\Division.cs" />
     <Compile Include="Models\EmployeeClassification.cs" />

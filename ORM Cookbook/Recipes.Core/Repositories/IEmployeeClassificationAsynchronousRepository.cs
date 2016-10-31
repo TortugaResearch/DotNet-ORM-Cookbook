@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 
 namespace Recipes.Repositories
 {
-    public interface IEmployeeClassificationAsynchronousRepository<TModel>
-        where TModel : IEmployeeClassification, new()
+    public interface IEmployeeClassificationAsynchronousRepository<TEmployeeClassification>
+        where TEmployeeClassification : IEmployeeClassification, new()
     {
-        Task<TModel> GetByKeyAsync(int employeeClassificationKey);
+        Task<TEmployeeClassification> GetByKeyAsync(int employeeClassificationKey);
 
-        Task<TModel> FindByNameAsync(string employeeClassificationName);
+        Task<TEmployeeClassification> FindByNameAsync(string employeeClassificationName);
 
-        Task<IList<TModel>> GetAllAsync();
+        Task<IList<TEmployeeClassification>> GetAllAsync();
 
-        Task<int> CreateAsync(TModel classification);
-        Task UpdateAsync(TModel classification);
-        Task DeleteAsync(TModel classification);
+        Task<int> CreateAsync(TEmployeeClassification classification);
+        Task UpdateAsync(TEmployeeClassification classification);
+        Task DeleteAsync(TEmployeeClassification classification);
         Task DeleteAsync(int employeeClassificationKey);
 
     }
