@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Title -->
+    <title>The ORM Cookbook</title>
+
+    <!-- Bootstrap -->
+    <link href="Content/bootstrap.min.css" rel="stylesheet">
+    <link href="Content/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Prism -->
+    <script src="Scripts/prism.js"></script>
+    <link href="Content/prism.css" rel="stylesheet" />
+
+    <!-- Projbook -->
+    <link href="Content/projbook.css" rel="stylesheet">
+</head>
+<body role="document">
+    <div class="container">
+        <div class="row">
+
+            <!--Nav Bar -->
+            <nav class="col-md-3 bs-docs-sidebar">
+                <ul id="sidebar" class="nav nav-stacked fixed hidden-xs hidden-sm">
+                    <li>
+                        <a href="#PageIntroductionmd">Introduction</a>
+                        <ul class="nav nav-stacked">
+                            <li><a href="#PageIntroductionmd-the-orm-cookbook">The ORM Cookbook</a></li>
+                            <li><a href="#PageIntroductionmd-presentation">Presentation</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#PageSingleModelRepositoriesmd">Single Model Repositories</a>
+                        <ul class="nav nav-stacked">
+                            <li><a href="#PageSingleModelRepositoriesmd-use-case--single-model-repositories">Use Case: Single Model Repositories</a></li>
+                            <li><a href="#PageSingleModelRepositoriesmd-prototype-repository">Prototype Repository</a></li>
+                            <li><a href="#PageSingleModelRepositoriesmd-ado-net">ADO.NET</a></li>
+                            <li><a href="#PageSingleModelRepositoriesmd-dapper">Dapper</a></li>
+                            <li><a href="#PageSingleModelRepositoriesmd-tortuga-chain">Tortuga Chain</a></li>
+                            <li><a href="#PageSingleModelRepositoriesmd-entity-framework">Entity Framework</a></li>
+                            <li><a href="#PageSingleModelRepositoriesmd-entity-framework-intermediate">Entity Framework Intermediate</a></li>
+                            <li><a href="#PageSingleModelRepositoriesmd-nhibernate">NHibernate</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#PageAsynchronousRepositoriesmd">Asynchronous Repositories</a>
+                        <ul class="nav nav-stacked">
+                            <li><a href="#PageAsynchronousRepositoriesmd-use-case--asynchronous-repositories">Use Case: Asynchronous Repositories</a></li>
+                            <li><a href="#PageAsynchronousRepositoriesmd-prototype-repository">Prototype Repository</a></li>
+                            <li><a href="#PageAsynchronousRepositoriesmd-ado-net">ADO.NET</a></li>
+                            <li><a href="#PageAsynchronousRepositoriesmd-dapper">Dapper</a></li>
+                            <li><a href="#PageAsynchronousRepositoriesmd-tortuga-chain">Tortuga Chain</a></li>
+                            <li><a href="#PageAsynchronousRepositoriesmd-entity-framework">Entity Framework</a></li>
+                            <li><a href="#PageAsynchronousRepositoriesmd-nhibernate">NHibernate</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#PageModelWithSingleChildmd">Model with Single Child</a>
+                        <ul class="nav nav-stacked">
+                            <li><a href="#PageModelWithSingleChildmd-use-case--model-with-single-child">Use Case: Model with Single Child</a></li>
+                            <li><a href="#PageModelWithSingleChildmd-ado-net">ADO.NET</a></li>
+                            <li><a href="#PageModelWithSingleChildmd-tortuga-chain">Tortuga Chain</a></li>
+                            <li><a href="#PageModelWithSingleChildmd-dapper">Dapper</a></li>
+                            <li><a href="#PageModelWithSingleChildmd-entity-framework">Entity Framework</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+            <!--Main Content -->
+            <div class="col-md-9">
+                <section id="PageIntroductionmd">
+                    <!--<div class="page-header">
+                        <h1>Introduction</h1>
+                    </div>-->
+                    
+                    <div id="PageIntroductionmd-the-orm-cookbook">
+                        <h2>The ORM Cookbook</h2>
+<p>In October of 2016, InfoQ published a series of articles on the repository pattern in .NET. To illustrate the concepts three ORMs were demonstrated:  Entity Framework, Dapper, and Chain.</p>
+<p>A criticism of the articles was that it didn’t include many people’s favorite ORM. So as a follow up, this GitHub repository was created to expand on that idea and create a shared “cookbook” of design patterns for any or all of the .NET ORMs. Contributions are welcome.</p>
+<p>When contributing recipes, please keep in mind the best practices for the ORM you are working with as novices may be using the code without fully understanding it.</p>
+<p><strong>Original InfoQ Articles</strong></p>
+<ul>
+<li><a href="https://www.infoq.com/articles/repository-implementation-strategies">Implementation Strategies for the Repository Pattern with Entity Framework, Dapper, and Chain</a></li>
+<li><a href="https://www.infoq.com/articles/repository-advanced">Advanced Use Cases for the Repository Pattern in .NET</a></li>
+</ul>
+
+                    </div>
+                    <div id="PageIntroductionmd-presentation">
+                        <h3>Presentation</h3>
+<p><a href="https://github.com/Grauenwolf/DotNet-ORM-Cookbook">The ORM Cookbook</a></p>
+<p>Each ORM is presented as its own xUnit test project. The actual recipes are in the Models and Repositories folder.</p>
+<p>To ensure each ORM is &quot;playing by the rules&quot;, a shared set of tests will be used. The tests are arranged into &quot;use cases&quot; classes. Each ORM can opt in for a given use case by inheriting from the appropriate use case class. This can be done multiple times if the ORM wishes to demonstrate alternate patterns.</p>
+<p>Each use case has a matching markdown file in which the code samples can be added along with any relevant explanations. When possible, use <a href="http://defrancea.github.io/Projbook/">Projbook</a> notation to inline code samples. This will prevent the code samples from getting out of sync with the documentation.</p>
+<p>If you build the “Documentation” project, the cookbook will be compiled as a website or PDF file.</p>
+
+                    </div>
+                </section>
+                <section id="PageSingleModelRepositoriesmd">
+                    <!--<div class="page-header">
+                        <h1>Single Model Repositories</h1>
+                    </div>-->
+                    
+                    <div id="PageSingleModelRepositoriesmd-use-case--single-model-repositories">
+                        <h2>Use Case: Single Model Repositories</h2>
+<p>This use case demonstrates CRUD operations on a single model mapped to a class.</p>
+
+                    </div>
+                    <div id="PageSingleModelRepositoriesmd-prototype-repository">
+                        <h3>Prototype Repository</h3>
+<p>This is the interface that every example repository will implement.</p>
+<pre><code class="language-csharp">    public interface IEmployeeClassificationRepository
+    {
+        EmployeeClassification GetByKey(int employeeClassificationKey);
+
+        EmployeeClassification FindByName(string employeeClassificationName);
+
+        IList&lt;EmployeeClassification&gt; GetAll();
+
+        int Create(EmployeeClassification classification);
+        void Update(EmployeeClassification classification);
+        void Delete(EmployeeClassification classification);
+        void Delete(int employeeClassificationKey);
+    }
+</code></pre>
+<p>The class <code>EmployeeClassification</code> is defined as such:</p>
+<pre><code class="language-csharp">public interface IEmployeeClassification
+{
+    int EmployeeClassificationKey { get; set; }
+    string EmployeeClassificationName { get; set; }
+}</code></pre>
+
+                    </div>
+                    <div id="PageSingleModelRepositoriesmd-ado-net">
+                        <h3>ADO.NET</h3>
+<p>With ADO.NET, the model does not actually participate in database operations so it needs no adornment.</p>
+<pre><code class="language-csharp">public class EmployeeClassification : Recipes.Models.IEmployeeClassification
+{
+    public int EmployeeClassificationKey { get; set; }
+
+    public string EmployeeClassificationName { get; set; }
+}</code></pre>
+<p>The repository methods use raw SQL strings. All other ORMs internally generate the same code.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationRepository : IEmployeeClassificationRepository&lt;EmployeeClassification&gt;
+{
+
+    readonly string m_ConnectionString;
+    public EmployeeClassificationRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) 
+                    OUTPUT Inserted.EmployeeClassificationKey 
+                    VALUES(@EmployeeClassificationName )&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+    }
+
+    public void Delete(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName 
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, employeeClassificationName);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        return null;
+
+                    return new EmployeeClassification()
+                    {
+                        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                        EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                    };
+                }
+            }
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new List&lt;EmployeeClassification&gt;();
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new EmployeeClassification()
+                        {
+                            EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                            EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                        });
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        return null;
+
+                    return new EmployeeClassification()
+                    {
+                        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                        EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                    };
+                }
+            }
+        }
+    }
+    public void Update(EmployeeClassification classification)
+    {
+        var sql = @&quot;UPDATE HR.EmployeeClassification 
+                    SET EmployeeClassificationName = @EmployeeClassificationName 
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageSingleModelRepositoriesmd-dapper">
+                        <h3>Dapper</h3>
+<p>Dapper is essentially just ADO.NET with some helper methods to reduce the amount of boilerplate code.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationRepository : IEmployeeClassificationRepository&lt;EmployeeClassification&gt;
+{
+
+    readonly string m_ConnectionString;
+    public EmployeeClassificationRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) 
+                    OUTPUT Inserted.EmployeeClassificationKey 
+                    VALUES (@EmployeeClassificationName )&quot;;
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            return con.ExecuteScalar&lt;int&gt;(sql, classification);
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName 
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
+        }
+    }
+
+    public void Delete(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            con.Execute(sql, classification);
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new List&lt;EmployeeClassification&gt;();
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            return con.Query&lt;EmployeeClassification&gt;(sql).ToList();
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+        }
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        var sql = @&quot;UPDATE HR.EmployeeClassification 
+                    SET EmployeeClassificationName = @EmployeeClassificationName 
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            con.Open();
+            con.Execute(sql, classification);
+        }
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageSingleModelRepositoriesmd-tortuga-chain">
+                        <h3>Tortuga Chain</h3>
+<p>Strictly speaking, Chain can use the same models as ADO.NET and Dapper so long as the column and property names match. However, it is more convenient to tag the class with what table it refers to.</p>
+<pre><code class="language-csharp">[Table(&quot;HR.EmployeeClassification&quot;)]
+public class EmployeeClassification : Recipes.Models.IEmployeeClassification
+{
+    public int EmployeeClassificationKey { get; set; }
+
+    public string EmployeeClassificationName { get; set; }
+}</code></pre>
+<p>Without the Table attribute, the table name will have to be specified in every call in the repository.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationRepository : IEmployeeClassificationRepository&lt;EmployeeClassification&gt;
+{
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
+    readonly SqlServerDataSource m_DataSource;
+    public EmployeeClassificationRepository(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        return m_DataSource.Insert(classification).ToInt32().Execute();
+    }
+
+    public void Delete(int employeeClassificationKey)
+    {
+        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        m_DataSource.Delete(classification).Execute();
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().Execute();
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        return m_DataSource.From(TableName).ToCollection&lt;EmployeeClassification&gt;().Execute();
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().Execute();
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        m_DataSource.Update(classification).Execute();
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageSingleModelRepositoriesmd-entity-framework">
+                        <h3>Entity Framework</h3>
+<p>To use Entity Framework, one needs to create a DbContext class. Here is a minimal example:</p>
+<pre><code class="language-csharp">public partial class OrmCookbook : DbContext
+{
+    public OrmCookbook()
+        : base(&quot;name=OrmCookbook&quot;)
+    {
+    }
+
+    public virtual DbSet&lt;EmployeeClassification&gt; EmployeeClassifications { get; set; }
+
+}
+</code></pre>
+<p>The model requires some annotations so that Entity Framework knows what table it applies to and what the primary key is.</p>
+<pre><code class="language-csharp">[Table(&quot;HR.EmployeeClassification&quot;)]
+public partial class EmployeeClassification
+{
+    [Key]
+    public int EmployeeClassificationKey { get; set; }
+
+    [StringLength(30)]
+    public string EmployeeClassificationName { get; set; }
+}
+</code></pre>
+<p>The context and model can be generated for you from the database using Entity Framework’s “Code First” tooling. (The name “code first” doesn’t literally mean the code has to be written before the database. Rather, it really means that you are not using EDMX style XML files.)</p>
+<p>Finally, there is the repository itself:</p>
+<pre><code class="language-csharp">public class EmployeeClassificationRepository : IEmployeeClassificationRepository&lt;EmployeeClassification&gt;
+{
+    public virtual int Create(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            context.EmployeeClassifications.Add(classification);
+            context.SaveChanges();
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public virtual void Delete(int employeeClassificationKey)
+    {
+        using (var context = new OrmCookbook())
+        {
+            var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassifications.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public virtual void Delete(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassifications.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public virtual EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        using (var context = new OrmCookbook())
+        {
+            return context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+        }
+    }
+
+    public virtual IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using (var context = new OrmCookbook())
+        {
+            return context.EmployeeClassifications.ToList();
+        }
+    }
+
+    public virtual EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = new OrmCookbook())
+        {
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
+        }
+    }
+
+    public virtual void Update(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
+            temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+            context.SaveChanges();
+        }
+    }
+}</code></pre>
+<p><em>Note that the repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.</em></p>
+
+                    </div>
+                    <div id="PageSingleModelRepositoriesmd-entity-framework-intermediate">
+                        <h4>Entity Framework Intermediate</h4>
+<p>The data access patterns in Entity Framework can be quite inefficient, so to reduce unnecessary database calls you can modify the code as shown below.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationRepository_Intermediate : EmployeeClassificationRepository
+{
+    public override void Delete(int employeeClassificationKey)
+    {
+        using (var context = new OrmCookbook())
+        {
+            context.Database.ExecuteSqlCommand(&quot;DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @p0&quot;, employeeClassificationKey);
+        }
+    }
+
+    public override void Delete(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            context.Database.ExecuteSqlCommand(&quot;DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @p0&quot;, classification.EmployeeClassificationKey);
+        }
+    }
+
+    public override void Update(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            context.Entry(classification).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageSingleModelRepositoriesmd-nhibernate">
+                        <h4>NHibernate</h4>
+<p>NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s Hibernate, it heavily relies on XML configuration files and interfaces.</p>
+<p>The models are interesting in that every property needs to be virtual. Without this, you’ll get a runtime error.</p>
+<pre><code class="language-csharp">public class EmployeeClassification : IEmployeeClassification
+{
+    public virtual int EmployeeClassificationKey { get; set; }
+
+    public virtual string EmployeeClassificationName { get; set; }
+}</code></pre>
+<p>Instead of attributes, a mapping file is used to associate the model with a database table.</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;hibernate-mapping xmlns=&quot;urn:nhibernate-mapping-2.2&quot;
+                   assembly=&quot;Recipes.NHibernate&quot;
+                   namespace=&quot;Recipes.NHibernate.Models&quot;&gt;
+
+  &lt;class name=&quot;EmployeeClassification&quot; table=&quot;EmployeeClassification&quot; schema=&quot;HR&quot;&gt;
+
+    &lt;id name=&quot;EmployeeClassificationKey&quot; &gt;
+      &lt;generator class=&quot;native&quot;/&gt;
+    &lt;/id&gt;
+    &lt;property name=&quot;EmployeeClassificationName&quot; /&gt;
+  &lt;/class&gt;
+
+&lt;/hibernate-mapping&gt;
+</code></pre>
+<p>The NHibernate documentation recommends create a session factory helper using this pattern:</p>
+<pre><code class="language-csharp">public class EmployeeClassificationRepository : IEmployeeClassificationRepository&lt;EmployeeClassification&gt;
+{
+    public int Create(EmployeeClassification classification)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            session.Save(classification);
+            session.Flush();
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public void Delete(int employeeClassificationKey)
+    {
+
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            session.Delete(temp);
+            session.Flush();
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            session.Delete(classification);
+            session.Flush();
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
+                .List&lt;EmployeeClassification&gt;()
+                .SingleOrDefault();
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .List&lt;EmployeeClassification&gt;();
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            session.Update(classification);
+            session.Flush();
+        }
+    }
+}</code></pre>
+<p>Finally there is the repository itself.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationRepository : IEmployeeClassificationRepository&lt;EmployeeClassification&gt;
+{
+    public int Create(EmployeeClassification classification)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            session.Save(classification);
+            session.Flush();
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public void Delete(int employeeClassificationKey)
+    {
+
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            session.Delete(temp);
+            session.Flush();
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            session.Delete(classification);
+            session.Flush();
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
+                .List&lt;EmployeeClassification&gt;()
+                .SingleOrDefault();
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .List&lt;EmployeeClassification&gt;();
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        using (ISession session = NHibernateHelper.OpenSession())
+        {
+            session.Update(classification);
+            session.Flush();
+        }
+    }
+}</code></pre>
+<p>The rules on when you need to call <code>Flush</code> are complex. In some cases it will be called for you implicitly, but as a general rule you need to invoke it before leaving a block that includes modifications.</p>
+
+                    </div>
+                </section>
+                <section id="PageAsynchronousRepositoriesmd">
+                    <!--<div class="page-header">
+                        <h1>Asynchronous Repositories</h1>
+                    </div>-->
+                    
+                    <div id="PageAsynchronousRepositoriesmd-use-case--asynchronous-repositories">
+                        <h2>Use Case: Asynchronous Repositories</h2>
+<p>This use case demonstrates the use of asynchronous CRUD operations. Asynchronous database calls are generally preferable, as they allow for more throughput in server applications and prevent UI blocking in GUI applications.</p>
+
+                    </div>
+                    <div id="PageAsynchronousRepositoriesmd-prototype-repository">
+                        <h3>Prototype Repository</h3>
+<p>The prototype repository based on our “Single Model Repositories” use case, with a slight modification to the signatures.</p>
+<pre><code class="language-csharp">    public interface IEmployeeClassificationAsynchronousRepository
+    {
+        Task&lt;EmployeeClassification&gt; GetByKeyAsync(int employeeClassificationKey);
+
+        Task&lt;EmployeeClassification&gt; FindByNameAsync(string employeeClassificationName);
+
+        Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync();
+
+        Task&lt;int&gt; CreateAsync(EmployeeClassificationclassification);
+        Task UpdateAsync(EmployeeClassificationclassification);
+        Task DeleteAsync(EmployeeClassificationclassification);
+        Task DeleteAsync(int employeeClassificationKey);
+    } 
+</code></pre>
+<p>No changes are needed for the model in any of these examples.</p>
+
+                    </div>
+                    <div id="PageAsynchronousRepositoriesmd-ado-net">
+                        <h3>ADO.NET</h3>
+<p>To make an ADO.NET repository asynchronous, simply add <code>await</code> and <code>Async</code> in the appropriate places.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationAsynchronousRepository : IEmployeeClassificationAsynchronousRepository&lt;EmployeeClassification&gt;
+{
+
+    readonly string m_ConnectionString;
+    public EmployeeClassificationAsynchronousRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) 
+                    OUTPUT Inserted.EmployeeClassificationKey 
+                    VALUES(@EmployeeClassificationName )&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+                return (int)await cmd.ExecuteScalarAsync();
+            }
+        }
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+    }
+
+    public async Task DeleteAsync(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+    }
+
+
+    public async Task&lt;EmployeeClassification&gt; FindByNameAsync(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName 
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, employeeClassificationName);
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (!await reader.ReadAsync())
+                        return null;
+
+                    return new EmployeeClassification()
+                    {
+                        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                        EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                    };
+                }
+            }
+        }
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync()
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new List&lt;EmployeeClassification&gt;();
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        result.Add(new EmployeeClassification()
+                        {
+                            EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                            EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                        });
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+
+
+    public async Task&lt;EmployeeClassification&gt; GetByKeyAsync(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (!await reader.ReadAsync())
+                        return null;
+
+                    return new EmployeeClassification()
+                    {
+                        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                        EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                    };
+                }
+            }
+        }
+    }
+
+
+    public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        var sql = @&quot;UPDATE HR.EmployeeClassification 
+                    SET EmployeeClassificationName = @EmployeeClassificationName 
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageAsynchronousRepositoriesmd-dapper">
+                        <h3>Dapper</h3>
+<p>To make a Dapper repository asynchronous, simply add <code>await</code> and <code>Async</code> in the appropriate places.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationAsynchronousRepository : IEmployeeClassificationAsynchronousRepository&lt;EmployeeClassification&gt;
+{
+
+    readonly string m_ConnectionString;
+    public EmployeeClassificationAsynchronousRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName) 
+                    OUTPUT Inserted.EmployeeClassificationKey 
+                    VALUES (@EmployeeClassificationName )&quot;;
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            return await con.ExecuteScalarAsync&lt;int&gt;(sql, classification);
+        }
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            await con.ExecuteAsync(sql, classification);
+        }
+    }
+
+    public async Task DeleteAsync(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            await con.ExecuteAsync(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+        }
+    }
+
+    public async Task&lt;EmployeeClassification&gt; FindByNameAsync(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName 
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+
+            return await con.QuerySingleAsync&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
+        }
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync()
+    {
+        var sql = @&quot;SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new List&lt;EmployeeClassification&gt;();
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            return (await con.QueryAsync&lt;EmployeeClassification&gt;(sql)).ToList();
+        }
+    }
+
+
+    public async Task&lt;EmployeeClassification&gt; GetByKeyAsync(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            return await con.QuerySingleAsync&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+        }
+    }
+
+    public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        var sql = @&quot;UPDATE HR.EmployeeClassification 
+                    SET EmployeeClassificationName = @EmployeeClassificationName 
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = new SqlConnection(m_ConnectionString))
+        {
+            await con.OpenAsync();
+            await con.ExecuteAsync(sql, classification);
+        }
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageAsynchronousRepositoriesmd-tortuga-chain">
+                        <h3>Tortuga Chain</h3>
+<p>In Chain, calls to <code>.Execute()</code> are replaced with <code>.ExecuteAsync()</code>.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationAsynchronousRepository : IEmployeeClassificationAsynchronousRepository&lt;EmployeeClassification&gt;
+{
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
+    readonly SqlServerDataSource m_DataSource;
+    public EmployeeClassificationAsynchronousRepository(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        return await m_DataSource.Insert(classification).ToInt32().ExecuteAsync();
+    }
+
+    public async Task DeleteAsync(int employeeClassificationKey)
+    {
+        await m_DataSource.DeleteByKey(TableName, employeeClassificationKey).ExecuteAsync();
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        await m_DataSource.Delete(classification).ExecuteAsync();
+    }
+
+    public async Task&lt;EmployeeClassification&gt; FindByNameAsync(string employeeClassificationName)
+    {
+        return await m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().ExecuteAsync();
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync()
+    {
+        return await m_DataSource.From(TableName).ToCollection&lt;EmployeeClassification&gt;().ExecuteAsync();
+    }
+
+    public async Task&lt;EmployeeClassification&gt; GetByKeyAsync(int employeeClassificationKey)
+    {
+        return await m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().ExecuteAsync();
+    }
+
+    public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        await m_DataSource.Update(classification).ExecuteAsync();
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageAsynchronousRepositoriesmd-entity-framework">
+                        <h3>Entity Framework</h3>
+<p>To make an Entity Framework repository asynchronous, you need to import the <code>System.Data.Entity</code> namespace. This creates the async version of the LINQ extension methods needed.</p>
+<pre><code class="language-csharp">public class EmployeeClassificationAsynchronousRepository : IEmployeeClassificationAsynchronousRepository&lt;EmployeeClassification&gt;
+{
+
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            context.EmployeeClassifications.Add(classification);
+            await context.SaveChangesAsync();
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public async Task DeleteAsync(int employeeClassificationKey)
+    {
+        using (var context = new OrmCookbook())
+        {
+            var temp = await context.EmployeeClassifications.FindAsync(employeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassifications.Remove(temp);
+                await context.SaveChangesAsync();
+            }
+        }
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassifications.Remove(temp);
+                await context.SaveChangesAsync();
+            }
+        }
+    }
+
+    public async Task&lt;EmployeeClassification&gt; FindByNameAsync(string employeeClassificationName)
+    {
+        using (var context = new OrmCookbook())
+        {
+            return await context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync();
+        }
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync()
+    {
+        using (var context = new OrmCookbook())
+        {
+            return await context.EmployeeClassifications.ToListAsync();
+        }
+    }
+
+    public async Task&lt;EmployeeClassification&gt; GetByKeyAsync(int employeeClassificationKey)
+    {
+        using (var context = new OrmCookbook())
+        {
+            return await context.EmployeeClassifications.FindAsync(employeeClassificationKey);
+        }
+    }
+
+
+    public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        using (var context = new OrmCookbook())
+        {
+            var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey);
+            temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+            await context.SaveChangesAsync();
+        }
+    }
+}</code></pre>
+
+                    </div>
+                    <div id="PageAsynchronousRepositoriesmd-nhibernate">
+                        <h4>NHibernate</h4>
+<p>NHibernate does not support asynchronous calls. To ensure UI responsiveness, use <code>Task.Run</code> calls to create awaitable tasks that run on a background thread. (Do not use <code>Task.Run</code> in a server scenario.)</p>
+
+                    </div>
+                </section>
+                <section id="PageModelWithSingleChildmd">
+                    <!--<div class="page-header">
+                        <h1>Model with Single Child</h1>
+                    </div>-->
+                    
+                    <div id="PageModelWithSingleChildmd-use-case--model-with-single-child">
+                        <h2>Use Case: Model with Single Child</h2>
+<p>In this use case, the Department model consits of a Deparment object with a single child object of type Division. For the purpose of this use case, the repository cannot create new Division records when saving the Department.</p>
+<p>The model is defined with these two interfaces:</p>
+<pre><code class="language-csharp">namespace Recipes.Models
+{
+    /// &lt;summary&gt;
+    /// This model shows a Department with a FK represented as a child object.
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name=&quot;TDivision&quot;&gt;The type of the t division.&lt;/typeparam&gt;
+    public interface IDepartment&lt;TDivision&gt; where TDivision : IDivision
+    {
+        int DepartmentKey { get; set; }
+        string DepartmentName { get; set; }
+        TDivision Division { get; set; }
+    }
+}</code></pre>
+<pre><code class="language-csharp">namespace Recipes.Models
+{
+    public interface IDivision
+    {
+        int DivisionKey { get; set; }
+        string DivisionName { get; set; }
+
+    }
+
+
+}</code></pre>
+
+                    </div>
+                    <div id="PageModelWithSingleChildmd-ado-net">
+                        <h3>ADO.NET</h3>
+<p>Nothing interesting here, as the data is just manually mapped.</p>
+
+                    </div>
+                    <div id="PageModelWithSingleChildmd-tortuga-chain">
+                        <h3>Tortuga Chain</h3>
+<p>Chain heavily relies on the use of views. If you wish to populate a child object, then its fields should be represented in the view using a normal join.</p>
+<p>In the model, the <code>Decompose</code> attribute is applied to a property to indicate that it should be populated from the parent's result set.</p>
+<pre><code class="language-csharp">[Decompose]
+public Division Division { get; set; }</code></pre>
+<p>Decomposed properties do not participate in Insert/Update operations. To handle this, you need to &quot;pull up&quot; the FK using this syntax.</p>
+<pre><code class="language-csharp">public int? DivisionKey
+{
+    get { return Division?.DivisionKey; }
+}</code></pre>
+<p>As mentioned above, you need to read from the view (called HR.DepartmentDetail in this case) in order to fetch the data needed to populate the child object. For inserts and updates, you will still refer to the underlying table.</p>
+<pre><code class="language-csharp">public Department GetByKey(int departmentKey)
+{
+    return m_DataSource.From(&quot;HR.DepartmentDetail&quot;, new { DepartmentKey = departmentKey }).ToObject&lt;Department&gt;().Execute();
+}</code></pre>
+
+                    </div>
+                    <div id="PageModelWithSingleChildmd-dapper">
+                        <h3>Dapper</h3>
+<p>Like Chain, Dapper can decompose result sets into parent-child models. This is called &quot;Multi Mapping&quot;. It requires a function to indicate how the parent and child are related, plus a parameter to indicate which column is the foreign Key.</p>
+<pre><code class="language-csharp">public IList&lt;Department&gt; GetAll()
+{
+    using (var context = new OrmCookbook())
+    {
+        return context.Departments.Include(d =&gt; d.Division).ToList();
+    }
+}</code></pre>
+<p>Unlike the other ORMs, Dapper has a hard limit of no more than 6 child objects. When using more than one child object, pass a comma separated list to the <code>splitOn</code> parameter.</p>
+
+                    </div>
+                    <div id="PageModelWithSingleChildmd-entity-framework">
+                        <h3>Entity Framework</h3>
+<p>The model used in Entity Framework expects the Division property to be vitual. If it isn't, then lazy loading will not be enabled.</p>
+<pre><code class="language-csharp">public Division Division { get; set; }</code></pre>
+<p>A limitation of EF is that for every child object you expose, you also need to expose the matching foreign Key.</p>
+<pre><code class="language-csharp">public int DivisionKey { get; set; }</code></pre>
+<p>When you save the record, EF's context handling becomes a problem. You need to set the &quot;Entry State&quot; for the division object so that EF knows that it came from a different context. Otherwise EF will try to insert a new row for Division, which will result in a runtime error.</p>
+<pre><code class="language-csharp">public int Create(Department department)
+{
+    using (var context = new OrmCookbook())
+    {
+        context.Departments.Add(department);
+        context.Entry(department.Division).State = EntityState.Unchanged;
+        context.SaveChanges();
+        return department.DepartmentKey;
+    }
+}</code></pre>
+<p>When performing an update, you don't need to touch the Entry State. Instead you need to update the DivsionKey on the Department object to match the DivsionKey on the Division object. Since that is an implementation detail, we are doing it inside the repository itself.</p>
+<pre><code class="language-csharp">public void Update(Department department)
+{
+    department.DivisionKey = department.Division.DivisionKey;
+
+    using (var context = new OrmCookbook())
+    {
+        context.Entry(department).State = EntityState.Modified;
+        context.SaveChanges();
+    }
+}</code></pre>
+<p>With reads, the <code>Include</code> clause is necessary. Without if one of two things will happen:</p>
+<ul>
+<li>If Division is virtual, lazy loading will be tiggered. Since the context will already be closed by the time that happens, an exception will be thrown.</li>
+<li>If Division is not virtual, the property will be null. This will most likely lead to a <code>NullReferenceException</code>, as logically this should always have a value.</li>
+</ul>
+<pre><code class="language-csharp">public IList&lt;Department&gt; GetAll()
+{
+    using (var context = new OrmCookbook())
+    {
+        return context.Departments.Include(d =&gt; d.Division).ToList();
+    }
+}</code></pre>
+<pre><code class="language-csharp">public Department GetByKey(int departmentKey)
+{
+    using (var context = new OrmCookbook())
+    {
+        return context.Departments.Include(d =&gt; d.Division).Where(d =&gt; d.DepartmentKey == departmentKey).SingleOrDefault();
+    }
+}</code></pre>
+<p>Note that the <code>Find</code> shortcut is not compatible with the <code>Include</code> clause, so you have to write the statement longform.</p>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="Scripts/jquery-3.1.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/projbook.js"></script>
+</body>
+</html>
