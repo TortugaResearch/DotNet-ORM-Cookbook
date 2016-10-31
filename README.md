@@ -4,6 +4,8 @@ In October of 2016, InfoQ published a series of articles on the repository patte
 
 A criticism of the articles was that it didn’t include many people’s favorite ORM. So as a follow up, this GitHub repository was created to expand on that idea and create a shared “cookbook” of design patterns for any or all of the .NET ORMs. Contributions are welcome.
 
+With this in mind, we'd like to present [The ORM Cookbook](https://grauenwolf.github.io/DotNet-ORM-Cookbook/)
+
 When contributing recipes, please keep in mind the best practices for the ORM you are working with as novices may be using the code without fully understanding it. 
 
 **Original InfoQ Articles**
