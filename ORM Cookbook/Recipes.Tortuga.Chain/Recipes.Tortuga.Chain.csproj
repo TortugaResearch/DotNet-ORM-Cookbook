@@ -89,9 +89,13 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Repositories\DepartmentWithChildRepository.cs" />
+    <Compile Include="Models\Division.cs" />
     <Compile Include="Models\EmployeeClassification.cs" />
     <Compile Include="Repositories\EmployeeClassificationAsynchronousRepository.cs" />
     <Compile Include="Repositories\EmployeeClassificationRepository.cs" />
+    <Compile Include="ModelWithSingleChild.cs" />
     <Compile Include="SingleModelCrud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleModelCrudAsync.cs" />

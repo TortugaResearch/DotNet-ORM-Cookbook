@@ -59,13 +59,17 @@
     <Folder Include="Properties" />
     <Folder Include="HR" />
     <Folder Include="Data" />
+    <Folder Include="HR\Views" />
+    <Folder Include="HR\Tables" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="HR\HR.sql" />
-    <Build Include="HR\Employee.sql" />
-    <Build Include="HR\Department.sql" />
-    <Build Include="HR\Division.sql" />
-    <Build Include="HR\EmployeeClassification.sql" />
+    <None Include="Data\Division.sql" />
+    <Build Include="HR\Views\DepartmentDetail.sql" />
+    <Build Include="HR\Tables\Department.sql" />
+    <Build Include="HR\Tables\Division.sql" />
+    <Build Include="HR\Tables\Employee.sql" />
+    <Build Include="HR\Tables\EmployeeClassification.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\EmployeeClassification.sql" />

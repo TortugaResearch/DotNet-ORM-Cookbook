@@ -12,3 +12,4 @@ Post-Deployment Script Template
 
 
 :r ".\Data\EmployeeClassification.sql"
+:r ".\Data\Division.sql"

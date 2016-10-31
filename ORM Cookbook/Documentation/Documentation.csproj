@@ -80,6 +80,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Page\AsynchronousRepositories.md" />
+    <None Include="Page\ModelWithSingleChild.md" />
     <None Include="Page\SingleModelRepositories.md" />
     <None Include="Page\Introduction.md" />
     <None Include="projbook.json" />

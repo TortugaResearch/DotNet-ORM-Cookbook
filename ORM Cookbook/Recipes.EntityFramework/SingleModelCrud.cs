@@ -1,5 +1,5 @@
-﻿using Recipes.Dapper.Repositories;
-using Recipes.EF.Models;
+﻿using Recipes.EF.Models;
+using Recipes.EF.Repositories;
 using Recipes.UseCases;
 
 namespace Recipes.EF

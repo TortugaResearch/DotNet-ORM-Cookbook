@@ -3,7 +3,7 @@ using Recipes.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Recipes.Dapper.Repositories
+namespace Recipes.EF.Repositories
 {
 
 

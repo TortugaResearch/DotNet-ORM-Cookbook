@@ -7,14 +7,14 @@ namespace Recipes.Repositories
             where TModel : IDepartment<TDivision>, new()
             where TDivision : IDivision
     {
-        TModel GetByKey(int employeeClassificationKey);
+        TModel GetByKey(int departmentKey);
 
         IList<TModel> GetAll();
 
-        int Create(TModel classification);
-        void Update(TModel classification);
-        void Delete(TModel classification);
-        void Delete(int employeeClassificationKey);
-
+        int Create(TModel department);
+        void Update(TModel department);
+        void Delete(TModel department);
+        void Delete(int departmentKey);
+        IList<TDivision> GetAllDivisions();
     }
 }

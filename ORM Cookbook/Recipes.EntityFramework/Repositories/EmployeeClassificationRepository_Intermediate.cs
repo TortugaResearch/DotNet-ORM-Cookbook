@@ -1,7 +1,7 @@
 using Recipes.EF.Models;
 using System.Data.Entity;
 
-namespace Recipes.Dapper.Repositories
+namespace Recipes.EF.Repositories
 {
 
     public class EmployeeClassificationRepository_Intermediate : EmployeeClassificationRepository

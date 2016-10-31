@@ -2,7 +2,6 @@
 using Recipes.Dapper.Repositories;
 using Recipes.UseCases;
 using System.Configuration;
-using System;
 
 namespace Recipes.Dapper
 {

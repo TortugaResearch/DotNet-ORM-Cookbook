@@ -84,8 +84,10 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\EmployeeClassification.cs" />
     <Compile Include="Models\Models.cs" />
+    <Compile Include="ModelWithSingleChild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\_Interfaces.cs" />
+    <Compile Include="Repositories\DepartmentWithChildRepository.cs" />
     <Compile Include="Repositories\EmployeeClassificationAsynchronousRepository.cs" />
     <Compile Include="Repositories\EmployeeClassificationRepository.cs" />
     <Compile Include="Repositories\EmployeeClassificationRepository_Intermediate.cs" />
