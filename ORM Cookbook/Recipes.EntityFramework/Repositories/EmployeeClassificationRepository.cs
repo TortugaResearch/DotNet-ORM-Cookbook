@@ -24,7 +24,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                var temp = context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == employeeClassificationKey).SingleOrDefault();
+                var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
                 if (temp != null)
                 {
                     context.EmployeeClassifications.Remove(temp);
@@ -37,7 +37,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                var temp = context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == classification.EmployeeClassificationKey).SingleOrDefault();
+                var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
                 if (temp != null)
                 {
                     context.EmployeeClassifications.Remove(temp);
@@ -66,7 +66,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                return context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == employeeClassificationKey).Single();
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
             }
         }
 
@@ -74,7 +74,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                var temp = context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == classification.EmployeeClassificationKey).SingleOrDefault();
+                var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
                 temp.EmployeeClassificationName = classification.EmployeeClassificationName;
                 context.SaveChanges();
             }

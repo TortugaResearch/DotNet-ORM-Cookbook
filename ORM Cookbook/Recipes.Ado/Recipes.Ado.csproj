@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleModelCrud.cs" />
     <Compile Include="SingleModelCrudAsync.cs" />
+    <Compile Include="TestConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

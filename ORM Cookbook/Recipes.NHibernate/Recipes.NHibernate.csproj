@@ -82,6 +82,7 @@
     <Compile Include="Repositories\NHibernateHelper.cs" />
     <Compile Include="SingleModelCrud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

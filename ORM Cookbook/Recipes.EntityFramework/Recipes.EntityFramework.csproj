@@ -92,6 +92,7 @@
     <Compile Include="SingleModelCrud.cs" />
     <Compile Include="SingleModelCrudAsync.cs" />
     <Compile Include="SingleModelCrud_Intermediate.cs" />
+    <Compile Include="TestConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

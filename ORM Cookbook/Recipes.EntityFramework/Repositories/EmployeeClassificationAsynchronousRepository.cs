@@ -27,7 +27,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                var temp = await context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == employeeClassificationKey).SingleOrDefaultAsync();
+                var temp = await context.EmployeeClassifications.FindAsync(employeeClassificationKey);
                 if (temp != null)
                 {
                     context.EmployeeClassifications.Remove(temp);
@@ -40,7 +40,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                var temp = await context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == classification.EmployeeClassificationKey).SingleOrDefaultAsync();
+                var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey);
                 if (temp != null)
                 {
                     context.EmployeeClassifications.Remove(temp);
@@ -69,7 +69,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                return await context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == employeeClassificationKey).SingleAsync();
+                return await context.EmployeeClassifications.FindAsync(employeeClassificationKey);
             }
         }
 
@@ -78,7 +78,7 @@ namespace Recipes.Dapper.Repositories
         {
             using (var context = new OrmCookbook())
             {
-                var temp = context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationKey == classification.EmployeeClassificationKey).SingleOrDefault();
+                var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey);
                 temp.EmployeeClassificationName = classification.EmployeeClassificationName;
                 await context.SaveChangesAsync();
             }
