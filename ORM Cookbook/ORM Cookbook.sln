@@ -24,6 +24,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.NHibernate", "Recip
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentation\Documentation.csproj", "{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LLBLGen Pro Generated Code", "LLBLGen Pro Generated Code", "{2018D736-3666-4E83-930C-ED776FC19B72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLBLGenPro.OrmCookbook", "Recipes.LLBLGenPro\LLBLGenPro.OrmCookbook.csproj", "{FD15B51D-01CF-4416-ADE9-9DC28ED7E223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLBLGenPro.OrmCookbookDBSpecific", "Recipes.LLBLGenPro\LLBLGenPro.OrmCookbookDBSpecific.csproj", "{E8534133-CE53-469B-B1AE-D0FBAE93362E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.LLBLGenPro", "Recipes.LLBLGenPro\Recipes.LLBLGenPro\Recipes.LLBLGenPro.csproj", "{B8F5D6F0-9D17-44EF-A616-A8B981845CC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,8 +71,24 @@ Global
 		{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAD63BFA-D88F-4AF4-A05F-9417B6163AF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD15B51D-01CF-4416-ADE9-9DC28ED7E223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD15B51D-01CF-4416-ADE9-9DC28ED7E223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD15B51D-01CF-4416-ADE9-9DC28ED7E223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD15B51D-01CF-4416-ADE9-9DC28ED7E223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8534133-CE53-469B-B1AE-D0FBAE93362E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8534133-CE53-469B-B1AE-D0FBAE93362E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8534133-CE53-469B-B1AE-D0FBAE93362E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8534133-CE53-469B-B1AE-D0FBAE93362E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8F5D6F0-9D17-44EF-A616-A8B981845CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F5D6F0-9D17-44EF-A616-A8B981845CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8F5D6F0-9D17-44EF-A616-A8B981845CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F5D6F0-9D17-44EF-A616-A8B981845CC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FD15B51D-01CF-4416-ADE9-9DC28ED7E223} = {2018D736-3666-4E83-930C-ED776FC19B72}
+		{E8534133-CE53-469B-B1AE-D0FBAE93362E} = {2018D736-3666-4E83-930C-ED776FC19B72}
 	EndGlobalSection
 EndGlobal
