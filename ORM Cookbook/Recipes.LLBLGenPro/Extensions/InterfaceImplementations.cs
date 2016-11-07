@@ -14,10 +14,6 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 		ICollection<DepartmentEntity> IDivision<DepartmentEntity>.Departments
 		{
 			get { return (ICollection<DepartmentEntity>)this.Departments; }
-			set
-			{
-				throw new NotSupportedException();
-			}
 		}
 	}
 }
