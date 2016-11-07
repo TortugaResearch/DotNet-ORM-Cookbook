@@ -16,4 +16,8 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			get { return (ICollection<DepartmentEntity>)this.Departments; }
 		}
 	}
+
+	public partial class EmployeeClassificationEntity : IEmployeeClassification
+	{
+	}
 }

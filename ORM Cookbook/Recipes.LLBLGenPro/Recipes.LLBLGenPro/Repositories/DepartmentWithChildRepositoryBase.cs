@@ -1,17 +1,17 @@
 ﻿using Recipes.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 using LLBLGenPro.OrmCookbook.DatabaseSpecific;
 using LLBLGenPro.OrmCookbook.EntityClasses;
 using LLBLGenPro.OrmCookbook.HelperClasses;
-using LLBLGenPro.OrmCookbook.Linq;
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.LinqSupportClasses;
 
 namespace Recipes.LLBLGenPro.Repositories
 {
-	internal class DepartmentWithChildRepository : IDepartmentWithChildRepository<DepartmentEntity, DivisionEntity>
+	/// <summary>
+	/// Base class for the repositories. Shared for linq & queryspec
+	/// </summary>
+	/// <seealso cref="Recipes.Repositories.IDepartmentWithChildRepository{LLBLGenPro.OrmCookbook.EntityClasses.DepartmentEntity, LLBLGenPro.OrmCookbook.EntityClasses.DivisionEntity}" />
+	internal abstract class DepartmentWithChildRepositoryBase: IDepartmentWithChildRepository<DepartmentEntity, DivisionEntity>
     {
         public int Create(DepartmentEntity department)
         {
@@ -28,7 +28,7 @@ namespace Recipes.LLBLGenPro.Repositories
 			using(var adapter = new DataAccessAdapter())
 			{
 				// delete directly on the DB, no fetch
-				adapter.DeleteEntitiesDirectly(typeof(DepartmentEntity), new RelationPredicateBucket(DepartmentFields.DepartmentKey.Equal(departmentKey)));
+				adapter.DeleteEntitiesDirectly(typeof(DepartmentEntity), new RelationPredicateBucket(DepartmentFields.DepartmentKey==departmentKey));
             }
         }
 
@@ -40,33 +40,6 @@ namespace Recipes.LLBLGenPro.Repositories
             }
         }
 
-        public IList<DepartmentEntity> GetAll()
-        {
-			using(var adapter = new DataAccessAdapter())
-			{
-				var metaData = new LinqMetaData(adapter);
-				return metaData.Department.WithPath(a=>a.Prefetch(d=>d.Division)).ToList();
-            }
-        }
-
-        public IList<DivisionEntity> GetAllDivisions()
-        {
-			using(var adapter = new DataAccessAdapter())
-			{
-				var metaData = new LinqMetaData(adapter);
-				return metaData.Division.ToList();
-            }
-        }
-
-        public DepartmentEntity GetByKey(int departmentKey)
-        {
-			using(var adapter = new DataAccessAdapter())
-			{
-				var metaData = new LinqMetaData(adapter);
-				return metaData.Department.Where(d=>d.DepartmentKey==departmentKey).WithPath(a => a.Prefetch(d => d.Division)).SingleOrDefault();
-            }
-        }
-
         public void Update(DepartmentEntity department)
         {
 			using(var adapter = new DataAccessAdapter())
@@ -75,6 +48,10 @@ namespace Recipes.LLBLGenPro.Repositories
 				adapter.SaveEntity(department, refetchAfterSave:true);
             }
         }
-    }
+
+		public abstract IList<DepartmentEntity> GetAll();
+		public abstract IList<DivisionEntity> GetAllDivisions();
+		public abstract DepartmentEntity GetByKey(int departmentKey);
+	}
 }
 

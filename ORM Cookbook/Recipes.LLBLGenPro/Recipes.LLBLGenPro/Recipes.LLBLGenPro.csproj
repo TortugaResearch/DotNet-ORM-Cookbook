@@ -73,9 +73,18 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ModelWithSingleChild.cs" />
+    <Compile Include="ModelWithSingleChildQuerySpec.cs" />
+    <Compile Include="ModelWithSingleChildLinq.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\DepartmentWithChildRepository.cs" />
+    <Compile Include="Repositories\DepartmentWithChildRepositoryBase.cs" />
+    <Compile Include="Repositories\DepartmentWithChildRepositoryQuerySpec.cs" />
+    <Compile Include="Repositories\DepartmentWithChildRepositoryLinq.cs" />
+    <Compile Include="Repositories\EmployeeClassificationAsynchronousRepositoryBase.cs" />
+    <Compile Include="Repositories\EmployeeClassificationAsynchronousRepositoryLinq.cs" />
+    <Compile Include="Repositories\EmployeeClassificationAsynchronousRepositoryQuerySpec.cs" />
+    <Compile Include="SingleModelCrudAsyncQuerySpec.cs" />
+    <Compile Include="SingleModelCrudAsyncLinq.cs" />
+    <Compile Include="TestConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Recipes.Core\Recipes.Core.csproj">
