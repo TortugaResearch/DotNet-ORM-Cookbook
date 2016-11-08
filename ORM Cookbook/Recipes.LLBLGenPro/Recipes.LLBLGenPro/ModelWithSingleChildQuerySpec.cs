@@ -5,12 +5,12 @@ using Recipes.UseCases;
 
 namespace Recipes.LLBLGenPro
 {
-	public class ModelWithSingleChildQuerySpec : ModelWithSingleChild<DepartmentEntity, DivisionEntity>
-	{
-		public override void CreateAndUpdate()
-		{
-			CreateAndUpdate(new DepartmentWithChildRepositoryQuerySpec());
-		}
+    public class ModelWithSingleChildQuerySpec : ModelWithSingleChild<DepartmentEntity, DivisionEntity>
+    {
+        public override void CreateAndUpdate()
+        {
+            CreateAndUpdate(new DepartmentWithChildRepositoryQuerySpec());
+        }
 
-	}
+    }
 }

@@ -80,8 +80,13 @@
     <Compile Include="Repositories\DepartmentWithChildRepositoryQuerySpec.cs" />
     <Compile Include="Repositories\DepartmentWithChildRepositoryLinq.cs" />
     <Compile Include="Repositories\EmployeeClassificationAsynchronousRepositoryBase.cs" />
+    <Compile Include="Repositories\EmployeeClassificationRepositoryQuerySpec.cs" />
+    <Compile Include="Repositories\EmployeeClassificationRepositoryLinq.cs" />
     <Compile Include="Repositories\EmployeeClassificationAsynchronousRepositoryLinq.cs" />
     <Compile Include="Repositories\EmployeeClassificationAsynchronousRepositoryQuerySpec.cs" />
+    <Compile Include="Repositories\EmployeeClassificationRepositoryBase.cs" />
+    <Compile Include="SingleModelCrudQuerySpec.cs" />
+    <Compile Include="SingleModelCrudLinq.cs" />
     <Compile Include="SingleModelCrudAsyncQuerySpec.cs" />
     <Compile Include="SingleModelCrudAsyncLinq.cs" />
     <Compile Include="TestConfig.cs" />

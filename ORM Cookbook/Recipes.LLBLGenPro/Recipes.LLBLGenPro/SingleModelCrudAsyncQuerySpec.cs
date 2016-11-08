@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LLBLGenPro.OrmCookbook.EntityClasses;
 using Recipes.LLBLGenPro.Repositories;
 
-namespace Recipes.Dapper
+namespace Recipes.LLBLGenPro
 {
     public class SingleModelCrudAsyncQuerySpec : SingleModelCrudAsync<EmployeeClassificationEntity>
     {

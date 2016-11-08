@@ -11,27 +11,27 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace Recipes.LLBLGenPro.Repositories
 {
-	/// <summary>
-	/// Repository implementation which uses the Linq API.
-	/// </summary>
-	/// <seealso cref="EmployeeClassificationEntity" />
-	public class EmployeeClassificationAsynchronousRepositoryLinq : EmployeeClassificationAsynchronousRepositoryBase
+    /// <summary>
+    /// Repository implementation which uses the Linq API.
+    /// </summary>
+    /// <seealso cref="EmployeeClassificationEntity" />
+    public class EmployeeClassificationAsynchronousRepositoryLinq : EmployeeClassificationAsynchronousRepositoryBase
     {
-		public override async Task<EmployeeClassificationEntity> FindByNameAsync(string employeeClassificationName)
+        public override async Task<EmployeeClassificationEntity> FindByNameAsync(string employeeClassificationName)
         {
             using (var adapter = new DataAccessAdapter())
             {
-	            var metaData = new LinqMetaData(adapter);
-				return await metaData.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync();
+                var metaData = new LinqMetaData(adapter);
+                return await metaData.EmployeeClassification.SingleOrDefaultAsync(ec => ec.EmployeeClassificationName == employeeClassificationName);
             }
         }
 
-		public override async Task<IList<EmployeeClassificationEntity>> GetAllAsync()
+        public override async Task<IList<EmployeeClassificationEntity>> GetAllAsync()
         {
             using (var adapter = new DataAccessAdapter())
             {
-				var metaData = new LinqMetaData(adapter);
-				return await metaData.EmployeeClassification.ToListAsync();
+                var metaData = new LinqMetaData(adapter);
+                return await metaData.EmployeeClassification.ToListAsync();
             }
         }
 
@@ -39,8 +39,8 @@ namespace Recipes.LLBLGenPro.Repositories
         {
             using (var adapter = new DataAccessAdapter())
             {
-				var metaData = new LinqMetaData(adapter);
-				return await metaData.EmployeeClassification.FirstOrDefaultAsync(e=>e.EmployeeClassificationKey==employeeClassificationKey);
+                var metaData = new LinqMetaData(adapter);
+                return await metaData.EmployeeClassification.FirstOrDefaultAsync(e=>e.EmployeeClassificationKey==employeeClassificationKey);
             }
         }
     }
