@@ -8,6 +8,6 @@ namespace Recipes.Models
         int DivisionKey { get; set; }
         string DivisionName { get; set; }
 
-        ICollection<TDepartment> Departments { get; set; }
+        ICollection<TDepartment> Departments { get; }
     }
 }
