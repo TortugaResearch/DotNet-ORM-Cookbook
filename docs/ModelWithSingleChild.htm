@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Model with Single Child - The ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="Introduction.htm">Introduction</a>
+</li>
+<li class="tocentry"><a href="SingleModelRepositories.htm">Single Model Repositories</a>
+</li>
+<li class="tocentry"><a href="AsynchronousRepositories.htm">Asynchronous Repositories</a>
+</li>
+<li class="tocentry current"><a class="current" href="ModelWithSingleChild.htm">Model with Single Child</a>
+<ul class="currentrelativeroot">
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+<li class="tocentry"><a href="#tortuga-chain">Tortuga Chain</a></li>
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+<li class="tocentry"><a href="#entity-framework">Entity Framework</a></li>
+</ul>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="ModelWithSingleChild.htm">Model with Single Child</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="use-case-model-with-single-child">Use Case: Model with Single Child<a class="headerlink" href="#use-case-model-with-single-child" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>In this use case, the Department model consits of a Deparment object with a single child object of type Division. For the purpose of this use case, the repository cannot create new Division records when saving the Department.</p>
+<p>The model is defined with these two interfaces:</p>
+<pre><code class="cs">/// &lt;summary&gt;
+/// This model shows a Department with a FK represented as a child object.
+/// &lt;/summary&gt;
+/// &lt;typeparam name=&quot;TDivision&quot;&gt;The type of the t division.&lt;/typeparam&gt;
+public interface IDepartment&lt;TDivision&gt; where TDivision : IDivision
+{
+    int DepartmentKey { get; set; }
+    string DepartmentName { get; set; }
+    TDivision Division { get; set; }
+}
+</code></pre>
+
+<pre><code class="cs">public interface IDivision
+{
+    int DivisionKey { get; set; }
+    string DivisionName { get; set; }
+
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Nothing interesting here, as the data is just manually mapped.</p>
+<h2 id="tortuga-chain">Tortuga Chain<a class="headerlink" href="#tortuga-chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain heavily relies on the use of views. If you wish to populate a child object, then its fields should be represented in the view using a normal join.</p>
+<p>In the model, the <code>Decompose</code> attribute is applied to a property to indicate that it should be populated from the parent's result set.</p>
+<pre><code class="cs">[Decompose]
+public Division Division { get; set; }
+</code></pre>
+
+<p>Decomposed properties do not participate in Insert/Update operations. To handle this, you need to &quot;pull up&quot; the FK using this syntax.</p>
+<pre><code class="cs">public int? DivisionKey
+{
+    get { return Division?.DivisionKey; }
+}
+</code></pre>
+
+<p>As mentioned above, you need to read from the view (called HR.DepartmentDetail in this case) in order to fetch the data needed to populate the child object. For inserts and updates, you will still refer to the underlying table.</p>
+<pre><code class="cs">public Department GetByKey(int departmentKey)
+{
+    return m_DataSource.From(&quot;HR.DepartmentDetail&quot;, new { DepartmentKey = departmentKey }).ToObject&lt;Department&gt;().Execute();
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Like Chain, Dapper can decompose result sets into parent-child models. This is called &quot;Multi Mapping&quot;. It requires a function to indicate how the parent and child are related, plus a parameter to indicate which column is the foreign Key.</p>
+<pre><code class="cs">public IList&lt;Department&gt; GetAll()
+{
+    using (var context = new OrmCookbook())
+    {
+        return context.Departments.Include(d =&gt; d.Division).ToList();
+    }
+}
+</code></pre>
+
+<p>Unlike the other ORMs, Dapper has a hard limit of no more than 6 child objects. When using more than one child object, pass a comma separated list to the <code>splitOn</code> parameter.</p>
+<h2 id="entity-framework">Entity Framework<a class="headerlink" href="#entity-framework" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The model used in Entity Framework expects the Division property to be vitual. If it isn't, then lazy loading will not be enabled.</p>
+<pre><code class="cs">public Division Division { get; set; }
+</code></pre>
+
+<p>A limitation of EF is that for every child object you expose, you also need to expose the matching foreign Key.</p>
+<pre><code class="cs">public int DivisionKey { get; set; }
+</code></pre>
+
+<p>When you save the record, EF's context handling becomes a problem. You need to set the &quot;Entry State&quot; for the division object so that EF knows that it came from a different context. Otherwise EF will try to insert a new row for Division, which will result in a runtime error.</p>
+<pre><code class="cs">public int Create(Department department)
+{
+    using (var context = new OrmCookbook())
+    {
+        context.Departments.Add(department);
+        context.Entry(department.Division).State = EntityState.Unchanged;
+        context.SaveChanges();
+        return department.DepartmentKey;
+    }
+}
+</code></pre>
+
+<p>When performing an update, you don't need to touch the Entry State. Instead you need to update the DivsionKey on the Department object to match the DivsionKey on the Division object. Since that is an implementation detail, we are doing it inside the repository itself.</p>
+<pre><code class="cs">public void Update(Department department)
+{
+    department.DivisionKey = department.Division.DivisionKey;
+
+    using (var context = new OrmCookbook())
+    {
+        context.Entry(department).State = EntityState.Modified;
+        context.SaveChanges();
+    }
+}
+</code></pre>
+
+<p>With reads, the <code>Include</code> clause is necessary. Without if one of two things will happen:</p>
+<ul>
+<li>If Division is virtual, lazy loading will be tiggered. Since the context will already be closed by the time that happens, an exception will be thrown.</li>
+<li>If Division is not virtual, the property will be null. This will most likely lead to a <code>NullReferenceException</code>, as logically this should always have a value.</li>
+</ul>
+<pre><code class="cs">public IList&lt;Department&gt; GetAll()
+{
+    using (var context = new OrmCookbook())
+    {
+        return context.Departments.Include(d =&gt; d.Division).ToList();
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public Department GetByKey(int departmentKey)
+{
+    using (var context = new OrmCookbook())
+    {
+        return context.Departments.Include(d =&gt; d.Division).Where(d =&gt; d.DepartmentKey == departmentKey).SingleOrDefault();
+    }
+}
+</code></pre>
+
+<div class="alert alert-warning"><span class="alert-title"><i class="fa fa-warning"></i> Important!</span><p>The <code>Find</code> shortcut is not compatible with the <code>Include</code> clause, so you have to write the statement longform.</p>
+</div>
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>
