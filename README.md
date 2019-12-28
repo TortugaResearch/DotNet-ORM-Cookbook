@@ -14,7 +14,7 @@ When contributing recipes, please keep in mind the best practices for the ORM yo
 
 ## Presentation
 
-Each ORM is presented as its own xUnit test project. The actual recipes are in the Models and Repositories folder. 
+Each ORM is presented as its own test project. The actual recipes are in the Models and Repositories folder. 
 
 To ensure each ORM is "playing by the rules", a shared set of tests will be used. The tests are arranged into "use cases" classes. Each ORM can opt in for a given use case by inheriting from the appropriate use case class. This can be done multiple times if the ORM wishes to demonstrate alternate patterns.
 

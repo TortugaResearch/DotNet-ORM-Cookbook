@@ -5,7 +5,7 @@ This use case demonstrates CRUD operations on a single model mapped to a class.
 ## Prototype Repository
 
 
-This is the interface that every example repository will implement. 
+This is the interface that every example repository in this set will implement. 
 
 ```cs
 public interface IEmployeeClassificationRepository
@@ -49,8 +49,8 @@ Dapper is essentially just ADO.NET with some helper methods to reduce the amount
 Strictly speaking, Chain can use the same models as ADO.NET and Dapper so long as the column and property names match. However, it is more convenient to tag the class with what table it refers to.
 
 @snippet cs [../Recipes.Tortuga.Chain/Models/EmployeeClassification.cs] EmployeeClassification
-Without the Table attribute, the table name will have to be specified in every call in the repository.
 
+Without the Table attribute, the table name will have to be specified in every call in the repository.
 
 @snippet cs [../Recipes.Tortuga.Chain/Repositories/EmployeeClassificationRepository.cs] EmployeeClassificationRepository
 

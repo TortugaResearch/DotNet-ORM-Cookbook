@@ -24,3 +24,8 @@ Each use case has a matching markdown file in which the code samples can be adde
 
 If you build the “Documentation” project, the cookbook will be compiled as a website or PDF file. 
 
+@snippet cs [../Recipes.Core/SingleModelCrudAsync/IEmployeeClassification.cs] IEmployeeClassification
+
+@snippet cs [../Recipes.Tortuga.Chain/SingleModelCrudAsync/SingleModelCrudRepository.cs] DeleteByKeyAsync(int)
+
+
