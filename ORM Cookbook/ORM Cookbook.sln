@@ -14,7 +14,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentationDocNet", "Docu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Core", "Recipes.Core\Recipes.Core.csproj", "{355C414A-76DC-4A3A-9BD7-3B64A5C4CEBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.Tortuga.Chain", "Recipes.Tortuga.Chain\Recipes.Tortuga.Chain.csproj", "{DCEAA258-6984-42A1-8780-11E0CA4CB026}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Tortuga.Chain", "Recipes.Tortuga.Chain\Recipes.Tortuga.Chain.csproj", "{DCEAA258-6984-42A1-8780-11E0CA4CB026}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.EntityFrameworkCore", "Recipes.EntityFrameworkCore\Recipes.EntityFrameworkCore.csproj", "{47C88905-5CA8-4092-8DF2-651D2BBA3C56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{DCEAA258-6984-42A1-8780-11E0CA4CB026}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCEAA258-6984-42A1-8780-11E0CA4CB026}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCEAA258-6984-42A1-8780-11E0CA4CB026}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C88905-5CA8-4092-8DF2-651D2BBA3C56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C88905-5CA8-4092-8DF2-651D2BBA3C56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C88905-5CA8-4092-8DF2-651D2BBA3C56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C88905-5CA8-4092-8DF2-651D2BBA3C56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

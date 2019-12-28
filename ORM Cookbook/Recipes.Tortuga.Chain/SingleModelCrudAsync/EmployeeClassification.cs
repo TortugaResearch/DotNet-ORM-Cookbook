@@ -1,6 +1,5 @@
 ﻿using Recipes.SingleModelCrudAsync;
 using System.ComponentModel.DataAnnotations.Schema;
-using Tortuga.Chain;
 
 namespace Recipes.Chain.SingleModelCrudAsync
 {

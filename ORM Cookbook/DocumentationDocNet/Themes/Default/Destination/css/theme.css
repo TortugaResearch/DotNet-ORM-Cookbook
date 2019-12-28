@@ -229,6 +229,10 @@ code.code-large {
 	font-size: 90%;
 }
 
+div.alert > pre > code {
+	line-height: initial;
+}
+
 dfn {
 	font-style: italic;
 }
@@ -1043,8 +1047,24 @@ div.figure p {
 }
 
 .menu-vertical li.tocentry {
-	padding-left: 15px;
+	padding-left: 20px;
 	padding-top: 7px;
+}
+
+.menu-vertical li.tocentry.current > ul.currentrelative {
+	padding-left: 7px;
+	padding-bottom: 5px;
+	margin-top: 0;
+}
+
+.menu-vertical li.tocentry > ul.currentrelative {
+	padding-left: 7px;
+	padding-bottom: 5px;
+	margin-top: -3px;
+}
+
+.menu-vertical li.tocentry > ul.currentrelative > li.tocentry {
+	padding-top: 3px !important;
 }
 
 .menu-vertical li.tocrootentry {

@@ -1,4 +1,4 @@
-#DocNet
+# DocNet
 
 DocNet is a static site generator, mainly meant for user documentation, using markdown files to build the content.
 

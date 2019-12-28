@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.SingleModelCrud;
-using Tortuga.Chain;
 
 namespace Recipes.Chain.SingleModelCrud
 {
