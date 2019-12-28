@@ -25,10 +25,11 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
             }
         }
 
-        public void DeleteByKey(int employeeClassificationKey)
+        public virtual void DeleteByKey(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
             {
+                //Find the row you wish to delete
                 var temp = context.EmployeeClassification.Find(employeeClassificationKey);
                 if (temp != null)
                 {
@@ -38,10 +39,11 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
             }
         }
 
-        public void Delete(EmployeeClassification classification)
+        public virtual void Delete(EmployeeClassification classification)
         {
             using (var context = CreateDbContext())
             {
+                //Find the row you wish to delete
                 var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
                 if (temp != null)
                 {
@@ -75,11 +77,13 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
             }
         }
 
-        public void Update(EmployeeClassification classification)
+        public virtual void Update(EmployeeClassification classification)
         {
             using (var context = CreateDbContext())
             {
+                //Get a fresh copy of the row from the database
                 var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+                //Copy the changed fields
                 temp.EmployeeClassificationName = classification.EmployeeClassificationName;
                 context.SaveChanges();
             }

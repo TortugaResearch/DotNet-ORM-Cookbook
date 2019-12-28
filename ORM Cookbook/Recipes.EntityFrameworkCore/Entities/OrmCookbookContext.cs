@@ -23,28 +23,15 @@ namespace Recipes.EntityFrameworkCore.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.;Database=OrmCookbook;Trusted_Connection=True;");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Department>(entity =>
             {
-                entity.HasKey(e => e.DepartmentKey);
-
-                entity.ToTable("Department", "HR");
-
                 entity.HasIndex(e => e.DepartmentName)
                     .HasName("UX_Department_DepartmentName")
                     .IsUnique();
-
-                entity.Property(e => e.DepartmentName)
-                    .IsRequired()
-                    .HasMaxLength(30);
 
                 entity.HasOne(d => d.DivisionKeyNavigation)
                     .WithMany(p => p.Department)
@@ -58,54 +45,20 @@ namespace Recipes.EntityFrameworkCore.Entities
                 entity.HasNoKey();
 
                 entity.ToView("DepartmentDetail", "HR");
-
-                entity.Property(e => e.DepartmentName)
-                    .IsRequired()
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.DivisionName).HasMaxLength(30);
             });
 
             modelBuilder.Entity<Division>(entity =>
             {
-                entity.HasKey(e => e.DivisionKey);
-
-                entity.ToTable("Division", "HR");
-
                 entity.HasIndex(e => e.DivisionName)
                     .HasName("UX_Division_DivisionName")
                     .IsUnique();
-
-                entity.Property(e => e.DivisionName)
-                    .IsRequired()
-                    .HasMaxLength(30);
             });
 
             modelBuilder.Entity<Employee>(entity =>
             {
-                entity.HasKey(e => e.EmployeeKey);
+                entity.Property(e => e.CellPhone).IsUnicode(false);
 
-                entity.ToTable("Employee", "HR");
-
-                entity.Property(e => e.CellPhone)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.MiddleName).HasMaxLength(50);
-
-                entity.Property(e => e.OfficePhone)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Title).HasMaxLength(100);
+                entity.Property(e => e.OfficePhone).IsUnicode(false);
 
                 entity.HasOne(d => d.EmployeeClassificationKeyNavigation)
                     .WithMany(p => p.Employee)
@@ -118,11 +71,7 @@ namespace Recipes.EntityFrameworkCore.Entities
                 entity.HasKey(e => e.EmployeeClassificationKey)
                     .HasName("PK__Employee__F3E60B21EE040346");
 
-                entity.ToTable("EmployeeClassification", "HR");
-
-                entity.Property(e => e.EmployeeClassificationName)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
+                entity.Property(e => e.EmployeeClassificationName).IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);
