@@ -251,3 +251,4 @@ paket-files/
 .idea/
 *.sln.iml
 /ORM Cookbook/OrmCookbook/OrmCookbook.jfm
+*.jfm

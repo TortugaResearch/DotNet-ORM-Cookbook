@@ -181,7 +181,7 @@ mark {
 	color: #2980B9;
 }
 
-.menu-vertical ul.currentrelative, .menu-vertical ul.currentrelativeroot {
+.menu-vertical ul.currentrelative {
 	background-color: #e3e3e3;
 }
 

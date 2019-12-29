@@ -1,16 +1,12 @@
 ﻿{
-    "Name" : "The ORM Cookbook",
-    "Source" : ".",
-    "Destination" : "..\\..\\docs",
-	"IncludeSource": "Includes",
-    "Theme" : "Light",
-    "Footer" : "The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.",
-    "Pages" : 
-    {
-        "__index" : "index.md",
-		"Introduction" : "Introduction.md",
-		"Single Model Repositories": "SingleModelRepositories.md",
-		"Asynchronous Repositories": "AsynchronousRepositories.md",
-		"Model with Single Child": "ModelWithSingleChild.md"
-    }
+  "Name": "The ORM Cookbook",
+  "Source": ".",
+  "Destination": "..\\..\\docs",
+  "IncludeSource": "Includes",
+  "Theme": "Light",
+  "Footer": "The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.",
+  "Pages": {
+    "__index": "Introduction.md",
+    "Single Model CRUD": "SingleModelCrud.md"
+  }
 }
