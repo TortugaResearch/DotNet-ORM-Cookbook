@@ -31,6 +31,8 @@ Strictly speaking, Chain can use the same models as ADO.NET and Dapper so long a
 
 Without the Table attribute, the table name will have to be specified in every call in the repository.
 
+Other information such as primary keys are read from the database's metadata.
+
 @snippet cs [..\Recipes.Tortuga.Chain\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
 
 ## Entity Framework Core
@@ -79,4 +81,14 @@ The repository methods are not normally virtual. This was done so that they coul
 The design of Entity Framework Core requires extraneous database calls when performing an update or delete operation. This revised version eliminates the extra calls.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrud\SingleModelCrudRepository2.cs] SingleModelCrudRepository2
+
+## RepoDb
+
+RepoDb often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
+
+@snippet cs [../Recipes.RepoDb\SingleModelCrud\EmployeeClassification.cs] EmployeeClassification
+
+The repository resemebles Dapper, but with far less SQL.
+
+@snippet cs [..\Recipes.RepoDb\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
 

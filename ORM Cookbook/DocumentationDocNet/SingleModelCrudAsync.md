@@ -55,3 +55,11 @@ Async:
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
+## RepoDb
+
+For non-cancellable operation, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+RepoDb does not support cancellation tokens at this time.
+
+@snippet cs [..\Recipes.RepoDb\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
+

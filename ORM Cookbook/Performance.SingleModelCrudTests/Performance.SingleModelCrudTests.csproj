@@ -11,7 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Recipes.Ado\Recipes.Ado.csproj" />
+    <ProjectReference Include="..\Recipes.Dapper\Recipes.Dapper.csproj" />
     <ProjectReference Include="..\Recipes.EntityFrameworkCore\Recipes.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Recipes.RepoDb\Recipes.RepoDb.csproj" />
     <ProjectReference Include="..\Recipes.Tortuga.Chain\Recipes.Tortuga.Chain.csproj" />
   </ItemGroup>
 
