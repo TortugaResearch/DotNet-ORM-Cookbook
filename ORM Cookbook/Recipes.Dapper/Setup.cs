@@ -1,17 +1,17 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
-using Tortuga.Chain;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
-namespace Recipes.Chain
+namespace Recipes.Dapper
 {
     [TestClass]
     public class Setup
     {
 #nullable disable
-        internal static SqlServerDataSource PrimaryDataSource { get; private set; }
+        internal static string ConnectionString { get; private set; }
 #nullable enable
 
         [AssemblyCleanup]
@@ -25,14 +25,20 @@ namespace Recipes.Chain
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
             var con = configuration.GetSection("ConnectionStrings").GetChildren().Single();
-            PrimaryDataSource = new SqlServerDataSource(con.Key, con.Value);
+
+            ConnectionString = con.Value;
         }
 
         [TestMethod]
         public void Warmup()
         {
-            //Preload all of the database metadata to warmup the data source
-            PrimaryDataSource.DatabaseMetadata.Preload();
+            //Make sure we can connect to the database. This will also pool a connection for future use.
+            using (var con = new SqlConnection(ConnectionString))
+            using (var cmd = new SqlCommand("SELECT 1", con))
+            {
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

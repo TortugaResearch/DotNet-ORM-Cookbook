@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Introduction - The ORM Cookbook</title>
+    <title>Home - The ORM Cookbook</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="css/theme.css" type="text/css" />
     <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
@@ -28,16 +28,9 @@
             </div>
             <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 <ul>
-<li class="tocentry"><a href="index.htm">Home</a>
+<li class="tocentry"><a href="Introduction.htm">Home</a>
 </li>
 
-<li class="tocentry current"><a class="current" href="Introduction.htm">Introduction</a>
-<ul class="currentrelative">
-<li class="tocentry"><a href="#presentation">Presentation</a></li>
-
-
-
-</ul>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
 </ul>
@@ -58,7 +51,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="Introduction.htm">Introduction</a></li></ul>
+<ul><li><a href="Introduction.htm">Home</a></li></ul>
 					
                     </div>
                     <hr />
@@ -79,7 +72,7 @@
 <p>Each ORM is presented as its own xUnit test project. The actual recipes are in the Models and Repositories folder. </p>
 <p>To ensure each ORM is &quot;playing by the rules&quot;, a shared set of tests will be used. The tests are arranged into &quot;use cases&quot; classes. Each ORM can opt in for a given use case by inheriting from the appropriate use case class. This can be done multiple times if the ORM wishes to demonstrate alternate patterns.</p>
 <p>Each use case has a matching markdown file in which the code samples can be added along with any relevant explanations. When possible, use <a href="http://defrancea.github.io/Projbook/" target="_blank">Projbook</a> notation to inline code samples. This will prevent the code samples from getting out of sync with the documentation.</p>
-<p>If you build the “Documentation” project, the cookbook will be compiled as a website or PDF file. </p>
+<p>If you build the “Documentation” project, the cookbook will be compiled as a website. </p>
 <pre><code class="cs">public interface IEmployeeClassification
 {
     int EmployeeClassificationKey { get; set; }

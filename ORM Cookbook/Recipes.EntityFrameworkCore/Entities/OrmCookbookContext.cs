@@ -1,6 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Recipes.EntityFrameworkCore.Entities
 {
@@ -15,11 +14,13 @@ namespace Recipes.EntityFrameworkCore.Entities
         {
         }
 
+#nullable disable //Assume that the DbContext constructor will populate these properties
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<DepartmentDetail> DepartmentDetail { get; set; }
         public virtual DbSet<Division> Division { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<EmployeeClassification> EmployeeClassification { get; set; }
+#nullable enable
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,6 +28,9 @@ namespace Recipes.EntityFrameworkCore.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            if (modelBuilder == null)
+                throw new ArgumentNullException(nameof(modelBuilder), $"{nameof(modelBuilder)} is null.");
+
             modelBuilder.Entity<Department>(entity =>
             {
                 entity.HasIndex(e => e.DepartmentName)
@@ -34,7 +38,7 @@ namespace Recipes.EntityFrameworkCore.Entities
                     .IsUnique();
 
                 entity.HasOne(d => d.DivisionKeyNavigation)
-                    .WithMany(p => p.Department)
+                    .WithMany(p => p!.Department) //change from p.Department to p!.Department
                     .HasForeignKey(d => d.DivisionKey)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Department_DivisionKey");
@@ -61,7 +65,7 @@ namespace Recipes.EntityFrameworkCore.Entities
                 entity.Property(e => e.OfficePhone).IsUnicode(false);
 
                 entity.HasOne(d => d.EmployeeClassificationKeyNavigation)
-                    .WithMany(p => p.Employee)
+                    .WithMany(p => p!.Employee) //change from p.Department to p!.Department
                     .HasForeignKey(d => d.EmployeeClassificationKey)
                     .HasConstraintName("FK_Employee_EmployeeClassificationKey");
             });

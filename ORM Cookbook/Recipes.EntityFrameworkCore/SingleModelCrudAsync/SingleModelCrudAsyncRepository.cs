@@ -22,7 +22,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
             using (var context = CreateDbContext())
             {
                 context.EmployeeClassification.Add(classification);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
                 return classification.EmployeeClassificationKey;
             }
         }
@@ -35,7 +35,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
                 if (temp != null)
                 {
                     context.EmployeeClassification.Remove(temp);
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync().ConfigureAwait(false);
                 }
             }
         }
@@ -48,16 +48,16 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
                 if (temp != null)
                 {
                     context.EmployeeClassification.Remove(temp);
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync().ConfigureAwait(false);
                 }
             }
         }
 
-        public async Task<EmployeeClassification> FindByNameAsync(string employeeClassificationName)
+        public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName)
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync();
+                return await context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync().ConfigureAwait(false);
             }
         }
 
@@ -65,11 +65,11 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.ToListAsync();
+                return await context.EmployeeClassification.ToListAsync().ConfigureAwait(false);
             }
         }
 
-        public async Task<EmployeeClassification> GetByKeyAsync(int employeeClassificationKey)
+        public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
             {
@@ -83,7 +83,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
             {
                 var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
                 temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }

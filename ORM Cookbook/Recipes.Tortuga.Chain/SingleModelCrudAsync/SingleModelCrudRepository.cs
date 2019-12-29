@@ -1,4 +1,5 @@
 ﻿using Recipes.SingleModelCrudAsync;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tortuga.Chain;
@@ -12,7 +13,7 @@ namespace Recipes.Chain.SingleModelCrudAsync
 
         public SingleModelCrudAsyncRepository(SqlServerDataSource dataSource)
         {
-            m_DataSource = dataSource;
+            m_DataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource), $"{nameof(dataSource)} is null.");
         }
 
         public Task<int> CreateAsync(EmployeeClassification classification)
@@ -30,19 +31,19 @@ namespace Recipes.Chain.SingleModelCrudAsync
             return m_DataSource.DeleteByKey(TableName, employeeClassificationKey).ExecuteAsync();
         }
 
-        public Task<EmployeeClassification> FindByNameAsync(string employeeClassificationName)
+        public Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName)
         {
-            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>().NeverNull().ExecuteAsync();
+            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync();
         }
 
         public async Task<IList<EmployeeClassification>> GetAllAsync()
         {
-            return await m_DataSource.From(TableName).ToCollection<EmployeeClassification>().ExecuteAsync();
+            return await m_DataSource.From(TableName).ToCollection<EmployeeClassification>().ExecuteAsync().ConfigureAwait(false);
         }
 
-        public Task<EmployeeClassification> GetByKeyAsync(int employeeClassificationKey)
+        public Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>().NeverNull().ExecuteAsync();
+            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync();
         }
 
         public Task UpdateAsync(EmployeeClassification classification)

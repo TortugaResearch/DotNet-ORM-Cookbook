@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Performance</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Recipes.EntityFrameworkCore\Recipes.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Recipes.Tortuga.Chain\Recipes.Tortuga.Chain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

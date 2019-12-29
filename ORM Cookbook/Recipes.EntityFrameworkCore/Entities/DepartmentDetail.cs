@@ -8,11 +8,14 @@ namespace Recipes.EntityFrameworkCore.Entities
     public partial class DepartmentDetail
     {
         public int DepartmentKey { get; set; }
+
         [Required]
         [StringLength(30)]
-        public string DepartmentName { get; set; }
+        public string? DepartmentName { get; set; }
+
         public int DivisionKey { get; set; }
+
         [StringLength(30)]
-        public string DivisionName { get; set; }
+        public string? DivisionName { get; set; }
     }
 }

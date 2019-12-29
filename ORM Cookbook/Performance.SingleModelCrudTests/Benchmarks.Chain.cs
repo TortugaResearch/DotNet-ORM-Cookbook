@@ -1,20 +1,16 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Recipes.EntityFrameworkCore;
-using Recipes.EntityFrameworkCore.SingleModelCrud;
+using Recipes.Chain.SingleModelCrud;
+using Recipes.Chain.SingleModelCrudAsync;
+using System.Threading.Tasks;
 
-namespace Performance.EntityFrameworkCore
+namespace Performance
 {
-    public class Benchmarks
+    partial class Benchmarks
     {
-        public Benchmarks()
-        {
-            Setup.AssemblyInit(null);
-        }
-
         #region SingleModelCrudTests
 
         [Benchmark]
-        public void SingleModelCrudTests_CreateAndReadBack()
+        public void Chain_SingleModelCrudTests_CreateAndReadBack()
         {
             var test = new SingleModelCrudTests();
             test.CreateAndReadBack();
@@ -24,7 +20,7 @@ namespace Performance.EntityFrameworkCore
         /// Create and delete a row.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests_CreateAndDeleteByModel()
+        public void Chain_SingleModelCrudTests_CreateAndDeleteByModel()
         {
             var test = new SingleModelCrudTests();
             test.CreateAndDeleteByModel();
@@ -34,7 +30,7 @@ namespace Performance.EntityFrameworkCore
         /// Create and delete a row.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests_CreateAndDeleteByKey()
+        public void Chain_SingleModelCrudTests_CreateAndDeleteByKey()
         {
             var test = new SingleModelCrudTests();
             test.CreateAndDeleteByKey();
@@ -44,7 +40,7 @@ namespace Performance.EntityFrameworkCore
         /// Get all rows from a table.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests_GetAll()
+        public void Chain_SingleModelCrudTests_GetAll()
         {
             var test = new SingleModelCrudTests();
             test.GetAll();
@@ -54,7 +50,7 @@ namespace Performance.EntityFrameworkCore
         /// Get a row using a primary key.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests_GetByKey()
+        public void Chain_SingleModelCrudTests_GetByKey()
         {
             var test = new SingleModelCrudTests();
             test.GetByKey();
@@ -64,7 +60,7 @@ namespace Performance.EntityFrameworkCore
         /// Create and update a row.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests_CreateAndUpdate()
+        public void Chain_SingleModelCrudTests_CreateAndUpdate()
         {
             var test = new SingleModelCrudTests();
             test.CreateAndUpdate();
@@ -72,65 +68,65 @@ namespace Performance.EntityFrameworkCore
 
         #endregion SingleModelCrudTests
 
-        #region SingleModelCrudTests2
+        #region SingleModelCrudAsyncTests
 
         [Benchmark]
-        public void SingleModelCrudTests2_CreateAndReadBack()
+        public Task Chain_SingleModelCrudAsyncTests_CreateAndReadBack()
         {
-            var test = new SingleModelCrudTests2();
-            test.CreateAndReadBack();
+            var test = new SingleModelCrudAsyncTests();
+            return test.CreateAndReadBackAsync();
         }
 
         /// <summary>
         /// Create and delete a row.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests2_CreateAndDeleteByModel()
+        public Task Chain_SingleModelCrudAsyncTests_CreateAndDeleteByModel()
         {
-            var test = new SingleModelCrudTests2();
-            test.CreateAndDeleteByModel();
+            var test = new SingleModelCrudAsyncTests();
+            return test.CreateAndDeleteByModelAsync();
         }
 
         /// <summary>
         /// Create and delete a row.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests2_CreateAndDeleteByKey()
+        public Task Chain_SingleModelCrudAsyncTests_CreateAndDeleteByKey()
         {
-            var test = new SingleModelCrudTests2();
-            test.CreateAndDeleteByKey();
+            var test = new SingleModelCrudAsyncTests();
+            return test.CreateAndDeleteByKeyAsync();
         }
 
         /// <summary>
         /// Get all rows from a table.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests2_GetAll()
+        public Task Chain_SingleModelCrudAsyncTests_GetAll()
         {
-            var test = new SingleModelCrudTests2();
-            test.GetAll();
+            var test = new SingleModelCrudAsyncTests();
+            return test.GetAllAsync();
         }
 
         /// <summary>
         /// Get a row using a primary key.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests2_GetByKey()
+        public Task Chain_SingleModelCrudAsyncTests_GetByKey()
         {
-            var test = new SingleModelCrudTests2();
-            test.GetByKey();
+            var test = new SingleModelCrudAsyncTests();
+            return test.GetByKeyAsync();
         }
 
         /// <summary>
         /// Create and update a row.
         /// </summary>
         [Benchmark]
-        public void SingleModelCrudTests2_CreateAndUpdate()
+        public Task Chain_SingleModelCrudAsyncTests_CreateAndUpdate()
         {
-            var test = new SingleModelCrudTests2();
-            test.CreateAndUpdate();
+            var test = new SingleModelCrudAsyncTests();
+            return test.CreateAndUpdateAsync();
         }
 
-        #endregion SingleModelCrudTests2
+        #endregion SingleModelCrudAsyncTests
     }
 }

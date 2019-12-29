@@ -50,7 +50,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="*.md" />
+    <None Include="AsynchronousRepositories.md" />
+    <None Include="Introduction.md" />
+    <None Include="ModelWithSingleChild.md" />
+    <None Include="readme.md" />
+    <None Include="SingleModelCrud.md" />
+    <None Include="SingleModelRepositories.md" />
     <None Include="docnet.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.EntityFrameworkCore.Entities;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Recipes.EntityFrameworkCore
@@ -20,6 +21,7 @@ namespace Recipes.EntityFrameworkCore
         }
 
         [AssemblyInitialize]
+        [SuppressMessage("Style", "CA1801")]
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();

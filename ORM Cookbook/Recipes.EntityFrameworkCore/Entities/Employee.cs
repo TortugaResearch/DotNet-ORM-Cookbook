@@ -10,24 +10,31 @@ namespace Recipes.EntityFrameworkCore.Entities
     {
         [Key]
         public int EmployeeKey { get; set; }
+
         [Required]
         [StringLength(50)]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
+
         [StringLength(50)]
-        public string MiddleName { get; set; }
+        public string? MiddleName { get; set; }
+
         [Required]
         [StringLength(50)]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
+
         [StringLength(100)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
+
         [StringLength(15)]
-        public string OfficePhone { get; set; }
+        public string? OfficePhone { get; set; }
+
         [StringLength(15)]
-        public string CellPhone { get; set; }
+        public string? CellPhone { get; set; }
+
         public int? EmployeeClassificationKey { get; set; }
 
         [ForeignKey(nameof(EmployeeClassificationKey))]
         [InverseProperty(nameof(EmployeeClassification.Employee))]
-        public virtual EmployeeClassification EmployeeClassificationKeyNavigation { get; set; }
+        public virtual EmployeeClassification? EmployeeClassificationKeyNavigation { get; set; }
     }
 }

@@ -10,13 +10,15 @@ namespace Recipes.EntityFrameworkCore.Entities
     {
         [Key]
         public int DepartmentKey { get; set; }
+
         [Required]
         [StringLength(30)]
-        public string DepartmentName { get; set; }
+        public string? DepartmentName { get; set; }
+
         public int DivisionKey { get; set; }
 
         [ForeignKey(nameof(DivisionKey))]
         [InverseProperty(nameof(Division.Department))]
-        public virtual Division DivisionKeyNavigation { get; set; }
+        public virtual Division? DivisionKeyNavigation { get; set; }
     }
 }

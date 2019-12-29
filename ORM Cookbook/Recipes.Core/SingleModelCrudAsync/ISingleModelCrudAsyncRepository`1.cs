@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 namespace Recipes.SingleModelCrudAsync
 {
     public interface ISingleModelCrudAsyncRepository<TEmployeeClassification>
-       where TEmployeeClassification : IEmployeeClassification, new()
+       where TEmployeeClassification : class, IEmployeeClassification, new()
     {
-        Task<TEmployeeClassification> GetByKeyAsync(int employeeClassificationKey);
+        Task<TEmployeeClassification?> GetByKeyAsync(int employeeClassificationKey);
 
-        Task<TEmployeeClassification> FindByNameAsync(string employeeClassificationName);
+        Task<TEmployeeClassification?> FindByNameAsync(string employeeClassificationName);
 
         Task<IList<TEmployeeClassification>> GetAllAsync();
 

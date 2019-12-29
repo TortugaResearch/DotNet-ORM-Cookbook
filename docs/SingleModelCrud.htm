@@ -28,11 +28,9 @@
             </div>
             <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 <ul>
-<li class="tocentry"><a href="index.htm">Home</a>
+<li class="tocentry"><a href="Introduction.htm">Home</a>
 </li>
 
-<li class="tocentry"><a href="Introduction.htm">Introduction</a>
-</li>
 <li class="tocentry current"><a class="current" href="SingleModelCrud.htm">Single Model CRUD</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
@@ -66,7 +64,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="SingleModelCrud.htm">Single Model CRUD</a></li></ul>
+<ul><li><a href="Introduction.htm">Home</a></li> / <li><a href="SingleModelCrud.htm">Single Model CRUD</a></li></ul>
 					
                     </div>
                     <hr />
@@ -77,17 +75,17 @@
 <p>This use case covers the basic CRUD operations on a model that represents a single row in the database.</p>
 <h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public interface ISingleModelCrudRepository&lt;TEmployeeClassification&gt;
-   where TEmployeeClassification : IEmployeeClassification, new()
+   where TEmployeeClassification : class, IEmployeeClassification, new()
 {
     /// &lt;summary&gt;
     /// Gets an EmployeeClassification row by its primary key.
     /// &lt;/summary&gt;
-    TEmployeeClassification GetByKey(int employeeClassificationKey);
+    TEmployeeClassification? GetByKey(int employeeClassificationKey);
 
     /// &lt;summary&gt;
     /// Gets an EmployeeClassification row by its name. Assume the name is unique.
     /// &lt;/summary&gt;
-    TEmployeeClassification FindByName(string employeeClassificationName);
+    TEmployeeClassification? FindByName(string employeeClassificationName);
 
     /// &lt;summary&gt;
     /// Gets all EmployeeClassification rows.
@@ -120,10 +118,297 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>[TODO]</p>
+<p>With ADO.NET, the model does not actually participate in database operations so it needs no adornment.</p>
+<pre><code class="cs">public class EmployeeClassification : IEmployeeClassification
+{
+    public int EmployeeClassificationKey { get; set; }
+
+    /// &lt;exclude /&gt;
+    public string? EmployeeClassificationName { get; set; }
+}
+</code></pre>
+
+<p>The repository methods use raw SQL strings. All other ORMs internally generate the same code. </p>
+<pre><code class="cs">public class SingleModelCrudRepository : ISingleModelCrudRepository&lt;EmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    SqlConnection OpenConnection()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        con.Open();
+        return con;
+    }
+
+    public SingleModelCrudRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+                    OUTPUT Inserted.EmployeeClassificationKey
+                    VALUES(@EmployeeClassificationName )&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+            return (int)cmd.ExecuteScalar();
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+            cmd.ExecuteNonQuery();
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+            cmd.ExecuteNonQuery();
+        }
+    }
+
+    public EmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, employeeClassificationName);
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (!reader.Read())
+                    return null;
+
+                return new EmployeeClassification()
+                {
+                    EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                    EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                };
+            }
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new List&lt;EmployeeClassification&gt;();
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        using (var reader = cmd.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                result.Add(new EmployeeClassification()
+                {
+                    EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                    EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                });
+            }
+            return result;
+        }
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (!reader.Read())
+                    return null;
+
+                return new EmployeeClassification()
+                {
+                    EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                    EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                };
+            }
+        }
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+            cmd.ExecuteNonQuery();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>[TODO]</p>
+<p>Dapper is essentially just ADO.NET with some helper methods to reduce the amount of boilerplate code.</p>
+<pre><code class="cs">public class SingleModelCrudRepository : ISingleModelCrudRepository&lt;EmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    SqlConnection OpenConnection()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        con.Open();
+        return con;
+    }
+
+    public SingleModelCrudRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+                    OUTPUT Inserted.EmployeeClassificationKey
+                    VALUES(@EmployeeClassificationName )&quot;;
+
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int&gt;(sql, classification);
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            con.Execute(sql, classification);
+    }
+
+    public EmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, employeeClassificationName);
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (!reader.Read())
+                    return null;
+
+                return new EmployeeClassification()
+                {
+                    EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                    EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
+                };
+            }
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new List&lt;EmployeeClassification&gt;();
+
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeClassification&gt;(sql).ToList();
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            con.Execute(sql, classification);
+    }
+}
+</code></pre>
+
 <h2 id="tortuga-chain">Tortuga Chain<a class="headerlink" href="#tortuga-chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Strictly speaking, Chain can use the same models as ADO.NET and Dapper so long as the column and property names match. However, it is more convenient to tag the class with what table it refers to.</p>
+<pre><code class="cs">[Table(&quot;HR.EmployeeClassification&quot;)]
+public class EmployeeClassification : IEmployeeClassification
+{
+    public int EmployeeClassificationKey { get; set; }
+
+    /// &lt;exclude /&gt;
+    public string? EmployeeClassificationName { get; set; }
+}
+</code></pre>
+
+<p>Without the Table attribute, the table name will have to be specified in every call in the repository.</p>
 <pre><code class="cs">public class SingleModelCrudRepository : ISingleModelCrudRepository&lt;EmployeeClassification&gt;
 {
     const string TableName = &quot;HR.EmployeeClassification&quot;;
@@ -172,7 +457,33 @@
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>To use Entity Framework Core, one needs to create a DbContext class. For more information see https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx</p>
+<p>To use Entity Framework, one needs to create a DbContext class. Here is a minimal example:</p>
+<pre><code class="csharp">public partial class OrmCookbook : DbContext
+{
+    public OrmCookbook()
+        : base(&quot;name=OrmCookbook&quot;)
+    {
+    }
+
+    public virtual DbSet&lt;EmployeeClassification&gt; EmployeeClassifications { get; set; }
+
+}
+</code></pre>
+
+<p>Depending on how you setup the DbContext, the model requires some further annotations sich as which table it applies to and what the primary key is.</p>
+<pre><code class="csharp">[Table(&quot;HR.EmployeeClassification&quot;)]
+public partial class EmployeeClassification
+{
+    [Key]
+    public int EmployeeClassificationKey { get; set; }
+
+    [StringLength(30)]
+    public string EmployeeClassificationName { get; set; }
+}
+</code></pre>
+
+<p>The context and model can be generated for you from the database using Entity Framework’s “Code First” tooling. (The name “code first” doesn’t literally mean the code has to be written before the database. Rather, it really means that you are not using EDMX style XML files.) For more information see https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx</p>
+<p>Finally, there is the repository itself:</p>
 <pre><code class="cs">public class SingleModelCrudRepository : ISingleModelCrudRepository&lt;EmployeeClassification&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
@@ -260,7 +571,7 @@
 
 <div class="alert alert-info"><span class="alert-title"><i class="fa fa-info-circle"></i> Info</span><p>The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.</p>
 </div><h3 id="entity-framework-core---improved">Entity Framework Core - Improved<a class="headerlink" href="#entity-framework-core---improved" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
-<p>The design of Entity Framework Core requires extraneous database calls in some scenarios. This revised version eliminates the extra calls.</p>
+<p>The design of Entity Framework Core requires extraneous database calls when performing an update or delete operation. This revised version eliminates the extra calls.</p>
 <pre><code class="cs">public class SingleModelCrudRepository2 : SingleModelCrudRepository
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;

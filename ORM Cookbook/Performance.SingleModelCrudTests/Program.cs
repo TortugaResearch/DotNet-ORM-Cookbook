@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace Performance.Tortuga.Chain
+namespace Performance
 {
     class Program
     {

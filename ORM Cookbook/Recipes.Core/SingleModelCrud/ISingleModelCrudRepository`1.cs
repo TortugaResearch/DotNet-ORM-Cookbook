@@ -3,17 +3,17 @@
 namespace Recipes.SingleModelCrud
 {
     public interface ISingleModelCrudRepository<TEmployeeClassification>
-       where TEmployeeClassification : IEmployeeClassification, new()
+       where TEmployeeClassification : class, IEmployeeClassification, new()
     {
         /// <summary>
         /// Gets an EmployeeClassification row by its primary key.
         /// </summary>
-        TEmployeeClassification GetByKey(int employeeClassificationKey);
+        TEmployeeClassification? GetByKey(int employeeClassificationKey);
 
         /// <summary>
         /// Gets an EmployeeClassification row by its name. Assume the name is unique.
         /// </summary>
-        TEmployeeClassification FindByName(string employeeClassificationName);
+        TEmployeeClassification? FindByName(string employeeClassificationName);
 
         /// <summary>
         /// Gets all EmployeeClassification rows.
