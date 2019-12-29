@@ -66,28 +66,12 @@ namespace Recipes.Dapper.SingleModelCrud
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@EmployeeClassificationName", employeeClassificationName);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (!reader.Read())
-                        return null;
-
-                    return new EmployeeClassification()
-                    {
-                        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal("EmployeeClassificationKey")),
-                        EmployeeClassificationName = reader.GetString(reader.GetOrdinal("EmployeeClassificationName"))
-                    };
-                }
-            }
+                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationName = employeeClassificationName });
         }
 
         public IList<EmployeeClassification> GetAll()
         {
             var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;";
-
-            var result = new List<EmployeeClassification>();
 
             using (var con = OpenConnection())
                 return con.Query<EmployeeClassification>(sql).ToList();

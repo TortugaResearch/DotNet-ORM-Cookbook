@@ -6,7 +6,8 @@
   "Theme": "Light",
   "Footer": "The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.",
   "Pages": {
-    "__index": "Introduction.md",
-    "Single Model CRUD": "SingleModelCrud.md"
+    "__index": "index.md",
+    "Single Model CRUD": "SingleModelCrud.md",
+    "Async Operations": "SingleModelCrudAsync.md"
   }
 }

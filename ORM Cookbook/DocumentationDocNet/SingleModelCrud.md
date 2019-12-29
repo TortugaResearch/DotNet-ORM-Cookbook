@@ -50,7 +50,7 @@ public partial class OrmCookbook : DbContext
 }
 ```
 
-Depending on how you setup the DbContext, the model requires some further annotations sich as which table it applies to and what the primary key is.
+Depending on how you setup the DbContext, the model requires some further annotations such as which table it applies to and what the primary key is.
 
 ```csharp
 [Table("HR.EmployeeClassification")]

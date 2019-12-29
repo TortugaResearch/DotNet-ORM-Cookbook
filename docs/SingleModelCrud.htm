@@ -28,7 +28,7 @@
             </div>
             <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 <ul>
-<li class="tocentry"><a href="Introduction.htm">Home</a>
+<li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
 <li class="tocentry current"><a class="current" href="SingleModelCrud.htm">Single Model CRUD</a>
@@ -46,6 +46,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -64,7 +66,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="Introduction.htm">Home</a></li> / <li><a href="SingleModelCrud.htm">Single Model CRUD</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="SingleModelCrud.htm">Single Model CRUD</a></li></ul>
 					
                     </div>
                     <hr />
@@ -344,28 +346,12 @@
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
-        using (var cmd = new SqlCommand(sql, con))
-        {
-            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, employeeClassificationName);
-            using (var reader = cmd.ExecuteReader())
-            {
-                if (!reader.Read())
-                    return null;
-
-                return new EmployeeClassification()
-                {
-                    EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
-                    EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;))
-                };
-            }
-        }
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
     }
 
     public IList&lt;EmployeeClassification&gt; GetAll()
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
-
-        var result = new List&lt;EmployeeClassification&gt;();
 
         using (var con = OpenConnection())
             return con.Query&lt;EmployeeClassification&gt;(sql).ToList();
@@ -470,7 +456,7 @@ public class EmployeeClassification : IEmployeeClassification
 }
 </code></pre>
 
-<p>Depending on how you setup the DbContext, the model requires some further annotations sich as which table it applies to and what the primary key is.</p>
+<p>Depending on how you setup the DbContext, the model requires some further annotations such as which table it applies to and what the primary key is.</p>
 <pre><code class="csharp">[Table(&quot;HR.EmployeeClassification&quot;)]
 public partial class EmployeeClassification
 {

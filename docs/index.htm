@@ -28,10 +28,12 @@
             </div>
             <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 <ul>
-<li class="tocentry"><a href="Introduction.htm">Home</a>
+<li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -51,7 +53,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="Introduction.htm">Home</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li></ul>
 					
                     </div>
                     <hr />
@@ -61,6 +63,13 @@
 <h1 id="the-orm-cookbook">The ORM Cookbook<a class="headerlink" href="#the-orm-cookbook" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
 <p>In October of 2016, InfoQ published a series of articles on the repository pattern in .NET. To illustrate the concepts three ORMs were demonstrated:  Entity Framework, Dapper, and Chain. </p>
 <p>A criticism of the articles was that it didn’t include many people’s favorite ORM. So as a follow up, this GitHub repository was created to expand on that idea and create a shared “cookbook” of design patterns for any or all of the .NET ORMs. Contributions are welcome.</p>
+<p>In December of 2019, the ORM Cookbook project was revived with an emphasis on modern, production grade programming. This means that each example must take into consideration these factors:</p>
+<ul>
+<li>Exception handling</li>
+<li>.NET Core Support</li>
+<li>C# 8 Nullable Reference Types</li>
+<li>Static Code Analysis (e.g. FxCopAnalyzers)</li>
+</ul>
 <p>When contributing recipes, please keep in mind the best practices for the ORM you are working with as novices may be using the code without fully understanding it. </p>
 <h3 id="original-infoq-articles">Original InfoQ Articles<a class="headerlink" href="#original-infoq-articles" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
 <ul>
@@ -73,19 +82,6 @@
 <p>To ensure each ORM is &quot;playing by the rules&quot;, a shared set of tests will be used. The tests are arranged into &quot;use cases&quot; classes. Each ORM can opt in for a given use case by inheriting from the appropriate use case class. This can be done multiple times if the ORM wishes to demonstrate alternate patterns.</p>
 <p>Each use case has a matching markdown file in which the code samples can be added along with any relevant explanations. When possible, use <a href="http://defrancea.github.io/Projbook/" target="_blank">Projbook</a> notation to inline code samples. This will prevent the code samples from getting out of sync with the documentation.</p>
 <p>If you build the “Documentation” project, the cookbook will be compiled as a website. </p>
-<pre><code class="cs">public interface IEmployeeClassification
-{
-    int EmployeeClassificationKey { get; set; }
-    string? EmployeeClassificationName { get; set; }
-}
-</code></pre>
-
-<pre><code class="cs">public Task DeleteByKeyAsync(int employeeClassificationKey)
-{
-    return m_DataSource.DeleteByKey(TableName, employeeClassificationKey).ExecuteAsync();
-}
-</code></pre>
-
 
                     </div>
                 </div>

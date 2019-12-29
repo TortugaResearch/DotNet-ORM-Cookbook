@@ -2,6 +2,7 @@
 using Recipes.SingleModelCrudAsync;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Recipes.Ado.SingleModelCrudAsync
@@ -70,7 +71,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
             }
         }
 
-        public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName)
+        public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
         {
             var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                         FROM HR.EmployeeClassification ec
@@ -80,9 +81,9 @@ namespace Recipes.Ado.SingleModelCrudAsync
             using (var cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", employeeClassificationName);
-                using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
+                using (var reader = await cmd.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    if (!(await reader.ReadAsync().ConfigureAwait(false)))
+                    if (!(await reader.ReadAsync(cancellationToken).ConfigureAwait(false)))
                         return null;
 
                     return new EmployeeClassification()
@@ -94,7 +95,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
             }
         }
 
-        public async Task<IList<EmployeeClassification>> GetAllAsync()
+        public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;";
 
@@ -102,9 +103,9 @@ namespace Recipes.Ado.SingleModelCrudAsync
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             using (var cmd = new SqlCommand(sql, con))
-            using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
+            using (var reader = await cmd.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
             {
-                while (await reader.ReadAsync().ConfigureAwait(false))
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
                     result.Add(new EmployeeClassification()
                     {
@@ -116,7 +117,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
             }
         }
 
-        public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey)
+        public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
         {
             var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                         FROM HR.EmployeeClassification ec
@@ -126,9 +127,9 @@ namespace Recipes.Ado.SingleModelCrudAsync
             using (var cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
-                using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
+                using (var reader = await cmd.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    if (!(await reader.ReadAsync().ConfigureAwait(false)))
+                    if (!(await reader.ReadAsync(cancellationToken).ConfigureAwait(false)))
                         return null;
 
                     return new EmployeeClassification()

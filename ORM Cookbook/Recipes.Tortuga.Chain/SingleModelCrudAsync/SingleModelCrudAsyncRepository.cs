@@ -1,6 +1,7 @@
 ﻿using Recipes.SingleModelCrudAsync;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Tortuga.Chain;
 
@@ -31,19 +32,19 @@ namespace Recipes.Chain.SingleModelCrudAsync
             return m_DataSource.DeleteByKey(TableName, employeeClassificationKey).ExecuteAsync();
         }
 
-        public Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName)
+        public Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
         {
-            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync();
+            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
         }
 
-        public async Task<IList<EmployeeClassification>> GetAllAsync()
+        public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await m_DataSource.From(TableName).ToCollection<EmployeeClassification>().ExecuteAsync().ConfigureAwait(false);
+            return await m_DataSource.From(TableName).ToCollection<EmployeeClassification>().ExecuteAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey)
+        public Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync();
+            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
         }
 
         public Task UpdateAsync(EmployeeClassification classification)

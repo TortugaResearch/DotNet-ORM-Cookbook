@@ -4,6 +4,7 @@ using Recipes.SingleModelCrudAsync;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
@@ -53,27 +54,27 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
             }
         }
 
-        public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName)
+        public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync().ConfigureAwait(false);
+                return await context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 
-        public async Task<IList<EmployeeClassification>> GetAllAsync()
+        public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.ToListAsync().ConfigureAwait(false);
+                return await context.EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 
-        public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey)
+        public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.FindAsync(employeeClassificationKey);
+                return await context.EmployeeClassification.FindAsync(new object[] { employeeClassificationKey }, cancellationToken);
             }
         }
 
