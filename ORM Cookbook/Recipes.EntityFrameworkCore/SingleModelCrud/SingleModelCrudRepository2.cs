@@ -23,6 +23,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
 
         public override void Delete(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 context.Database.ExecuteSqlInterpolated($"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = {classification.EmployeeClassificationKey}");
@@ -31,6 +34,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
 
         public override void Update(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 //Get a fresh copy of the row from the database

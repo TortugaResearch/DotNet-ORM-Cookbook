@@ -17,6 +17,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
 
         public int Create(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 context.EmployeeClassification.Add(classification);
@@ -41,6 +44,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
 
         public virtual void Delete(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 //Find the row you wish to delete
@@ -79,6 +85,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
 
         public virtual void Update(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 //Get a fresh copy of the row from the database

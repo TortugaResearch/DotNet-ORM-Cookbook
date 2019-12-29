@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Tortuga.Chain;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Recipes.Chain
 {
@@ -20,7 +20,7 @@ namespace Recipes.Chain
         }
 
         [AssemblyInitialize]
-        [SuppressMessage("Style", "CA1801")]
+        [SuppressMessage("Usage", "CA1801")]
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();

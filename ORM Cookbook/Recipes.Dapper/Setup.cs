@@ -20,7 +20,7 @@ namespace Recipes.Dapper
         }
 
         [AssemblyInitialize]
-        [SuppressMessage("Style", "CA1801")]
+        [SuppressMessage("Usage", "CA1801")]
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();

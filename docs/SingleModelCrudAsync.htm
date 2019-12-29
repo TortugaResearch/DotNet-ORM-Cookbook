@@ -47,6 +47,8 @@
 
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
 
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
 
 
 </ul>
@@ -394,11 +396,17 @@
 
     public Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
     {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
         return m_DataSource.Insert(classification).ToInt32().ExecuteAsync();
     }
 
     public Task DeleteAsync(EmployeeClassification classification)
     {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
         return m_DataSource.Delete(classification).ExecuteAsync();
     }
 
@@ -424,6 +432,9 @@
 
     public Task UpdateAsync(EmployeeClassification classification)
     {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
         return m_DataSource.Update(classification).ExecuteAsync();
     }
 }
@@ -463,6 +474,9 @@
 
     public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
     {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
         using (var context = CreateDbContext())
         {
             context.EmployeeClassification.Add(classification);
@@ -473,6 +487,9 @@
 
     public async Task DeleteAsync(EmployeeClassification classification)
     {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
         using (var context = CreateDbContext())
         {
             var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
@@ -523,6 +540,9 @@
 
     public async Task UpdateAsync(EmployeeClassification classification)
     {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
         using (var context = CreateDbContext())
         {
             var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
@@ -605,6 +625,95 @@
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             await con.UpdateAsync(classification).ConfigureAwait(false);
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>With NHibernate, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
+<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassification&gt;
+{
+    readonly ISessionFactory m_SessionFactory;
+
+    public SingleModelCrudAsyncRepository(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            await session.SaveAsync(classification).ConfigureAwait(false);
+            await session.FlushAsync().ConfigureAwait(false);
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            await session.DeleteAsync(classification).ConfigureAwait(false);
+            await session.FlushAsync().ConfigureAwait(false);
+        }
+    }
+
+    public async Task DeleteByKeyAsync(int employeeClassificationKey)
+    {
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            await session.DeleteAsync(temp).ConfigureAwait(false);
+            await session.FlushAsync().ConfigureAwait(false);
+        }
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return (await session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
+                .ListAsync&lt;EmployeeClassification&gt;(cancellationToken)
+                .ConfigureAwait(false))
+                .SingleOrDefault();
+        }
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return await session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .ListAsync&lt;EmployeeClassification&gt;(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+            return await session.GetAsync&lt;EmployeeClassification&gt;(employeeClassificationKey, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            await session.UpdateAsync(classification).ConfigureAwait(false);
+            await session.FlushAsync().ConfigureAwait(false);
+        }
     }
 }
 </code></pre>

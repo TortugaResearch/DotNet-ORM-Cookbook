@@ -63,3 +63,10 @@ RepoDb does not support cancellation tokens at this time.
 
 @snippet cs [..\Recipes.RepoDb\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
+
+## NHibernate
+
+With NHibernate, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+@snippet cs [../Recipes.NHibernate/SingleModelCrudAsync/SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
+

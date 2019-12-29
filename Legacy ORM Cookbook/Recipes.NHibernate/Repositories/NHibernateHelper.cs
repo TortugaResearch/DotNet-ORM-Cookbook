@@ -1,7 +1,5 @@
 using NHibernate;
 using NHibernate.Cfg;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Recipes.NHibernate.Repositories
 {

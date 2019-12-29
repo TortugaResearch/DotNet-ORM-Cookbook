@@ -92,3 +92,33 @@ The repository resemebles Dapper, but with far less SQL.
 
 @snippet cs [..\Recipes.RepoDb\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
 
+## NHibernate
+
+NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s Hibernate, it heavily relies on XML configuration files and interfaces.
+
+The models are interesting in that every property needs to be virtual. Without this, you’ll get a runtime error.
+
+@snippet cs [../Recipes.NHibernate/Models/EmployeeClassification.cs] EmployeeClassification
+
+Instead of attributes, a mapping file is used to associate the model with a database table. There is one file per table and each is set to `Build Action: Embedded resource`. 
+
+@snippet xml [..\Recipes.NHibernate\Mappings\EmployeeClassification.hbm.xml] .
+
+A `SessionFactory` is needed to stitch the various configuration files together. 
+
+@snippet cs [..\Recipes.NHibernate\Setup.cs] ConfigureSessionFactory
+
+Finally there is the repository itself.
+
+@snippet cs [..\Recipes.NHibernate\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
+
+The rules on when you need to call `Flush` are complex. In some cases it will be called for you implicitly, but as a general rule you need to invoke it before leaving a block that includes modifications.
+
+
+
+
+
+
+
+
+

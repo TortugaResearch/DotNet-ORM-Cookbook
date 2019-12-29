@@ -134,5 +134,26 @@ namespace Recipes.SingleModelCrud
             Assert.IsNotNull(updated);
             Assert.AreEqual(echo.EmployeeClassificationName, updated!.EmployeeClassificationName);
         }
+
+        [TestMethod]
+        public void Create_ParameterCheck()
+        {
+            var repository = GetRepository();
+            Assert.ThrowsException<ArgumentNullException>(() => repository.Create(null!));
+        }
+
+        [TestMethod]
+        public void Update_ParameterCheck()
+        {
+            var repository = GetRepository();
+            Assert.ThrowsException<ArgumentNullException>(() => repository.Update(null!));
+        }
+
+        [TestMethod]
+        public void Delete_ParameterCheck()
+        {
+            var repository = GetRepository();
+            Assert.ThrowsException<ArgumentNullException>(() => repository.Delete(null!));
+        }
     }
 }

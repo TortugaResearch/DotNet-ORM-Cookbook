@@ -20,6 +20,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
 
         public async Task<int> CreateAsync(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 context.EmployeeClassification.Add(classification);
@@ -30,6 +33,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
 
         public async Task DeleteAsync(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
@@ -80,6 +86,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
 
         public async Task UpdateAsync(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             using (var context = CreateDbContext())
             {
                 var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);

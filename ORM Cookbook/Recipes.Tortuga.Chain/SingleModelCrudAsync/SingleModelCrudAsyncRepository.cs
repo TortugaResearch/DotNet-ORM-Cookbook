@@ -19,11 +19,17 @@ namespace Recipes.Chain.SingleModelCrudAsync
 
         public Task<int> CreateAsync(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             return m_DataSource.Insert(classification).ToInt32().ExecuteAsync();
         }
 
         public Task DeleteAsync(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             return m_DataSource.Delete(classification).ExecuteAsync();
         }
 
@@ -49,6 +55,9 @@ namespace Recipes.Chain.SingleModelCrudAsync
 
         public Task UpdateAsync(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             return m_DataSource.Update(classification).ExecuteAsync();
         }
     }

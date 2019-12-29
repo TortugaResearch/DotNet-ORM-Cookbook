@@ -137,5 +137,26 @@ namespace Recipes.SingleModelCrudAsync
             Assert.IsNotNull(updated);
             Assert.AreEqual(echo.EmployeeClassificationName, updated!.EmployeeClassificationName);
         }
+
+        [TestMethod]
+        public async Task CreateAsync_ParameterCheck()
+        {
+            var repository = GetRepository();
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => repository.CreateAsync(null!)).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpdateAsync_ParameterCheck()
+        {
+            var repository = GetRepository();
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => repository.UpdateAsync(null!)).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task DeleteAsync_ParameterCheck()
+        {
+            var repository = GetRepository();
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => repository.DeleteAsync(null!)).ConfigureAwait(false);
+        }
     }
 }

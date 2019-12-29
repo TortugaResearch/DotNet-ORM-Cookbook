@@ -1,4 +1,5 @@
 ﻿using Recipes.SingleModelCrud;
+using System;
 using System.Collections.Generic;
 using Tortuga.Chain;
 
@@ -16,6 +17,9 @@ namespace Recipes.Chain.SingleModelCrud
 
         public int Create(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             return m_DataSource.Insert(classification).ToInt32().Execute();
         }
 
@@ -26,6 +30,9 @@ namespace Recipes.Chain.SingleModelCrud
 
         public void Delete(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             m_DataSource.Delete(classification).Execute();
         }
 
@@ -46,6 +53,9 @@ namespace Recipes.Chain.SingleModelCrud
 
         public void Update(EmployeeClassification classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             m_DataSource.Update(classification).Execute();
         }
     }

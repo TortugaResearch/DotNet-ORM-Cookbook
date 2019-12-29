@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Ado", "Recipes.Ado\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Dapper", "Recipes.Dapper\Recipes.Dapper.csproj", "{3449965D-C692-452A-94EC-15A61BA822FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.RepoDb", "Recipes.RepoDb\Recipes.RepoDb.csproj", "{FD78E64B-84BE-4955-8307-5E739947E94F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.RepoDb", "Recipes.RepoDb\Recipes.RepoDb.csproj", "{FD78E64B-84BE-4955-8307-5E739947E94F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.NHibernate", "Recipes.NHibernate\Recipes.NHibernate.csproj", "{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{FD78E64B-84BE-4955-8307-5E739947E94F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD78E64B-84BE-4955-8307-5E739947E94F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD78E64B-84BE-4955-8307-5E739947E94F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
