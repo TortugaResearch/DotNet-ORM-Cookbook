@@ -92,9 +92,12 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
             {
                 //Get a fresh copy of the row from the database
                 var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                //Copy the changed fields
-                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-                context.SaveChanges();
+                if (temp != null)
+                {
+                    //Copy the changed fields
+                    temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                    context.SaveChanges();
+                }
             }
         }
     }

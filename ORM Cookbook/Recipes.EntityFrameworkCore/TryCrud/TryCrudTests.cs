@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.EntityFrameworkCore.Entities;
 using Recipes.TryCrud;
 
 namespace Recipes.EntityFrameworkCore.TryCrud
@@ -8,7 +9,7 @@ namespace Recipes.EntityFrameworkCore.TryCrud
     {
         protected override ITryCrudRepository<EmployeeClassification> GetRepository()
         {
-            throw new AssertInconclusiveException("TODO");
+            return new TryCrudRepository(Setup.DBContextFactory);
         }
     }
 }

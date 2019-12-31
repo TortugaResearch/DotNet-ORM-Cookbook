@@ -92,8 +92,11 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
             using (var context = CreateDbContext())
             {
                 var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
-                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-                await context.SaveChangesAsync().ConfigureAwait(false);
+                if (temp != null)
+                {
+                    temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                }
             }
         }
     }
