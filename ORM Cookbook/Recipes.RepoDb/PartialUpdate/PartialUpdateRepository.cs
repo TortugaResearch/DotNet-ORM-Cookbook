@@ -15,17 +15,17 @@ namespace Recipes.RepoDb.PartialUpdate
             throw new AssertInconclusiveException("TODO");
         }
 
-        public void Update(EmployeeClassificationNameUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
         {
             throw new AssertInconclusiveException("TODO");
         }
 
-        public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         {
             throw new AssertInconclusiveException("TODO");
         }
 
-        public void UpdateFlags(int employeeClassificationKey, bool isExempt, bool isEmployee)
+        public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
         {
             throw new AssertInconclusiveException("TODO");
         }

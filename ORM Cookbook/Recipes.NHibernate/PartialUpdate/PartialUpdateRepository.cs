@@ -33,7 +33,7 @@ namespace Recipes.NHibernate.PartialUpdate
                 return session.Get<EmployeeClassification>(employeeClassificationKey);
         }
 
-        public void Update(EmployeeClassificationNameUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
         {
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
@@ -50,7 +50,7 @@ namespace Recipes.NHibernate.PartialUpdate
             }
         }
 
-        public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         {
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
@@ -68,7 +68,7 @@ namespace Recipes.NHibernate.PartialUpdate
             }
         }
 
-        public void UpdateFlags(int employeeClassificationKey, bool isExempt, bool isEmployee)
+        public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
         {
             using (var session = m_SessionFactory.OpenSession())
             {

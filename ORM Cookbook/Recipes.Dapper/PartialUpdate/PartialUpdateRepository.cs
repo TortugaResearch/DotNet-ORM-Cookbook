@@ -37,7 +37,7 @@ namespace Recipes.Dapper.PartialUpdate
                 return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationKey = employeeClassificationKey });
         }
 
-        public void Update(EmployeeClassificationNameUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
         {
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
@@ -50,7 +50,7 @@ namespace Recipes.Dapper.PartialUpdate
                 con.Execute(sql, updateMessage);
         }
 
-        public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         {
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
@@ -63,7 +63,7 @@ namespace Recipes.Dapper.PartialUpdate
                 con.Execute(sql, updateMessage);
         }
 
-        public void UpdateFlags(int employeeClassificationKey, bool isExempt, bool isEmployee)
+        public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
         {
             var sql = @"UPDATE HR.EmployeeClassification
                         SET IsExempt = @IsExempt, IsEmployee = @IsEmployee

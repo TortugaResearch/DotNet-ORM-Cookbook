@@ -46,8 +46,8 @@ namespace Recipes.PartialUpdate
                 EmployeeClassificationName = "Updated " + DateTime.Now.Ticks
             };
 
-            repositoryA.Update(updateMessage1);
-            repositoryA.Update(updateMessage2);
+            repositoryA.UpdateWithObject(updateMessage1);
+            repositoryA.UpdateWithObject(updateMessage2);
 
             {
                 //get the final version using repository A
@@ -95,8 +95,8 @@ namespace Recipes.PartialUpdate
             };
 
             //Update using both repositories
-            repositoryA.Update(updateMessage1);
-            repositoryB.Update(updateMessage2);
+            repositoryA.UpdateWithObject(updateMessage1);
+            repositoryB.UpdateWithObject(updateMessage2);
 
             {
                 //get the final version using repository A
@@ -144,7 +144,7 @@ namespace Recipes.PartialUpdate
             var updatedIsExempt = false;
             var updatedIsEmployee = true;
 
-            repositoryA.UpdateFlags(newKey, updatedIsExempt, updatedIsEmployee);
+            repositoryA.UpdateWithSeparateParameters(newKey, updatedIsExempt, updatedIsEmployee);
             {
                 //get the final version using repository A
                 var versionA2 = repositoryA.GetByKey(newKey);
@@ -168,7 +168,7 @@ namespace Recipes.PartialUpdate
         {
             var repository = GetRepository();
             EmployeeClassificationFlagsUpdater value = null!;
-            Assert.ThrowsException<ArgumentNullException>(() => repository.Update(value));
+            Assert.ThrowsException<ArgumentNullException>(() => repository.UpdateWithObject(value));
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace Recipes.PartialUpdate
         {
             var repository = GetRepository();
             EmployeeClassificationNameUpdater value = null!;
-            Assert.ThrowsException<ArgumentNullException>(() => repository.Update(value));
+            Assert.ThrowsException<ArgumentNullException>(() => repository.UpdateWithObject(value));
         }
     }
 }

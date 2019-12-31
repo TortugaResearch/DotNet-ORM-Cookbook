@@ -27,7 +27,7 @@ namespace Recipes.Chain.PartialUpdate
             return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>().NeverNull().Execute();
         }
 
-        public void Update(EmployeeClassificationNameUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
         {
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
@@ -35,7 +35,7 @@ namespace Recipes.Chain.PartialUpdate
             m_DataSource.Update(TableName, updateMessage).Execute();
         }
 
-        public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+        public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         {
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
@@ -43,7 +43,7 @@ namespace Recipes.Chain.PartialUpdate
             m_DataSource.Update(TableName, updateMessage).Execute();
         }
 
-        public void UpdateFlags(int employeeClassificationKey, bool isExempt, bool isEmployee)
+        public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
         {
             m_DataSource.Update(TableName, new { employeeClassificationKey, isExempt, isEmployee }).Execute();
         }

@@ -13,10 +13,10 @@
         /// </summary>
         int Create(TEmployeeClassification classification);
 
-        void Update(EmployeeClassificationNameUpdater updateMessage);
+        void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage);
 
-        void Update(EmployeeClassificationFlagsUpdater updateMessage);
+        void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage);
 
-        void UpdateFlags(int employeeClassificationKey, bool isExempt, bool isEmployee);
+        void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee);
     }
 }

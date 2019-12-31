@@ -84,29 +84,16 @@
 <h1 id="partial-updates">Partial Updates<a class="headerlink" href="#partial-updates" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
 <p>These use cases demonstrate how to perform partial updates on a row. </p>
 <h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public interface IPartialUpdateRepository&lt;TEmployeeClassification&gt;
-   where TEmployeeClassification : class, IEmployeeClassification, new()
-{
-    /// &lt;summary&gt;
-    /// Gets an EmployeeClassification row by its primary key.
-    /// &lt;/summary&gt;
-    TEmployeeClassification? GetByKey(int employeeClassificationKey);
+<pre><code class="cs">void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage);
 
-    /// &lt;summary&gt;
-    /// Create a new EmployeeClassification row, returning the new primary key.
-    /// &lt;/summary&gt;
-    int Create(TEmployeeClassification classification);
+void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage);
+</code></pre>
 
-    void Update(EmployeeClassificationNameUpdater updateMessage);
-
-    void Update(EmployeeClassificationFlagsUpdater updateMessage);
-
-    void UpdateFlags(int employeeClassificationKey, bool isExempt, bool isEmployee);
-}
+<pre><code class="cs">void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee);
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public void Update(EmployeeClassificationNameUpdater updateMessage)
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -124,7 +111,7 @@
     }
 }
 
-public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -144,8 +131,25 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
 }
 </code></pre>
 
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    var sql = @&quot;UPDATE HR.EmployeeClassification
+                SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+    using (var con = OpenConnection())
+    using (var cmd = new SqlCommand(sql, con))
+    {
+        cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+        cmd.Parameters.AddWithValue(&quot;@IsExempt&quot;, isExempt);
+        cmd.Parameters.AddWithValue(&quot;@IsEmployee&quot;, isEmployee);
+        cmd.ExecuteNonQuery();
+    }
+}
+</code></pre>
+
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public void Update(EmployeeClassificationNameUpdater updateMessage)
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -158,7 +162,7 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
         con.Execute(sql, updateMessage);
 }
 
-public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -172,8 +176,19 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
 }
 </code></pre>
 
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    var sql = @&quot;UPDATE HR.EmployeeClassification
+                SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+    using (var con = OpenConnection())
+        con.Execute(sql, new { employeeClassificationKey, isExempt, isEmployee });
+}
+</code></pre>
+
 <h2 id="tortuga-chain">Tortuga Chain<a class="headerlink" href="#tortuga-chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public void Update(EmployeeClassificationNameUpdater updateMessage)
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -181,7 +196,7 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
     m_DataSource.Update(TableName, updateMessage).Execute();
 }
 
-public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -190,9 +205,15 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
 }
 </code></pre>
 
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    m_DataSource.Update(TableName, new { employeeClassificationKey, isExempt, isEmployee }).Execute();
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>To perform a partial update, first fetch a record and then modify it.</p>
-<pre><code class="cs">public void Update(EmployeeClassificationNameUpdater updateMessage)
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -210,7 +231,7 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
     }
 }
 
-public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -230,14 +251,37 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
 }
 </code></pre>
 
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    using (var context = CreateDbContext())
+    {
+        //Get a fresh copy of the row from the database
+        var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+        if (temp != null)
+        {
+            //Copy the changed fields
+            temp.IsExempt = isExempt;
+            temp.IsEmployee = isEmployee;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
-<pre><code class="cs">public void Update(EmployeeClassificationNameUpdater updateMessage)
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
     throw new AssertInconclusiveException(&quot;TODO&quot;);
 }
 
-public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
+{
+    throw new AssertInconclusiveException(&quot;TODO&quot;);
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
 {
     throw new AssertInconclusiveException(&quot;TODO&quot;);
 }
@@ -245,7 +289,7 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>To perform a partial update, first fetch a record and then modify it.</p>
-<pre><code class="cs">public void Update(EmployeeClassificationNameUpdater updateMessage)
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -262,7 +306,7 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
     }
 }
 
-public void Update(EmployeeClassificationFlagsUpdater updateMessage)
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 {
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
@@ -274,6 +318,22 @@ public void Update(EmployeeClassificationFlagsUpdater updateMessage)
         {
             temp.IsExempt = updateMessage.IsExempt;
             temp.IsEmployee = updateMessage.IsEmployee;
+            session.Update(temp);
+            session.Flush();
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    using (var session = m_SessionFactory.OpenSession())
+    {
+        var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+        if (temp != null)
+        {
+            temp.IsExempt = isExempt;
+            temp.IsEmployee = isEmployee;
             session.Update(temp);
             session.Flush();
         }

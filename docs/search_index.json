@@ -21,7 +21,7 @@
     {
       "location": "PartialUpdate.htm",
       "breadcrumbs": "Home / Partial Updates",
-      "keywords": "1 a Ado ADO and cases Chain Core cs Dapper demonstrate Entity EntityFrameworkCore fetch first Framework how IPartialUpdateRepository it modify NET NHibernate on partial Partial PartialUpdate PartialUpdateRepository perform Prototype Recipes record RepoDb Repository row snippet TEmployeeClassification then These to To TODO Tortuga update Update updates Updates use",
+      "keywords": "1 a Ado ADO and cases Chain Core cs Dapper demonstrate Entity EntityFrameworkCore fetch first Framework how IPartialUpdateRepository it modify NET NHibernate on partial Partial PartialUpdate PartialUpdateRepository perform Prototype Recipes record RepoDb Repository row snippet then These to To TODO Tortuga update updates Updates UpdateWithObject UpdateWithSeparateParameters use",
       "title": "Partial Updates"
     }
   ]
