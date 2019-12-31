@@ -12,7 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TryCrud\TryCrudTests`11.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="..\DocumentationDocNet\SingleModelCrud.md" Link="SingleModelCrud\SingleModelCrud.md" />
+    <None Include="..\DocumentationDocNet\TryCrud.md" Link="TryCrud\TryCrud.md" />
   </ItemGroup>
 
   <ItemGroup>

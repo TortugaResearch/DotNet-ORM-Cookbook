@@ -52,8 +52,8 @@
   <ItemGroup>
     <None Include="AsynchronousRepositories.md" />
     <None Include="index.md" />
-    <None Include="ModelWithSingleChild.md" />
     <None Include="readme.md" />
+    <None Include="TryCrud.md" />
     <None Include="SingleModelCrudAsync.md" />
     <None Include="SingleModelCrud.md" />
     <None Include="docnet.json" />

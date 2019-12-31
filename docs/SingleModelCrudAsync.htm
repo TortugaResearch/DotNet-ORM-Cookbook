@@ -52,6 +52,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -546,8 +548,11 @@
         using (var context = CreateDbContext())
         {
             var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
-            temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-            await context.SaveChangesAsync().ConfigureAwait(false);
+            if (temp != null)
+            {
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
         }
     }
 }

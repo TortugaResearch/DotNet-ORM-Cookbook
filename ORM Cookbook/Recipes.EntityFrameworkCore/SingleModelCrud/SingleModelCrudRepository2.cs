@@ -39,10 +39,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
 
             using (var context = CreateDbContext())
             {
-                //Get a fresh copy of the row from the database
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                //Copy the changed fields
-                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.Entry(classification).State = EntityState.Modified;
                 context.SaveChanges();
             }
         }
