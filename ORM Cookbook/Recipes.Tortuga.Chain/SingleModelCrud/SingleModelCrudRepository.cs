@@ -38,7 +38,7 @@ namespace Recipes.Chain.SingleModelCrud
 
         public EmployeeClassification FindByName(string employeeClassificationName)
         {
-            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>().Execute()!;
+            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>().NeverNull().Execute();
         }
 
         public IList<EmployeeClassification> GetAll()
@@ -48,7 +48,7 @@ namespace Recipes.Chain.SingleModelCrud
 
         public EmployeeClassification GetByKey(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>().Execute()!;
+            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>().NeverNull().Execute();
         }
 
         public void Update(EmployeeClassification classification)

@@ -435,7 +435,7 @@ public class EmployeeClassification : IEmployeeClassification
 
     public EmployeeClassification FindByName(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().Execute()!;
+        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
     }
 
     public IList&lt;EmployeeClassification&gt; GetAll()
@@ -445,7 +445,7 @@ public class EmployeeClassification : IEmployeeClassification
 
     public EmployeeClassification GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().Execute()!;
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
     }
 
     public void Update(EmployeeClassification classification)

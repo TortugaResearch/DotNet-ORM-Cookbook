@@ -448,7 +448,7 @@
 <p>TODO</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
-    //const string TableName = &quot;HR.EmployeeClassification&quot;;
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public TryCrudRepository(SqlServerDataSource dataSource)
@@ -458,57 +458,75 @@
 
     public int Create(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return m_DataSource.Insert(classification).ToInt32().Execute();
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+        return true;
     }
 
     public void DeleteOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Delete(classification).Execute();
     }
 
     public bool DeleteWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Delete(classification).Execute();
+        return true;
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().Execute()!;
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().Execute()!;
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).Execute();
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Update(classification).Execute();
     }
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Update(classification).Execute();
+        return true;
     }
 }
 </code></pre>
