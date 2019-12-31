@@ -9,6 +9,7 @@
   "Pages": {
     "__index": "index.md",
     "Single Model CRUD": "SingleModelCrud.md",
-    "Async Operations": "SingleModelCrudAsync.md"
+    "Async Operations": "SingleModelCrudAsync.md",
+    "TryGet/Update/Delete Operations": "TryCrud.md"
   }
 }

@@ -1,6 +1,6 @@
 ﻿# Single Model CRUD
 
-This use case covers the basic CRUD operations on a model that represents a single row in the database.
+This use case covers the basic Create-Read-Update-Delete operations on a model that represents a single row in the database.
 
 ## Prototype Repository
 
