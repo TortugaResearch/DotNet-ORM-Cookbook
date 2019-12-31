@@ -40,7 +40,7 @@ namespace Recipes.Ado.TryCrud
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
                 var rowCount = cmd.ExecuteNonQuery();
-                if (rowCount == 0)
+                if (rowCount != 1)
                     throw new DataException($"No row was found for key {employeeClassificationKey}.");
             }
         }
@@ -53,8 +53,7 @@ namespace Recipes.Ado.TryCrud
             using (var cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
-                var rowCount = cmd.ExecuteNonQuery();
-                return rowCount > 0;
+                return 1 == cmd.ExecuteNonQuery();
             }
         }
 
@@ -70,7 +69,7 @@ namespace Recipes.Ado.TryCrud
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
                 var rowCount = cmd.ExecuteNonQuery();
-                if (rowCount == 0)
+                if (rowCount != 1)
                     throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
             }
         }
@@ -86,8 +85,7 @@ namespace Recipes.Ado.TryCrud
             using (var cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
-                var rowCount = cmd.ExecuteNonQuery();
-                return rowCount > 0;
+                return 1 == cmd.ExecuteNonQuery();
             }
         }
 
@@ -202,7 +200,7 @@ namespace Recipes.Ado.TryCrud
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
                 var rowCount = cmd.ExecuteNonQuery();
-                if (rowCount == 0)
+                if (rowCount != 1)
                     throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
             }
         }
@@ -221,8 +219,7 @@ namespace Recipes.Ado.TryCrud
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
-                var rowCount = cmd.ExecuteNonQuery();
-                return rowCount > 0;
+                return 1 == cmd.ExecuteNonQuery();
             }
         }
 

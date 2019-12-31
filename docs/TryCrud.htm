@@ -184,7 +184,7 @@
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
             var rowCount = cmd.ExecuteNonQuery();
-            if (rowCount == 0)
+            if (rowCount != 1)
                 throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
         }
     }
@@ -197,8 +197,7 @@
         using (var cmd = new SqlCommand(sql, con))
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
-            var rowCount = cmd.ExecuteNonQuery();
-            return rowCount &gt; 0;
+            return 1 == cmd.ExecuteNonQuery();
         }
     }
 
@@ -214,7 +213,7 @@
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
             var rowCount = cmd.ExecuteNonQuery();
-            if (rowCount == 0)
+            if (rowCount != 1)
                 throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
         }
     }
@@ -230,8 +229,7 @@
         using (var cmd = new SqlCommand(sql, con))
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
-            var rowCount = cmd.ExecuteNonQuery();
-            return rowCount &gt; 0;
+            return 1 == cmd.ExecuteNonQuery();
         }
     }
 
@@ -346,7 +344,7 @@
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
             var rowCount = cmd.ExecuteNonQuery();
-            if (rowCount == 0)
+            if (rowCount != 1)
                 throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
         }
     }
@@ -365,8 +363,7 @@
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
-            var rowCount = cmd.ExecuteNonQuery();
-            return rowCount &gt; 0;
+            return 1 == cmd.ExecuteNonQuery();
         }
     }
 
@@ -387,59 +384,151 @@
 <p>TODO</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
+    readonly string m_ConnectionString;
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    SqlConnection OpenConnection()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        con.Open();
+        return con;
+    }
+
+    public TryCrudRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
     public int Create(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+                    OUTPUT Inserted.EmployeeClassificationKey
+                    VALUES(@EmployeeClassificationName )&quot;;
+
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int&gt;(sql, classification);
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        {
+            var rowCount = con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        }
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            return 1 == con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
     }
 
     public void DeleteOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        {
+            var rowCount = con.Execute(sql, classification);
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
     }
 
     public bool DeleteWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            return 1 == con.Execute(sql, classification);
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        {
+            var rowCount = con.Execute(sql, classification);
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
     }
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            return 1 == con.Execute(sql, classification);
     }
 }
 </code></pre>
@@ -466,13 +555,14 @@
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+        var count = m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+        if (count == 0)
+            throw new MissingDataException();
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
-        return true;
+        return 1 == m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
     }
 
     public void DeleteOrException(EmployeeClassification classification)
@@ -480,7 +570,9 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        m_DataSource.Delete(classification).Execute();
+        var count = m_DataSource.Delete(classification).Execute();
+        if (count == 0)
+            throw new MissingDataException();
     }
 
     public bool DeleteWithStatus(EmployeeClassification classification)
@@ -488,18 +580,17 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        m_DataSource.Delete(classification).Execute();
-        return true;
+        return 1 == m_DataSource.Delete(classification).Execute();
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().Execute()!;
+        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().Execute()!;
+        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).Execute();
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
@@ -525,8 +616,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        m_DataSource.Update(classification).Execute();
-        return true;
+        return 1 == m_DataSource.Update(classification, UpdateOptions.IgnoreRowsAffected).Execute();
     }
 }
 </code></pre>
