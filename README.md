@@ -13,7 +13,6 @@ In December of 2019, the ORM Cookbook project was revived with an emphasis on mo
 * C# 8 Nullable Reference Types
 * Static Code Analysis (e.g. FxCopAnalyzers)
 
-
 ### Original InfoQ Articles
 
 * [Implementation Strategies for the Repository Pattern with Entity Framework, Dapper, and Chain](https://www.infoq.com/articles/repository-implementation-strategies)
