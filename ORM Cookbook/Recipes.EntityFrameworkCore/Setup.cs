@@ -33,6 +33,12 @@ namespace Recipes.EntityFrameworkCore
 
             var options2 = new DbContextOptionsBuilder<OrmCookbookContext>().UseLazyLoadingProxies().UseSqlServer(con.Value).Options;
             LazyLoadingDBContextFactory = () => new OrmCookbookContext(options2);
+
+            try
+            {
+                (new Setup()).Warmup();
+            }
+            catch { }
         }
 
         [TestMethod]

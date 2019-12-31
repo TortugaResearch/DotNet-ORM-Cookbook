@@ -26,6 +26,12 @@ namespace Recipes.Chain
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
             var con = configuration.GetSection("ConnectionStrings").GetChildren().Single();
             PrimaryDataSource = new SqlServerDataSource(con.Key, con.Value);
+
+            try
+            {
+                (new Setup()).Warmup();
+            }
+            catch { }
         }
 
         [TestMethod]

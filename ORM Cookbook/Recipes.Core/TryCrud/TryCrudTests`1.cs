@@ -8,7 +8,7 @@ namespace Recipes.TryCrud
     /// This use case performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
-    public abstract class TryCrudTests<TModel>
+    public abstract class TryCrudTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {
         [TestMethod]
@@ -55,21 +55,6 @@ namespace Recipes.TryCrud
             echo.EmployeeClassificationName = "Updated " + DateTime.Now.Ticks;
 
             repository.UpdateOrException(echo);
-        }
-
-        [SuppressMessage("Design", "CA1031")]
-        void AssertThrowsException(Action action)
-        {
-            try
-            {
-                action();
-            }
-            catch (Exception ex) when (!(ex is AssertInconclusiveException) && !(ex is AssertFailedException))
-            {
-                return; //bypass the assert-fail on the line below
-            }
-
-            Assert.Fail("An exception was expected but not thrown.");
         }
 
         [TestMethod]

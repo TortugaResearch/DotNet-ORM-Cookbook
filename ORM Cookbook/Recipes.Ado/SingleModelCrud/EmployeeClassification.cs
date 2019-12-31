@@ -1,9 +1,6 @@
-﻿using Recipes.SingleModelCrud;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Recipes.Ado.SingleModelCrud
+﻿namespace Recipes.Ado.SingleModelCrud
 {
-    public class EmployeeClassification : IEmployeeClassification
+    public class EmployeeClassification : Recipes.SingleModelCrud.IEmployeeClassification
     {
         public int EmployeeClassificationKey { get; set; }
 

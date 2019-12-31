@@ -1,8 +1,6 @@
-﻿using Recipes.TryCrud;
-
-namespace Recipes.Dapper.TryCrud
+﻿namespace Recipes.Dapper.TryCrud
 {
-    public class EmployeeClassification : IEmployeeClassification
+    public class EmployeeClassification : Recipes.TryCrud.IEmployeeClassification
     {
         public int EmployeeClassificationKey { get; set; }
 
