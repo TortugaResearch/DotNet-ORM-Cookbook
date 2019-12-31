@@ -572,9 +572,12 @@ public partial class EmployeeClassification
         {
             //Get a fresh copy of the row from the database
             var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-            //Copy the changed fields
-            temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-            context.SaveChanges();
+            if (temp != null)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.SaveChanges();
+            }
         }
     }
 }
@@ -618,10 +621,7 @@ public partial class EmployeeClassification
 
         using (var context = CreateDbContext())
         {
-            //Get a fresh copy of the row from the database
-            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-            //Copy the changed fields
-            temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+            context.Entry(classification).State = EntityState.Modified;
             context.SaveChanges();
         }
     }

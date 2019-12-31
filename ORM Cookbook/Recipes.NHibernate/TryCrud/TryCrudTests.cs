@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.NHibernate.Models;
 using Recipes.TryCrud;
 
 namespace Recipes.NHibernate.TryCrud
@@ -8,7 +9,7 @@ namespace Recipes.NHibernate.TryCrud
     {
         protected override ITryCrudRepository<EmployeeClassification> GetRepository()
         {
-            throw new AssertInconclusiveException("TODO");
+            return new TryCrudRepository(Setup.SessionFactory);
         }
     }
 }

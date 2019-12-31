@@ -625,59 +625,169 @@
 <p>TODO</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public TryCrudRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
     public int Create(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            return classification.EmployeeClassificationKey;
+        }
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+            else
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        }
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+        }
     }
 
     public void DeleteOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+            else
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
     }
 
     public bool DeleteWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+        }
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).Single();
+        }
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+        }
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.Find(employeeClassificationKey) ?? throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        }
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+        }
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.SaveChanges();
+            }
+            else
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
     }
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }
 </code></pre>
@@ -747,59 +857,147 @@
 <p>TODO</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
+    readonly ISessionFactory m_SessionFactory;
+
+    public TryCrudRepository(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
     public int Create(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            session.Save(classification);
+            session.Flush();
+            return classification.EmployeeClassificationKey;
+        }
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            session.Delete(temp);
+            session.Flush();
+        }
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            if (temp == null)
+                return false;
+            session.Delete(temp);
+            session.Flush();
+            return true;
+        }
     }
 
     public void DeleteOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            session.Delete(classification);
+            session.Flush();
+        }
     }
 
     public bool DeleteWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            try
+            {
+                session.Delete(classification);
+                session.Flush();
+                return true;
+            }
+            catch (StaleStateException ex) when (ex.Message.Contains(&quot;Batch update returned unexpected row count from update;&quot;, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
+                .List&lt;EmployeeClassification&gt;()
+                .Single();
+        }
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
+                .List&lt;EmployeeClassification&gt;()
+                .SingleOrDefault();
+        }
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var session = m_SessionFactory.OpenStatelessSession())
+            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey) ?? throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;); ;
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        using (var session = m_SessionFactory.OpenStatelessSession())
+            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            session.Update(classification);
+            session.Flush();
+        }
     }
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            try
+            {
+                session.Update(classification);
+                session.Flush();
+                return true;
+            }
+            catch (StaleStateException ex) when (ex.Message.Contains(&quot;Batch update returned unexpected row count from update;&quot;, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
     }
 }
 </code></pre>

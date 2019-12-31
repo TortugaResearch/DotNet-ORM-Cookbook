@@ -1,12 +1,9 @@
 ﻿using Recipes.TryCrud;
 
-namespace Recipes.NHibernate.TryCrud
+namespace Recipes.NHibernate.Models
 {
-    public class EmployeeClassification : IEmployeeClassification
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class EmployeeClassification : IEmployeeClassification
     {
-        public int EmployeeClassificationKey { get; set; }
-
-        /// <exclude />
-        public string? EmployeeClassificationName { get; set; }
     }
 }

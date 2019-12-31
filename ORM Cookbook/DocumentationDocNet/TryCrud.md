@@ -38,7 +38,7 @@ TODO
 
 ## NHibernate
 
-TODO
+In some cases you'll need to catch a `StaleStateException` as there is no TryUpdate or TryDelete.
 
 @snippet cs [..\Recipes.NHibernate\TryCrud\TryCrudRepository.cs] TryCrudRepository
 
