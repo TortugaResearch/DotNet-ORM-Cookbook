@@ -1,7 +1,9 @@
-﻿using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 
 namespace Performance
 {
+    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 5, invocationCount: 10)]
     public partial class Benchmarks
     {
         public static void Main(string[] args)

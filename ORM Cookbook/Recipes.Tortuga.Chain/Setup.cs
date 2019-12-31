@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.SingleModelCrudAsync;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace Recipes.Chain
         {
             //Preload all of the database metadata to warmup the data source
             PrimaryDataSource.DatabaseMetadata.Preload();
+            PrimaryDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
         }
     }
 }
