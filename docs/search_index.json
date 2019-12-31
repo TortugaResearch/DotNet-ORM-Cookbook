@@ -15,7 +15,7 @@
     {
       "location": "TryCrud.htm",
       "breadcrumbs": "Home / TryGet/Update/Delete Operations",
-      "keywords": "1 Ado ADO an and back between cases Chain Core counts cs Dapper Delete demonstrate difference Entity EntityFrameworkCore exception ExecuteNonQuery fail Framework from is ITryCrudRepository methods NET NHibernate operations Operations Prototype read Recipes RepoDb Repository row silently snippet TEmployeeClassification that the The These to TODO Tortuga trick TryCrud TryCrudRepository TryDelete TryGet TryUpdate Update use with",
+      "keywords": "1 a Ado ADO an and as back between cases catch Chain command Core counts cs Dapper Delete demonstrate difference Entity EntityFrameworkCore exception Execute ExecuteNonQuery fail Framework from In is ITryCrudRepository Like methods need NET NHibernate no operations Operations or Prototype read Recipes RepoDb Repository returned row silently snippet some StaleStateException TEmployeeClassification that the The there These this to TODO Tortuga trick TryCrud TryCrudRepository TryDelete TryGet TryUpdate Update use uses with you",
       "title": "TryGet/Update/Delete Operations"
     }
   ]

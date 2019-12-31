@@ -381,7 +381,7 @@
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>Like ADO.NET, this uses the row counts returned from the <code>Execute</code> command.</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
@@ -534,7 +534,6 @@
 </code></pre>
 
 <h2 id="tortuga-chain">Tortuga Chain<a class="headerlink" href="#tortuga-chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
     const string TableName = &quot;HR.EmployeeClassification&quot;;
@@ -622,7 +621,6 @@
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
@@ -854,7 +852,7 @@
 </code></pre>
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>In some cases you'll need to catch a <code>StaleStateException</code> as there is no TryUpdate or TryDelete.</p>
 <pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
 {
     readonly ISessionFactory m_SessionFactory;

@@ -14,19 +14,15 @@ The trick to the `Update` and `Delete` methods is to read back the row counts fr
 
 ## Dapper
 
-TODO
+Like ADO.NET, this uses the row counts returned from the `Execute` command.
 
 @snippet cs [..\Recipes.Dapper\TryCrud\TryCrudRepository.cs] TryCrudRepository
 
 ## Tortuga Chain
 
-TODO
-
 @snippet cs [..\Recipes.Tortuga.Chain\TryCrud\TryCrudRepository.cs] TryCrudRepository
 
 ## Entity Framework Core
-
-TODO
 
 @snippet cs [..\Recipes.EntityFrameworkCore\TryCrud\TryCrudRepository.cs] TryCrudRepository
 
