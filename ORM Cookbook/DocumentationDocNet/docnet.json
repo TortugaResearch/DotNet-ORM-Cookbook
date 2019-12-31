@@ -1,5 +1,5 @@
 ﻿{
-  "Name": "The ORM Cookbook",
+  "Name": "The .NET Core ORM Cookbook",
   "Source": ".",
   "Destination": "..\\..\\docs",
   "IncludeSource": "Includes",
