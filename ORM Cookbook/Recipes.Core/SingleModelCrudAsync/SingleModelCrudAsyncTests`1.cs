@@ -9,7 +9,7 @@ namespace Recipes.SingleModelCrudAsync
     /// This use case performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
-    public abstract class SingleModelCrudAsyncTests<TModel>
+    public abstract class SingleModelCrudAsyncTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {
         protected abstract ISingleModelCrudAsyncRepository<TModel> GetRepository();
@@ -142,21 +142,21 @@ namespace Recipes.SingleModelCrudAsync
         public async Task CreateAsync_ParameterCheck()
         {
             var repository = GetRepository();
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => repository.CreateAsync(null!)).ConfigureAwait(false);
+            await AssertThrowsExceptionAsync<ArgumentNullException>(() => repository.CreateAsync(null!)).ConfigureAwait(false);
         }
 
         [TestMethod]
         public async Task UpdateAsync_ParameterCheck()
         {
             var repository = GetRepository();
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => repository.UpdateAsync(null!)).ConfigureAwait(false);
+            await AssertThrowsExceptionAsync<ArgumentNullException>(() => repository.UpdateAsync(null!)).ConfigureAwait(false);
         }
 
         [TestMethod]
         public async Task DeleteAsync_ParameterCheck()
         {
             var repository = GetRepository();
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => repository.DeleteAsync(null!)).ConfigureAwait(false);
+            await AssertThrowsExceptionAsync<ArgumentNullException>(() => repository.DeleteAsync(null!)).ConfigureAwait(false);
         }
     }
 }

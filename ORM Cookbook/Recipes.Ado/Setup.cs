@@ -27,6 +27,12 @@ namespace Recipes.Ado
             var con = configuration.GetSection("ConnectionStrings").GetChildren().Single();
 
             ConnectionString = con.Value;
+
+            try
+            {
+                (new Setup()).Warmup();
+            }
+            catch { }
         }
 
         [TestMethod]

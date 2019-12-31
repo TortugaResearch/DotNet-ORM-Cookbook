@@ -7,10 +7,11 @@
 
   <class name="EmployeeClassification" table="EmployeeClassification" schema="HR">
 
-    <id name="EmployeeClassificationKey" >
-      <generator class="native"/>
+    <id name="EmployeeClassificationKey">
+      <generator class="native" />
     </id>
     <property name="EmployeeClassificationName" />
+    <property name="IsExempt" />
+    <property name="IsEmployee" />
   </class>
-
 </hibernate-mapping>

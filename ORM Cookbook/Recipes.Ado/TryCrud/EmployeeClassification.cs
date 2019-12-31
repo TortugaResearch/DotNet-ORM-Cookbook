@@ -1,9 +1,6 @@
-﻿using Recipes.TryCrud;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Recipes.Ado.TryCrud
+﻿namespace Recipes.Ado.TryCrud
 {
-    public class EmployeeClassification : IEmployeeClassification
+    public class EmployeeClassification : Recipes.TryCrud.IEmployeeClassification
     {
         public int EmployeeClassificationKey { get; set; }
 

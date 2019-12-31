@@ -15,8 +15,14 @@ namespace Recipes.EntityFrameworkCore.Entities
         [Key]
         public int EmployeeClassificationKey { get; set; }
 
+        [Required]
         [StringLength(30)]
         public string? EmployeeClassificationName { get; set; }
+
+        public bool IsExempt { get; set; }
+
+        [Required]
+        public bool? IsEmployee { get; set; }
 
         [InverseProperty("EmployeeClassificationKeyNavigation")]
         public virtual ICollection<Employee> Employee { get; }

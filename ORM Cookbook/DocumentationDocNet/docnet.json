@@ -10,6 +10,7 @@
     "__index": "index.md",
     "Single Model CRUD": "SingleModelCrud.md",
     "Async Operations": "SingleModelCrudAsync.md",
-    "TryGet/Update/Delete Operations": "TryCrud.md"
+    "TryGet/Update/Delete Operations": "TryCrud.md",
+    "Partial Updates": "PartialUpdate.md"
   }
 }

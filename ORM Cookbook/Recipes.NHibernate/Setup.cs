@@ -30,6 +30,12 @@ namespace Recipes.NHibernate
             configuration.Configure();
             configuration.AddAssembly(typeof(Setup).Assembly);
             SessionFactory = configuration.BuildSessionFactory();
+
+            try
+            {
+                (new Setup()).Warmup();
+            }
+            catch { }
         }
 
         [TestMethod]

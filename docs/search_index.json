@@ -17,6 +17,12 @@
       "breadcrumbs": "Home / TryGet/Update/Delete Operations",
       "keywords": "1 a Ado ADO an and as back between cases catch Chain command Core counts cs Dapper Delete demonstrate difference Entity EntityFrameworkCore exception Execute ExecuteNonQuery fail Framework from In is ITryCrudRepository Like methods need NET NHibernate no operations Operations or Prototype read Recipes RepoDb Repository returned row silently snippet some StaleStateException TEmployeeClassification that the The there These this to TODO Tortuga trick TryCrud TryCrudRepository TryDelete TryGet TryUpdate Update use uses with you",
       "title": "TryGet/Update/Delete Operations"
+    },
+    {
+      "location": "PartialUpdate.htm",
+      "breadcrumbs": "Home / Partial Updates",
+      "keywords": "1 a Ado ADO and cases Chain Core cs Dapper demonstrate Entity EntityFrameworkCore fetch first Framework how IPartialUpdateRepository it modify NET NHibernate on partial Partial PartialUpdate PartialUpdateRepository perform Prototype Recipes record RepoDb Repository row snippet TEmployeeClassification then These to To TODO Tortuga update Update updates Updates use",
+      "title": "Partial Updates"
     }
   ]
 }

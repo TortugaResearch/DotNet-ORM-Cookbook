@@ -8,7 +8,7 @@ namespace Recipes.SingleModelCrud
     /// This use case performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
-    public abstract class SingleModelCrudTests<TModel>
+    public abstract class SingleModelCrudTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {
         protected abstract ISingleModelCrudRepository<TModel> GetRepository();
@@ -139,21 +139,21 @@ namespace Recipes.SingleModelCrud
         public void Create_ParameterCheck()
         {
             var repository = GetRepository();
-            Assert.ThrowsException<ArgumentNullException>(() => repository.Create(null!));
+            AssertThrowsException<ArgumentNullException>(() => repository.Create(null!));
         }
 
         [TestMethod]
         public void Update_ParameterCheck()
         {
             var repository = GetRepository();
-            Assert.ThrowsException<ArgumentNullException>(() => repository.Update(null!));
+            AssertThrowsException<ArgumentNullException>(() => repository.Update(null!));
         }
 
         [TestMethod]
         public void Delete_ParameterCheck()
         {
             var repository = GetRepository();
-            Assert.ThrowsException<ArgumentNullException>(() => repository.Delete(null!));
+            AssertThrowsException<ArgumentNullException>(() => repository.Delete(null!));
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using Recipes.SingleModelCrudAsync;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Recipes.Ado.SingleModelCrudAsync
+﻿namespace Recipes.Ado.SingleModelCrudAsync
 {
-    public class EmployeeClassification : IEmployeeClassification
+    public class EmployeeClassification : Recipes.SingleModelCrudAsync.IEmployeeClassification
     {
         public int EmployeeClassificationKey { get; set; }
 
