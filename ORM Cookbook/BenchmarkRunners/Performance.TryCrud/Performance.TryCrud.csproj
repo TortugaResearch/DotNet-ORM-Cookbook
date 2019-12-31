@@ -15,6 +15,7 @@
     <ProjectReference Include="..\..\Recipes.EntityFrameworkCore\Recipes.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\Recipes.NHibernate\Recipes.NHibernate.csproj" />
     <ProjectReference Include="..\..\Recipes.RepoDb\Recipes.RepoDb.csproj" />
+    <ProjectReference Include="..\..\Recipes.ServiceStack\Recipes.ServiceStack.csproj" />
     <ProjectReference Include="..\..\Recipes.Tortuga.Chain\Recipes.Tortuga.Chain.csproj" />
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@ namespace Performance
             Recipes.Ado.Setup.AssemblyInit(null);
             Recipes.RepoDb.Setup.AssemblyInit(null);
             Recipes.NHibernate.Setup.AssemblyInit(null);
+            Recipes.ServiceStack.Setup.AssemblyInit(null);
         }
     }
 }
