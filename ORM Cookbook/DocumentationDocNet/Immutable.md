@@ -6,17 +6,18 @@ These use cases demonstrate how to perform Create, Read, Update, and Delete oper
 
 @snippet cs [..\Recipes.Core\Immutable\IImmutableRepository`1.cs] IImmutableRepository{TReadOnlyModel}
 
+@snippet cs [..\Recipes.Core\Immutable\IReadOnlyEmployeeClassification.cs] IReadOnlyEmployeeClassification
 
 
 ## ADO.NET
 
 Since ADO doesn't directly interact with models, no changes are needed for immutable objects other than to call a constructor instead of setting individual properties.
 
-TODO
+@snippet cs [..\Recipes.ADO\Immutable\ImmutableRepository.cs] ImmutableRepository
 
 ## Chain
 
-Chain natively supports working with immutable objects, conversions are needed.
+Chain natively supports working with immutable objects, no conversions are needed.
 
 To populate immutable objects, use either the `InferConstructor` option or a `.WithConstructor<...>` link to indicate that a non-default constructor should be used.
 
@@ -24,7 +25,11 @@ To populate immutable objects, use either the `InferConstructor` option or a `.W
 
 ## Dapper
 
-TODO
+Dapper natively supports working with immutable objects, no conversions are needed.
+
+No special handling is needed to call a non-default constructor.
+
+@snippet cs [..\Recipes.Dapper\Immutable\ImmutableRepository.cs] ImmutableRepository
 
 ## Entity Framework Core
 
