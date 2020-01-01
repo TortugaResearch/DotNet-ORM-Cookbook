@@ -88,7 +88,7 @@ NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s H
 
 The models are interesting in that every property needs to be virtual. Without this, you’ll get a runtime error.
 
-@snippet cs [../Recipes.NHibernate/Models/EmployeeClassification.cs] EmployeeClassification
+@snippet cs [../Recipes.NHibernate/Entities/EmployeeClassification.cs] EmployeeClassification
 
 Instead of attributes, a mapping file is used to associate the model with a database table. There is one file per table and each is set to `Build Action: Embedded resource`. 
 

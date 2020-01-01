@@ -54,12 +54,12 @@ namespace Recipes.Chain.TryCrud
 
         public EmployeeClassification FindByNameOrException(string employeeClassificationName)
         {
-            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>().NeverNull().Execute();
+            return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject<EmployeeClassification>().NeverNull().Execute();
         }
 
         public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
         {
-            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
+            return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
         }
 
         public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)

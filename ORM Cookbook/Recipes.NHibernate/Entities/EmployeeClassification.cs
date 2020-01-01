@@ -1,4 +1,4 @@
-namespace Recipes.NHibernate.Models
+namespace Recipes.NHibernate.Entities
 {
     public partial class EmployeeClassification
     {

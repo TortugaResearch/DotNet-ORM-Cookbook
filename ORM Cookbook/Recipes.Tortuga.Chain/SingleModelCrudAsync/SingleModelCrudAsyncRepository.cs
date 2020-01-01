@@ -40,7 +40,7 @@ namespace Recipes.Chain.SingleModelCrudAsync
 
         public Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
         {
-            return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
+            return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
         }
 
         public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)

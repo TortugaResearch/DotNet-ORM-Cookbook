@@ -58,6 +58,8 @@
 </ul>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -435,12 +437,12 @@
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
+        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).Execute();
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)

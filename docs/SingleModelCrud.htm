@@ -58,6 +58,8 @@
 </li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -342,7 +344,7 @@ public class EmployeeClassification : Recipes.SingleModelCrud.IEmployeeClassific
 
     public EmployeeClassification FindByName(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { EmployeeClassificationName = employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
+        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
     }
 
     public IList&lt;EmployeeClassification&gt; GetAll()
@@ -648,7 +650,7 @@ public partial class EmployeeClassification
 <p>Instead of attributes, a mapping file is used to associate the model with a database table. There is one file per table and each is set to <code>Build Action: Embedded resource</code>. </p>
 <pre><code class="xml">&lt;hibernate-mapping
   assembly=&quot;Recipes.NHibernate&quot;
-  namespace=&quot;Recipes.NHibernate.Models&quot;&gt;
+  namespace=&quot;Recipes.NHibernate.Entities&quot;&gt;
   &lt;!-- more mapping info here --&gt;
   &lt;class
     name=&quot;EmployeeClassification&quot;

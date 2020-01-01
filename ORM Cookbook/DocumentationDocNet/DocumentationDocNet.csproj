@@ -52,6 +52,7 @@
   <ItemGroup>
     <None Include="AsynchronousRepositories.md" />
     <None Include="index.md" />
+    <None Include="Immutable.md" />
     <None Include="readme.md" />
     <None Include="PartialUpdate.md" />
     <None Include="TryCrud.md" />
