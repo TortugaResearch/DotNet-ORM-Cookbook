@@ -10,6 +10,18 @@
             DEFAULT (0),
     IsEmployee BIT NOT NULL
         CONSTRAINT D_EmployeeClassification_IsEmployee
+            DEFAULT (1),
+    IncludeInHolidayParty BIT NULL
+        CONSTRAINT D_EmployeeClassification_IncludeInHolidayParty
             DEFAULT (1)
 );
 GO
+
+EXEC sys.sp_addextendedproperty @name = N'MS_Description',
+                                @value = N'An unusual case where there is a default for a nullable column.',
+                                @level0type = N'SCHEMA',
+                                @level0name = N'HR',
+                                @level1type = N'TABLE',
+                                @level1name = N'EmployeeClassification',
+                                @level2type = N'COLUMN',
+                                @level2name = N'IncludeInHolidayParty';
