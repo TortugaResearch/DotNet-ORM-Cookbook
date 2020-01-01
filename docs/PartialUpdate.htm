@@ -43,15 +43,17 @@
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
-<li class="tocentry"><a href="#dapper">Dapper</a></li>
+<li class="tocentry"><a href="#chain">Chain</a></li>
 
-<li class="tocentry"><a href="#tortuga-chain">Tortuga Chain</a></li>
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
 
-<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
 
 
@@ -148,6 +150,30 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 }
 </code></pre>
 
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    m_DataSource.Update(TableName, updateMessage).Execute();
+}
+
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    m_DataSource.Update(TableName, updateMessage).Execute();
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    m_DataSource.Update(TableName, new { employeeClassificationKey, isExempt, isEmployee }).Execute();
+}
+</code></pre>
+
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
@@ -184,30 +210,6 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 
     using (var con = OpenConnection())
         con.Execute(sql, new { employeeClassificationKey, isExempt, isEmployee });
-}
-</code></pre>
-
-<h2 id="tortuga-chain">Tortuga Chain<a class="headerlink" href="#tortuga-chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
-{
-    if (updateMessage == null)
-        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
-
-    m_DataSource.Update(TableName, updateMessage).Execute();
-}
-
-public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
-{
-    if (updateMessage == null)
-        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
-
-    m_DataSource.Update(TableName, updateMessage).Execute();
-}
-</code></pre>
-
-<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
-{
-    m_DataSource.Update(TableName, new { employeeClassificationKey, isExempt, isEmployee }).Execute();
 }
 </code></pre>
 
@@ -268,25 +270,6 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 }
 </code></pre>
 
-<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
-<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
-{
-    throw new AssertInconclusiveException(&quot;TODO&quot;);
-}
-
-public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
-{
-    throw new AssertInconclusiveException(&quot;TODO&quot;);
-}
-</code></pre>
-
-<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
-{
-    throw new AssertInconclusiveException(&quot;TODO&quot;);
-}
-</code></pre>
-
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>To perform a partial update, first fetch a record and then modify it.</p>
 <pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
@@ -337,6 +320,65 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
             session.Update(temp);
             session.Flush();
         }
+    }
+}
+</code></pre>
+
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
+{
+    throw new AssertInconclusiveException(&quot;TODO&quot;);
+}
+
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
+{
+    throw new AssertInconclusiveException(&quot;TODO&quot;);
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    throw new AssertInconclusiveException(&quot;TODO&quot;);
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In ServiceStack, partial updates have to be 'unpacked'. Updated columns are passed in one parameter and filter column(s) (e.g. primary key) in a separate parameter.</p>
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var db = _dbConnectionFactory.OpenDbConnection())
+    {
+        db.Update&lt;EmployeeClassificationPartial&gt;(
+            new {updateMessage.EmployeeClassificationName},
+            r =&gt; r.Id == updateMessage.EmployeeClassificationKey);
+    }
+}
+
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var db = _dbConnectionFactory.OpenDbConnection())
+    {
+        db.Update&lt;EmployeeClassificationPartial&gt;(
+            new {updateMessage.IsEmployee, updateMessage.IsExempt},
+            r =&gt; r.Id == updateMessage.EmployeeClassificationKey);
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    using (var db = _dbConnectionFactory.OpenDbConnection())
+    {
+        db.Update&lt;EmployeeClassificationPartial&gt;(
+            new {isExempt, isEmployee},
+            r =&gt; r.Id == employeeClassificationKey);
     }
 }
 </code></pre>

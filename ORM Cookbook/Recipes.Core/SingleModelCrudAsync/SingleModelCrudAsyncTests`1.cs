@@ -9,6 +9,7 @@ namespace Recipes.SingleModelCrudAsync
     /// This use case performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
+    [TestCategory("SingleModelCrudAsync")]
     public abstract class SingleModelCrudAsyncTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {

@@ -11,3 +11,6 @@ dotnet_diagnostic.CA1707.severity = none
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
+
+# CA1033: Interface methods should be callable by child types
+dotnet_diagnostic.CA1033.severity = none

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.ServiceStack.Entities;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Recipes.ServiceStack
 {
@@ -55,6 +55,23 @@ namespace Recipes.ServiceStack
             }
 
             Assert.AreNotEqual(0, i);
+        }
+
+        [TestMethod]
+        public void TestFlags()
+        {
+            var a = new EmployeeClassification() { EmployeeClassificationName = "A T T " + DateTime.Now.Ticks, IsExempt = true, IsEmployee = true };
+            var b = new EmployeeClassification() { EmployeeClassificationName = "A F T " + DateTime.Now.Ticks, IsExempt = false, IsEmployee = true };
+            var c = new EmployeeClassification() { EmployeeClassificationName = "A T F " + DateTime.Now.Ticks, IsExempt = true, IsEmployee = false };
+            var d = new EmployeeClassification() { EmployeeClassificationName = "A F F " + DateTime.Now.Ticks, IsExempt = false, IsEmployee = false };
+
+            using (var db = DbConnectionFactory.OpenDbConnection())
+            {
+                db.Save(a);
+                db.Save(b);
+                db.Save(c);
+                db.Save(d);
+            }
         }
 
         [TestMethod]

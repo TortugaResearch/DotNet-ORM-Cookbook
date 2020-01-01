@@ -8,6 +8,7 @@ namespace Recipes.TryCrud
     /// This use case performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
+    [TestCategory("TryCrud")]
     public abstract class TryCrudTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {

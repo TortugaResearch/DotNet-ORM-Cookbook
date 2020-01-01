@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Performance.PartialUpdate",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Performance.TryCrud", "BenchmarkRunners\Performance.TryCrud\Performance.TryCrud.csproj", "{81B5551F-C45B-4F65-80F2-8DF4EE31CB8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.ServiceStack", "Recipes.ServiceStack\Recipes.ServiceStack.csproj", "{1F101225-F4DD-41C0-BEEE-564939BB98ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.ServiceStack", "Recipes.ServiceStack\Recipes.ServiceStack.csproj", "{1F101225-F4DD-41C0-BEEE-564939BB98ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatabaseSchema", "DatabaseSchema", "{F0D99CDC-D310-419F-A1DA-0BBC2AE8E08B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +110,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{96CECE81-7A5D-4E56-8828-647FF24B9B57} = {F0D99CDC-D310-419F-A1DA-0BBC2AE8E08B}
 		{17AD2807-0B37-49C6-98D7-3471A0E9E378} = {BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}
 		{CB12C942-565B-4E60-AFB6-1370391A1CC0} = {BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}
 		{735A1D4F-A911-4E3B-A626-73914900B4AD} = {BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}
