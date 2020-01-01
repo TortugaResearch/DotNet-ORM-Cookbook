@@ -1,5 +1,6 @@
 ﻿using Recipes.SingleModelCrud;
 using RepoDb;
+using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,39 +8,24 @@ using System.Linq;
 
 namespace Recipes.RepoDb.SingleModelCrud
 {
-    public class SingleModelCrudRepository : ISingleModelCrudRepository<EmployeeClassification>
+    public class SingleModelCrudRepository : BaseRepository<EmployeeClassification, SqlConnection>,
+        ISingleModelCrudRepository<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
-
         public SingleModelCrudRepository(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+            : base(connectionString)
+        { }
 
         public int Create(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using (var con = OpenConnection())
-                return con.Insert<EmployeeClassification, int>(classification);
+            return Insert<int>(classification);
         }
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            using (var con = OpenConnection())
-                con.Delete<EmployeeClassification>(employeeClassificationKey);
+            Delete(employeeClassificationKey);
         }
 
         public void Delete(EmployeeClassification classification)
@@ -47,26 +33,22 @@ namespace Recipes.RepoDb.SingleModelCrud
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using (var con = OpenConnection())
-                con.Delete(classification);
+            base.Delete(classification);
         }
 
         public EmployeeClassification? FindByName(string employeeClassificationName)
         {
-            using (var con = OpenConnection())
-                return con.Query<EmployeeClassification>(new { EmployeeClassificationName = employeeClassificationName }).FirstOrDefault();
+            return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
         }
 
         public IList<EmployeeClassification> GetAll()
         {
-            using (var con = OpenConnection())
-                return con.QueryAll<EmployeeClassification>().ToList();
+            return QueryAll().AsList();
         }
 
         public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            using (var con = OpenConnection())
-                return con.Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
+            return Query(employeeClassificationKey).FirstOrDefault();
         }
 
         public void Update(EmployeeClassification classification)
@@ -74,8 +56,7 @@ namespace Recipes.RepoDb.SingleModelCrud
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using (var con = OpenConnection())
-                con.Update(classification);
+            base.Update(classification);
         }
     }
 }
