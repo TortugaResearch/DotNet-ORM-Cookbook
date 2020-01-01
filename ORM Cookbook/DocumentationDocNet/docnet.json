@@ -11,6 +11,7 @@
     "Single Model CRUD": "SingleModelCrud.md",
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",
-    "Partial Updates": "PartialUpdate.md"
+    "Partial Updates": "PartialUpdate.md",
+    "Immutable CRUD": "Immutable.md"
   }
 }

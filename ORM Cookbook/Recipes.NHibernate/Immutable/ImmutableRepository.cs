@@ -1,58 +1,50 @@
 ﻿using NHibernate;
 using NHibernate.Criterion;
+using Recipes.Immutable;
 using Recipes.NHibernate.Entities;
-using Recipes.SingleModelCrud;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
-namespace Recipes.NHibernate.SingleModelCrud
+namespace Recipes.NHibernate.Immutable
 {
-    public class SingleModelCrudRepository : ISingleModelCrudRepository<EmployeeClassification>
+    public class ImmutableRepository : IImmutableRepository<ReadOnlyEmployeeClassification>
     {
         readonly ISessionFactory m_SessionFactory;
 
-        public SingleModelCrudRepository(ISessionFactory sessionFactory)
+        public ImmutableRepository(ISessionFactory sessionFactory)
         {
             m_SessionFactory = sessionFactory;
         }
 
-        public int Create(EmployeeClassification classification)
+        public int Create(ReadOnlyEmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
             using (var session = m_SessionFactory.OpenSession())
             {
-                session.Save(classification);
+                var temp = classification.ToEntity();
+                session.Save(temp);
                 session.Flush();
-                return classification.EmployeeClassificationKey;
+                return temp.EmployeeClassificationKey;
             }
         }
 
-        public void DeleteByKey(int employeeClassificationKey)
-        {
-            using (var session = m_SessionFactory.OpenSession())
-            {
-                var temp = session.Get<EmployeeClassification>(employeeClassificationKey);
-                session.Delete(temp);
-                session.Flush();
-            }
-        }
-
-        public void Delete(EmployeeClassification classification)
+        public void Delete(ReadOnlyEmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
             using (var session = m_SessionFactory.OpenSession())
             {
-                session.Delete(classification);
+                session.Delete(classification.ToEntity());
                 session.Flush();
             }
         }
 
-        public EmployeeClassification FindByName(string employeeClassificationName)
+        public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
@@ -60,34 +52,40 @@ namespace Recipes.NHibernate.SingleModelCrud
                     .CreateCriteria(typeof(EmployeeClassification))
                     .Add(Restrictions.Eq("EmployeeClassificationName", employeeClassificationName))
                     .List<EmployeeClassification>()
+                    .Select(x => new ReadOnlyEmployeeClassification(x))
                     .SingleOrDefault();
             }
         }
 
-        public IList<EmployeeClassification> GetAll()
+        public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
                 return session
                     .CreateCriteria(typeof(EmployeeClassification))
-                    .List<EmployeeClassification>();
+                    .List<EmployeeClassification>()
+                    .Select(x => new ReadOnlyEmployeeClassification(x))
+                    .ToImmutableArray();
             }
         }
 
-        public EmployeeClassification GetByKey(int employeeClassificationKey)
+        public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
-                return session.Get<EmployeeClassification>(employeeClassificationKey);
+            {
+                var result = session.Get<EmployeeClassification>(employeeClassificationKey);
+                return new ReadOnlyEmployeeClassification(result);
+            }
         }
 
-        public void Update(EmployeeClassification classification)
+        public void Update(ReadOnlyEmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
             using (var session = m_SessionFactory.OpenSession())
             {
-                session.Update(classification);
+                session.Update(classification.ToEntity());
                 session.Flush();
             }
         }

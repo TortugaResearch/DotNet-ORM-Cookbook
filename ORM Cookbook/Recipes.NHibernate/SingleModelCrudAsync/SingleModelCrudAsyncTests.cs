@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.NHibernate.Models;
+using Recipes.NHibernate.Entities;
 using Recipes.SingleModelCrudAsync;
 
 namespace Recipes.NHibernate.SingleModelCrudAsync

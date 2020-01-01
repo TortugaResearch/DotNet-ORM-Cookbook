@@ -86,9 +86,19 @@ namespace Recipes.SingleModelCrud
         {
             var repository = GetRepository();
 
-            var all = repository.GetAll();
-            Assert.IsNotNull(all);
-            Assert.AreNotEqual(0, all.Count);
+            var allRows = repository.GetAll();
+            Assert.IsNotNull(allRows);
+            Assert.AreNotEqual(0, allRows.Count);
+
+            var row1 = allRows.SingleOrDefault(x => x.EmployeeClassificationKey == 1);
+            Assert.IsNotNull(row1);
+            Assert.AreEqual(1, row1!.EmployeeClassificationKey);
+            Assert.AreEqual("Full Time Salary", row1.EmployeeClassificationName);
+
+            var row4 = allRows.SingleOrDefault(x => x.EmployeeClassificationKey == 4);
+            Assert.IsNotNull(row4);
+            Assert.AreEqual(4, row4!.EmployeeClassificationKey);
+            Assert.AreEqual("Contractor", row4.EmployeeClassificationName);
         }
 
         /// <summary>
