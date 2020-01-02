@@ -33,7 +33,7 @@ No special handling is needed to call a non-default constructor.
 
 ## Entity Framework Core
 
-NHibernate does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.
+Entity Framework Core does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Immutable\ReadOnlyEmployeeClassification.cs] <Constructor>(EmployeeClassification)
 
