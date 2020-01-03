@@ -17,13 +17,7 @@ The repository methods use raw SQL strings. All other ORMs internally generate t
 
 @snippet cs [../Recipes.Ado/SingleModelCrud/SingleModelCrudRepository.cs] SingleModelCrudRepository
 
-## Dapper
-
-Dapper is essentially just ADO.NET with some helper methods to reduce the amount of boilerplate code.
-
-@snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudRepository.cs] SingleModelCrudRepository
-
-## Tortuga Chain
+## Chain
 
 Strictly speaking, Chain can use the same models as ADO.NET and Dapper so long as the column and property names match. However, it is more convenient to tag the class with what table it refers to.
 
@@ -34,6 +28,12 @@ Without the Table attribute, the table name will have to be specified in every c
 Other information such as primary keys are read from the database's metadata.
 
 @snippet cs [..\Recipes.Tortuga.Chain\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
+
+## Dapper
+
+Dapper is essentially just ADO.NET with some helper methods to reduce the amount of boilerplate code.
+
+@snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudRepository.cs] SingleModelCrudRepository
 
 ## Entity Framework Core
 
@@ -82,23 +82,13 @@ The design of Entity Framework Core requires extraneous database calls when perf
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrud\SingleModelCrudRepository2.cs] SingleModelCrudRepository2
 
-## RepoDb
-
-RepoDb often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
-
-@snippet cs [../Recipes.RepoDb\SingleModelCrud\EmployeeClassification.cs] EmployeeClassification
-
-The repository resemebles Dapper, but with far less SQL.
-
-@snippet cs [..\Recipes.RepoDb\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
-
 ## NHibernate
 
 NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s Hibernate, it heavily relies on XML configuration files and interfaces.
 
 The models are interesting in that every property needs to be virtual. Without this, you’ll get a runtime error.
 
-@snippet cs [../Recipes.NHibernate/Models/EmployeeClassification.cs] EmployeeClassification
+@snippet cs [../Recipes.NHibernate/Entities/EmployeeClassification.cs] EmployeeClassification
 
 Instead of attributes, a mapping file is used to associate the model with a database table. There is one file per table and each is set to `Build Action: Embedded resource`. 
 
@@ -113,6 +103,26 @@ Finally there is the repository itself.
 @snippet cs [..\Recipes.NHibernate\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
 
 The rules on when you need to call `Flush` are complex. In some cases it will be called for you implicitly, but as a general rule you need to invoke it before leaving a block that includes modifications.
+
+## RepoDb
+
+RepoDb often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
+
+@snippet cs [../Recipes.RepoDb\SingleModelCrud\EmployeeClassification.cs] EmployeeClassification
+
+The repository resemebles Dapper, but with far less SQL.
+
+@snippet cs [..\Recipes.RepoDb\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
+
+## ServiceStack
+
+ServiceStack requires the use of annotations on its models. These are specific to ServiceStack, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
+
+@snippet cs [../Recipes.ServiceStack\Entities\EmployeeClassification.cs] EmployeeClassification
+
+The repository resemebles Dapper, but with far less SQL.
+
+@snippet cs [..\Recipes.ServiceStack\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
 
 
 

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Immutable CRUD - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry current"><a class="current" href="Immutable.htm">Immutable CRUD</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Immutable.htm">Immutable CRUD</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="crud-operations-on-immutable-objects">CRUD Operations on Immutable Objects<a class="headerlink" href="#crud-operations-on-immutable-objects" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These use cases demonstrate how to perform Create, Read, Update, and Delete operations on immutable objects. </p>
+<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IImmutableRepository&lt;TReadOnlyModel&gt;
+   where TReadOnlyModel : class, IReadOnlyEmployeeClassification
+{
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its primary key.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    TReadOnlyModel? GetByKey(int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Gets all EmployeeClassification rows.
+    /// &lt;/summary&gt;
+    IReadOnlyList&lt;TReadOnlyModel&gt; GetAll();
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its name. Assume the name is unique.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Must return a null if when row doesn't exist.&lt;/remarks&gt;
+    TReadOnlyModel? FindByName(string employeeClassificationName);
+
+    /// &lt;summary&gt;
+    /// Create a new EmployeeClassification row, returning the new primary key.
+    /// &lt;/summary&gt;
+    int Create(TReadOnlyModel classification);
+
+    /// &lt;summary&gt;
+    /// Update a EmployeeClassification row.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Update(TReadOnlyModel classification);
+
+    /// &lt;summary&gt;
+    /// Delete a EmployeeClassification row using an object.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Delete(TReadOnlyModel classification);
+}
+</code></pre>
+
+<pre><code class="cs">public interface IReadOnlyEmployeeClassification
+{
+    int EmployeeClassificationKey { get; }
+    string EmployeeClassificationName { get; }
+    bool IsExempt { get; }
+    bool IsEmployee { get; }
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Since ADO doesn't directly interact with models, no changes are needed for immutable objects other than to call a constructor instead of setting individual properties.</p>
+<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+
+    public ImmutableRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
+                    OUTPUT Inserted.EmployeeClassificationKey
+                    VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+            cmd.Parameters.AddWithValue(&quot;@IsExempt&quot;, classification.IsExempt);
+            cmd.Parameters.AddWithValue(&quot;@IsEmployee&quot;, classification.IsEmployee);
+            return (int)cmd.ExecuteScalar();
+        }
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+            cmd.ExecuteNonQuery();
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+            cmd.ExecuteNonQuery();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, employeeClassificationName);
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (!reader.Read())
+                    return null;
+
+                return new ReadOnlyEmployeeClassification(
+                    reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                    reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;)),
+                    reader.GetBoolean(reader.GetOrdinal(&quot;IsExempt&quot;)),
+                    reader.GetBoolean(reader.GetOrdinal(&quot;IsEmployee&quot;))
+                );
+            }
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new List&lt;ReadOnlyEmployeeClassification&gt;();
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        using (var reader = cmd.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                result.Add(new ReadOnlyEmployeeClassification(
+                    reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                    reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;)),
+                    reader.GetBoolean(reader.GetOrdinal(&quot;IsExempt&quot;)),
+                    reader.GetBoolean(reader.GetOrdinal(&quot;IsEmployee&quot;))
+                ));
+            }
+
+            return result.ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (!reader.Read())
+                    return null;
+
+                return new ReadOnlyEmployeeClassification(
+                    reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                    reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;)),
+                    reader.GetBoolean(reader.GetOrdinal(&quot;IsExempt&quot;)),
+                    reader.GetBoolean(reader.GetOrdinal(&quot;IsEmployee&quot;))
+                );
+            }
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
+            cmd.Parameters.AddWithValue(&quot;@IsExempt&quot;, classification.IsExempt);
+            cmd.Parameters.AddWithValue(&quot;@IsEmployee&quot;, classification.IsEmployee);
+            cmd.ExecuteNonQuery();
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    SqlConnection OpenConnection()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        con.Open();
+        return con;
+    }
+}
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain natively supports working with immutable objects, no conversions are needed.</p>
+<p>To populate immutable objects, use either the <code>InferConstructor</code> option or a <code>.WithConstructor&lt;...&gt;</code> link to indicate that a non-default constructor should be used.</p>
+<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public ImmutableRepository(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return m_DataSource.Insert(classification).ToInt32().Execute();
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Delete(classification).ToInt32().Execute();
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor | RowOptions.AllowEmptyResults).Execute();
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        return m_DataSource.From(TableName).ToImmutableArray&lt;ReadOnlyEmployeeClassification&gt;(CollectionOptions.InferConstructor).Execute();
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor).NeverNull().Execute();
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Update(classification).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Dapper natively supports working with immutable objects, no conversions are needed.</p>
+<p>No special handling is needed to call a non-default constructor.</p>
+<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    SqlConnection OpenConnection()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        con.Open();
+        return con;
+    }
+
+    public ImmutableRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
+                    OUTPUT Inserted.EmployeeClassificationKey
+                    VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )&quot;;
+
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int&gt;(sql, classification);
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            con.Execute(sql, classification);
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingleOrDefault&lt;ReadOnlyEmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
+
+        using (var con = OpenConnection())
+            return con.Query&lt;ReadOnlyEmployeeClassification&gt;(sql).ToImmutableList();
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingle&lt;ReadOnlyEmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            con.Execute(sql, classification);
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework Core does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
+<pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassification entity)
+{
+    if (entity == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity)} is null.&quot;);
+    if (entity.EmployeeClassificationName == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.EmployeeClassificationName)} is null.&quot;);
+    if (entity.IsEmployee == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.IsEmployee)} is null.&quot;);
+
+    EmployeeClassificationKey = entity.EmployeeClassificationKey;
+    EmployeeClassificationName = entity.EmployeeClassificationName;
+    IsExempt = entity.IsExempt;
+    IsEmployee = entity.IsEmployee.Value;
+}
+</code></pre>
+
+<pre><code class="cs">public EmployeeClassification ToEntity()
+{
+    return new EmployeeClassification()
+    {
+        EmployeeClassificationKey = EmployeeClassificationKey,
+        EmployeeClassificationName = EmployeeClassificationName,
+        IsExempt = IsExempt,
+        IsEmployee = IsEmployee
+    };
+}
+</code></pre>
+
+<p>These conversions are used in the repository before write operations and after read operations.</p>
+<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ImmutableRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            var temp = classification.ToEntity();
+            context.EmployeeClassification.Add(temp);
+            context.SaveChanges();
+            return temp.EmployeeClassificationKey;
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public virtual void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification
+                .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp == null)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                temp.IsEmployee = classification.IsEmployee;
+                temp.IsExempt = classification.IsExempt;
+                context.SaveChanges();
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>NHibernate does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
+<pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassification entity)
+{
+    if (entity == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity)} is null.&quot;);
+    if (entity.EmployeeClassificationName == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.EmployeeClassificationName)} is null.&quot;);
+
+    EmployeeClassificationKey = entity.EmployeeClassificationKey;
+    EmployeeClassificationName = entity.EmployeeClassificationName;
+    IsExempt = entity.IsExempt;
+    IsEmployee = entity.IsEmployee;
+}
+</code></pre>
+
+<pre><code class="cs">public EmployeeClassification ToEntity()
+{
+    return new EmployeeClassification()
+    {
+        EmployeeClassificationKey = EmployeeClassificationKey,
+        EmployeeClassificationName = EmployeeClassificationName,
+        IsExempt = IsExempt,
+        IsEmployee = IsEmployee
+    };
+}
+</code></pre>
+
+<p>These conversions are used in the repository before write operations and after read operations.</p>
+<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    readonly ISessionFactory m_SessionFactory;
+
+    public ImmutableRepository(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            var temp = classification.ToEntity();
+            session.Save(temp);
+            session.Flush();
+            return temp.EmployeeClassificationKey;
+        }
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            session.Delete(classification.ToEntity());
+            session.Flush();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
+                .List&lt;EmployeeClassification&gt;()
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x))
+                .SingleOrDefault();
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session
+                .CreateCriteria(typeof(EmployeeClassification))
+                .List&lt;EmployeeClassification&gt;()
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x))
+                .ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            var result = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            return new ReadOnlyEmployeeClassification(result);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            session.Update(classification.ToEntity());
+            session.Flush();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

@@ -7,6 +7,7 @@ namespace Recipes.PartialUpdate
     /// This use case performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
+    [TestCategory("PartialUpdate")]
     public abstract class PartialUpdateTests<TModel>
         where TModel : class, IEmployeeClassification, new()
     {

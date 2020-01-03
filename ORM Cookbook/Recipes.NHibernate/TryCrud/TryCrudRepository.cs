@@ -1,6 +1,6 @@
 ﻿using NHibernate;
 using NHibernate.Criterion;
-using Recipes.NHibernate.Models;
+using Recipes.NHibernate.Entities;
 using Recipes.TryCrud;
 using System;
 using System.Data;

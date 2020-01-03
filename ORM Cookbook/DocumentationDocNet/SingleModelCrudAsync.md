@@ -14,6 +14,12 @@ With ADO.NET, the only changes are to add `await`, `Async`, and `.ConfigureAwait
 
 @snippet cs [../Recipes.Ado/SingleModelCrudAsync/SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
+## Chain
+
+With Tortuga Chain, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+@snippet cs [..\Recipes.Tortuga.Chain\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
+
 ## Dapper
 
 For non-cancellable operation, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
@@ -32,12 +38,6 @@ Here is the full repository.
 
 @snippet cs [../Recipes.Dapper/SingleModelCrudAsync/SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
-## Tortuga Chain
-
-With Tortuga Chain, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
-
-@snippet cs [..\Recipes.Tortuga.Chain\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
-
 ## Entity Framework Core
 
 For non-cancellable operation, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
@@ -55,18 +55,15 @@ Async:
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
-## RepoDb
-
-For non-cancellable operation, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
-
-RepoDb does not support cancellation tokens at this time.
-
-@snippet cs [..\Recipes.RepoDb\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
-
-
 ## NHibernate
 
 With NHibernate, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
 
 @snippet cs [../Recipes.NHibernate/SingleModelCrudAsync/SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
+
+## ServiceStack
+
+With ServiceStack, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+@snippet cs [..\Recipes.ServiceStack\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository

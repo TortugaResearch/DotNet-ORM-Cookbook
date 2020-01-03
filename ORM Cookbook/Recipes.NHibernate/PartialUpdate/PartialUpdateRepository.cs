@@ -1,5 +1,5 @@
 ﻿using NHibernate;
-using Recipes.NHibernate.Models;
+using Recipes.NHibernate.Entities;
 using Recipes.PartialUpdate;
 using System;
 

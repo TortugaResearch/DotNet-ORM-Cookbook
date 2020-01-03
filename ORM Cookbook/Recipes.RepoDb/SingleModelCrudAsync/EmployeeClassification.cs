@@ -1,6 +1,5 @@
 ﻿using Recipes.SingleModelCrudAsync;
 using RepoDb.Attributes;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipes.RepoDb.SingleModelCrudAsync
 {
