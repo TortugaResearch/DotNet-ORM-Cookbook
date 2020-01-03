@@ -1,9 +1,12 @@
 ﻿using Recipes.TryCrud;
+using RepoDb.Attributes;
 
 namespace Recipes.RepoDb.TryCrud
 {
+    [Map("HR.EmployeeClassification")]
     public class EmployeeClassification : IEmployeeClassification
     {
+        [Primary]
         public int EmployeeClassificationKey { get; set; }
 
         /// <exclude />
