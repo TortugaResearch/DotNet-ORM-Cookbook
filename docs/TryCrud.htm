@@ -794,61 +794,89 @@
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudRepository : BaseRepository&lt;EmployeeClassification, SqlConnection&gt;,
+    ITryCrudRepository&lt;EmployeeClassification&gt;
 {
+    public TryCrudRepository(string connectionString)
+        : base(connectionString)
+    { }
+
     public int Create(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return Insert&lt;int&gt;(classification);
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var rowCount = Delete(employeeClassificationKey);
+        if (rowCount != 1)
+            throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return 1 == Delete(employeeClassificationKey);
     }
 
     public void DeleteOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var rowCount = Delete(classification);
+        if (rowCount != 1)
+            throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
     }
 
     public bool DeleteWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return 1 == Delete(classification);
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var entity = Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+        if (null == entity)
+            throw new DataException($&quot;Message&quot;);
+
+        return entity;
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var entity = Query(employeeClassificationKey).FirstOrDefault();
+        if (null == entity)
+            throw new DataException($&quot;Message&quot;);
+
+        return entity;
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return Query(employeeClassificationKey).FirstOrDefault();
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        var rowCount = Update(classification);
+        if (rowCount != 1)
+            throw new DataException($&quot;Message&quot;);
     }
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        return 1 == Update(classification);
     }
 }
 </code></pre>
