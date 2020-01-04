@@ -7,10 +7,13 @@ namespace Recipes.ServiceStack.Entities
     [Schema("HR")]
     public class Division
     {
-        [PrimaryKey, AutoIncrement] [Alias("DivisionKey")] public int Id { get; set; }
+        [PrimaryKey, AutoIncrement] [Alias("DivisionKey")] 
+        public int Id { get; set; }
 
-        [Required] [StringLength(30)] public string? DivisionName { get; set; }
+        [Required] [StringLength(30)] 
+        public string? DivisionName { get; set; }
 
-        [Reference] public virtual List<Department> Departments { get; } = new List<Department>();
+        [Reference] 
+        public virtual List<Department> Departments { get; } = new List<Department>();
     }
 }

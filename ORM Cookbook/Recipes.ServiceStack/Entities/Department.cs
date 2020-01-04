@@ -6,14 +6,17 @@ namespace Recipes.ServiceStack.Entities
     [Alias("Department")]
     public class Department
     {
-        [PrimaryKey, AutoIncrement] [Alias("DepartmentKey")] public int Id { get; set; }
+        [PrimaryKey, AutoIncrement] [Alias("DepartmentKey")] 
+        public int Id { get; set; }
 
-        [StringLength(30)] public string? DepartmentName { get; set; }
+        [StringLength(30)] 
+        public string? DepartmentName { get; set; }
 
         [References(typeof(Division))]
         [Alias("DivisionKey")]
         public int DivisionId { get; set; }
 
-        [Reference] public virtual Division? Division { get; set; }
+        [Reference] 
+        public virtual Division? Division { get; set; }
     }
 }
