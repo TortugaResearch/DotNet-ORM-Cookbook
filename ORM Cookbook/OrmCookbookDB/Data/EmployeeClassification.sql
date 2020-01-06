@@ -16,7 +16,8 @@ VALUES	(1, 'Full Time Salary', 1, 1),
 		(3, 'Part Time Wage', 0, 1),
 		(4, 'Contractor', 0, 0),
 		(5, 'Paid Intern', 0, 1),
-		(6, 'Unpaid Intern', 1, 1);
+		(6, 'Unpaid Intern', 1, 1),
+		(7, 'Consultant', 1, 0);
 
 
 

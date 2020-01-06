@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Populate DataTable - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry current"><a class="current" href="PopulateDataTable.htm">Populate DataTable</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="PopulateDataTable.htm">Populate DataTable</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="populate-a-datatable">Populate a DataTable<a class="headerlink" href="#populate-a-datatable" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>A <code>DataTable</code> is often used for holding the results of a report that are then displayed in a data grid of some sort. It is primarily used when the columns returned are dynamically chosen or when creating custom classes for each report is consider to be onerous.</p>
+<p>A <code>DataTable</code> may also be used as a staging area before performing a bulk insert operation. </p>
+<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IPopulateDataTableRepository
+
+{
+    /// &lt;summary&gt;
+    /// Gets a filtered list of EmployeeClassification rows.
+    /// &lt;/summary&gt;
+    DataTable FindByFlags(bool isExempt, bool isEmployee);
+
+    /// &lt;summary&gt;
+    /// Gets all EmployeeClassification rows.
+    /// &lt;/summary&gt;
+    DataTable GetAll();
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p><code>DataTable.Load</code> can be provided with an <code>IDataReader</code>.</p>
+<pre><code class="cs">public class PopulateDataTableRepository : IPopulateDataTableRepository
+{
+    readonly string m_ConnectionString;
+
+    public PopulateDataTableRepository(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE ec.IsExempt = @IsExempt AND ec.IsEmployee = @IsEmployee;&quot;;
+
+        var result = new DataTable();
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@IsExempt&quot;, isExempt);
+            cmd.Parameters.AddWithValue(&quot;@IsEmployee&quot;, isEmployee);
+            using (var reader = cmd.ExecuteReader())
+                result.Load(reader);
+        }
+        return result;
+    }
+
+    public DataTable GetAll()
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
+
+        var result = new DataTable();
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        using (var reader = cmd.ExecuteReader())
+            result.Load(reader);
+
+        return result;
+    }
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    SqlConnection OpenConnection()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        con.Open();
+        return con;
+    }
+}
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain natively supports <code>DataTable</code>.</p>
+<pre><code class="cs">public class PopulateDataTableRepository : IPopulateDataTableRepository
+{
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public PopulateDataTableRepository(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        return m_DataSource.From(TableName, new { isExempt, isEmployee }).ToDataTable().Execute();
+    }
+
+    public DataTable GetAll()
+    {
+        return m_DataSource.From(TableName).ToDataTable().Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Dapper does not natively support <code>DataTable</code>. Use the ADO.NET pattern.</p>
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>EF Core does not support <code>DataTable</code>. </p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In some cases you'll need to catch a <code>StaleStateException</code> as there is no TryUpdate or TryDelete.</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="..\DocumentationDocNet\PopulateDataTable.md" Link="PopulateDataTable\PopulateDataTable.md" />
     <None Include="..\DocumentationDocNet\SingleModelCrud.md" Link="SingleModelCrud\SingleModelCrud.md" />
     <None Include="..\DocumentationDocNet\TryCrud.md" Link="TryCrud\TryCrud.md" />
   </ItemGroup>
@@ -33,6 +34,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Tortuga.Anchor" Version="3.1.7293.38400" />
   </ItemGroup>
 
