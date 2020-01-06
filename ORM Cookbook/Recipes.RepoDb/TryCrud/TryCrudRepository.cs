@@ -1,63 +1,95 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.TryCrud;
+﻿using Recipes.TryCrud;
+using RepoDb;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 
 namespace Recipes.RepoDb.TryCrud
 {
-    public class TryCrudRepository : ITryCrudRepository<EmployeeClassification>
+    public class TryCrudRepository : BaseRepository<EmployeeClassification, SqlConnection>,
+        ITryCrudRepository<EmployeeClassification>
     {
+        public TryCrudRepository(string connectionString)
+            : base(connectionString)
+        { }
+
         public int Create(EmployeeClassification classification)
         {
-            throw new AssertInconclusiveException("TODO");
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+            return Insert<int>(classification);
         }
 
         public void DeleteByKeyOrException(int employeeClassificationKey)
         {
-            throw new AssertInconclusiveException("TODO");
+            var rowCount = Delete(employeeClassificationKey);
+            if (rowCount != 1)
+                throw new DataException($"No row was found for key {employeeClassificationKey}.");
         }
 
         public bool DeleteByKeyWithStatus(int employeeClassificationKey)
         {
-            throw new AssertInconclusiveException("TODO");
+            return 1 == Delete(employeeClassificationKey);
         }
 
         public void DeleteOrException(EmployeeClassification classification)
         {
-            throw new AssertInconclusiveException("TODO");
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+            var rowCount = Delete(classification);
+            if (rowCount != 1)
+                throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
         }
 
         public bool DeleteWithStatus(EmployeeClassification classification)
         {
-            throw new AssertInconclusiveException("TODO");
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+            return 1 == Delete(classification);
         }
 
         public EmployeeClassification FindByNameOrException(string employeeClassificationName)
         {
-            throw new AssertInconclusiveException("TODO");
+            var entity = Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+            if (null == entity)
+                throw new DataException($"Message");
+
+            return entity;
         }
 
         public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
         {
-            throw new AssertInconclusiveException("TODO");
+            return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
         }
 
         public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
         {
-            throw new AssertInconclusiveException("TODO");
+            var entity = Query(employeeClassificationKey).FirstOrDefault();
+            if (null == entity)
+                throw new DataException($"Message");
+
+            return entity;
         }
 
         public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
         {
-            throw new AssertInconclusiveException("TODO");
+            return Query(employeeClassificationKey).FirstOrDefault();
         }
 
         public void UpdateOrException(EmployeeClassification classification)
         {
-            throw new AssertInconclusiveException("TODO");
+            var rowCount = Update(classification);
+            if (rowCount != 1)
+                throw new DataException($"Message");
         }
 
         public bool UpdateWithStatus(EmployeeClassification classification)
         {
-            throw new AssertInconclusiveException("TODO");
+            return 1 == Update(classification);
         }
     }
 }

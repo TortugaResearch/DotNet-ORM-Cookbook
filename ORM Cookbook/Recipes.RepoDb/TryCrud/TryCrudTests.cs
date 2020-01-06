@@ -8,7 +8,7 @@ namespace Recipes.RepoDb.TryCrud
     {
         protected override ITryCrudRepository<EmployeeClassification> GetRepository()
         {
-            throw new AssertInconclusiveException("TODO");
+            return new TryCrudRepository(Setup.ConnectionString);
         }
     }
 }

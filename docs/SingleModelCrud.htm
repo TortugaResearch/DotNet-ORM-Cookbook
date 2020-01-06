@@ -789,39 +789,24 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <p>The repository resemebles Dapper, but with far less SQL.</p>
-<pre><code class="cs">public class SingleModelCrudRepository : ISingleModelCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudRepository : BaseRepository&lt;EmployeeClassification, SqlConnection&gt;,
+    ISingleModelCrudRepository&lt;EmployeeClassification&gt;
 {
-    readonly string m_ConnectionString;
-
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    SqlConnection OpenConnection()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        con.Open();
-        return con;
-    }
-
     public SingleModelCrudRepository(string connectionString)
-    {
-        m_ConnectionString = connectionString;
-    }
+        : base(connectionString)
+    { }
 
     public int Create(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using (var con = OpenConnection())
-            return con.Insert&lt;EmployeeClassification, int&gt;(classification);
+        return Insert&lt;int&gt;(classification);
     }
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        using (var con = OpenConnection())
-            con.Delete&lt;EmployeeClassification&gt;(employeeClassificationKey);
+        Delete(employeeClassificationKey);
     }
 
     public void Delete(EmployeeClassification classification)
@@ -829,26 +814,22 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using (var con = OpenConnection())
-            con.Delete(classification);
+        base.Delete(classification);
     }
 
     public EmployeeClassification? FindByName(string employeeClassificationName)
     {
-        using (var con = OpenConnection())
-            return con.Query&lt;EmployeeClassification&gt;(new { EmployeeClassificationName = employeeClassificationName }).FirstOrDefault();
+        return Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
     }
 
     public IList&lt;EmployeeClassification&gt; GetAll()
     {
-        using (var con = OpenConnection())
-            return con.QueryAll&lt;EmployeeClassification&gt;().ToList();
+        return QueryAll().AsList();
     }
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        using (var con = OpenConnection())
-            return con.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+        return Query(employeeClassificationKey).FirstOrDefault();
     }
 
     public void Update(EmployeeClassification classification)
@@ -856,8 +837,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using (var con = OpenConnection())
-            con.Update(classification);
+        base.Update(classification);
     }
 }
 </code></pre>
