@@ -31,6 +31,8 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
 <li class="tocentry current"><a class="current" href="SingleModelCrud.htm">Single Model CRUD</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
@@ -844,19 +846,16 @@ public class EmployeeClassification : IEmployeeClassification
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>ServiceStack requires the use of annotations on its models. These are specific to ServiceStack, you cannot use the standard <code>Table</code>, <code>Column</code>, and <code>Key</code> attributes from .NET.</p>
-<pre><code class="cs">[Alias(&quot;EmployeeClassification&quot;)]
-[Schema(&quot;HR&quot;)]
+<pre><code class="cs">[Alias(&quot;EmployeeClassification&quot;), Schema(&quot;HR&quot;)]
 public partial class EmployeeClassification
 {
     [PrimaryKey, AutoIncrement]
     [Alias(&quot;EmployeeClassificationKey&quot;)]
     public int Id { get; set; }
 
-    [Default(0)]
     public bool IsExempt { get; set; }
 
-    [Default(1)]
-    public bool? IsEmployee { get; set; }
+    public bool IsEmployee { get; set; }
 
     [Reference]
     public virtual List&lt;Employee&gt; Employees { get; } = new List&lt;Employee&gt;();
