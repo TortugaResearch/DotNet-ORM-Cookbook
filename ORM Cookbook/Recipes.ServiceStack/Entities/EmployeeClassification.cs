@@ -1,21 +1,18 @@
-﻿using ServiceStack.DataAnnotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ServiceStack.DataAnnotations;
 
 namespace Recipes.ServiceStack.Entities
 {
-    [Alias("EmployeeClassification")]
-    [Schema("HR")]
+    [Alias("EmployeeClassification"), Schema("HR")]
     public partial class EmployeeClassification
     {
         [PrimaryKey, AutoIncrement]
         [Alias("EmployeeClassificationKey")]
         public int Id { get; set; }
 
-        [Default(0)]
         public bool IsExempt { get; set; }
 
-        [Default(1)]
-        public bool? IsEmployee { get; set; }
+        public bool IsEmployee { get; set; }
 
         [Reference]
         public virtual List<Employee> Employees { get; } = new List<Employee>();
