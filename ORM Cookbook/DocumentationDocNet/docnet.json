@@ -13,6 +13,7 @@
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",
     "Partial Updates": "PartialUpdate.md",
-    "Immutable CRUD": "Immutable.md"
+    "Immutable CRUD": "Immutable.md",
+    "Populate DataTable": "PopulateDataTable.md"
   }
 }
