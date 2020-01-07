@@ -22,15 +22,31 @@ Chain natively supports `DataTable`.
 
 ## Dapper
 
-Dapper does not natively support `DataTable`. Use the ADO.NET pattern.
+`DataTable.Load` can be provided with an `IDataReader`.
+
+@snippet cs [..\Recipes.Dapper\PopulateDataTable\PopulateDataTableRepository.cs] PopulateDataTableRepository
 
 ## Entity Framework Core
 
 EF Core does not support `DataTable`. 
 
+@snippet cs [..\Recipes.EntityFrameworkCore\PopulateDataTable\PopulateDataTableRepository.cs] PopulateDataTableRepository
+
+You can generalize this using a reflection library.
+
+@snippet cs [..\Recipes.EntityFrameworkCore\PopulateDataTable\PopulateDataTableRepository2.cs] PopulateDataTableRepository2
+
+
 ## NHibernate
 
-In some cases you'll need to catch a `StaleStateException` as there is no TryUpdate or TryDelete.
+NHibernate does not support `DataTable`, but you can add it using an `IResultTransformer`. 
+
+@snippet cs [..\Recipes.NHibernate\DataTableResultTransformer.cs] DataTableResultTransformer
+
+Note that inline SQL must be used inconjunction with the `IResultTransformer`.
+
+@snippet cs [..\Recipes.NHibernate\PopulateDataTable\PopulateDataTableRepository.cs] PopulateDataTableRepository
+
 
 ## RepoDb
 

@@ -32,6 +32,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
+    <PackageReference Include="Tortuga.Anchor" Version="3.1.7293.38400" />
   </ItemGroup>
 
   <ItemGroup>
