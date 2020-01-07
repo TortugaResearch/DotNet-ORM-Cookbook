@@ -64,6 +64,9 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -106,7 +109,7 @@ void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage);
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
-    var sql = @&quot;UPDATE HR.EmployeeClassification
+    const string sql = @&quot;UPDATE HR.EmployeeClassification
                 SET EmployeeClassificationName = @EmployeeClassificationName
                 WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -124,7 +127,7 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
-    var sql = @&quot;UPDATE HR.EmployeeClassification
+    const string sql = @&quot;UPDATE HR.EmployeeClassification
                 SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
                 WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -141,7 +144,7 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 
 <pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
 {
-    var sql = @&quot;UPDATE HR.EmployeeClassification
+    const string sql = @&quot;UPDATE HR.EmployeeClassification
                 SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
                 WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 

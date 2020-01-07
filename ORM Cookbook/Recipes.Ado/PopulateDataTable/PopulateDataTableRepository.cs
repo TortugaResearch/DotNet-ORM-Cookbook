@@ -15,7 +15,7 @@ namespace Recipes.Ado.PopulateDataTable
 
         public DataTable FindByFlags(bool isExempt, bool isEmployee)
         {
-            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE ec.IsExempt = @IsExempt AND ec.IsEmployee = @IsEmployee;";
+            const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE ec.IsExempt = @IsExempt AND ec.IsEmployee = @IsEmployee;";
 
             var result = new DataTable();
 
@@ -32,7 +32,7 @@ namespace Recipes.Ado.PopulateDataTable
 
         public DataTable GetAll()
         {
-            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;";
+            const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;";
 
             var result = new DataTable();
 

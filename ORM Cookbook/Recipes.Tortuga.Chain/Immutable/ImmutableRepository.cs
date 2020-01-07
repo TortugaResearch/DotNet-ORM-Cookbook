@@ -28,7 +28,7 @@ namespace Recipes.Chain.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            m_DataSource.Delete(classification).ToInt32().Execute();
+            m_DataSource.Delete(classification).Execute();
         }
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
