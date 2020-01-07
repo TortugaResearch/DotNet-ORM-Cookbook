@@ -8,6 +8,7 @@
   "ConvertLocalLinks": "true",
   "Pages": {
     "__index": "index.md",
+    "FAQ": "FAQ.md",
     "Single Model CRUD": "SingleModelCrud.md",
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",

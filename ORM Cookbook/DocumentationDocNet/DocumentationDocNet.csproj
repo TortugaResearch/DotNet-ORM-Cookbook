@@ -55,6 +55,7 @@
     <None Include="Immutable.md" />
     <None Include="readme.md" />
     <None Include="PartialUpdate.md" />
+    <None Include="FAQ.md" />
     <None Include="PopulateDataTable.md" />
     <None Include="TryCrud.md" />
     <None Include="SingleModelCrudAsync.md" />
