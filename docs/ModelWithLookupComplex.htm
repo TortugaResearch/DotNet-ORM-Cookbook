@@ -444,7 +444,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         //Used for Insert/Update operations
         public int EmployeeClassificationKey =&gt; EmployeeClassification?.EmployeeClassificationKey ?? 0;
 
-        [Decompose]
+        [Decompose] //Used for Read operations
         public EmployeeClassification? EmployeeClassification { get; set; }
 
         //Used for linking the entity to the test framework. Not part of the recipe.
