@@ -28,6 +28,10 @@ In order to promote code reuse, object population has been moved into the model'
 
 @snippet cs [..\Recipes.EntityFrameworkCore\ModelWithLookup\ModelWithLookupSimpleRepository.cs] ModelWithLookupSimpleRepository
 
+## LLBLGen Pro
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithLookup\ModelWithLookupSimpleRepository.cs] ModelWithLookupSimpleRepository
+
 ## NHibernate
 
 TODO

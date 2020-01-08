@@ -36,6 +36,11 @@ You can generalize this using a reflection library.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\PopulateDataTable\PopulateDataTableRepository2.cs] PopulateDataTableRepository2
 
+## LLBLGen Pro
+
+LLBLGen Pro natively supports `DataTable`.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\PopulateDataTable\PopulateDataTableRepository.cs] PopulateDataTableRepository
 
 ## NHibernate
 

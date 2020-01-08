@@ -43,6 +43,19 @@ These conversions are used in the repository before write operations and after r
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Immutable\ImmutableRepository.cs] ImmutableRepository
 
+## LLBLGen Pro 
+
+LLBLGen Pro supports 'action' specifications on entities, e.g. an entity can only be fetched, or fetched and updated, but e.g. not deleted. An entity that's marked as 'Read' can't be updated, deleted or inserted. The scope of the recipes in this cookbook however
+focus on immutable data in-memory. LLBLGen Pro does not directly support these objects, You can overcome this by using a pair of conversions between the immutable object and the mutable entity.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Immutable\ReadOnlyEmployeeClassification.cs] <Constructor>(EmployeeClassificationEntity)
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Immutable\ReadOnlyEmployeeClassification.cs] ToEntity
+
+These conversions are used in the repository before write operations and after read operations.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Immutable\ImmutableRepository.cs] ImmutableRepository
+
 ## NHibernate
 
 NHibernate does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.

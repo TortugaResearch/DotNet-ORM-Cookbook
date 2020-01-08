@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\Recipes.Ado\Recipes.Ado.csproj" />
     <ProjectReference Include="..\..\Recipes.Dapper\Recipes.Dapper.csproj" />
     <ProjectReference Include="..\..\Recipes.EntityFrameworkCore\Recipes.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\Recipes.LLBLGenPro\Recipes\Recipes.LLBLGenPro.csproj" />
     <ProjectReference Include="..\..\Recipes.NHibernate\Recipes.NHibernate.csproj" />
     <ProjectReference Include="..\..\Recipes.RepoDb\Recipes.RepoDb.csproj" />
     <ProjectReference Include="..\..\Recipes.ServiceStack\Recipes.ServiceStack.csproj" />

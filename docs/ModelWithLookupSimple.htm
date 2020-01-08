@@ -60,6 +60,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
 
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
@@ -681,6 +683,108 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
                 temp.Title = employee.Title;
                 temp.EmployeeClassificationKey = employee.EmployeeClassificationKey;
                 context.SaveChanges();
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ModelWithLookupSimpleRepository : IModelWithLookupSimpleRepository&lt;EmployeeEntity&gt;
+{
+    public int Create(EmployeeEntity employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.SaveEntity(employee, true, recurse:false);
+            return employee.EmployeeKey;
+        }
+    }
+
+    public void Delete(EmployeeEntity employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            employee.IsNew = false;
+            adapter.DeleteEntity(employee);
+        }
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.DeleteEntitiesDirectly(typeof(EmployeeEntity), new RelationPredicateBucket(EmployeeFields.EmployeeKey.Equal(employeeKey)));
+        }
+    }
+
+    public IList&lt;EmployeeEntity&gt; FindByLastName(string lastName)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.Where(ec =&gt; ec.LastName == lastName).ToList();
+        }
+    }
+
+    public IList&lt;EmployeeEntity&gt; GetAll()
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.ToList();
+        }
+    }
+
+    public EmployeeEntity? GetByKey(int employeeKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return adapter.FetchFirst(new QueryFactory().Employee.Where(EmployeeFields.EmployeeKey.Equal(employeeKey)));
+        }
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec=&gt;ec.EmployeeClassificationKey==employeeClassificationKey);
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// Updates the specified employee.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employee&quot;&gt;The employee.&lt;/param&gt;
+    /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;employee&lt;/exception&gt;
+    public void Update(EmployeeEntity employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            EmployeeEntity toPersist = employee;
+            if(toPersist.IsNew)
+            {
+                toPersist = new EmployeeEntity(employee.EmployeeKey);
+                adapter.FetchEntity(toPersist);
+                //Copy the changed fields
+                toPersist.FirstName = employee.FirstName;
+                toPersist.MiddleName = employee.MiddleName;
+                toPersist.LastName = employee.LastName;
+                toPersist.CellPhone = employee.CellPhone;
+                toPersist.OfficePhone = employee.OfficePhone;
+                toPersist.Title = employee.Title;
+                toPersist.EmployeeClassificationKey = employee.EmployeeClassificationKey;
+            }
+            if(!toPersist.IsNew)
+            {
+                adapter.SaveEntity(toPersist, refetchAfterSave:false, recurse:false);
             }
         }
     }
