@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--LLBLGen Pro v5.6 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
+<Project Version="5.6" TargetFrameworkName="LLBLGen Pro Runtime Framework" UseLegacyDefaults="false">
+  <Properties>
+    <Abbreviations />
+    <Property Name="AdditionalTaskPerformerFolder" Value="" />
+    <Property Name="AdditionalTasksFolder" Value="" />
+    <Property Name="AdditionalTemplatesFolder" Value="" />
+    <Property Name="AdditionalTypeConverterFolder" Value="" />
+    <Property Name="AddNewElementsAfterRefresh_v5" Value="false" />
+    <Property Name="AddNewElementsAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="AddNewFieldsAfterRefresh_v5" Value="true" />
+    <Property Name="AddNewFieldsAfterRelationalModelDataSync_v5" Value="true" />
+    <Property Name="AddNewViewsAsEntitiesAfterRefresh_v5" Value="false" />
+    <Property Name="AddNewViewsAsEntitiesAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="AutoAddManyToManyRelationships" Value="false" />
+    <Property Name="AutoAssignSequencesToIntegerPks" Value="true" />
+    <Property Name="AutoAssignTypeConverterToFieldMapping" Value="true" />
+    <Property Name="AutomaticallyGenerateSourceCodeOnProjectSave" Value="true" />
+    <Property Name="ConnectionStringKeyNamePattern" Value="ConnectionString.{$ProviderName}" />
+    <Property Name="DefaultDeleteRuleAction" Value="1" />
+    <Property Name="DefaultUpdateRuleAction" Value="0" />
+    <Property Name="DeleteObsoleteFiles" Value="true" />
+    <Property Name="EncodingToUse" Value="0" />
+    <Property Name="EntityActionCombinationDefaultForTable" Value="0" />
+    <Property Name="EntityActionCombinationDefaultForView" Value="4" />
+    <Property Name="EntityFieldNameStripPattern" Value="{}{}" />
+    <Property Name="EntityNameStripPattern" Value="{tbl_}{}" />
+    <Property Name="ExcludableOrphanedElementDetectedAction" Value="3" />
+    <Property Name="FailCodeGenerationOnWriteError" Value="false" />
+    <Property Name="FieldMappedOntoRelatedFieldPattern" Value="{$RelatedFieldName}" />
+    <Property Name="FkFieldsAreNamedAfterTargetField" Value="true" />
+    <Property Name="ForeignKeyConstraintPattern" Value="FK_{$Guid}" />
+    <Property Name="ForeignKeyFieldPattern" Value="{$NavigatorName}{$RelatedFieldName}" />
+    <Property Name="GroupUsage" Value="0" />
+    <Property Name="IdentifyingFieldsFollowDBPrimaryKeyConstraints_v5" Value="true" />
+    <Property Name="InsertUnderscoreAtWordBreakCaseInsensitiveDBs" Value="false" />
+    <Property Name="InsertUnderscoreAtWordBreakCaseSensitiveDBs" Value="false" />
+    <Property Name="LengthPrecisionScaleFollowDBLengthPrecisionScale_v5" Value="true" />
+    <Property Name="MakeElementNamePascalCasing" Value="true" />
+    <Property Name="NavigatorMappedOntoManyToManyPattern" Value="{$EndEntityName}CollectionVia{$IntermediateEntityName$S}" />
+    <Property Name="NavigatorMappedOntoOneManyToOnePattern" Value="{$EndEntityName$S}" />
+    <Property Name="NavigatorMappedOntoOneToManyPattern" Value="{$EndEntityName$P}" />
+    <Property Name="NonExcludableOrphanedElementDetectedAction" Value="3" />
+    <Property Name="PreferDecimalOverCurrencyTypes" Value="true" />
+    <Property Name="PreferNaturalCharacterTypes" Value="true" />
+    <Property Name="PreferSystemSequencesOverSchemaSequencesIfApplicable" Value="true" />
+    <Property Name="PreferVariableLengthTypes" Value="true" />
+    <Property Name="PrimaryKeyConstraintPattern" Value="PK_{$Guid}" />
+    <Property Name="ProjectCreator" Value="FB" />
+    <Property Name="ProjectName" Value="LLBLGenPro.OrmCookbook" />
+    <Property Name="ReflectNullabilityOfElementFieldInTargetField_v5" Value="false" />
+    <Property Name="ReflectTypeOfElementFieldInTargetField_v5" Value="true" />
+    <Property Name="RelationalModelDataElementNameCasingCaseInsensitiveDBs" Value="3" />
+    <Property Name="RelationalModelDataElementNameCasingCaseSensitiveDBs" Value="3" />
+    <Property Name="RelationshipsFollowDBForeignKeyConstraints_v5" Value="true" />
+    <Property Name="RemoveUnderscoresFromElementName" Value="true" />
+    <Property Name="RemoveUnmappedElementsAfterRefresh_v5" Value="false" />
+    <Property Name="RemoveUnmappedElementsAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="ResetFieldOrderBasedOnTargetOrderAtRefresh" Value="false" />
+    <Property Name="ResetFieldOrderBasedOnTargetOrderAtRelationalModelDataSync" Value="false" />
+    <Property Name="RetrieveDBCustomProperties" Value="false" />
+    <Property Name="RootNamespace" Value="LLBLGenPro.OrmCookbook" />
+    <Property Name="SequenceNameMatchingPattern" Value="SEQ_{$TableName}" />
+    <Property Name="SequencePattern" Value="SEQ_{$EntityName}" />
+    <Property Name="SetGroupNameAfterSchemaName" Value="true" />
+    <Property Name="SetSchemaNameAfterGroupName" Value="true" />
+    <Property Name="SingularizeElementNames" Value="true" />
+    <Property Name="StoredProcNameStripPattern" Value="{pr_, sp_}{}" />
+    <Property Name="StoreTimeLastGeneratedIntoProject" Value="false" />
+    <Property Name="StoreTimeLastSyncIntoProject" Value="true" />
+    <Property Name="SyncCustomFieldOrderingWithTableFieldIndex" Value="false" />
+    <Property Name="SyncMappedElementNamesAfterRefresh_v5" Value="false" />
+    <Property Name="SyncMappedElementNamesAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="SyncRelationalModelDataElementNameWithModelElementName_v5" Value="false" />
+    <Property Name="SyncRenamedMappedElementNamesAfterRefresh_v5" Value="false" />
+    <Property Name="SyncRenamedMappedElementNamesAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="TableValuedFunctionNameStripPattern" Value="{fn_, pr_, sp_}{}" />
+    <Property Name="TargetPerEntityEdgesRequireBackingFkConstraint" Value="true" />
+    <Property Name="TypedViewFieldNameStripPattern" Value="{}{}" />
+    <Property Name="TypedViewMappedOnResultsetPattern" Value="{$ProcFunctionName}{$ResultsetName}Result" />
+    <Property Name="TypedViewNameStripPattern" Value="{vw_}{}" />
+    <Property Name="UniqueConstraintPattern" Value="UC_{$Guid}" />
+    <Property Name="UniqueConstraintsFollowDBUniqueConstraints_v5" Value="true" />
+    <Property Name="UpdateCustomPropertiesAfterRefresh_v5" Value="false" />
+    <Property Name="UpdateCustomPropertiesAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="UseCustomFieldOrderingOnNewElements" Value="false" />
+  </Properties>
+  <TypeShortcuts>
+    <TypeShortcut Shortcut="CategoryType" Type="EnumTypes.CategoryType, EnumTypes" />
+  </TypeShortcuts>
+  <IgnoredWarnings />
+  <SavedSearchQueries />
+  <CodeGenerationCyclePreferences>
+    <OutputType Value="3">
+      <LastUsedPreferences>
+        <DestinationRootFolder Value=".\" />
+        <FrameworkName Value="LLBLGen Pro Runtime Framework" />
+        <LanguageName Value="C#" />
+        <PlatformName Value=".NET Standard 2.0" />
+        <PresetName Value="SD.Presets.Adapter.General.Netstandard" />
+        <RootNamespace Value="LLBLGenPro.OrmCookbook" />
+        <TemplateGroup Value="Adapter" />
+        <TemplateBindings>
+          <Binding Name="SD.TemplateBindings.DB2Specific" />
+          <Binding Name="SD.TemplateBindings.FirebirdSpecific" />
+          <Binding Name="SD.TemplateBindings.MySqlSpecific" />
+          <Binding Name="SD.TemplateBindings.OracleODPNetSpecific" />
+          <Binding Name="SD.TemplateBindings.PostgreSqlSpecific" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.Netstandard20" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates" />
+          <Binding Name="SD.TemplateBindings.SpannerSpecific" />
+          <Binding Name="SD.TemplateBindings.SqlServerSpecific" />
+          <Binding Name="SD.TemplateBindings.General" />
+        </TemplateBindings>
+        <AdhocTemplateSets />
+      </LastUsedPreferences>
+    </OutputType>
+  </CodeGenerationCyclePreferences>
+  <OutputSettingValues>
+    <SettingValues>
+      <SettingValue Name="1:AdapterDbGenericSubFolderName" Value="DatabaseGeneric" Type="18" />
+      <SettingValue Name="1:AdapterDbSpecificNamespaceSuffix" Value="DatabaseSpecific" Type="18" />
+      <SettingValue Name="1:AdapterDbSpecificProjectFileSuffix" Value="DBSpecific" Type="18" />
+      <SettingValue Name="1:AdapterDbSpecificSubFolderName" Value="DatabaseSpecific" Type="18" />
+      <SettingValue Name="1:ConvertNulledReferenceTypesToDefaultValue" Value="true" Type="3" />
+      <SettingValue Name="1:EntityBaseClassNameDefault" Value="CommonEntityBase" Type="18" />
+      <SettingValue Name="1:FieldPropertyIsPublicDefault" Value="true" Type="3" />
+      <SettingValue Name="1:GenerateAsNullableTypeDefault" Value="true" Type="3" />
+      <SettingValue Name="1:GenerateEntityFieldFactory" Value="false" Type="3" />
+      <SettingValue Name="1:GenerateEntityFieldsFactory" Value="false" Type="3" />
+      <SettingValue Name="1:InlineValueTypedFields" Value="true" Type="3" />
+      <SettingValue Name="1:LazyLoadingWithoutResultReturnsNew" Value="false" Type="3" />
+      <SettingValue Name="1:NavigatorPropertyIsPublicDefault" Value="true" Type="3" />
+      <SettingValue Name="1:SupportedActionCombinations" Value="0,1,2,3,4,5,6,7" Type="18" />
+      <SettingValue Name="1:TdlEmitTimeDateInOutputFiles" Value="false" Type="3" />
+      <SettingValue Name="1:TypedListOutputTypeDefault" Value="PocoWithQuerySpecQuery" Type="18" />
+      <SettingValue Name="1:TypedViewOutputTypeDefault" Value="PocoWithQuerySpecQuery" Type="18" />
+    </SettingValues>
+  </OutputSettingValues>
+  <CodeGenerationMetaDataDefaults>
+    <TargetElement Type="256">
+      <Defaults>
+        <Attributes>
+          <Attribute Value="Browsable($false)" />
+        </Attributes>
+      </Defaults>
+    </TargetElement>
+  </CodeGenerationMetaDataDefaults>
+  <EntityModel>
+    <ValueTypeDefinitions />
+    <EntityDefinitions>
+      <EntityDefinition Name="Department" ObjectID="abab4610-ab93-4642-a2fa-390755630238">
+        <Fields>
+          <Field Name="DepartmentKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
+          <Field Name="DepartmentName" Type="string" MaxLength="30" />
+          <Field Name="DivisionKey" Type="int" Precision="10" />
+        </Fields>
+        <UniqueConstraints>
+          <UniqueConstraint Name="UxDepartmentDepartmentName">
+            <Field Name="DepartmentName" />
+          </UniqueConstraint>
+        </UniqueConstraints>
+      </EntityDefinition>
+      <EntityDefinition Name="Division" ObjectID="4bd49434-34f6-4040-9db4-cf9f5c0ddcd6">
+        <Fields>
+          <Field Name="DivisionKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
+          <Field Name="DivisionName" Type="string" MaxLength="30" />
+        </Fields>
+        <UniqueConstraints>
+          <UniqueConstraint Name="UxDivisionDivisionName">
+            <Field Name="DivisionName" />
+          </UniqueConstraint>
+        </UniqueConstraints>
+      </EntityDefinition>
+      <EntityDefinition Name="Employee" ObjectID="ef153284-8238-407a-9bc1-28ddceb82ae7">
+        <Fields>
+          <Field Name="CellPhone" Type="string" IsOptional="true" MaxLength="15" />
+          <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
+          <Field Name="EmployeeKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
+          <Field Name="FirstName" Type="string" MaxLength="50" />
+          <Field Name="LastName" Type="string" MaxLength="50" />
+          <Field Name="MiddleName" Type="string" IsOptional="true" MaxLength="50" />
+          <Field Name="OfficePhone" Type="string" IsOptional="true" MaxLength="15" />
+          <Field Name="Title" Type="string" IsOptional="true" MaxLength="100" />
+        </Fields>
+        <OutputSettingValues>
+          <Interfaces>
+            <Interface Name="Recipes.ModelWithLookup.IEmployeeSimple" />
+            <Interface Name="Recipes.ModelWithLookup.IEmployeeComplex" />
+          </Interfaces>
+        </OutputSettingValues>
+      </EntityDefinition>
+      <EntityDefinition Name="EmployeeClassification" ObjectID="cfc3bdcf-215c-4cf1-b1db-a1e4ff349406">
+        <Fields>
+          <Field Name="EmployeeClassificationKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
+          <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
+          <Field Name="IsEmployee" Type="bool" />
+          <Field Name="IsExempt" Type="bool" />
+        </Fields>
+        <UniqueConstraints>
+          <UniqueConstraint Name="UxEmployeeClassificationEmployeeClassificationName">
+            <Field Name="EmployeeClassificationName" />
+          </UniqueConstraint>
+        </UniqueConstraints>
+        <OutputSettingValues>
+          <Interfaces>
+            <Interface Name="Recipes.ModelWithLookup.IEmployeeClassification" />
+          </Interfaces>
+        </OutputSettingValues>
+      </EntityDefinition>
+    </EntityDefinitions>
+    <Relationships>
+      <NormalRelationship Name="Department.Division-Division.Departments" Start=":Department" End=":Division" StartNavigator="Division" EndNavigator="Departments" Type="4">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="DivisionKey" PkField="DivisionKey" />
+        </FieldRelationships>
+      </NormalRelationship>
+      <NormalRelationship Name="Employee.EmployeeClassification-EmployeeClassification.Employees" Start=":Employee" End=":EmployeeClassification" StartNavigator="EmployeeClassification" EndNavigator="Employees" Type="4">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="EmployeeClassificationKey" PkField="EmployeeClassificationKey" />
+        </FieldRelationships>
+      </NormalRelationship>
+    </Relationships>
+    <InheritanceHierarchies />
+  </EntityModel>
+  <TypedViewDefinitions>
+    <TypedViewDefinition Name="DepartmentDetail" ObjectID="72413255-845d-4d05-81ad-5a835eb02ee1">
+      <Fields>
+        <Field Name="DepartmentKey" Type="int" Precision="10" />
+        <Field Name="DepartmentName" Type="string" MaxLength="30" />
+        <Field Name="DivisionKey" Type="int" Precision="10" />
+        <Field Name="DivisionName" Type="string" IsOptional="true" MaxLength="30" />
+      </Fields>
+    </TypedViewDefinition>
+    <TypedViewDefinition Name="EmployeeDetail" ObjectID="c297ea4c-33a7-425a-8e04-727481005bfb">
+      <Fields>
+        <Field Name="CellPhone" Type="string" IsOptional="true" MaxLength="15" />
+        <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
+        <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
+        <Field Name="EmployeeKey" Type="int" Precision="10" />
+        <Field Name="FirstName" Type="string" MaxLength="50" />
+        <Field Name="IsEmployee" Type="bool" />
+        <Field Name="IsExempt" Type="bool" />
+        <Field Name="LastName" Type="string" MaxLength="50" />
+        <Field Name="MiddleName" Type="string" IsOptional="true" MaxLength="50" />
+        <Field Name="OfficePhone" Type="string" IsOptional="true" MaxLength="15" />
+        <Field Name="Title" Type="string" IsOptional="true" MaxLength="100" />
+      </Fields>
+    </TypedViewDefinition>
+  </TypedViewDefinitions>
+  <TargetDatabases>
+    <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="2">
+      <ConnectionElements>
+        <ConnectionElement Name="ServerName" Value="ATHENA\SQLEXPRESS2017" />
+        <ConnectionElement Name="CatalogName" Value="master" />
+        <ConnectionElement Name="UseWindowsAuthentication" Value="true" />
+        <ConnectionElement Name="UserID" Value="" />
+        <ConnectionElement Name="Password" Value="" />
+      </ConnectionElements>
+      <SystemSequences>
+        <Sequence Name="SCOPE_IDENTITY()" />
+        <Sequence Name="@@IDENTITY" />
+      </SystemSequences>
+      <Catalogs>
+        <Catalog Name="ORMCookbook" SyncSource="2">
+          <Schemas>
+            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-08T09:54:53.6920906Z">
+              <Tables>
+                <Table Name="Department">
+                  <PkConstraintName Name="PK_Department" />
+                  <Fields>
+                    <Field Name="DepartmentKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
+                    <Field Name="DepartmentName" Ordinal="2" DbType="12" Length="30" />
+                    <Field Name="DivisionKey" Ordinal="3" DbType="8" Precision="10" />
+                  </Fields>
+                  <UniqueConstraints>
+                    <UniqueConstraint Name="UX_Department_DepartmentName">
+                      <Field Name="DepartmentName" />
+                    </UniqueConstraint>
+                  </UniqueConstraints>
+                </Table>
+                <Table Name="Division">
+                  <PkConstraintName Name="PK_Division" />
+                  <Fields>
+                    <Field Name="DivisionKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
+                    <Field Name="DivisionName" Ordinal="2" DbType="12" Length="30" />
+                  </Fields>
+                  <UniqueConstraints>
+                    <UniqueConstraint Name="UX_Division_DivisionName">
+                      <Field Name="DivisionName" />
+                    </UniqueConstraint>
+                  </UniqueConstraints>
+                </Table>
+                <Table Name="Employee">
+                  <PkConstraintName Name="PK_Employee" />
+                  <Fields>
+                    <Field Name="EmployeeKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
+                    <Field Name="FirstName" Ordinal="2" DbType="12" Length="50" />
+                    <Field Name="MiddleName" Ordinal="3" IsOptional="true" DbType="12" Length="50" />
+                    <Field Name="LastName" Ordinal="4" DbType="12" Length="50" />
+                    <Field Name="Title" Ordinal="5" IsOptional="true" DbType="12" Length="100" />
+                    <Field Name="OfficePhone" Ordinal="6" IsOptional="true" DbType="24" Length="15" />
+                    <Field Name="CellPhone" Ordinal="7" IsOptional="true" DbType="24" Length="15" />
+                    <Field Name="EmployeeClassificationKey" Ordinal="8" DbType="8" Precision="10" />
+                  </Fields>
+                </Table>
+                <Table Name="EmployeeClassification">
+                  <PkConstraintName Name="PK_EmployeeClassification" />
+                  <Fields>
+                    <Field Name="EmployeeClassificationKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
+                    <Field Name="EmployeeClassificationName" Ordinal="2" DbType="24" Length="30" />
+                    <Field Name="IsExempt" Ordinal="3" HasDefaultValue="true" DefaultValue="(0)" DbType="2" />
+                    <Field Name="IsEmployee" Ordinal="4" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
+                  </Fields>
+                  <UniqueConstraints>
+                    <UniqueConstraint Name="UX_EmployeeClassification_EmployeeClassificationName">
+                      <Field Name="EmployeeClassificationName" />
+                    </UniqueConstraint>
+                  </UniqueConstraints>
+                </Table>
+              </Tables>
+              <Views>
+                <View Name="DepartmentDetail">
+                  <Fields>
+                    <Field Name="DepartmentKey" Ordinal="1" DbType="8" Precision="10" />
+                    <Field Name="DepartmentName" Ordinal="2" DbType="12" Length="30" />
+                    <Field Name="DivisionKey" Ordinal="3" DbType="8" Precision="10" />
+                    <Field Name="DivisionName" Ordinal="4" IsOptional="true" DbType="12" Length="30" />
+                  </Fields>
+                </View>
+                <View Name="EmployeeDetail">
+                  <Fields>
+                    <Field Name="EmployeeKey" Ordinal="1" DbType="8" Precision="10" />
+                    <Field Name="FirstName" Ordinal="2" DbType="12" Length="50" />
+                    <Field Name="MiddleName" Ordinal="3" IsOptional="true" DbType="12" Length="50" />
+                    <Field Name="LastName" Ordinal="4" DbType="12" Length="50" />
+                    <Field Name="Title" Ordinal="5" IsOptional="true" DbType="12" Length="100" />
+                    <Field Name="OfficePhone" Ordinal="6" IsOptional="true" DbType="24" Length="15" />
+                    <Field Name="CellPhone" Ordinal="7" IsOptional="true" DbType="24" Length="15" />
+                    <Field Name="EmployeeClassificationKey" Ordinal="8" DbType="8" Precision="10" />
+                    <Field Name="EmployeeClassificationName" Ordinal="9" DbType="24" Length="30" />
+                    <Field Name="IsExempt" Ordinal="10" DbType="2" />
+                    <Field Name="IsEmployee" Ordinal="11" DbType="2" />
+                  </Fields>
+                </View>
+              </Views>
+            </Schema>
+          </Schemas>
+          <ForeignKeyConstraints>
+            <ForeignKeyConstraint Name="HR:Department:FK_Department_DivisionKey">
+              <FieldPairs>
+                <FieldPair PkField="HR:Division:DivisionKey" FkField="HR:Department:DivisionKey" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
+            <ForeignKeyConstraint Name="HR:Employee:FK_Employee_EmployeeClassificationKey">
+              <FieldPairs>
+                <FieldPair PkField="HR:EmployeeClassification:EmployeeClassificationKey" FkField="HR:Employee:EmployeeClassificationKey" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
+          </ForeignKeyConstraints>
+        </Catalog>
+      </Catalogs>
+    </TargetDatabase>
+  </TargetDatabases>
+  <MappingStores>
+    <MappingStore Type="2D18D138-1DD2-467E-86CC-4838250611AE">
+      <EntityMappings>
+        <EntityMapping EntityName=":Department" TargetName="ORMCookbook:HR:Department">
+          <FieldMappings>
+            <FieldMapping FieldName="DepartmentKey" TargetFieldName="DepartmentKey" SequenceToUse="SCOPE_IDENTITY()" />
+            <FieldMapping FieldName="DepartmentName" TargetFieldName="DepartmentName" />
+            <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" />
+          </FieldMappings>
+        </EntityMapping>
+        <EntityMapping EntityName=":Division" TargetName="ORMCookbook:HR:Division">
+          <FieldMappings>
+            <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" SequenceToUse="SCOPE_IDENTITY()" />
+            <FieldMapping FieldName="DivisionName" TargetFieldName="DivisionName" />
+          </FieldMappings>
+        </EntityMapping>
+        <EntityMapping EntityName=":Employee" TargetName="ORMCookbook:HR:Employee">
+          <FieldMappings>
+            <FieldMapping FieldName="CellPhone" TargetFieldName="CellPhone" />
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
+            <FieldMapping FieldName="EmployeeKey" TargetFieldName="EmployeeKey" SequenceToUse="SCOPE_IDENTITY()" />
+            <FieldMapping FieldName="FirstName" TargetFieldName="FirstName" />
+            <FieldMapping FieldName="LastName" TargetFieldName="LastName" />
+            <FieldMapping FieldName="MiddleName" TargetFieldName="MiddleName" />
+            <FieldMapping FieldName="OfficePhone" TargetFieldName="OfficePhone" />
+            <FieldMapping FieldName="Title" TargetFieldName="Title" />
+          </FieldMappings>
+        </EntityMapping>
+        <EntityMapping EntityName=":EmployeeClassification" TargetName="ORMCookbook:HR:EmployeeClassification">
+          <FieldMappings>
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" SequenceToUse="SCOPE_IDENTITY()" />
+            <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="EmployeeClassificationName" />
+            <FieldMapping FieldName="IsEmployee" TargetFieldName="IsEmployee" />
+            <FieldMapping FieldName="IsExempt" TargetFieldName="IsExempt" />
+          </FieldMappings>
+        </EntityMapping>
+      </EntityMappings>
+      <TypedViewMappings>
+        <TypedViewMapping TypedViewName=":DepartmentDetail" TargetName="ORMCookbook:HR:DepartmentDetail">
+          <FieldMappings>
+            <FieldMapping FieldName="DepartmentKey" TargetFieldName="DepartmentKey" />
+            <FieldMapping FieldName="DepartmentName" TargetFieldName="DepartmentName" />
+            <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" />
+            <FieldMapping FieldName="DivisionName" TargetFieldName="DivisionName" />
+          </FieldMappings>
+        </TypedViewMapping>
+        <TypedViewMapping TypedViewName=":EmployeeDetail" TargetName="ORMCookbook:HR:EmployeeDetail">
+          <FieldMappings>
+            <FieldMapping FieldName="CellPhone" TargetFieldName="CellPhone" />
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
+            <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="EmployeeClassificationName" />
+            <FieldMapping FieldName="EmployeeKey" TargetFieldName="EmployeeKey" />
+            <FieldMapping FieldName="FirstName" TargetFieldName="FirstName" />
+            <FieldMapping FieldName="IsEmployee" TargetFieldName="IsEmployee" />
+            <FieldMapping FieldName="IsExempt" TargetFieldName="IsExempt" />
+            <FieldMapping FieldName="LastName" TargetFieldName="LastName" />
+            <FieldMapping FieldName="MiddleName" TargetFieldName="MiddleName" />
+            <FieldMapping FieldName="OfficePhone" TargetFieldName="OfficePhone" />
+            <FieldMapping FieldName="Title" TargetFieldName="Title" />
+          </FieldMappings>
+        </TypedViewMapping>
+      </TypedViewMappings>
+      <SPCallMappings />
+      <TvfCallMappings />
+      <TypeConversionDefinitions />
+    </MappingStore>
+  </MappingStores>
+  <ModelViews />
+</Project>
