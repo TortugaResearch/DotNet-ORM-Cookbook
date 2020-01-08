@@ -207,6 +207,9 @@
           <Interfaces>
             <Interface Name="Recipes.ModelWithLookup.IEmployeeClassification" />
             <Interface Name="Recipes.PartialUpdate.IEmployeeClassification" />
+            <Interface Name="Recipes.SingleModelCrud.IEmployeeClassification" />
+            <Interface Name="Recipes.SingleModelCrudAsync.IEmployeeClassification" />
+            <Interface Name="Recipes.TryCrud.IEmployeeClassification" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>

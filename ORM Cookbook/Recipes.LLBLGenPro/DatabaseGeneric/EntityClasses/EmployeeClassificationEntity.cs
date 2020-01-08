@@ -22,7 +22,7 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	/// <summary>Entity class which represents the entity 'EmployeeClassification'.<br/><br/></summary>
 	[Serializable]
-	public partial class EmployeeClassificationEntity : CommonEntityBase, Recipes.ModelWithLookup.IEmployeeClassification, Recipes.PartialUpdate.IEmployeeClassification
+	public partial class EmployeeClassificationEntity : CommonEntityBase, Recipes.ModelWithLookup.IEmployeeClassification, Recipes.PartialUpdate.IEmployeeClassification, Recipes.SingleModelCrud.IEmployeeClassification, Recipes.SingleModelCrudAsync.IEmployeeClassification, Recipes.TryCrud.IEmployeeClassification
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
