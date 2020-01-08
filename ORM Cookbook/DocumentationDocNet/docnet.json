@@ -14,6 +14,10 @@
     "TryGet/Update/Delete Operations": "TryCrud.md",
     "Partial Updates": "PartialUpdate.md",
     "Immutable CRUD": "Immutable.md",
-    "Populate DataTable": "PopulateDataTable.md"
+    "Populate DataTable": "PopulateDataTable.md",
+    "Foreign Key to Lookup Table CRUD": {
+      "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
+      "Object-Based Foreign Key": "ModelWithLookupComplex.md"
+    }
   }
 }

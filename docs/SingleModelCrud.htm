@@ -64,6 +64,9 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -172,7 +175,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+        const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
                     OUTPUT Inserted.EmployeeClassificationKey
                     VALUES(@EmployeeClassificationName )&quot;;
 
@@ -186,7 +189,7 @@
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -201,7 +204,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -213,7 +216,7 @@
 
     public EmployeeClassification? FindByName(string employeeClassificationName)
     {
-        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
@@ -237,7 +240,7 @@
 
     public IList&lt;EmployeeClassification&gt; GetAll()
     {
-        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
 
         var result = new List&lt;EmployeeClassification&gt;();
 
@@ -259,7 +262,7 @@
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -286,7 +289,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;UPDATE HR.EmployeeClassification
+        const string sql = @&quot;UPDATE HR.EmployeeClassification
                     SET EmployeeClassificationName = @EmployeeClassificationName
                     WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -304,7 +307,7 @@
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Strictly speaking, Chain can use the same models as ADO.NET and Dapper so long as the column and property names match. However, it is more convenient to tag the class with what table it refers to.</p>
 <pre><code class="cs">[Table(&quot;HR.EmployeeClassification&quot;)]
-public class EmployeeClassification : Recipes.SingleModelCrud.IEmployeeClassification
+public class EmployeeClassification : IEmployeeClassification
 {
     public int EmployeeClassificationKey { get; set; }
 

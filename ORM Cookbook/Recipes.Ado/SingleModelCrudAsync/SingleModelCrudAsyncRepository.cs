@@ -32,7 +32,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+            const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
                         OUTPUT Inserted.EmployeeClassificationKey
                         VALUES(@EmployeeClassificationName )";
 
@@ -46,7 +46,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
 
         public async Task DeleteByKeyAsync(int employeeClassificationKey)
         {
-            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             using (var cmd = new SqlCommand(sql, con))
@@ -61,7 +61,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             using (var cmd = new SqlCommand(sql, con))
@@ -73,7 +73,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
 
         public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
         {
-            var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+            const string sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                         FROM HR.EmployeeClassification ec
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
@@ -97,7 +97,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
 
         public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;";
+            const string sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;";
 
             var result = new List<EmployeeClassification>();
 
@@ -119,7 +119,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
 
         public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
         {
-            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+            const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                         FROM HR.EmployeeClassification ec
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
@@ -146,7 +146,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"UPDATE HR.EmployeeClassification
+            const string sql = @"UPDATE HR.EmployeeClassification
                         SET EmployeeClassificationName = @EmployeeClassificationName
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 

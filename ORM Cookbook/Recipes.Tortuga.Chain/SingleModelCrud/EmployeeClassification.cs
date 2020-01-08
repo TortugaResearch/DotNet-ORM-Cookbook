@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Recipes.SingleModelCrud;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipes.Chain.SingleModelCrud
 {
     [Table("HR.EmployeeClassification")]
-    public class EmployeeClassification : Recipes.SingleModelCrud.IEmployeeClassification
+    public class EmployeeClassification : IEmployeeClassification
     {
         public int EmployeeClassificationKey { get; set; }
 

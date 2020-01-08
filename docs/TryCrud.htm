@@ -64,6 +64,9 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -173,7 +176,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+        const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
                     OUTPUT Inserted.EmployeeClassificationKey
                     VALUES(@EmployeeClassificationName )&quot;;
 
@@ -187,7 +190,7 @@
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -201,7 +204,7 @@
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -216,7 +219,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -233,7 +236,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -245,7 +248,7 @@
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
@@ -269,7 +272,7 @@
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
@@ -293,7 +296,7 @@
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -317,7 +320,7 @@
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -344,7 +347,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;UPDATE HR.EmployeeClassification
+        const string sql = @&quot;UPDATE HR.EmployeeClassification
                     SET EmployeeClassificationName = @EmployeeClassificationName
                     WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -364,7 +367,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;UPDATE HR.EmployeeClassification
+        const string sql = @&quot;UPDATE HR.EmployeeClassification
                     SET EmployeeClassificationName = @EmployeeClassificationName
                     WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 

@@ -64,6 +64,9 @@
 </ul>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -156,7 +159,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
+        const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
                     OUTPUT Inserted.EmployeeClassificationKey
                     VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )&quot;;
 
@@ -175,7 +178,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -187,7 +190,7 @@
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -199,7 +202,7 @@
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
-        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
@@ -224,7 +227,7 @@
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
 
         var result = new List&lt;ReadOnlyEmployeeClassification&gt;();
 
@@ -248,7 +251,7 @@
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -276,7 +279,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;UPDATE HR.EmployeeClassification
+        const string sql = @&quot;UPDATE HR.EmployeeClassification
                     SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
                     WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -330,7 +333,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        m_DataSource.Delete(classification).ToInt32().Execute();
+        m_DataSource.Delete(classification).Execute();
     }
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
