@@ -31,7 +31,7 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
         {
 			using (var adapter= new DataAccessAdapter())
             {
-				// delete directly 
+				// delete directly, so we don't have to fetch the entity first. 
 				adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
 											   new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
             }
@@ -44,6 +44,7 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
 
 			using (var adapter= new DataAccessAdapter())
 			{
+				// flag the entity as not-new, so we can delete it without fetching it first if the PK is set. 
 				classification.IsNew = false;
 				adapter.DeleteEntity(classification);
             }
@@ -77,26 +78,27 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
             }
         }
 
-        public virtual void Update(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-			using (var adapter= new DataAccessAdapter())
+		public virtual void Update(EmployeeClassificationEntity classification)
+		{
+			if(classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+			using(var adapter = new DataAccessAdapter())
 			{
 				// re-use existing entity (as it tracks changes internally) otherwise fetch the instance from the DB
 				EmployeeClassificationEntity toPersist = classification;
 				if(classification.IsNew)
 				{
 					toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(
-																	EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
-					if(!toPersist.IsNew)
-					{
-						toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
-					}
+																	 EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+					toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
 				}
-				adapter.SaveEntity(toPersist);
-            }
-        }
+				if(!toPersist.IsNew)
+				{
+					adapter.SaveEntity(toPersist, refetchAfterSave:false, recurse:false);
+				}
+			}
+		}
     }
 }

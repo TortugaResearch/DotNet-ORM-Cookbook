@@ -92,9 +92,9 @@ namespace Recipes.LLBLGenPro.SingleModelCrudAsync
 						toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
 					}
 				}
-                if (toPersist != null)
+                if (toPersist != null && !toPersist.IsNew)
                 {
-                    await adapter.SaveEntityAsync(toPersist).ConfigureAwait(false);
+                    await adapter.SaveEntityAsync(toPersist, refetchAfterSave:false, recurse:false).ConfigureAwait(false);
                 }
             }
         }

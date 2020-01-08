@@ -24,7 +24,7 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
 			using (var adapter = new DataAccessAdapter())
 			{
 				// the test FoulLookup will alter the associated lookup entity and if we persist things recursively we'll save this record too, so we don't use any
-				// recursive persistence here. It doesn't make sense, but I didn't design the test. 
+				// recursive persistence here. 
 				adapter.SaveEntity(employee, true, recurse:false);
 				return employee.EmployeeKey;
 			}
@@ -55,9 +55,9 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
 			using (var adapter = new DataAccessAdapter())
 			{
 				return new LinqMetaData(adapter).Employee
-					.Where(ec => ec.LastName == lastName)
-					.WithPath(p=>p.Prefetch(e=>e.EmployeeClassification))
-					.ToList();
+												.Where(ec => ec.LastName == lastName)
+												.WithPath(p => p.Prefetch(e => e.EmployeeClassification))
+												.ToList();
 			}
 		}
 
@@ -103,19 +103,25 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
 
 			using (var adapter = new DataAccessAdapter())
 			{
-				var temp = new EmployeeEntity(employee.EmployeeKey);
-				adapter.FetchEntity(temp);
-				if (!temp.IsNew)
+				EmployeeEntity toPersist = employee;
+				if(toPersist.IsNew)
 				{
+					toPersist = new EmployeeEntity(employee.EmployeeKey);
+					adapter.FetchEntity(toPersist);
 					//Copy the changed fields
-					temp.FirstName = employee.FirstName;
-					temp.MiddleName = employee.MiddleName;
-					temp.LastName = employee.LastName;
-					temp.CellPhone = employee.CellPhone;
-					temp.OfficePhone = employee.OfficePhone;
-					temp.Title = employee.Title;
-					temp.EmployeeClassificationKey = employee.EmployeeClassificationKey;
-					adapter.SaveEntity(temp);
+					toPersist.FirstName = employee.FirstName;
+					toPersist.MiddleName = employee.MiddleName;
+					toPersist.LastName = employee.LastName;
+					toPersist.CellPhone = employee.CellPhone;
+					toPersist.OfficePhone = employee.OfficePhone;
+					toPersist.Title = employee.Title;
+					toPersist.EmployeeClassificationKey = employee.EmployeeClassificationKey;
+				}
+				if(!toPersist.IsNew)
+				{
+					// By default the whole graph is persisted in-order, FKs are synced etc. but there's a test in this system
+					// which makes it fail if we do so, so we have to disable the recursive saves. 
+					adapter.SaveEntity(toPersist, refetchAfterSave:false, recurse:false);
 				}
 			}
 		}

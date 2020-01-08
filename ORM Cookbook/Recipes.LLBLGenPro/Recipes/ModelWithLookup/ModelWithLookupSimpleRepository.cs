@@ -94,22 +94,21 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
 				EmployeeEntity toPersist = employee;
 				if(toPersist.IsNew)
 				{
-					// fetch from the DB
 					toPersist = new EmployeeEntity(employee.EmployeeKey);
 					adapter.FetchEntity(toPersist);
-					if (!toPersist.IsNew)
-					{
-						//Copy the changed fields
-						toPersist.FirstName = employee.FirstName;
-						toPersist.MiddleName = employee.MiddleName;
-						toPersist.LastName = employee.LastName;
-						toPersist.CellPhone = employee.CellPhone;
-						toPersist.OfficePhone = employee.OfficePhone;
-						toPersist.Title = employee.Title;
-						toPersist.EmployeeClassificationKey = employee.EmployeeClassificationKey;
-					}
+					//Copy the changed fields
+					toPersist.FirstName = employee.FirstName;
+					toPersist.MiddleName = employee.MiddleName;
+					toPersist.LastName = employee.LastName;
+					toPersist.CellPhone = employee.CellPhone;
+					toPersist.OfficePhone = employee.OfficePhone;
+					toPersist.Title = employee.Title;
+					toPersist.EmployeeClassificationKey = employee.EmployeeClassificationKey;
 				}
-				adapter.SaveEntity(toPersist);
+				if(!toPersist.IsNew)
+				{
+					adapter.SaveEntity(toPersist, refetchAfterSave:false, recurse:false);
+				}
 			}
 		}
 	}

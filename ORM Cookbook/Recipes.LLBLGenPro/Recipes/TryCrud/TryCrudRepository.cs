@@ -146,11 +146,11 @@ namespace Recipes.LLBLGenPro.TryCrud
 			using(var adapter = new DataAccessAdapter())
 			{
 				var toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(
-																												 EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+													 EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
 				if(!toPersist.IsNew)
 				{
 					toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
-					return adapter.SaveEntity(toPersist);
+					return adapter.SaveEntity(toPersist, refetchAfterSave:false, recurse:false);
 				}
 				return false;
 			}

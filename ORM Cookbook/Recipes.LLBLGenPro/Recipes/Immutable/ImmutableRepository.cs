@@ -22,9 +22,9 @@ namespace Recipes.LLBLGenPro.Immutable
 
 			using (var adapter = new DataAccessAdapter())
 			{
-				var temp = classification.ToEntity();
-				adapter.SaveEntity(temp);
-				return temp.EmployeeClassificationKey;
+				var toPersist = classification.ToEntity();
+				adapter.SaveEntity(toPersist);
+				return toPersist.EmployeeClassificationKey;
 			}
 		}
 
@@ -50,8 +50,8 @@ namespace Recipes.LLBLGenPro.Immutable
 			using (var adapter = new DataAccessAdapter())
 			{
 				return new LinqMetaData(adapter).EmployeeClassification
-					.Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
-					.Select(x => new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+													.Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
+													.Select(x => new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
 			}
 		}
 
