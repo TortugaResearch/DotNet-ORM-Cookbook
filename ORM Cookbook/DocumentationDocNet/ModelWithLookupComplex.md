@@ -52,6 +52,18 @@ This provides a layer of safety, as otherwise clients could override data in the
 
 @snippet cs [..\Recipes.EntityFrameworkCore\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
 
+## LLBLGen Pro
+
+As LLBLGen Pro supports change tracking in the entities it doesn't have to refetch an entity that's been updated. The repository code 
+illustrates this. As it also by default persists all reachable entities in a graph, recursive saves are disabled here to make sure only the
+entity that's passed in is persisted. 
+
+Entity classes are always derived from a known base class so types created by the user aren't taken into account when traversing the graph, 
+only entity classes. 
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
+
+
 ## NHibernate
 
 TODO

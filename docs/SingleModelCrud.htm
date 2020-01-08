@@ -45,6 +45,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
 
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
@@ -636,6 +638,100 @@ public partial class EmployeeClassification
         {
             context.Entry(classification).State = EntityState.Modified;
             context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LLBLGen Pro is a .NET ORM on the market since 2003 and has seen over 15 major releases since that date. The latest version is v5.6.1, released in October 2019. LLBLGen Pro is a commercial non-poco full ORM which also offers a full plain-SQL API so can be used as a micro ORM as well. </p>
+<p>As all entities derive from a base class, the class models and mappings have to be generated from an abstract entity model which is created in the LLBLGen Pro designer using either model first or database first development (or a mix of both). LLBLGen Pro supports two paradigms: Adapter and SelfServicing. The cookbook looks at Adapter. </p>
+<p>It offers multiple query systems (Linq, QuerySpec (a fluent API) and a low-level API). The recipes illustrate usage of all of these.</p>
+<pre><code class="cs">public class SingleModelCrudRepository : ISingleModelCrudRepository&lt;EmployeeClassificationEntity&gt;
+{
+    public int Create(EmployeeClassificationEntity classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var adapter= new DataAccessAdapter())
+        {
+            adapter.SaveEntity(classification, true, recurse: false);
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var adapter= new DataAccessAdapter())
+        {
+            // delete directly, so we don't have to fetch the entity first. 
+            adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
+                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+        }
+    }
+
+    public virtual void Delete(EmployeeClassificationEntity classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var adapter= new DataAccessAdapter())
+        {
+            // flag the entity as not-new, so we can delete it without fetching it first if the PK is set. 
+            classification.IsNew = false;
+            adapter.DeleteEntity(classification);
+        }
+    }
+
+    public EmployeeClassificationEntity FindByName(string employeeClassificationName)
+    {
+        using (var adapter= new DataAccessAdapter())
+        {
+            // let's use QuerySpec
+            return adapter.FetchFirst(new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.EmployeeClassificationName.Equal(employeeClassificationName)));
+        }
+    }
+
+    public IList&lt;EmployeeClassificationEntity&gt; GetAll()
+    {
+        using (var adapter= new DataAccessAdapter())
+        {
+            // you know what, let's use the low level API for a change.
+            var toReturn = new EntityCollection&lt;EmployeeClassificationEntity&gt;();
+            adapter.FetchEntityCollection(toReturn, null);
+            return toReturn;
+        }
+    }
+
+    public EmployeeClassificationEntity GetByKey(int employeeClassificationKey)
+    {
+        using (var adapter= new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+        }
+    }
+
+
+    public virtual void Update(EmployeeClassificationEntity classification)
+    {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            // re-use existing entity (as it tracks changes internally) otherwise fetch the instance from the DB
+            EmployeeClassificationEntity toPersist = classification;
+            if(classification.IsNew)
+            {
+                toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(
+                                                                 EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
+            }
+            if(!toPersist.IsNew)
+            {
+                adapter.SaveEntity(toPersist, refetchAfterSave:false, recurse:false);
+            }
         }
     }
 }

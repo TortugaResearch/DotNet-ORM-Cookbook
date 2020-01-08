@@ -10,24 +10,24 @@ using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace Recipes.LLBLGenPro.PopulateDataTable
 {
-    public class PopulateDataTableRepository : IPopulateDataTableRepository
-    {
-        public DataTable FindByFlags(bool isExempt, bool isEmployee)
-        {
+	public class PopulateDataTableRepository : IPopulateDataTableRepository
+	{
+		public DataTable FindByFlags(bool isExempt, bool isEmployee)
+		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var q = new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.IsEmployee.Equal(isEmployee).And(EmployeeClassificationFields.IsExempt.Equal(isExempt)))
 										  .Select(Projection.Full);
 				return adapter.FetchAsDataTable(q);
 			}
-        }
+		}
 
-        public DataTable GetAll()
-        {
+		public DataTable GetAll()
+		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				return adapter.FetchAsDataTable(new QueryFactory().EmployeeClassification.Select(Projection.Full));
 			}
-        }
-    }
+		}
+	}
 }

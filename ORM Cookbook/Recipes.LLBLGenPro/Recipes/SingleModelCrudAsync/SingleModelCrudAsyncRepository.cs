@@ -16,70 +16,70 @@ using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace Recipes.LLBLGenPro.SingleModelCrudAsync
 {
-    public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository<EmployeeClassificationEntity>
-    {
-        public async Task<int> CreateAsync(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+	public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository<EmployeeClassificationEntity>
+	{
+		public async Task<int> CreateAsync(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using (var adapter = new DataAccessAdapter())
+			using (var adapter = new DataAccessAdapter())
 			{
 				await adapter.SaveEntityAsync(classification).ConfigureAwait(false);
-                return classification.EmployeeClassificationKey;
-            }
-        }
+				return classification.EmployeeClassificationKey;
+			}
+		}
 
-        public async Task DeleteAsync(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+		public async Task DeleteAsync(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
 			using (var adapter = new DataAccessAdapter())
 			{
 				classification.IsNew = false;
 				await adapter.DeleteEntityAsync(classification).ConfigureAwait(false);
-            }
-        }
+			}
+		}
 
-        public async Task DeleteByKeyAsync(int employeeClassificationKey)
-        {
+		public async Task DeleteByKeyAsync(int employeeClassificationKey)
+		{
 			using (var adapter = new DataAccessAdapter())
 			{
 				await adapter.DeleteEntitiesDirectlyAsync(typeof(EmployeeClassificationEntity),
 														  new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey))).ConfigureAwait(false);
-            }
-        }
+			}
+		}
 
-        public async Task<EmployeeClassificationEntity?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
-        {
+		public async Task<EmployeeClassificationEntity?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
-                return await new LinqMetaData(adapter).EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
+			{
+				return await new LinqMetaData(adapter).EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
 											   .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-            }
-        }
+			}
+		}
 
-        public async Task<IList<EmployeeClassificationEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-        {
+		public async Task<IList<EmployeeClassificationEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
-                return await new LinqMetaData(adapter).EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
-            }
-        }
+			{
+				return await new LinqMetaData(adapter).EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
+			}
+		}
 
-        public async Task<EmployeeClassificationEntity?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
-        {
+		public async Task<EmployeeClassificationEntity?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
-                return await new LinqMetaData(adapter).EmployeeClassification.FirstOrDefaultAsync(ec=>ec.EmployeeClassificationKey==employeeClassificationKey, cancellationToken).ConfigureAwait(false);
-            }
-        }
+			{
+				return await new LinqMetaData(adapter).EmployeeClassification.FirstOrDefaultAsync(ec=>ec.EmployeeClassificationKey==employeeClassificationKey, cancellationToken).ConfigureAwait(false);
+			}
+		}
 
-        public async Task UpdateAsync(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+		public async Task UpdateAsync(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
 			using (var adapter = new DataAccessAdapter())
 			{
@@ -92,11 +92,11 @@ namespace Recipes.LLBLGenPro.SingleModelCrudAsync
 						toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
 					}
 				}
-                if (toPersist != null && !toPersist.IsNew)
-                {
-                    await adapter.SaveEntityAsync(toPersist, refetchAfterSave:false, recurse:false).ConfigureAwait(false);
-                }
-            }
-        }
-    }
+				if (toPersist != null && !toPersist.IsNew)
+				{
+					await adapter.SaveEntityAsync(toPersist, refetchAfterSave:false, recurse:false).ConfigureAwait(false);
+				}
+			}
+		}
+	}
 }

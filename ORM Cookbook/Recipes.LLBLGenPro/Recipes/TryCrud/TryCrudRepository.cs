@@ -11,24 +11,24 @@ using SD.LLBLGen.Pro.QuerySpec;
 
 namespace Recipes.LLBLGenPro.TryCrud
 {
-    public class TryCrudRepository : ITryCrudRepository<EmployeeClassificationEntity>
-    {
-        public int Create(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+	public class TryCrudRepository : ITryCrudRepository<EmployeeClassificationEntity>
+	{
+		public int Create(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using (var adapter = new DataAccessAdapter())
+			using (var adapter = new DataAccessAdapter())
 			{
 				adapter.SaveEntity(classification, true, recurse: false);
-                return classification.EmployeeClassificationKey;
-            }
-        }
+				return classification.EmployeeClassificationKey;
+			}
+		}
 
-        public void DeleteByKeyOrException(int employeeClassificationKey)
-        {
+		public void DeleteByKeyOrException(int employeeClassificationKey)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
+			{
 				// delete directly 
 				int count = adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
 											   new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
@@ -37,23 +37,23 @@ namespace Recipes.LLBLGenPro.TryCrud
 					throw new DataException($"No row was found for key {employeeClassificationKey}.");
 				}
 			}
-        }
+		}
 
-        public bool DeleteByKeyWithStatus(int employeeClassificationKey)
-        {
+		public bool DeleteByKeyWithStatus(int employeeClassificationKey)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
+			{
 				// delete directly 
 				int count = adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
 														   new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
 				return count > 0;
-            }
-        }
+			}
+		}
 
-        public void DeleteOrException(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+		public void DeleteOrException(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
 			using (var adapter = new DataAccessAdapter())
 			{
@@ -63,38 +63,38 @@ namespace Recipes.LLBLGenPro.TryCrud
 					throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
 				}
 			}
-        }
+		}
 
-        public bool DeleteWithStatus(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+		public bool DeleteWithStatus(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
 			using (var adapter = new DataAccessAdapter())
 			{
 				classification.IsNew = false;
 				return adapter.DeleteEntity(classification);
-            }
-        }
+			}
+		}
 
-        public EmployeeClassificationEntity FindByNameOrException(string employeeClassificationName)
-        {
+		public EmployeeClassificationEntity FindByNameOrException(string employeeClassificationName)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
-                return new LinqMetaData(adapter).EmployeeClassification.Single(ec => ec.EmployeeClassificationName == employeeClassificationName);
-            }
-        }
+			{
+				return new LinqMetaData(adapter).EmployeeClassification.Single(ec => ec.EmployeeClassificationName == employeeClassificationName);
+			}
+		}
 
-        public EmployeeClassificationEntity? FindByNameOrNull(string employeeClassificationName)
-        {
+		public EmployeeClassificationEntity? FindByNameOrNull(string employeeClassificationName)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
-                return new LinqMetaData(adapter).EmployeeClassification.SingleOrDefault(ec => ec.EmployeeClassificationName == employeeClassificationName);
-            }
-        }
+			{
+				return new LinqMetaData(adapter).EmployeeClassification.SingleOrDefault(ec => ec.EmployeeClassificationName == employeeClassificationName);
+			}
+		}
 
-        public EmployeeClassificationEntity GetByKeyOrException(int employeeClassificationKey)
-        {
+		public EmployeeClassificationEntity GetByKeyOrException(int employeeClassificationKey)
+		{
 			using (var adapter = new DataAccessAdapter())
 			{
 				var ec = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
@@ -104,24 +104,24 @@ namespace Recipes.LLBLGenPro.TryCrud
 				}
 				return ec;
 			}
-        }
+		}
 
-        public EmployeeClassificationEntity? GetByKeyOrNull(int employeeClassificationKey)
-        {
+		public EmployeeClassificationEntity? GetByKeyOrNull(int employeeClassificationKey)
+		{
 			using (var adapter = new DataAccessAdapter())
-            {
+			{
 				var ec = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
 				return ec.IsNew ? null : ec;
-            }
-        }
+			}
+		}
 
-        public void UpdateOrException(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+		public void UpdateOrException(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
 			using (var adapter = new DataAccessAdapter())
-            {
+			{
 				var toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(
 																	EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
 				if(!toPersist.IsNew)
@@ -136,12 +136,12 @@ namespace Recipes.LLBLGenPro.TryCrud
 				}
 				throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
 			}
-        }
+		}
 
-        public bool UpdateWithStatus(EmployeeClassificationEntity classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+		public bool UpdateWithStatus(EmployeeClassificationEntity classification)
+		{
+			if (classification == null)
+				throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -155,5 +155,5 @@ namespace Recipes.LLBLGenPro.TryCrud
 				return false;
 			}
 		}
-    }
+	}
 }
