@@ -112,7 +112,7 @@ namespace Recipes.NHibernate.TryCrud
         public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
-                return session.Get<EmployeeClassification>(employeeClassificationKey) ?? throw new DataException($"No row was found for key {employeeClassificationKey}."); ;
+                return session.Get<EmployeeClassification>(employeeClassificationKey) ?? throw new DataException($"No row was found for key {employeeClassificationKey}.");
         }
 
         public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)

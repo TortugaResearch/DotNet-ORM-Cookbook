@@ -23,7 +23,9 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
 
 			using (var adapter = new DataAccessAdapter())
 			{
-				adapter.SaveEntity(employee);
+				// the test FoulLookup will alter the associated lookup entity and if we persist things recursively we'll save this record too, so we don't use any
+				// recursive persistence here. It doesn't make sense, but I didn't design the test. 
+				adapter.SaveEntity(employee, true, recurse:false);
 				return employee.EmployeeKey;
 			}
 		}

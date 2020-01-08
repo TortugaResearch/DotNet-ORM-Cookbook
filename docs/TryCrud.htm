@@ -909,7 +909,7 @@
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
         using (var session = m_SessionFactory.OpenStatelessSession())
-            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey) ?? throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;); ;
+            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey) ?? throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)

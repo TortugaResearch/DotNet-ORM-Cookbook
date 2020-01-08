@@ -206,6 +206,7 @@
         <OutputSettingValues>
           <Interfaces>
             <Interface Name="Recipes.ModelWithLookup.IEmployeeClassification" />
+            <Interface Name="Recipes.PartialUpdate.IEmployeeClassification" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>

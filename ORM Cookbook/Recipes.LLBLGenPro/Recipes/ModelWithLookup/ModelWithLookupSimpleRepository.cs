@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using LLBLGenPro.OrmCookbook.DatabaseSpecific;
 using LLBLGenPro.OrmCookbook.EntityClasses;
+using LLBLGenPro.OrmCookbook.FactoryClasses;
 using LLBLGenPro.OrmCookbook.HelperClasses;
 using LLBLGenPro.OrmCookbook.Linq;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace Recipes.LLBLGenPro.ModelWithLookup
 {
@@ -20,7 +22,7 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
 
 			using (var adapter = new DataAccessAdapter())
 			{
-				adapter.SaveEntity(employee);
+				adapter.SaveEntity(employee, true, recurse:false);
 				return employee.EmployeeKey;
 			}
 		}
@@ -65,7 +67,7 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
 		{
 			using (var adapter = new DataAccessAdapter())
 			{
-				return new LinqMetaData(adapter).Employee.FirstOrDefault(e=>e.EmployeeKey==employeeKey);
+				return adapter.FetchFirst(new QueryFactory().Employee.Where(EmployeeFields.EmployeeKey.Equal(employeeKey)));
 			}
 		}
 

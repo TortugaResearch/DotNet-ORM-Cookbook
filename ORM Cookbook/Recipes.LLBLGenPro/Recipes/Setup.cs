@@ -27,6 +27,7 @@ namespace Recipes.LLBLGenPro
 			RuntimeConfiguration.AddConnectionString("ConnectionString.SQL Server (SqlClient)", con.Value);
 			RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c => c.AddDbProviderFactory(typeof(Microsoft.Data.SqlClient.SqlClientFactory))
 																			   .SetDefaultCompatibilityLevel(SqlServerCompatibilityLevel.SqlServer2012));
+			RuntimeConfiguration.Entity.SetMarkSavedEntitiesAsFetched(true);
 			try
 			{
 				(new Setup()).Warmup();
