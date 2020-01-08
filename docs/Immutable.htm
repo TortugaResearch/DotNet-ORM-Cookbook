@@ -51,9 +51,9 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
-<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
-
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
 
@@ -461,119 +461,6 @@
 }
 </code></pre>
 
-<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>LLBLGen Pro does not directly support immutable objects, You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
-<pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassificationEntity entity)
-{
-    if (entity == null)
-        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity)} is null.&quot;);
-    if (entity.EmployeeClassificationName == null)
-        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.EmployeeClassificationName)} is null.&quot;);
-
-    EmployeeClassificationKey = entity.EmployeeClassificationKey;
-    EmployeeClassificationName = entity.EmployeeClassificationName;
-    IsExempt = entity.IsExempt;
-    IsEmployee = entity.IsEmployee;
-}
-</code></pre>
-
-<pre><code class="cs">public EmployeeClassificationEntity ToEntity()
-{
-    return new EmployeeClassificationEntity()
-    {
-        EmployeeClassificationKey = EmployeeClassificationKey,
-        EmployeeClassificationName = EmployeeClassificationName,
-        IsExempt = IsExempt,
-        IsEmployee = IsEmployee
-    };
-}
-</code></pre>
-
-<p>These conversions are used in the repository before write operations and after read operations.</p>
-<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
-{
-    public int Create(ReadOnlyEmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            var toPersist = classification.ToEntity();
-            adapter.SaveEntity(toPersist);
-            return toPersist.EmployeeClassificationKey;
-        }
-    }
-
-    public virtual void DeleteByKey(int employeeClassificationKey)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
-        }
-    }
-
-    public virtual void Delete(ReadOnlyEmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        DeleteByKey(classification.EmployeeClassificationKey);
-    }
-
-    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return new LinqMetaData(adapter).EmployeeClassification
-                                                .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
-                                                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
-        }
-    }
-
-    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return new LinqMetaData(adapter).EmployeeClassification.Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
-        }
-    }
-
-    public ReadOnlyEmployeeClassification GetByKey(int employeeClassificationKey)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
-            if (temp.IsNew)
-                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
-            return new ReadOnlyEmployeeClassification(temp);
-        }
-    }
-
-    public void Update(ReadOnlyEmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            //Get a fresh copy of the row from the database
-            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
-                                new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
-            if (!temp.IsNew)
-            {
-                //Copy the changed fields
-                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-                temp.IsEmployee = classification.IsEmployee;
-                temp.IsExempt = classification.IsExempt;
-                adapter.SaveEntity(temp);
-            }
-        }
-    }
-}
-</code></pre>
-
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Entity Framework Core does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
 <pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassification entity)
@@ -704,6 +591,120 @@
                 temp.IsEmployee = classification.IsEmployee;
                 temp.IsExempt = classification.IsExempt;
                 context.SaveChanges();
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LLBLGen Pro supports 'action' specifications on entities, e.g. an entity can only be fetched, or fetched and updated, but e.g. not deleted. An entity that's marked as 'Read' can't be updated, deleted or inserted. The scope of the recipes in this cookbook however
+focus on immutable data in-memory. LLBLGen Pro does not directly support these objects, You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
+<pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassificationEntity entity)
+{
+    if (entity == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity)} is null.&quot;);
+    if (entity.EmployeeClassificationName == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.EmployeeClassificationName)} is null.&quot;);
+
+    EmployeeClassificationKey = entity.EmployeeClassificationKey;
+    EmployeeClassificationName = entity.EmployeeClassificationName;
+    IsExempt = entity.IsExempt;
+    IsEmployee = entity.IsEmployee;
+}
+</code></pre>
+
+<pre><code class="cs">public EmployeeClassificationEntity ToEntity()
+{
+    return new EmployeeClassificationEntity()
+    {
+        EmployeeClassificationKey = EmployeeClassificationKey,
+        EmployeeClassificationName = EmployeeClassificationName,
+        IsExempt = IsExempt,
+        IsEmployee = IsEmployee
+    };
+}
+</code></pre>
+
+<p>These conversions are used in the repository before write operations and after read operations.</p>
+<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            var toPersist = classification.ToEntity();
+            adapter.SaveEntity(toPersist);
+            return toPersist.EmployeeClassificationKey;
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
+                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+        }
+    }
+
+    public virtual void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        DeleteByKey(classification.EmployeeClassificationKey);
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification
+                                                .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+                                                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification.Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+            if (temp.IsNew)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            //Get a fresh copy of the row from the database
+            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+            if (!temp.IsNew)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                temp.IsEmployee = classification.IsEmployee;
+                temp.IsExempt = classification.IsExempt;
+                adapter.SaveEntity(temp);
             }
         }
     }
