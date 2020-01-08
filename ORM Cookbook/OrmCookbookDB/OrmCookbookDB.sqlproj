@@ -60,6 +60,12 @@
     <Folder Include="HR" />
     <Folder Include="HR\Tables" />
     <Folder Include="HR\Views" />
+    <Folder Include="Sales" />
+    <Folder Include="Sales\Tables" />
+    <Folder Include="Sales\Views" />
+    <Folder Include="Production" />
+    <Folder Include="Production\Views" />
+    <Folder Include="Production\Tables" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Division.sql" />
@@ -81,5 +87,9 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="HR\Views\EmployeeDetail.sql" />
+    <Build Include="Sales\Sales.sql" />
+    <Build Include="Production\Production.sql" />
+    <Build Include="Production\Tables\Product.sql" />
+    <Build Include="Production\Tables\ProductLine.sql" />
   </ItemGroup>
 </Project>
