@@ -26,12 +26,12 @@ namespace Recipes.EntityFrameworkCore
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
-            var con = configuration.GetSection("ConnectionStrings").GetChildren().Single();
+            var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
 
-            var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(con.Value).Options;
+            var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(sqlServerConnectionString).Options;
             DBContextFactory = () => new OrmCookbookContext(options);
 
-            var options2 = new DbContextOptionsBuilder<OrmCookbookContext>().UseLazyLoadingProxies().UseSqlServer(con.Value).Options;
+            var options2 = new DbContextOptionsBuilder<OrmCookbookContext>().UseLazyLoadingProxies().UseSqlServer(sqlServerConnectionString).Options;
             LazyLoadingDBContextFactory = () => new OrmCookbookContext(options2);
 
             try

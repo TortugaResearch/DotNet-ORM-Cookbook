@@ -49,6 +49,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LLBLGenPro.OrmCookbookDBSpe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.LLBLGenPro", "Recipes.LLBLGenPro\Recipes\Recipes.LLBLGenPro.csproj", "{412263F3-027B-4EB5-94C7-B7DE9D64D9FA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{B57EC866-6202-4108-AE43-19A8B10FEE23}"
+	ProjectSection(SolutionItems) = preProject
+		Configuration\appsettings.json = Configuration\appsettings.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
