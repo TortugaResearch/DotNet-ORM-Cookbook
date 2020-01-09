@@ -55,6 +55,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
 
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
@@ -355,6 +357,30 @@
         }
 
         return dt;
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LLBLGen Pro natively supports <code>DataTable</code>.</p>
+<pre><code class="cs">public class PopulateDataTableRepository : IPopulateDataTableRepository
+{
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            var q = new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.IsEmployee.Equal(isEmployee).And(EmployeeClassificationFields.IsExempt.Equal(isExempt)))
+                                      .Select(Projection.Full);
+            return adapter.FetchAsDataTable(q);
+        }
+    }
+
+    public DataTable GetAll()
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return adapter.FetchAsDataTable(new QueryFactory().EmployeeClassification.Select(Projection.Full));
+        }
     }
 }
 </code></pre>

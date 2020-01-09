@@ -55,6 +55,13 @@ Async:
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
+## LLBLGen Pro
+
+With LLBLGen Pro, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
+
+
 ## NHibernate
 
 With NHibernate, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 

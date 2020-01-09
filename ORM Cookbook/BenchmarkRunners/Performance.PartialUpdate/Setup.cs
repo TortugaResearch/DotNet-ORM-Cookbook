@@ -20,6 +20,7 @@ namespace Performance
             Recipes.RepoDb.Setup.AssemblyInit(null);
             Recipes.NHibernate.Setup.AssemblyInit(null);
             Recipes.ServiceStack.Setup.AssemblyInit(null);
+			Recipes.LLBLGenPro.Setup.AssemblyInit(null);
         }
     }
 }

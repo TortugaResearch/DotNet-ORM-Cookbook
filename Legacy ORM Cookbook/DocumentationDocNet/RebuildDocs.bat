@@ -1,1 +1,0 @@
-docnet -c .
