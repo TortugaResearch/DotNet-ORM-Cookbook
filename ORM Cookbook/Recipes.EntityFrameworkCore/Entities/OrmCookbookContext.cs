@@ -22,6 +22,8 @@ namespace Recipes.EntityFrameworkCore.Entities
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<EmployeeClassification> EmployeeClassification { get; set; }
         public virtual DbSet<EmployeeDetail> EmployeeDetail { get; set; }
+        public virtual DbSet<Product> Product { get; set; }
+        public virtual DbSet<ProductLine> ProductLine { get; set; }
 #nullable enable
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -93,6 +95,22 @@ namespace Recipes.EntityFrameworkCore.Entities
                 entity.Property(e => e.EmployeeClassificationName).IsUnicode(false);
 
                 entity.Property(e => e.OfficePhone).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.HasOne(d => d.ProductLineKeyNavigation)
+                    .WithMany(p => p.Product)
+                    .HasForeignKey(d => d.ProductLineKey)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Product_ProductLineKey");
+            });
+
+            modelBuilder.Entity<ProductLine>(entity =>
+            {
+                entity.HasIndex(e => e.ProductLineName)
+                    .HasName("UX_ProductLine_ProductLineName")
+                    .IsUnique();
             });
 
 #nullable enable
