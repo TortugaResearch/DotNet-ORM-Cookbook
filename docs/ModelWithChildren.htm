@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Object-Based Foreign Key - The .NET Core ORM Cookbook</title>
+    <title>Model with Childern CRUD - The .NET Core ORM Cookbook</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="css/theme.css" type="text/css" />
     <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
@@ -35,24 +35,7 @@
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
-</li>
-<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
-</li>
-<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
-</li>
-<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
-</li>
-<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
-</li>
-<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
-</li>
-<li class="tocentry">
-<ul>
-<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span></li>
-<li class="tocentry"><a href="ModelWithLookupSimple.htm">Integer-Based Foreign Key</a>
-</li>
-<li class="tocentry current"><a class="current" href="ModelWithLookupComplex.htm">Object-Based Foreign Key</a>
+<li class="tocentry current"><a class="current" href="ModelWithChildren.htm">Model with Childern CRUD</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
 
@@ -77,8 +60,18 @@
 
 
 </ul>
-
-</ul>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -98,15 +91,15 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></li> / <li><a href="ModelWithLookupComplex.htm">Object-Based Foreign Key</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="ModelWithChildren.htm">Model with Childern CRUD</a></li></ul>
 					
                     </div>
                     <hr />
                 </div>
                 <div role="main">
                     <div class="section">
-<h1 id="crud-operations-on-model-with-object-based-foreign-key">CRUD Operations on Model with Object-Based Foreign Key<a class="headerlink" href="#crud-operations-on-model-with-object-based-foreign-key" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This use case demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an object.</p>
+<h1 id="crud-operations-on-model-with-child-records">CRUD Operations on Model with Child Records<a class="headerlink" href="#crud-operations-on-model-with-child-records" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>This use case demonstrates performing Create, Read, Update, and Delete operations on an object that includes a collection of child records.</p>
 <h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public interface IEmployeeComplex
 {

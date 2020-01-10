@@ -10,6 +10,6 @@
     ProductWeight NUMERIC(10, 4) NULL,
     CONSTRAINT C_Product_Weight CHECK (ShippingWeight IS NULL
                                        OR ProductWeight IS NULL
-                                       OR ShippingWeight <= ProductWeight
+                                       OR ShippingWeight >= ProductWeight
                                       )
 );
