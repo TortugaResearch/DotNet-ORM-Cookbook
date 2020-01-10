@@ -117,7 +117,7 @@ The rules on when you need to call `Flush` are complex. In some cases it will be
 
 RepoDb often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
 
-@snippet cs [../Recipes.RepoDb\SingleModelCrud\EmployeeClassification.cs] EmployeeClassification
+@snippet cs [../Recipes.RepoDb\Entities\EmployeeClassificationSingleModelCrud.cs] EmployeeClassificationSingleModelCrud
 
 The repository resemebles Dapper, but with far less SQL.
 

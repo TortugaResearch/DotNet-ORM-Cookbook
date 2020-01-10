@@ -15,6 +15,9 @@ namespace Recipes.RepoDb.PartialUpdate
 
         public int Create(EmployeeClassificationPartialUpdate classification)
         {
+            if (classification == null)
+                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
             return Insert<int>(classification);
         }
 
@@ -50,7 +53,7 @@ namespace Recipes.RepoDb.PartialUpdate
             using (var connection = CreateConnection(true))
             {
                 connection.Update(ClassMappedNameCache.Get<EmployeeClassificationPartialUpdate>(),
-                    new { isExempt, isEmployee });
+                    new { employeeClassificationKey, isExempt, isEmployee });
             }
         }
     }

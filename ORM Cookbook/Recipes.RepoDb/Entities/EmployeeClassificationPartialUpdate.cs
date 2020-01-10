@@ -6,6 +6,7 @@ namespace Recipes.RepoDb
     [Map("[HR].[EmployeeClassification]")]
     public class EmployeeClassificationPartialUpdate : IEmployeeClassification
     {
+        [Primary]
         public int EmployeeClassificationKey { get; set; }
 
         public string? EmployeeClassificationName { get; set; }
