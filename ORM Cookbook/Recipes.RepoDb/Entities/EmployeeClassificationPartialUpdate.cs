@@ -1,7 +1,7 @@
 ﻿using Recipes.PartialUpdate;
 using RepoDb.Attributes;
 
-namespace Recipes.RepoDb
+namespace Recipes.RepoDb.Entities
 {
     [Map("[HR].[EmployeeClassification]")]
     public class EmployeeClassificationPartialUpdate : IEmployeeClassification

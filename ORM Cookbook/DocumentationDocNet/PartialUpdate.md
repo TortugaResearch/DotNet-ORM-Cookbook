@@ -53,8 +53,6 @@ To perform a partial update, first fetch a record and then modify it.
 
 ## RepoDb
 
-TODO
-
 @snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
 
 @snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters

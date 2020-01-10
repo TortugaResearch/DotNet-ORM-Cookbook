@@ -1,4 +1,5 @@
-﻿using Recipes.SingleModelCrudAsync;
+﻿using Recipes.RepoDb.Entities;
+using Recipes.SingleModelCrudAsync;
 using RepoDb;
 using RepoDb.Extensions;
 using System;
@@ -59,7 +60,7 @@ namespace Recipes.RepoDb.SingleModelCrudAsync
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            await UpdateAsync(classification).ConfigureAwait(false);
+            await base.UpdateAsync(classification).ConfigureAwait(false);
         }
     }
 }

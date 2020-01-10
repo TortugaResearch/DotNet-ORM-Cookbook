@@ -1,4 +1,5 @@
-﻿using Recipes.SingleModelCrud;
+﻿using Recipes.RepoDb.Entities;
+using Recipes.SingleModelCrud;
 using RepoDb;
 using RepoDb.Extensions;
 using System;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.Immutable;
+using Recipes.RepoDb.Entities;
 using System;
 
 namespace Recipes.RepoDb.Immutable

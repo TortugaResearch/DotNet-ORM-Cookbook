@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.PartialUpdate;
+using Recipes.RepoDb.Entities;
 
 namespace Recipes.RepoDb.PartialUpdate
 {

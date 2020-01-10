@@ -1,4 +1,5 @@
 ﻿using Recipes.PartialUpdate;
+using Recipes.RepoDb.Entities;
 using RepoDb;
 using System;
 using System.Data.SqlClient;

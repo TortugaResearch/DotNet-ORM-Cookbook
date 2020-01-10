@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.RepoDb.Entities;
 using Recipes.TryCrud;
 
 namespace Recipes.RepoDb.TryCrud
