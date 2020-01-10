@@ -31,6 +31,8 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
@@ -51,6 +53,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
 
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
@@ -60,6 +64,11 @@
 
 
 </ul>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -152,7 +161,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
+        const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
                     OUTPUT Inserted.EmployeeClassificationKey
                     VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )&quot;;
 
@@ -171,7 +180,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -183,7 +192,7 @@
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -195,7 +204,7 @@
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
-        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
@@ -220,7 +229,7 @@
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
 
         var result = new List&lt;ReadOnlyEmployeeClassification&gt;();
 
@@ -244,7 +253,7 @@
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
                     FROM HR.EmployeeClassification ec
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -272,7 +281,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;UPDATE HR.EmployeeClassification
+        const string sql = @&quot;UPDATE HR.EmployeeClassification
                     SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
                     WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
@@ -326,7 +335,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        m_DataSource.Delete(classification).ToInt32().Execute();
+        m_DataSource.Delete(classification).Execute();
     }
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
@@ -582,6 +591,120 @@
                 temp.IsEmployee = classification.IsEmployee;
                 temp.IsExempt = classification.IsExempt;
                 context.SaveChanges();
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LLBLGen Pro supports 'action' specifications on entities, e.g. an entity can only be fetched, or fetched and updated, but e.g. not deleted. An entity that's marked as 'Read' can't be updated, deleted or inserted. The scope of the recipes in this cookbook however
+focus on immutable data in-memory. LLBLGen Pro does not directly support these objects, You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
+<pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassificationEntity entity)
+{
+    if (entity == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity)} is null.&quot;);
+    if (entity.EmployeeClassificationName == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.EmployeeClassificationName)} is null.&quot;);
+
+    EmployeeClassificationKey = entity.EmployeeClassificationKey;
+    EmployeeClassificationName = entity.EmployeeClassificationName;
+    IsExempt = entity.IsExempt;
+    IsEmployee = entity.IsEmployee;
+}
+</code></pre>
+
+<pre><code class="cs">public EmployeeClassificationEntity ToEntity()
+{
+    return new EmployeeClassificationEntity()
+    {
+        EmployeeClassificationKey = EmployeeClassificationKey,
+        EmployeeClassificationName = EmployeeClassificationName,
+        IsExempt = IsExempt,
+        IsEmployee = IsEmployee
+    };
+}
+</code></pre>
+
+<p>These conversions are used in the repository before write operations and after read operations.</p>
+<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            var toPersist = classification.ToEntity();
+            adapter.SaveEntity(toPersist);
+            return toPersist.EmployeeClassificationKey;
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
+                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+        }
+    }
+
+    public virtual void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        DeleteByKey(classification.EmployeeClassificationKey);
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification
+                                                .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+                                                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification.Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+            if (temp.IsNew)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            //Get a fresh copy of the row from the database
+            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+            if (!temp.IsNew)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                temp.IsEmployee = classification.IsEmployee;
+                temp.IsExempt = classification.IsExempt;
+                adapter.SaveEntity(temp);
             }
         }
     }

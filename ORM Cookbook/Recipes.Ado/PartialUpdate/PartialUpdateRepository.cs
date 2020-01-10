@@ -18,7 +18,7 @@ namespace Recipes.Ado.PartialUpdate
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
+            const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
                         OUTPUT Inserted.EmployeeClassificationKey
                         VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )";
 
@@ -34,7 +34,7 @@ namespace Recipes.Ado.PartialUpdate
 
         public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+            const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
                         FROM HR.EmployeeClassification ec
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
@@ -63,7 +63,7 @@ namespace Recipes.Ado.PartialUpdate
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-            var sql = @"UPDATE HR.EmployeeClassification
+            const string sql = @"UPDATE HR.EmployeeClassification
                         SET EmployeeClassificationName = @EmployeeClassificationName
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
@@ -81,7 +81,7 @@ namespace Recipes.Ado.PartialUpdate
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-            var sql = @"UPDATE HR.EmployeeClassification
+            const string sql = @"UPDATE HR.EmployeeClassification
                         SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
@@ -97,7 +97,7 @@ namespace Recipes.Ado.PartialUpdate
 
         public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
         {
-            var sql = @"UPDATE HR.EmployeeClassification
+            const string sql = @"UPDATE HR.EmployeeClassification
                         SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 

@@ -20,7 +20,7 @@ namespace Recipes.Ado.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
+            const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
                         OUTPUT Inserted.EmployeeClassificationKey
                         VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )";
 
@@ -39,7 +39,7 @@ namespace Recipes.Ado.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql, con))
@@ -51,7 +51,7 @@ namespace Recipes.Ado.Immutable
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql, con))
@@ -63,7 +63,7 @@ namespace Recipes.Ado.Immutable
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
         {
-            var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+            const string sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
                         FROM HR.EmployeeClassification ec
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
@@ -88,7 +88,7 @@ namespace Recipes.Ado.Immutable
 
         public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
         {
-            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;";
+            const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;";
 
             var result = new List<ReadOnlyEmployeeClassification>();
 
@@ -112,7 +112,7 @@ namespace Recipes.Ado.Immutable
 
         public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+            const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
                         FROM HR.EmployeeClassification ec
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
@@ -140,7 +140,7 @@ namespace Recipes.Ado.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"UPDATE HR.EmployeeClassification
+            const string sql = @"UPDATE HR.EmployeeClassification
                         SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 

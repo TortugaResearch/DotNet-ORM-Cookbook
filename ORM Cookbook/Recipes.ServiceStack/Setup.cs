@@ -14,10 +14,9 @@ namespace Recipes.ServiceStack
     {
         static Lazy<IDbConnectionFactory> DbConnectionFactoryFactory = new Lazy<IDbConnectionFactory>(() =>
         {
-            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json").Build();
-            var con = configuration.GetSection("ConnectionStrings").GetChildren().Single();
-            return new OrmLiteConnectionFactory(con.Value, SqlServerDialect.Provider);
+            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
+            var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
+            return new OrmLiteConnectionFactory(sqlServerConnectionString, SqlServerDialect.Provider);
         });
 
         internal static IDbConnectionFactory DbConnectionFactory => DbConnectionFactoryFactory.Value;

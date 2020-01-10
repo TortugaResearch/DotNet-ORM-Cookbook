@@ -26,6 +26,10 @@ Like ADO.NET, this uses the row counts returned from the `Execute` command.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\TryCrud\TryCrudRepository.cs] TryCrudRepository
 
+## LLBLGen Pro
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\TryCrud\TryCrudRepository.cs] TryCrudRepository
+
 ## NHibernate
 
 In some cases you'll need to catch a `StaleStateException` as there is no TryUpdate or TryDelete.

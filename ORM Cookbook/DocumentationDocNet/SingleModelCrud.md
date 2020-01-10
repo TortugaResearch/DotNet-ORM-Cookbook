@@ -82,6 +82,15 @@ The design of Entity Framework Core requires extraneous database calls when perf
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrud\SingleModelCrudRepository2.cs] SingleModelCrudRepository2
 
+## LLBLGen Pro
+LLBLGen Pro is a .NET ORM on the market since 2003 and has seen over 15 major releases since that date. The latest version is v5.6.1, released in October 2019. LLBLGen Pro is a commercial non-poco full ORM which also offers a full plain-SQL API so can be used as a micro ORM as well. 
+
+As all entities derive from a base class, the class models and mappings have to be generated from an abstract entity model which is created in the LLBLGen Pro designer using either model first or database first development (or a mix of both). LLBLGen Pro supports two paradigms: Adapter and SelfServicing. The cookbook looks at Adapter. 
+
+It offers multiple query systems (Linq, QuerySpec (a fluent API) and a low-level API). The recipes illustrate usage of all of these.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
+
 ## NHibernate
 
 NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s Hibernate, it heavily relies on XML configuration files and interfaces.
