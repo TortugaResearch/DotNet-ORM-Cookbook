@@ -7,14 +7,14 @@ using System.Linq;
 
 namespace Recipes.RepoDb.TryCrud
 {
-    public class TryCrudRepository : BaseRepository<EmployeeClassification, SqlConnection>,
-        ITryCrudRepository<EmployeeClassification>
+    public class TryCrudRepository : BaseRepository<EmployeeClassificationTryCrud, SqlConnection>,
+        ITryCrudRepository<EmployeeClassificationTryCrud>
     {
         public TryCrudRepository(string connectionString)
             : base(connectionString)
         { }
 
-        public int Create(EmployeeClassification classification)
+        public int Create(EmployeeClassificationTryCrud classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -34,7 +34,7 @@ namespace Recipes.RepoDb.TryCrud
             return 1 == Delete(employeeClassificationKey);
         }
 
-        public void DeleteOrException(EmployeeClassification classification)
+        public void DeleteOrException(EmployeeClassificationTryCrud classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -44,7 +44,7 @@ namespace Recipes.RepoDb.TryCrud
                 throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
         }
 
-        public bool DeleteWithStatus(EmployeeClassification classification)
+        public bool DeleteWithStatus(EmployeeClassificationTryCrud classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -52,7 +52,7 @@ namespace Recipes.RepoDb.TryCrud
             return 1 == Delete(classification);
         }
 
-        public EmployeeClassification FindByNameOrException(string employeeClassificationName)
+        public EmployeeClassificationTryCrud FindByNameOrException(string employeeClassificationName)
         {
             var entity = Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
             if (null == entity)
@@ -61,12 +61,12 @@ namespace Recipes.RepoDb.TryCrud
             return entity;
         }
 
-        public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
+        public EmployeeClassificationTryCrud? FindByNameOrNull(string employeeClassificationName)
         {
             return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
         }
 
-        public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
+        public EmployeeClassificationTryCrud GetByKeyOrException(int employeeClassificationKey)
         {
             var entity = Query(employeeClassificationKey).FirstOrDefault();
             if (null == entity)
@@ -75,19 +75,19 @@ namespace Recipes.RepoDb.TryCrud
             return entity;
         }
 
-        public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
+        public EmployeeClassificationTryCrud? GetByKeyOrNull(int employeeClassificationKey)
         {
             return Query(employeeClassificationKey).FirstOrDefault();
         }
 
-        public void UpdateOrException(EmployeeClassification classification)
+        public void UpdateOrException(EmployeeClassificationTryCrud classification)
         {
             var rowCount = Update(classification);
             if (rowCount != 1)
                 throw new DataException($"Message");
         }
 
-        public bool UpdateWithStatus(EmployeeClassification classification)
+        public bool UpdateWithStatus(EmployeeClassificationTryCrud classification)
         {
             return 1 == Update(classification);
         }

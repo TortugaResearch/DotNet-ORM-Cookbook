@@ -1,15 +1,17 @@
-﻿using Recipes.PartialUpdate;
+﻿using Recipes.TryCrud;
+using RepoDb.Attributes;
 
-namespace Recipes.RepoDb.PartialUpdate
+namespace Recipes.RepoDb
 {
-    public class EmployeeClassification : IEmployeeClassification
+    [Map("[HR].[EmployeeClassification]")]
+    public class EmployeeClassificationTryCrud : IEmployeeClassification
     {
         public int EmployeeClassificationKey { get; set; }
 
-        /// <exclude />
         public string? EmployeeClassificationName { get; set; }
 
         public bool IsExempt { get; set; }
+
         public bool IsEmployee { get; set; }
     }
 }

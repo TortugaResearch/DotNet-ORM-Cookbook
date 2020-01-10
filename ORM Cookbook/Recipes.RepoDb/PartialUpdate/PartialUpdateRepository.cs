@@ -1,33 +1,57 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.PartialUpdate;
+﻿using Recipes.PartialUpdate;
+using RepoDb;
+using System;
+using System.Data.SqlClient;
+using System.Linq;
 
 namespace Recipes.RepoDb.PartialUpdate
 {
-    public class PartialUpdateRepository : IPartialUpdateRepository<EmployeeClassification>
+    public class PartialUpdateRepository : BaseRepository<EmployeeClassificationPartialUpdate, SqlConnection>,
+        IPartialUpdateRepository<EmployeeClassificationPartialUpdate>
     {
-        public int Create(EmployeeClassification classification)
+        public PartialUpdateRepository(string connectionString)
+            : base(connectionString)
+        { }
+
+        public int Create(EmployeeClassificationPartialUpdate classification)
         {
-            throw new AssertInconclusiveException("TODO");
+            return Insert<int>(classification);
         }
 
-        public EmployeeClassification? GetByKey(int employeeClassificationKey)
+        public EmployeeClassificationPartialUpdate? GetByKey(int employeeClassificationKey)
         {
-            throw new AssertInconclusiveException("TODO");
+            return Query(employeeClassificationKey).FirstOrDefault();
         }
 
         public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
         {
-            throw new AssertInconclusiveException("TODO");
+            if (updateMessage == null)
+                throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
+
+            using (var connection = CreateConnection(true))
+            {
+                connection.Update(ClassMappedNameCache.Get<EmployeeClassificationPartialUpdate>(), updateMessage);
+            }
         }
 
         public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         {
-            throw new AssertInconclusiveException("TODO");
+            if (updateMessage == null)
+                throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
+
+            using (var connection = CreateConnection(true))
+            {
+                connection.Update(ClassMappedNameCache.Get<EmployeeClassificationPartialUpdate>(), updateMessage);
+            }
         }
 
         public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
         {
-            throw new AssertInconclusiveException("TODO");
+            using (var connection = CreateConnection(true))
+            {
+                connection.Update(ClassMappedNameCache.Get<EmployeeClassificationPartialUpdate>(),
+                    new { isExempt, isEmployee });
+            }
         }
     }
 }

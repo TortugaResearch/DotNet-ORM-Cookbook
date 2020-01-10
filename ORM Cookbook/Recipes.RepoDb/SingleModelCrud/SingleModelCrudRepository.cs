@@ -8,14 +8,14 @@ using System.Linq;
 
 namespace Recipes.RepoDb.SingleModelCrud
 {
-    public class SingleModelCrudRepository : BaseRepository<EmployeeClassification, SqlConnection>,
-        ISingleModelCrudRepository<EmployeeClassification>
+    public class SingleModelCrudRepository : BaseRepository<EmployeeClassificationSingleModelCrud, SqlConnection>,
+        ISingleModelCrudRepository<EmployeeClassificationSingleModelCrud>
     {
         public SingleModelCrudRepository(string connectionString)
             : base(connectionString)
         { }
 
-        public int Create(EmployeeClassification classification)
+        public int Create(EmployeeClassificationSingleModelCrud classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -28,7 +28,7 @@ namespace Recipes.RepoDb.SingleModelCrud
             Delete(employeeClassificationKey);
         }
 
-        public void Delete(EmployeeClassification classification)
+        public void Delete(EmployeeClassificationSingleModelCrud classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -36,22 +36,22 @@ namespace Recipes.RepoDb.SingleModelCrud
             base.Delete(classification);
         }
 
-        public EmployeeClassification? FindByName(string employeeClassificationName)
+        public EmployeeClassificationSingleModelCrud? FindByName(string employeeClassificationName)
         {
             return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
         }
 
-        public IList<EmployeeClassification> GetAll()
+        public IList<EmployeeClassificationSingleModelCrud> GetAll()
         {
             return QueryAll().AsList();
         }
 
-        public EmployeeClassification? GetByKey(int employeeClassificationKey)
+        public EmployeeClassificationSingleModelCrud? GetByKey(int employeeClassificationKey)
         {
             return Query(employeeClassificationKey).FirstOrDefault();
         }
 
-        public void Update(EmployeeClassification classification)
+        public void Update(EmployeeClassificationSingleModelCrud classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
