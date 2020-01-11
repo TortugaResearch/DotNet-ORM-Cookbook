@@ -41,9 +41,11 @@ TODO
 
 ## NHibernate
 
-By default, NHibernate does not support a clean seperation between the data access layer and the rest of the application. This is due to the way the lazy-loading works, which requires an active `ISession` even when lazy-loading isn't desired.
+By default, NHibernate does not support a clean separation between the data access layer and the rest of the application. This is due to the way the lazy-loading works, which requires an active `ISession` even when lazy-loading isn't desired.
 
 The work-around is to explicitly trigger lazy-loading when the child rows are desired. When the child rows are not desired, block lazy-loading by setting the collection property to an empty list.
+
+For partial deletes, you have to explicitly find and delete the child rows that are no longer needed. Furthermore, this must be done in a separate `ISession` to avoid a ` NonUniqueObjectException`.
 
 @snippet cs [..\Recipes.NHibernate\ModelWithChildren\ModelWithChildrenRepository.cs] ModelWithChildrenRepository
 
