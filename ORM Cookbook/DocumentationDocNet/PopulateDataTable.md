@@ -52,10 +52,11 @@ Note that inline SQL must be used inconjunction with the `IResultTransformer`.
 
 @snippet cs [..\Recipes.NHibernate\PopulateDataTable\PopulateDataTableRepository.cs] PopulateDataTableRepository
 
-
 ## RepoDb
 
-TODO
+In RepoDb, the `DataTable.Load` can be provided with an `IDataReader` object from `ExecuteReader` method.
+
+@snippet cs [..\Recipes.RepoDb\PopulateDataTable\PopulateDataTableRepository.cs] PopulateDataTableRepository
 
 ## ServiceStack
 

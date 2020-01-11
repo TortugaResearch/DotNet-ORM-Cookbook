@@ -48,6 +48,12 @@ To make an Entity Framework repository asynchronous, you need to import the `Sys
 
 @snippet cs [../Recipes.EntityFramework/Repositories/EmployeeClassificationAsynchronousRepository.cs] EmployeeClassificationAsynchronousRepository
 
+## RepoDb
+
+To make a RepoDb repository asynchronous, simply add `await` and `Async` in the appropriate places.
+
+@snippet cs [../Recipes.RepoDb/Repositories/EmployeeClassificationAsynchronousRepository.cs] EmployeeClassificationAsynchronousRepository
+
 ## NHibernate
 
 NHibernate does not support asynchronous calls. To ensure UI responsiveness, use `Task.Run` calls to create awaitable tasks that run on a background thread. (Do not use `Task.Run` in a server scenario.)
