@@ -50,7 +50,7 @@ namespace Recipes.Chain.ModelWithChildren
         {
             using (var trans = m_DataSource.BeginTransaction())
             {
-                trans.DeleteWithFilter(ProductLineTable, "ProductTable", new { productLineKey }).Execute();
+                trans.DeleteWithFilter(ProductTable, new { productLineKey }).Execute();
                 trans.DeleteByKey(ProductLineTable, productLineKey).Execute();
                 trans.Commit();
             }
@@ -109,6 +109,9 @@ namespace Recipes.Chain.ModelWithChildren
                 //Remove the old records
                 foreach (var key in oldKeys)
                     trans.DeleteByKey(ProductTable, key).Execute();
+
+                //Ensure new child rows have their parent's key
+                productLine.ApplyKeys();
 
                 //Insert/update the remaining child rows
                 foreach (var row in productLine.Products)
