@@ -1,4 +1,5 @@
-﻿using Recipes.EntityFrameworkCore.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Recipes.EntityFrameworkCore.Entities;
 using Recipes.ModelWithLookup;
 using System;
 using System.Collections.Generic;
@@ -35,13 +36,8 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
 
             using (var context = CreateDbContext())
             {
-                //Find the row you wish to delete
-                var temp = context.Employee.Find(employee.EmployeeKey);
-                if (temp != null)
-                {
-                    context.Employee.Remove(temp);
-                    context.SaveChanges();
-                }
+                context.Entry(employee).State = EntityState.Deleted;
+                context.SaveChanges();
             }
         }
 
@@ -62,33 +58,25 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
         public IList<Employee> FindByLastName(string lastName)
         {
             using (var context = CreateDbContext())
-            {
                 return context.Employee.Where(ec => ec.LastName == lastName).ToList();
-            }
         }
 
         public IList<Employee> GetAll()
         {
             using (var context = CreateDbContext())
-            {
                 return context.Employee.ToList();
-            }
         }
 
         public Employee? GetByKey(int employeeKey)
         {
             using (var context = CreateDbContext())
-            {
                 return context.Employee.Find(employeeKey);
-            }
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-            {
                 return context.EmployeeClassification.Find(employeeClassificationKey);
-            }
         }
 
         /// <summary>
@@ -103,20 +91,8 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
 
             using (var context = CreateDbContext())
             {
-                //Get a fresh copy of the row from the database
-                var temp = context.Employee.Find(employee.EmployeeKey);
-                if (temp != null)
-                {
-                    //Copy the changed fields
-                    temp.FirstName = employee.FirstName;
-                    temp.MiddleName = employee.MiddleName;
-                    temp.LastName = employee.LastName;
-                    temp.CellPhone = employee.CellPhone;
-                    temp.OfficePhone = employee.OfficePhone;
-                    temp.Title = employee.Title;
-                    temp.EmployeeClassificationKey = employee.EmployeeClassificationKey;
-                    context.SaveChanges();
-                }
+                context.Entry(employee).State = EntityState.Modified;
+                context.SaveChanges();
             }
         }
     }

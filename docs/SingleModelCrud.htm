@@ -56,6 +56,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+</li>
 <li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
 </li>
 <li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
@@ -813,16 +815,6 @@ public partial class EmployeeClassification
         }
     }
 
-    public void DeleteByKey(int employeeClassificationKey)
-    {
-        using (var session = m_SessionFactory.OpenSession())
-        {
-            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
-            session.Delete(temp);
-            session.Flush();
-        }
-    }
-
     public void Delete(EmployeeClassification classification)
     {
         if (classification == null)
@@ -831,6 +823,16 @@ public partial class EmployeeClassification
         using (var session = m_SessionFactory.OpenSession())
         {
             session.Delete(classification);
+            session.Flush();
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            session.Delete(temp);
             session.Flush();
         }
     }

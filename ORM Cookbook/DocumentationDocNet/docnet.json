@@ -10,6 +10,7 @@
     "__index": "index.md",
     "FAQ": "FAQ.md",
     "Single Model CRUD": "SingleModelCrud.md",
+    "Model with Childern CRUD": "ModelWithChildren.md",
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",
     "Partial Updates": "PartialUpdate.md",

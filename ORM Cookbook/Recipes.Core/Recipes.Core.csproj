@@ -14,6 +14,10 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="..\DocumentationDocNet\ModelWithChildren.md" Link="ModelWithChildren\ModelWithChildren.md" />
+    <None Include="..\DocumentationDocNet\ModelWithLookupComplex.md" Link="ModelWithLookup\ModelWithLookupComplex.md" />
+    <None Include="..\DocumentationDocNet\ModelWithLookupSimple.md" Link="ModelWithLookup\ModelWithLookupSimple.md" />
+    <None Include="..\DocumentationDocNet\PartialUpdate.md" Link="PartialUpdate\PartialUpdate.md" />
     <None Include="..\DocumentationDocNet\PopulateDataTable.md" Link="PopulateDataTable\PopulateDataTable.md" />
     <None Include="..\DocumentationDocNet\SingleModelCrud.md" Link="SingleModelCrud\SingleModelCrud.md" />
     <None Include="..\DocumentationDocNet\TryCrud.md" Link="TryCrud\TryCrud.md" />
