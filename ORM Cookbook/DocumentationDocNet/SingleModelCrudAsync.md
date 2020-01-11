@@ -64,10 +64,15 @@ With LLBLGen Pro, the only changes are to add `await`, `Async`, and `.ConfigureA
 
 ## NHibernate
 
-With NHibernate, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+With NHibernate, the only changes are to add `await`, `async`, and `.ConfigureAwait(false)` to the appropriate places. 
 
 @snippet cs [../Recipes.NHibernate/SingleModelCrudAsync/SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
+## RepoDb
+
+With RepoDb, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+@snippet cs [..\Recipes.RepoDb\SingleModelCrudAsync\SingleModelCrudAsyncRepository.cs] SingleModelCrudAsyncRepository
 
 ## ServiceStack
 

@@ -391,21 +391,43 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>In RepoDb, you can either do the following.</p>
+<ul>
+<li>Limit the properties of your entity model for targetted columns.</li>
+<li>Specify the name of the targe table and pass the object (or <em>dynamic</em>).</li>
+</ul>
+<p>The <em>ClassMappedNameCache</em> class  will help you extract the target table from the original entity.</p>
+<p>Code snippets below resembles item #2 above.</p>
 <pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
 {
-    throw new AssertInconclusiveException(&quot;TODO&quot;);
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var connection = CreateConnection(true))
+    {
+        connection.Update(ClassMappedNameCache.Get&lt;EmployeeClassificationPartialUpdate&gt;(), updateMessage);
+    }
 }
 
 public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 {
-    throw new AssertInconclusiveException(&quot;TODO&quot;);
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var connection = CreateConnection(true))
+    {
+        connection.Update(ClassMappedNameCache.Get&lt;EmployeeClassificationPartialUpdate&gt;(), updateMessage);
+    }
 }
 </code></pre>
 
 <pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
 {
-    throw new AssertInconclusiveException(&quot;TODO&quot;);
+    using (var connection = CreateConnection(true))
+    {
+        connection.Update(ClassMappedNameCache.Get&lt;EmployeeClassificationPartialUpdate&gt;(),
+            new { employeeClassificationKey, isExempt, isEmployee });
+    }
 }
 </code></pre>
 

@@ -38,8 +38,6 @@ In some cases you'll need to catch a `StaleStateException` as there is no TryUpd
 
 ## RepoDb
 
-TODO
-
 @snippet cs [..\Recipes.RepoDb\TryCrud\TryCrudRepository.cs] TryCrudRepository
 
 ## ServiceStack

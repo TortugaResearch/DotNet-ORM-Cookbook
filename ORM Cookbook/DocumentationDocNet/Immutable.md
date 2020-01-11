@@ -69,10 +69,21 @@ These conversions are used in the repository before write operations and after r
 
 @snippet cs [..\Recipes.NHibernate\Immutable\ImmutableRepository.cs] ImmutableRepository
 
-
 ## RepoDb
 
-TODO
+RepoDb does not directly support immutable objects. You have to manage the conversion between *mutable* and *immutable* objects in order to make it work.
+
+Below is a sample snippet for *immutable* class.
+
+@snippet cs [..\Recipes.RepoDb\Entities\ReadOnlyEmployeeClassification.cs] ReadOnlyEmployeeClassification
+
+Below is a sample snippet for *mutable* class.
+
+@snippet cs [..\Recipes.RepoDb\Entities\MutableEmployeeClassification.cs] MutableEmployeeClassification
+
+Below is the *immutable repository*.
+
+@snippet cs [..\Recipes.RepoDb\Immutable\ImmutableRepository.cs] ImmutableRepository
 
 ## ServiceStack
 

@@ -115,11 +115,13 @@ The rules on when you need to call `Flush` are complex. In some cases it will be
 
 ## RepoDb
 
-RepoDb often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
+RepoDb is a hybrid-ORM that supports both *raw-SQLs* and *fluent* calls. When calling the *raw-SQL* operations, just like *Dapper* it does need annotations.
 
-@snippet cs [../Recipes.RepoDb\SingleModelCrud\EmployeeClassification.cs] EmployeeClassification
+However, by using a *fluent* calls in the repositories (as recommended), it often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
 
-The repository resemebles Dapper, but with far less SQL.
+@snippet cs [../Recipes.RepoDb\Entities\EmployeeClassificationSingleModelCrud.cs] EmployeeClassificationSingleModelCrud
+
+The repository resembles Dapper, but with far less SQL.
 
 @snippet cs [..\Recipes.RepoDb\SingleModelCrud\SingleModelCrudRepository.cs] SingleModelCrudRepository
 

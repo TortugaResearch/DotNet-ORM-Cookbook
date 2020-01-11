@@ -8,5 +8,7 @@
     <BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
     <DropObjectsNotInSource>True</DropObjectsNotInSource>
     <ProfileVersionNumber>1</ProfileVersionNumber>
+    <IgnoreWithNocheckOnCheckConstraints>True</IgnoreWithNocheckOnCheckConstraints>
+    <IgnoreWithNocheckOnForeignKeys>True</IgnoreWithNocheckOnForeignKeys>
   </PropertyGroup>
 </Project>
