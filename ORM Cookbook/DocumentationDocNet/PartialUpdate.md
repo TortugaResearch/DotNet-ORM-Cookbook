@@ -53,6 +53,15 @@ To perform a partial update, first fetch a record and then modify it.
 
 ## RepoDb
 
+In RepoDb, you can either do the following.
+
+- Limit the properties of your entity model for targetted columns.
+- Specify the name of the targe table and pass the object (or *dynamic*).
+
+The *ClassMappedNameCache* class  will help you extract the target table from the original entity.
+
+Code snippets below resembles item #2 above.
+
 @snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
 
 @snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters

@@ -26,7 +26,7 @@ namespace Recipes.RepoDb.Immutable
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            Delete<MutableEmployeeClassification>(e => e.EmployeeClassificationKey == employeeClassificationKey);
+            Delete<MutableEmployeeClassification>(employeeClassificationKey);
         }
 
         public void Delete(ReadOnlyEmployeeClassification classification)
@@ -34,7 +34,7 @@ namespace Recipes.RepoDb.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            Delete<MutableEmployeeClassification>(new MutableEmployeeClassification(classification));
+            Delete(new MutableEmployeeClassification(classification));
         }
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
