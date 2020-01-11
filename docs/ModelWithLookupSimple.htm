@@ -771,7 +771,64 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ModelWithLookupSimpleRepository : DbRepository&lt;SqlConnection&gt;,
+    IModelWithLookupSimpleRepository&lt;EmployeeSimple&gt;
+{
+    public ModelWithLookupSimpleRepository(string connectionString)
+        : base(connectionString)
+    { }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return Insert&lt;EmployeeSimple, int&gt;(employee);
+    }
+
+    public void Delete(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        base.Delete(employee);
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        Delete&lt;EmployeeSimple&gt;(employeeKey);
+    }
+
+    public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+    {
+        return Query&lt;EmployeeSimple&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; GetAll()
+    {
+        return QueryAll&lt;EmployeeSimple&gt;().AsList();
+    }
+
+    public EmployeeSimple? GetByKey(int employeeKey)
+    {
+        return Query&lt;EmployeeSimple&gt;(employeeKey).FirstOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return Query&lt;EmployeeClassificationModelWithLookup&gt;(employeeClassificationKey).FirstOrDefault();
+    }
+
+    public void Update(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        base.Update(employee);
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 
