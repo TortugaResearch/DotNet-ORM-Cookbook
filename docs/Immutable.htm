@@ -824,7 +824,137 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>RepoDb does not directly support immutable objects. You have to manage the conversion between <em>mutable</em> and <em>immutable</em> objects in order to make it work.</p>
+<p>Below is a sample snippet for <em>immutable</em> class.</p>
+<pre><code class="cs">[Map(&quot;[HR].[EmployeeClassification]&quot;)]
+public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
+{
+    public ReadOnlyEmployeeClassification(MutableEmployeeClassification classification)
+    {
+        if (classification?.EmployeeClassificationName == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification.EmployeeClassificationName)} is null.&quot;);
+
+        EmployeeClassificationKey = classification.EmployeeClassificationKey;
+        EmployeeClassificationName = classification.EmployeeClassificationName;
+        IsExempt = classification.IsExempt;
+        IsEmployee = classification.IsEmployee;
+    }
+
+    public ReadOnlyEmployeeClassification(int employeeClassificationKey,
+        string employeeClassificationName,
+        bool isExempt,
+        bool isEmployee)
+    {
+        EmployeeClassificationKey = employeeClassificationKey;
+        EmployeeClassificationName = employeeClassificationName;
+        IsExempt = isExempt;
+        IsEmployee = isEmployee;
+    }
+
+    [Primary]
+    public int EmployeeClassificationKey { get; }
+
+    public string EmployeeClassificationName { get; }
+
+    public bool IsExempt { get; }
+
+    public bool IsEmployee { get; }
+}
+</code></pre>
+
+<p>Below is a sample snippet for <em>mutable</em> class.</p>
+<pre><code class="cs">[Map(&quot;[HR].[EmployeeClassification]&quot;)]
+public class MutableEmployeeClassification
+{
+    public MutableEmployeeClassification() { }
+
+    public MutableEmployeeClassification(IReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        EmployeeClassificationKey = classification.EmployeeClassificationKey;
+        EmployeeClassificationName = classification.EmployeeClassificationName;
+        IsExempt = classification.IsExempt;
+        IsEmployee = classification.IsEmployee;
+    }
+
+    [Primary]
+    public int EmployeeClassificationKey { get; set; }
+
+    public string? EmployeeClassificationName { get; set; }
+
+    public bool IsExempt { get; set; }
+
+    public bool IsEmployee { get; set; }
+
+    internal ReadOnlyEmployeeClassification ToImmutable()
+    {
+        return new ReadOnlyEmployeeClassification(this);
+    }
+}
+</code></pre>
+
+<p>Below is the <em>immutable repository</em>.</p>
+<pre><code class="cs">public class ImmutableRepository : DbRepository&lt;SqlConnection&gt;,
+    IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+{
+    public ImmutableRepository(string connectionString)
+        : base(connectionString)
+    { }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return Insert&lt;MutableEmployeeClassification, int&gt;(new MutableEmployeeClassification(classification));
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        Delete&lt;MutableEmployeeClassification&gt;(employeeClassificationKey);
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        Delete(new MutableEmployeeClassification(classification));
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        return Query&lt;MutableEmployeeClassification&gt;(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
+            .FirstOrDefault()?
+            .ToImmutable();
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        return QueryAll&lt;MutableEmployeeClassification&gt;()
+            .Select(e =&gt; e.ToImmutable())
+            .ToImmutableList();
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        return Query&lt;MutableEmployeeClassification&gt;(employeeClassificationKey)
+            .FirstOrDefault()?
+            .ToImmutable();
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        base.Update&lt;MutableEmployeeClassification&gt;(new MutableEmployeeClassification(classification));
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 
