@@ -11,6 +11,7 @@
   <ItemGroup>
     <None Remove="hibernate.cfg.xml" />
     <None Remove="Mappings\EmployeeClassification.hbm.xml" />
+    <None Remove="Mappings\Production.hbm.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Mappings\EmployeeClassification.hbm.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Production.hbm.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

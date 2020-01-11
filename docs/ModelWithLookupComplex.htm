@@ -700,9 +700,8 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
         using (var context = CreateDbContext())
         {
-            //Replace EmployeeClassification with one fetched from the same context.
-            var localEmployeeClassification = context.EmployeeClassification.Find(employee.EmployeeClassificationKeyNavigation.EmployeeClassificationKey);
-            employee.EmployeeClassificationKeyNavigation = localEmployeeClassification;
+            //Prevent updates to the lookup table
+            context.Entry(employee.EmployeeClassificationKeyNavigation).State = EntityState.Unchanged;
 
             context.Employee.Add(employee);
             context.SaveChanges();
@@ -717,13 +716,8 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
         using (var context = CreateDbContext())
         {
-            //Find the row you wish to delete
-            var temp = context.Employee.Find(employee.EmployeeKey);
-            if (temp != null)
-            {
-                context.Employee.Remove(temp);
-                context.SaveChanges();
-            }
+            context.Entry(employee).State = EntityState.Deleted;
+            context.SaveChanges();
         }
     }
 
@@ -744,40 +738,32 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     public IList&lt;Employee&gt; FindByLastName(string lastName)
     {
         using (var context = CreateDbContext())
-        {
             return context.Employee
                 .Where(ec =&gt; ec.LastName == lastName)
                 .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
                 .ToList();
-        }
     }
 
     public IList&lt;Employee&gt; GetAll()
     {
         using (var context = CreateDbContext())
-        {
             return context.Employee
                 .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
                 .ToList();
-        }
     }
 
     public Employee? GetByKey(int employeeKey)
     {
         using (var context = CreateDbContext())
-        {
             return context.Employee
                 .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
                 .SingleOrDefault(e =&gt; e.EmployeeKey == employeeKey);
-        }
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
-        {
             return context.EmployeeClassification.Find(employeeClassificationKey);
-        }
     }
 
     /// &lt;summary&gt;
@@ -794,24 +780,11 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
         using (var context = CreateDbContext())
         {
-            //Get a fresh copy of the row from the database
-            var temp = context.Employee.Find(employee.EmployeeKey);
+            //Prevent updates to the lookup table
+            context.Entry(employee.EmployeeClassificationKeyNavigation).State = EntityState.Unchanged;
 
-            //Replace EmployeeClassification with one fetched from the same context.
-            var localEmployeeClassification = context.EmployeeClassification.Find(employee.EmployeeClassificationKeyNavigation.EmployeeClassificationKey);
-
-            if (temp != null)
-            {
-                //Copy the changed fields
-                temp.FirstName = employee.FirstName;
-                temp.MiddleName = employee.MiddleName;
-                temp.LastName = employee.LastName;
-                temp.CellPhone = employee.CellPhone;
-                temp.OfficePhone = employee.OfficePhone;
-                temp.Title = employee.Title;
-                temp.EmployeeClassificationKeyNavigation = localEmployeeClassification;
-                context.SaveChanges();
-            }
+            context.Entry(employee).State = EntityState.Modified;
+            context.SaveChanges();
         }
     }
 }

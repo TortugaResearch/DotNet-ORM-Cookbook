@@ -30,16 +30,6 @@ namespace Recipes.NHibernate.SingleModelCrud
             }
         }
 
-        public void DeleteByKey(int employeeClassificationKey)
-        {
-            using (var session = m_SessionFactory.OpenSession())
-            {
-                var temp = session.Get<EmployeeClassification>(employeeClassificationKey);
-                session.Delete(temp);
-                session.Flush();
-            }
-        }
-
         public void Delete(EmployeeClassification classification)
         {
             if (classification == null)
@@ -48,6 +38,16 @@ namespace Recipes.NHibernate.SingleModelCrud
             using (var session = m_SessionFactory.OpenSession())
             {
                 session.Delete(classification);
+                session.Flush();
+            }
+        }
+
+        public void DeleteByKey(int employeeClassificationKey)
+        {
+            using (var session = m_SessionFactory.OpenSession())
+            {
+                var temp = session.Get<EmployeeClassification>(employeeClassificationKey);
+                session.Delete(temp);
                 session.Flush();
             }
         }

@@ -1,6 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Recipes.EntityFrameworkCore.Entities
 {
@@ -102,7 +101,7 @@ namespace Recipes.EntityFrameworkCore.Entities
                 entity.HasOne(d => d.ProductLineKeyNavigation)
                     .WithMany(p => p.Product)
                     .HasForeignKey(d => d.ProductLineKey)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade) //This must be changed to support cascade
                     .HasConstraintName("FK_Product_ProductLineKey");
             });
 
