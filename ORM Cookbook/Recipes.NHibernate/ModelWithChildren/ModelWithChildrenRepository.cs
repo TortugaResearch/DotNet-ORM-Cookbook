@@ -129,7 +129,7 @@ namespace Recipes.NHibernate.ModelWithChildren
 
             using (var session = m_SessionFactory.OpenSession())
             {
-                session.Update(product);
+                session.Merge(product);
                 session.Flush();
             }
         }
