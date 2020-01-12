@@ -70,7 +70,15 @@ TODO
 
 ## RepoDb
 
-TODO
+RepoDb does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.
+
+> RepoDb supports [*ExecuteQueryMultiple*](https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple#executing-multiple-sql-statements) which can cater a much more optimal solution for fetching parent-children related data entities.
+
+Read operations must occur against a database view in order to get the properties from the child object. The `Decompose` attribute indicates that the child should be populated from the same view.
+
+@snippet cs [..\Recipes.RepoDb\Entities\EmployeeComplex.cs] EmployeeComplex
+
+@snippet cs [..\Recipes.RepoDb\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
 
 ## ServiceStack
 
