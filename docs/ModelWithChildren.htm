@@ -421,7 +421,7 @@
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>By default, NHibernate does not support a clean separation between the data access layer and the rest of the application. This is due to the way the lazy-loading works, which requires an active <code>ISession</code> even when lazy-loading isn't desired.</p>
 <p>The work-around is to explicitly trigger lazy-loading when the child rows are desired. When the child rows are not desired, block lazy-loading by setting the collection property to an empty list.</p>
-<p>For partial deletes, you have to explicitly find and delete the child rows that are no longer needed. Furthermore, this must be done in a separate <code>ISession</code> to avoid a <code>NonUniqueObjectException</code>.</p>
+<p>For partial deletes, ensure that you are using <code>cascade=&quot;all-delete-orphan&quot;</code>. Otherwise it will ignore the missing child rows. (Alternately, you can pass in a separate list of rows to delete.)</p>
 <pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLine, Product&gt;
 {
     readonly ISessionFactory m_SessionFactory;
