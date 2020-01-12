@@ -13,7 +13,7 @@
 
     <property name="ProductLineName" />
 
-    <bag name="Products" table="Product" schema="Production" cascade="all"  lazy="true" inverse="true">
+    <bag name="Products" table="Product" schema="Production" cascade="all-delete-orphan"  lazy="true" inverse="true">
       <key column="ProductLineKey" />
       <one-to-many class="Product" />
     </bag>

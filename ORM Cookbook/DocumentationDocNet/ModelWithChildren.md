@@ -45,7 +45,7 @@ By default, NHibernate does not support a clean separation between the data acce
 
 The work-around is to explicitly trigger lazy-loading when the child rows are desired. When the child rows are not desired, block lazy-loading by setting the collection property to an empty list.
 
-For partial deletes, you have to explicitly find and delete the child rows that are no longer needed. Furthermore, this must be done in a separate `ISession` to avoid a ` NonUniqueObjectException`.
+For partial deletes, ensure that you are using `cascade="all-delete-orphan"`. Otherwise it will ignore the missing child rows. (Alternately, you can pass in a separate list of rows to delete.)
 
 @snippet cs [..\Recipes.NHibernate\ModelWithChildren\ModelWithChildrenRepository.cs] ModelWithChildrenRepository
 
