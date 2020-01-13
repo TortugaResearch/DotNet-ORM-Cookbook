@@ -34,7 +34,7 @@ namespace Recipes.Dapper.PartialUpdate
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationKey });
         }
 
         public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)

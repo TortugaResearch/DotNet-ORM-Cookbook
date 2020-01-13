@@ -47,7 +47,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
             var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
-                await con.ExecuteAsync(sql, new { EmployeeClassificationKey = employeeClassificationKey }).ConfigureAwait(false);
+                await con.ExecuteAsync(sql, new { employeeClassificationKey }).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(EmployeeClassification classification)
@@ -69,7 +69,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
                 return await con.QuerySingleAsync<EmployeeClassification>(
-                    new CommandDefinition(sql, parameters: new { EmployeeClassificationName = employeeClassificationName }, cancellationToken: cancellationToken)).ConfigureAwait(false);
+                    new CommandDefinition(sql, parameters: new { employeeClassificationName }, cancellationToken: cancellationToken)).ConfigureAwait(false);
         }
 
         public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -88,7 +88,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
                 return await con.QuerySingleAsync<EmployeeClassification>(
-                    new CommandDefinition(sql, parameters: new { EmployeeClassificationKey = employeeClassificationKey }, cancellationToken: cancellationToken)).ConfigureAwait(false);
+                    new CommandDefinition(sql, parameters: new { employeeClassificationKey }, cancellationToken: cancellationToken)).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(EmployeeClassification classification)

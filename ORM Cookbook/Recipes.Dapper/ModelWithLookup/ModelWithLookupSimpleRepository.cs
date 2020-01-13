@@ -47,7 +47,7 @@ VALUES
             const string sql = @"DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;";
 
             using (var con = OpenConnection())
-                con.Execute(sql, new { EmployeeKey = employeeKey });
+                con.Execute(sql, new { employeeKey });
         }
 
         public IList<EmployeeSimple> FindByLastName(string lastName)
@@ -57,7 +57,7 @@ VALUES
             var result = new List<EmployeeSimple>();
 
             using (var con = OpenConnection())
-                return con.Query<EmployeeSimple>(sql, new { LastName = lastName }).ToList();
+                return con.Query<EmployeeSimple>(sql, new { lastName }).ToList();
         }
 
         public IList<EmployeeSimple> GetAll()
@@ -75,7 +75,7 @@ VALUES
             const string sql = @"SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone,        e.EmployeeClassificationKey FROM HR.Employee e WHERE e.EmployeeKey = @EmployeeKey";
 
             using (var con = OpenConnection())
-                return con.QuerySingleOrDefault<EmployeeSimple>(sql, new { EmployeeKey = employeeKey });
+                return con.QuerySingleOrDefault<EmployeeSimple>(sql, new { employeeKey });
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ServiceStack.DataAnnotations;
+﻿using ServiceStack.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Recipes.ServiceStack.Entities
 {

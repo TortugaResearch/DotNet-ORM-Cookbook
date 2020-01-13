@@ -66,6 +66,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
@@ -406,7 +408,7 @@
         var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
-            con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            con.Execute(sql, new { employeeClassificationKey });
     }
 
     public void Delete(ReadOnlyEmployeeClassification classification)
@@ -427,7 +429,7 @@
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingleOrDefault&lt;ReadOnlyEmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
+            return con.QuerySingleOrDefault&lt;ReadOnlyEmployeeClassification&gt;(sql, new { employeeClassificationName });
     }
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
@@ -445,7 +447,7 @@
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingle&lt;ReadOnlyEmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            return con.QuerySingle&lt;ReadOnlyEmployeeClassification&gt;(sql, new { employeeClassificationKey });
     }
 
     public void Update(ReadOnlyEmployeeClassification classification)

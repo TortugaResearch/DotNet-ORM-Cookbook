@@ -4,34 +4,77 @@ namespace Recipes.ServiceStack.Entities
 {
     [Alias("Employee")]
     [Schema("HR")]
-    public class Employee
+    public partial class Employee
     {
-        [PrimaryKey, AutoIncrement] [Alias("EmployeeKey")] 
+        [PrimaryKey, AutoIncrement]
+        [Alias("EmployeeKey")]
         public int Id { get; set; }
 
-        [Required] [StringLength(50)] 
+        [Required]
+        [StringLength(50)]
         public string? FirstName { get; set; }
 
-        [StringLength(50)] 
+        [StringLength(50)]
         public string? MiddleName { get; set; }
 
-        [Required] [StringLength(50)] 
+        [Required]
+        [StringLength(50)]
         public string? LastName { get; set; }
 
-        [StringLength(100)] 
+        [StringLength(100)]
         public string? Title { get; set; }
 
-        [StringLength(15)] 
+        [StringLength(15)]
         public string? OfficePhone { get; set; }
 
-        [StringLength(15)] 
+        [StringLength(15)]
         public string? CellPhone { get; set; }
 
         [References(typeof(EmployeeClassification))]
         [Alias("EmployeeClassificationKey")]
         public int? EmployeeClassificationId { get; set; }
 
-        [Reference] 
+        [Reference]
         public virtual EmployeeClassification? EmployeeClassification { get; set; }
+    }
+
+    [Alias("EmployeeDetail")]
+    [Schema("HR")]
+    public partial class EmployeeDetail
+    {
+        [PrimaryKey, AutoIncrement]
+        [Alias("EmployeeKey")]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string? FirstName { get; set; }
+
+        [StringLength(50)]
+        public string? MiddleName { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string? LastName { get; set; }
+
+        [StringLength(100)]
+        public string? Title { get; set; }
+
+        [StringLength(15)]
+        public string? OfficePhone { get; set; }
+
+        [StringLength(15)]
+        public string? CellPhone { get; set; }
+
+        [References(typeof(EmployeeClassification))]
+        [Alias("EmployeeClassificationKey")]
+        public int? EmployeeClassificationId { get; set; }
+
+        [Required, StringLength(30)]
+        public string? EmployeeClassificationName { get; set; }
+
+        public bool IsExempt { get; set; }
+
+        public bool IsEmployee { get; set; }
     }
 }

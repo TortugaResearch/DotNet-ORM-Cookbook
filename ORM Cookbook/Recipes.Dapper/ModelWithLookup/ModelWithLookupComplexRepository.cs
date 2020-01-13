@@ -49,7 +49,7 @@ VALUES
             const string sql = @"DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;";
 
             using (var con = OpenConnection())
-                con.Execute(sql, new { EmployeeKey = employeeKey });
+                con.Execute(sql, new { employeeKey });
         }
 
         public IList<EmployeeComplex> FindByLastName(string lastName)
@@ -98,7 +98,7 @@ VALUES
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationKey });
         }
 
         public void Update(EmployeeComplex employee)

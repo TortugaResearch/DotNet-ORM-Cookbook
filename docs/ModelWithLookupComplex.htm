@@ -45,6 +45,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
@@ -593,7 +595,7 @@ VALUES
             const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
 
             using (var con = OpenConnection())
-                con.Execute(sql, new { EmployeeKey = employeeKey });
+                con.Execute(sql, new { employeeKey });
         }
 
         public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
@@ -642,7 +644,7 @@ VALUES
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
             using (var con = OpenConnection())
-                return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
         }
 
         public void Update(EmployeeComplex employee)

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Recipes.NHibernate"
+                   namespace="Recipes.NHibernate.Entities">
+
+  <class name="EmployeeDetail" table="EmployeeDetail" schema="HR"  mutable="false">
+
+    <id name="EmployeeKey" />
+
+    <property name="FirstName" />
+    <property name="MiddleName" />
+    <property name="LastName" />
+    <property name="Title" />
+    <property name="OfficePhone" />
+    <property name="CellPhone" />
+    <property name="EmployeeClassificationKey" />
+    <property name="EmployeeClassificationName" />
+    <property name="IsExempt" />
+    <property name="IsEmployee" />
+  </class>
+</hibernate-mapping>

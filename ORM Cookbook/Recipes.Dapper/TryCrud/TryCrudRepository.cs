@@ -45,7 +45,7 @@ namespace Recipes.Dapper.TryCrud
 
             using (var con = OpenConnection())
             {
-                var rowCount = con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                var rowCount = con.Execute(sql, new { employeeClassificationKey });
                 if (rowCount != 1)
                     throw new DataException($"No row was found for key {employeeClassificationKey}.");
             }
@@ -56,7 +56,7 @@ namespace Recipes.Dapper.TryCrud
             var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                return 1 == con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return 1 == con.Execute(sql, new { employeeClassificationKey });
         }
 
         public void DeleteOrException(EmployeeClassification classification)
@@ -92,7 +92,7 @@ namespace Recipes.Dapper.TryCrud
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationName = employeeClassificationName });
+                return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationName });
         }
 
         public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
@@ -102,7 +102,7 @@ namespace Recipes.Dapper.TryCrud
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-                return con.QuerySingleOrDefault<EmployeeClassification>(sql, new { EmployeeClassificationName = employeeClassificationName });
+                return con.QuerySingleOrDefault<EmployeeClassification>(sql, new { employeeClassificationName });
         }
 
         public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
@@ -112,7 +112,7 @@ namespace Recipes.Dapper.TryCrud
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationKey });
         }
 
         public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
@@ -122,7 +122,7 @@ namespace Recipes.Dapper.TryCrud
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                return con.QuerySingleOrDefault<EmployeeClassification>(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return con.QuerySingleOrDefault<EmployeeClassification>(sql, new { employeeClassificationKey });
         }
 
         public void UpdateOrException(EmployeeClassification classification)

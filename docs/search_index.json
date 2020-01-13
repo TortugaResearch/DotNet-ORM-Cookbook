@@ -43,6 +43,12 @@
       "title": "Immutable CRUD"
     },
     {
+      "location": "Views.htm",
+      "breadcrumbs": "Home / Reading from Views",
+      "keywords": "0 2 3 a additional Ado ADO also are as be but by capability case cases Chain column configuration configured Core cs Dapper Database databases demonstrate EF EmployeeDetail entity Entity EntityFrameworkCore false Framework from HasNoKey hbm how HR ID in In is IViewsRepository like LLBLGen Mappings modelBuilder must mutable name NET NHibernate Note of OrmCookbookDB outside Pro Prototype Reading reads Recipes RepoDb Repository require requirements schema scope ServiceStack snippet some sql Starting supported tables TEmployeeDetail TEmployeeSimple text that the These They this to TODO Tortuga ToView treated two unique use view views Views ViewsRepository While with writing xml",
+      "title": "Reading from Views"
+    },
+    {
       "location": "PopulateDataTable.htm",
       "breadcrumbs": "Home / Populate DataTable",
       "keywords": "a A add Ado ADO also an are area as be before bulk but can Chain chosen classes columns consider Core creating cs custom Dapper data DataTable DataTableResultTransformer displayed does dynamically each EF Entity EntityFrameworkCore ExecuteReader for Framework from generalize grid holding IDataReader in In inconjunction inline insert IPopulateDataTableRepository IResultTransformer is it It library LLBLGen LLBLGenPro Load may method must natively NET NHibernate not Note object of often onerous operation or performing Populate PopulateDataTable PopulateDataTableRepository PopulateDataTableRepository2 primarily Pro Prototype provided Recipes reflection RepoDb report Repository results returned ServiceStack snippet some sort SQL staging support supports that the then this to TODO Tortuga used using when with you You",

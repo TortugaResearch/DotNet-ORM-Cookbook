@@ -6,7 +6,6 @@ namespace Recipes.Ado.ModelWithLookup
     {
         public int EmployeeClassificationKey { get; set; }
 
-        /// <exclude />
         public string? EmployeeClassificationName { get; set; }
 
         public bool IsExempt { get; set; }
