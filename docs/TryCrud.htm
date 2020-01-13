@@ -66,6 +66,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
@@ -525,7 +527,7 @@
 
         using (var con = OpenConnection())
         {
-            var rowCount = con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            var rowCount = con.Execute(sql, new { employeeClassificationKey });
             if (rowCount != 1)
                 throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
         }
@@ -536,7 +538,7 @@
         var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
-            return 1 == con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            return 1 == con.Execute(sql, new { employeeClassificationKey });
     }
 
     public void DeleteOrException(EmployeeClassification classification)
@@ -572,7 +574,7 @@
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName });
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
@@ -582,7 +584,7 @@
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
+            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName });
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
@@ -592,7 +594,7 @@
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
@@ -602,7 +604,7 @@
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
     }
 
     public void UpdateOrException(EmployeeClassification classification)

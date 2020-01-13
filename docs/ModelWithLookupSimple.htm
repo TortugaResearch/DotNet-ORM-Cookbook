@@ -45,6 +45,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
@@ -501,7 +503,7 @@ VALUES
             const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
 
             using (var con = OpenConnection())
-                con.Execute(sql, new { EmployeeKey = employeeKey });
+                con.Execute(sql, new { employeeKey });
         }
 
         public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
@@ -511,7 +513,7 @@ VALUES
             var result = new List&lt;EmployeeSimple&gt;();
 
             using (var con = OpenConnection())
-                return con.Query&lt;EmployeeSimple&gt;(sql, new { LastName = lastName }).ToList();
+                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
         }
 
         public IList&lt;EmployeeSimple&gt; GetAll()
@@ -529,7 +531,7 @@ VALUES
             const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone,        e.EmployeeClassificationKey FROM HR.Employee e WHERE e.EmployeeKey = @EmployeeKey&quot;;
 
             using (var con = OpenConnection())
-                return con.QuerySingleOrDefault&lt;EmployeeSimple&gt;(sql, new { EmployeeKey = employeeKey });
+                return con.QuerySingleOrDefault&lt;EmployeeSimple&gt;(sql, new { employeeKey });
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)

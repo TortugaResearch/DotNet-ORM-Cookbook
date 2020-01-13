@@ -45,7 +45,7 @@ namespace Recipes.Dapper.Immutable
             var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                con.Execute(sql, new { employeeClassificationKey });
         }
 
         public void Delete(ReadOnlyEmployeeClassification classification)
@@ -66,7 +66,7 @@ namespace Recipes.Dapper.Immutable
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-                return con.QuerySingleOrDefault<ReadOnlyEmployeeClassification>(sql, new { EmployeeClassificationName = employeeClassificationName });
+                return con.QuerySingleOrDefault<ReadOnlyEmployeeClassification>(sql, new { employeeClassificationName });
         }
 
         public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
@@ -84,7 +84,7 @@ namespace Recipes.Dapper.Immutable
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                return con.QuerySingle<ReadOnlyEmployeeClassification>(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return con.QuerySingle<ReadOnlyEmployeeClassification>(sql, new { employeeClassificationKey });
         }
 
         public void Update(ReadOnlyEmployeeClassification classification)

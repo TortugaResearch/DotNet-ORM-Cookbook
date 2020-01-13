@@ -66,6 +66,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
@@ -418,7 +420,7 @@ public class EmployeeClassification : IEmployeeClassification
         var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
-            con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            con.Execute(sql, new { employeeClassificationKey });
     }
 
     public void Delete(EmployeeClassification classification)
@@ -439,7 +441,7 @@ public class EmployeeClassification : IEmployeeClassification
                     WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationName = employeeClassificationName });
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName });
     }
 
     public IList&lt;EmployeeClassification&gt; GetAll()
@@ -457,7 +459,7 @@ public class EmployeeClassification : IEmployeeClassification
                     WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
-            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+            return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
     }
 
     public void Update(EmployeeClassification classification)

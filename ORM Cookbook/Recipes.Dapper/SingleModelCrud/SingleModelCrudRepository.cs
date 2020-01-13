@@ -45,7 +45,7 @@ namespace Recipes.Dapper.SingleModelCrud
             var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                con.Execute(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                con.Execute(sql, new { employeeClassificationKey });
         }
 
         public void Delete(EmployeeClassification classification)
@@ -66,7 +66,7 @@ namespace Recipes.Dapper.SingleModelCrud
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationName = employeeClassificationName });
+                return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationName });
         }
 
         public IList<EmployeeClassification> GetAll()
@@ -84,7 +84,7 @@ namespace Recipes.Dapper.SingleModelCrud
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-                return con.QuerySingle<EmployeeClassification>(sql, new { EmployeeClassificationKey = employeeClassificationKey });
+                return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationKey });
         }
 
         public void Update(EmployeeClassification classification)

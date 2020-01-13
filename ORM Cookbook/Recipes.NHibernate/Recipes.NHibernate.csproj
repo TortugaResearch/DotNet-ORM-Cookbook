@@ -10,7 +10,9 @@
 
   <ItemGroup>
     <None Remove="hibernate.cfg.xml" />
+    <None Remove="Mappings\Employee.hbm.xml" />
     <None Remove="Mappings\EmployeeClassification.hbm.xml" />
+    <None Remove="Mappings\EmployeeDetail.hbm.xml" />
     <None Remove="Mappings\Production.hbm.xml" />
   </ItemGroup>
 
@@ -21,6 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Mappings\Employee.hbm.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\EmployeeDetail.hbm.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Mappings\EmployeeClassification.hbm.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
