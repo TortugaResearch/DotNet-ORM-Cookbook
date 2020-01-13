@@ -8,6 +8,9 @@ Note: While writing to views is supported by some databases, that capability is 
 
 @snippet cs [..\Recipes.Core\Views\IViewsRepository`2.cs] IViewsRepository{TEmployeeDetail, TEmployeeSimple}
 
+## Database Views
+
+@snippet text [..\OrmCookbookDB\HR\Views\EmployeeDetail.sql] 
 
 ## ADO.NET
 
