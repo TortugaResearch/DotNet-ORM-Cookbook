@@ -16,6 +16,7 @@
     "Partial Updates": "PartialUpdate.md",
     "Immutable CRUD": "Immutable.md",
     "Reading from Views": "Views.md",
+    "Basic Sorting": "Sorting.md",
     "Populate DataTable": "PopulateDataTable.md",
     "Foreign Key to Lookup Table CRUD": {
       "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
