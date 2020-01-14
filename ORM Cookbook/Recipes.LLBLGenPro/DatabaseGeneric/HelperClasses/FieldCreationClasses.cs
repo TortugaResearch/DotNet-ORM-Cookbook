@@ -63,6 +63,57 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		/// <summary>Creates a new EmployeeClassificationEntity.IsExempt field instance</summary>
 		public static EntityField2 IsExempt { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeClassificationFieldIndex.IsExempt); }}
 	}
+
+	/// <summary>Field Creation Class for entity EmployeeDetailEntity</summary>
+	public partial class EmployeeDetailFields
+	{
+		/// <summary>Creates a new EmployeeDetailEntity.CellPhone field instance</summary>
+		public static EntityField2 CellPhone { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.CellPhone); }}
+		/// <summary>Creates a new EmployeeDetailEntity.EmployeeClassificationKey field instance</summary>
+		public static EntityField2 EmployeeClassificationKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.EmployeeClassificationKey); }}
+		/// <summary>Creates a new EmployeeDetailEntity.EmployeeClassificationName field instance</summary>
+		public static EntityField2 EmployeeClassificationName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.EmployeeClassificationName); }}
+		/// <summary>Creates a new EmployeeDetailEntity.EmployeeKey field instance</summary>
+		public static EntityField2 EmployeeKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.EmployeeKey); }}
+		/// <summary>Creates a new EmployeeDetailEntity.FirstName field instance</summary>
+		public static EntityField2 FirstName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.FirstName); }}
+		/// <summary>Creates a new EmployeeDetailEntity.IsEmployee field instance</summary>
+		public static EntityField2 IsEmployee { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.IsEmployee); }}
+		/// <summary>Creates a new EmployeeDetailEntity.IsExempt field instance</summary>
+		public static EntityField2 IsExempt { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.IsExempt); }}
+		/// <summary>Creates a new EmployeeDetailEntity.LastName field instance</summary>
+		public static EntityField2 LastName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.LastName); }}
+		/// <summary>Creates a new EmployeeDetailEntity.MiddleName field instance</summary>
+		public static EntityField2 MiddleName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.MiddleName); }}
+		/// <summary>Creates a new EmployeeDetailEntity.OfficePhone field instance</summary>
+		public static EntityField2 OfficePhone { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.OfficePhone); }}
+		/// <summary>Creates a new EmployeeDetailEntity.Title field instance</summary>
+		public static EntityField2 Title { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.Title); }}
+	}
+
+	/// <summary>Field Creation Class for entity ProductEntity</summary>
+	public partial class ProductFields
+	{
+		/// <summary>Creates a new ProductEntity.ProductKey field instance</summary>
+		public static EntityField2 ProductKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ProductFieldIndex.ProductKey); }}
+		/// <summary>Creates a new ProductEntity.ProductLineKey field instance</summary>
+		public static EntityField2 ProductLineKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ProductFieldIndex.ProductLineKey); }}
+		/// <summary>Creates a new ProductEntity.ProductName field instance</summary>
+		public static EntityField2 ProductName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ProductFieldIndex.ProductName); }}
+		/// <summary>Creates a new ProductEntity.ProductWeight field instance</summary>
+		public static EntityField2 ProductWeight { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ProductFieldIndex.ProductWeight); }}
+		/// <summary>Creates a new ProductEntity.ShippingWeight field instance</summary>
+		public static EntityField2 ShippingWeight { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ProductFieldIndex.ShippingWeight); }}
+	}
+
+	/// <summary>Field Creation Class for entity ProductLineEntity</summary>
+	public partial class ProductLineFields
+	{
+		/// <summary>Creates a new ProductLineEntity.ProductLineKey field instance</summary>
+		public static EntityField2 ProductLineKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ProductLineFieldIndex.ProductLineKey); }}
+		/// <summary>Creates a new ProductLineEntity.ProductLineName field instance</summary>
+		public static EntityField2 ProductLineName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ProductLineFieldIndex.ProductLineName); }}
+	}
 	
 
 	/// <summary>Field Creation Class for typedview DepartmentDetailTypedView</summary>
@@ -76,32 +127,5 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		public static EntityField2 DivisionKey	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentDetailFieldIndex.DivisionKey); } }
 		/// <summary>Creates a new DepartmentDetailTypedView.DivisionName field instance</summary>
 		public static EntityField2 DivisionName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentDetailFieldIndex.DivisionName); } }
-	}
-
-	/// <summary>Field Creation Class for typedview EmployeeDetailTypedView</summary>
-	public partial class EmployeeDetailFields
-	{
-		/// <summary>Creates a new EmployeeDetailTypedView.EmployeeKey field instance</summary>
-		public static EntityField2 EmployeeKey	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.EmployeeKey); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.FirstName field instance</summary>
-		public static EntityField2 FirstName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.FirstName); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.MiddleName field instance</summary>
-		public static EntityField2 MiddleName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.MiddleName); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.LastName field instance</summary>
-		public static EntityField2 LastName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.LastName); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.Title field instance</summary>
-		public static EntityField2 Title	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.Title); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.OfficePhone field instance</summary>
-		public static EntityField2 OfficePhone	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.OfficePhone); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.CellPhone field instance</summary>
-		public static EntityField2 CellPhone	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.CellPhone); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.EmployeeClassificationKey field instance</summary>
-		public static EntityField2 EmployeeClassificationKey	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.EmployeeClassificationKey); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.EmployeeClassificationName field instance</summary>
-		public static EntityField2 EmployeeClassificationName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.EmployeeClassificationName); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.IsExempt field instance</summary>
-		public static EntityField2 IsExempt	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.IsExempt); } }
-		/// <summary>Creates a new EmployeeDetailTypedView.IsEmployee field instance</summary>
-		public static EntityField2 IsEmployee	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(EmployeeDetailFieldIndex.IsEmployee); } }
 	}
 }

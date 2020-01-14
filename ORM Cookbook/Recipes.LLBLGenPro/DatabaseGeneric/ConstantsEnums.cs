@@ -23,35 +23,35 @@ namespace LLBLGenPro.OrmCookbook
 		/// <summary></summary>
 		AmountOfFields
 	}
-	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : EmployeeDetail.</summary>
-	public enum EmployeeDetailFieldIndex
+
+	/// <summary>Index enum to fast-access TypedList Fields in the Columns collection of the Typed List: EmployeeJoined</summary>
+	public enum EmployeeJoinedTypedListFieldIndex
 	{
+		///<summary>CellPhone</summary>
+		CellPhone,
 		///<summary>EmployeeKey</summary>
 		EmployeeKey,
 		///<summary>FirstName</summary>
 		FirstName,
-		///<summary>MiddleName</summary>
-		MiddleName,
 		///<summary>LastName</summary>
 		LastName,
-		///<summary>Title</summary>
-		Title,
+		///<summary>MiddleName</summary>
+		MiddleName,
 		///<summary>OfficePhone</summary>
 		OfficePhone,
-		///<summary>CellPhone</summary>
-		CellPhone,
+		///<summary>Title</summary>
+		Title,
 		///<summary>EmployeeClassificationKey</summary>
 		EmployeeClassificationKey,
 		///<summary>EmployeeClassificationName</summary>
 		EmployeeClassificationName,
-		///<summary>IsExempt</summary>
-		IsExempt,
 		///<summary>IsEmployee</summary>
 		IsEmployee,
+		///<summary>IsExempt</summary>
+		IsExempt,
 		/// <summary></summary>
 		AmountOfFields
 	}
-
 
 	/// <summary>Enum definition for all the entity types defined in this namespace. Used by the entityfields factory.</summary>
 	public enum EntityType
@@ -63,16 +63,20 @@ namespace LLBLGenPro.OrmCookbook
 		///<summary>Employee</summary>
 		EmployeeEntity,
 		///<summary>EmployeeClassification</summary>
-		EmployeeClassificationEntity
+		EmployeeClassificationEntity,
+		///<summary>EmployeeDetail</summary>
+		EmployeeDetailEntity,
+		///<summary>Product</summary>
+		ProductEntity,
+		///<summary>ProductLine</summary>
+		ProductLineEntity
 	}
 
 	/// <summary>Enum definition for all the typed view types defined in this namespace. Used by the entityfields factory.</summary>
 	public enum TypedViewType
 	{
 		///<summary>DepartmentDetail</summary>
-		DepartmentDetailTypedView,
-		///<summary>EmployeeDetail</summary>
-		EmployeeDetailTypedView
+		DepartmentDetailTypedView
 	}
 
 

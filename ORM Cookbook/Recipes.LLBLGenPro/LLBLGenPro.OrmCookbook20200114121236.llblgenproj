@@ -188,9 +188,6 @@
           <Interfaces>
             <Interface Name="Recipes.ModelWithLookup.IEmployeeSimple" />
             <Interface Name="Recipes.ModelWithLookup.IEmployeeComplex" />
-            <Interface Name="Recipes.Views.IEmployeeSimple" />
-            <Interface Name="Recipes.Sorting.IEmployeeSimple" />
-            <Interface Name="Recipes.Joins.IEmployeeSimple" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -213,59 +210,6 @@
             <Interface Name="Recipes.SingleModelCrud.IEmployeeClassification" />
             <Interface Name="Recipes.SingleModelCrudAsync.IEmployeeClassification" />
             <Interface Name="Recipes.TryCrud.IEmployeeClassification" />
-            <Interface Name="Recipes.Views.IEmployeeClassification" />
-            <Interface Name="Recipes.Joins.IEmployeeClassification" />
-          </Interfaces>
-        </OutputSettingValues>
-      </EntityDefinition>
-      <EntityDefinition Name="EmployeeDetail" ObjectID="d285084d-1d9f-4692-b79d-3c99d3a08768">
-        <Fields>
-          <Field Name="CellPhone" Type="string" IsOptional="true" MaxLength="15" />
-          <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
-          <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
-          <Field Name="EmployeeKey" Type="int" Precision="10" />
-          <Field Name="FirstName" Type="string" MaxLength="50" />
-          <Field Name="IsEmployee" Type="bool" />
-          <Field Name="IsExempt" Type="bool" />
-          <Field Name="LastName" Type="string" MaxLength="50" />
-          <Field Name="MiddleName" Type="string" IsOptional="true" MaxLength="50" />
-          <Field Name="OfficePhone" Type="string" IsOptional="true" MaxLength="15" />
-          <Field Name="Title" Type="string" IsOptional="true" MaxLength="100" />
-        </Fields>
-        <OutputSettingValues>
-          <Interfaces>
-            <Interface Name="Recipes.Views.IEmployeeDetail" />
-            <Interface Name="Recipes.Joins.IEmployeeDetail" />
-          </Interfaces>
-        </OutputSettingValues>
-      </EntityDefinition>
-      <EntityDefinition Name="Product" ObjectID="313935e5-03ce-4ac8-b3f4-05d10c74b64c">
-        <Fields>
-          <Field Name="ProductKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
-          <Field Name="ProductLineKey" Type="int" Precision="10" />
-          <Field Name="ProductName" Type="string" MaxLength="50" />
-          <Field Name="ProductWeight" Type="decimal" IsOptional="true" Precision="10" Scale="4" />
-          <Field Name="ShippingWeight" Type="decimal" IsOptional="true" Precision="10" Scale="4" />
-        </Fields>
-        <OutputSettingValues>
-          <Interfaces>
-            <Interface Name="Recipes.ModelWithChildren.IProduct" />
-          </Interfaces>
-        </OutputSettingValues>
-      </EntityDefinition>
-      <EntityDefinition Name="ProductLine" ObjectID="b7f77477-1d26-44eb-86c8-c6f2f4c5f44d">
-        <Fields>
-          <Field Name="ProductLineKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
-          <Field Name="ProductLineName" Type="string" MaxLength="50" />
-        </Fields>
-        <UniqueConstraints>
-          <UniqueConstraint Name="UxProductLineProductLineName">
-            <Field Name="ProductLineName" />
-          </UniqueConstraint>
-        </UniqueConstraints>
-        <OutputSettingValues>
-          <Interfaces>
-            <Interface Name="Recipes.ModelWithChildren.IProductLine&lt;ProductEntity&gt;" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -281,46 +225,9 @@
           <FieldFieldRelationship FkField="EmployeeClassificationKey" PkField="EmployeeClassificationKey" />
         </FieldRelationships>
       </NormalRelationship>
-      <NormalRelationship Name="Product.ProductLine-ProductLine.Products" Start=":Product" End=":ProductLine" StartNavigator="ProductLine" EndNavigator="Products" Type="4">
-        <FieldRelationships>
-          <FieldFieldRelationship FkField="ProductLineKey" PkField="ProductLineKey" />
-        </FieldRelationships>
-      </NormalRelationship>
     </Relationships>
     <InheritanceHierarchies />
   </EntityModel>
-  <TypedListDefinitions>
-    <TypedListDefinition Name="EmployeeJoined">
-      <EntityAliases>
-        <EntityAlias Entity=":Employee" />
-        <EntityAlias Entity=":EmployeeClassification" />
-      </EntityAliases>
-      <Fields>
-        <Field FieldAlias="CellPhone" TargetField="Employee.CellPhone" />
-        <Field FieldAlias="EmployeeKey" TargetField="Employee.EmployeeKey" />
-        <Field FieldAlias="FirstName" TargetField="Employee.FirstName" />
-        <Field FieldAlias="LastName" TargetField="Employee.LastName" />
-        <Field FieldAlias="MiddleName" TargetField="Employee.MiddleName" />
-        <Field FieldAlias="OfficePhone" TargetField="Employee.OfficePhone" />
-        <Field FieldAlias="Title" TargetField="Employee.Title" />
-        <Field FieldAlias="EmployeeClassificationKey" TargetField="EmployeeClassification.EmployeeClassificationKey" />
-        <Field FieldAlias="EmployeeClassificationName" TargetField="EmployeeClassification.EmployeeClassificationName" />
-        <Field FieldAlias="IsEmployee" TargetField="EmployeeClassification.IsEmployee" />
-        <Field FieldAlias="IsExempt" TargetField="EmployeeClassification.IsExempt" />
-      </Fields>
-      <Relationships>
-        <Relationship Name="Employee.EmployeeClassification-EmployeeClassification.Employees" StartAlias="Employee" EndAlias="EmployeeClassification" JoinHint="1" StartAliasIsStartVertex="true" />
-      </Relationships>
-      <OutputSettingValues>
-        <SettingValues>
-          <SettingValue Name="8:OutputType" Value="PocoWithLinqQuery" Type="18" />
-        </SettingValues>
-        <Interfaces>
-          <Interface Name="Recipes.Joins.IEmployeeDetail" />
-        </Interfaces>
-      </OutputSettingValues>
-    </TypedListDefinition>
-  </TypedListDefinitions>
   <TypedViewDefinitions>
     <TypedViewDefinition Name="DepartmentDetail" ObjectID="72413255-845d-4d05-81ad-5a835eb02ee1">
       <Fields>
@@ -328,6 +235,21 @@
         <Field Name="DepartmentName" Type="string" MaxLength="30" />
         <Field Name="DivisionKey" Type="int" Precision="10" />
         <Field Name="DivisionName" Type="string" IsOptional="true" MaxLength="30" />
+      </Fields>
+    </TypedViewDefinition>
+    <TypedViewDefinition Name="EmployeeDetail" ObjectID="c297ea4c-33a7-425a-8e04-727481005bfb">
+      <Fields>
+        <Field Name="CellPhone" Type="string" IsOptional="true" MaxLength="15" />
+        <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
+        <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
+        <Field Name="EmployeeKey" Type="int" Precision="10" />
+        <Field Name="FirstName" Type="string" MaxLength="50" />
+        <Field Name="IsEmployee" Type="bool" />
+        <Field Name="IsExempt" Type="bool" />
+        <Field Name="LastName" Type="string" MaxLength="50" />
+        <Field Name="MiddleName" Type="string" IsOptional="true" MaxLength="50" />
+        <Field Name="OfficePhone" Type="string" IsOptional="true" MaxLength="15" />
+        <Field Name="Title" Type="string" IsOptional="true" MaxLength="100" />
       </Fields>
     </TypedViewDefinition>
   </TypedViewDefinitions>
@@ -345,9 +267,9 @@
         <Sequence Name="@@IDENTITY" />
       </SystemSequences>
       <Catalogs>
-        <Catalog Name="ORMCookbook">
+        <Catalog Name="ORMCookbook" SyncSource="2">
           <Schemas>
-            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-14T11:12:49.5463621Z">
+            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-08T09:54:53.6920906Z">
               <Tables>
                 <Table Name="Department">
                   <PkConstraintName Name="PK_Department" />
@@ -428,32 +350,6 @@
                 </View>
               </Views>
             </Schema>
-            <Schema Name="Production" SyncSource="2" LastSyncWithDatabase="2020-01-14T11:12:49.6597875Z">
-              <Tables>
-                <Table Name="Product">
-                  <PkConstraintName Name="PK_Product" />
-                  <Fields>
-                    <Field Name="ProductKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
-                    <Field Name="ProductName" Ordinal="2" DbType="12" Length="50" />
-                    <Field Name="ProductLineKey" Ordinal="3" DbType="8" Precision="10" />
-                    <Field Name="ShippingWeight" Ordinal="4" IsOptional="true" DbType="13" Precision="10" Scale="4" />
-                    <Field Name="ProductWeight" Ordinal="5" IsOptional="true" DbType="13" Precision="10" Scale="4" />
-                  </Fields>
-                </Table>
-                <Table Name="ProductLine">
-                  <PkConstraintName Name="PK_ProductLine" />
-                  <Fields>
-                    <Field Name="ProductLineKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
-                    <Field Name="ProductLineName" Ordinal="2" DbType="12" Length="50" />
-                  </Fields>
-                  <UniqueConstraints>
-                    <UniqueConstraint Name="UX_ProductLine_ProductLineName">
-                      <Field Name="ProductLineName" />
-                    </UniqueConstraint>
-                  </UniqueConstraints>
-                </Table>
-              </Tables>
-            </Schema>
           </Schemas>
           <ForeignKeyConstraints>
             <ForeignKeyConstraint Name="HR:Department:FK_Department_DivisionKey">
@@ -464,11 +360,6 @@
             <ForeignKeyConstraint Name="HR:Employee:FK_Employee_EmployeeClassificationKey">
               <FieldPairs>
                 <FieldPair PkField="HR:EmployeeClassification:EmployeeClassificationKey" FkField="HR:Employee:EmployeeClassificationKey" />
-              </FieldPairs>
-            </ForeignKeyConstraint>
-            <ForeignKeyConstraint Name="Production:Product:FK_Product_ProductLineKey">
-              <FieldPairs>
-                <FieldPair PkField="Production:ProductLine:ProductLineKey" FkField="Production:Product:ProductLineKey" />
               </FieldPairs>
             </ForeignKeyConstraint>
           </ForeignKeyConstraints>
@@ -512,7 +403,17 @@
             <FieldMapping FieldName="IsExempt" TargetFieldName="IsExempt" />
           </FieldMappings>
         </EntityMapping>
-        <EntityMapping EntityName=":EmployeeDetail" TargetName="ORMCookbook:HR:EmployeeDetail" ActionCombination="4">
+      </EntityMappings>
+      <TypedViewMappings>
+        <TypedViewMapping TypedViewName=":DepartmentDetail" TargetName="ORMCookbook:HR:DepartmentDetail">
+          <FieldMappings>
+            <FieldMapping FieldName="DepartmentKey" TargetFieldName="DepartmentKey" />
+            <FieldMapping FieldName="DepartmentName" TargetFieldName="DepartmentName" />
+            <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" />
+            <FieldMapping FieldName="DivisionName" TargetFieldName="DivisionName" />
+          </FieldMappings>
+        </TypedViewMapping>
+        <TypedViewMapping TypedViewName=":EmployeeDetail" TargetName="ORMCookbook:HR:EmployeeDetail">
           <FieldMappings>
             <FieldMapping FieldName="CellPhone" TargetFieldName="CellPhone" />
             <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
@@ -525,31 +426,6 @@
             <FieldMapping FieldName="MiddleName" TargetFieldName="MiddleName" />
             <FieldMapping FieldName="OfficePhone" TargetFieldName="OfficePhone" />
             <FieldMapping FieldName="Title" TargetFieldName="Title" />
-          </FieldMappings>
-        </EntityMapping>
-        <EntityMapping EntityName=":Product" TargetName="ORMCookbook:Production:Product">
-          <FieldMappings>
-            <FieldMapping FieldName="ProductKey" TargetFieldName="ProductKey" SequenceToUse="SCOPE_IDENTITY()" />
-            <FieldMapping FieldName="ProductLineKey" TargetFieldName="ProductLineKey" />
-            <FieldMapping FieldName="ProductName" TargetFieldName="ProductName" />
-            <FieldMapping FieldName="ProductWeight" TargetFieldName="ProductWeight" />
-            <FieldMapping FieldName="ShippingWeight" TargetFieldName="ShippingWeight" />
-          </FieldMappings>
-        </EntityMapping>
-        <EntityMapping EntityName=":ProductLine" TargetName="ORMCookbook:Production:ProductLine">
-          <FieldMappings>
-            <FieldMapping FieldName="ProductLineKey" TargetFieldName="ProductLineKey" SequenceToUse="SCOPE_IDENTITY()" />
-            <FieldMapping FieldName="ProductLineName" TargetFieldName="ProductLineName" />
-          </FieldMappings>
-        </EntityMapping>
-      </EntityMappings>
-      <TypedViewMappings>
-        <TypedViewMapping TypedViewName=":DepartmentDetail" TargetName="ORMCookbook:HR:DepartmentDetail">
-          <FieldMappings>
-            <FieldMapping FieldName="DepartmentKey" TargetFieldName="DepartmentKey" />
-            <FieldMapping FieldName="DepartmentName" TargetFieldName="DepartmentName" />
-            <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" />
-            <FieldMapping FieldName="DivisionName" TargetFieldName="DivisionName" />
           </FieldMappings>
         </TypedViewMapping>
       </TypedViewMappings>

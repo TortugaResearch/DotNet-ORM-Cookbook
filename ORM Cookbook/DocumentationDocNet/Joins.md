@@ -26,17 +26,25 @@ Chain doesn't natively support joins, so raw SQL (or a view) has to be used as a
 
 ## Entity Framework Core
 
-EF Core native supports joins, but not projections. Multiple objects need to be explicitly mapped.
+EF Core native supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Joins\JoinsRepository.cs] JoinsRepository
 
 ## LLBLGen Pro 
 
-TODO
+LLBLGen Pro native supports joins, but not implicit projections in the entity API. It does in the plain SQL API. 
+In the entity API, multiple objects need to be explicitly mapped.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Joins\JoinsRepository.cs] JoinsRepository
+
+Additionally, LLBLGen Pro supports design time projects over an entity graph, called Typed Lists. Here a Typed List, EmployeeJoined
+has been created which is the same projection as the one in the queries in the normal linq repository.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Joins\JoinsRepositoryTypedList.cs] JoinsRepositoryTypedList
 
 ## NHibernate
 
-EF Core native supports joins, but not projections. Multiple objects need to be explicitly mapped.
+NHibernate native supports joins, but not projections. Multiple objects need to be explicitly mapped.
 
 @snippet xml [..\Recipes.NHibernate\Mappings\EmployeeDetail.hbm.xml] .
 

@@ -28,7 +28,7 @@ Columns to be sorted by are passed in as strings, but checked against the list o
 
 ## LLBLGen Pro 
 
-TODO
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Sorting\SortingRepository.cs] SortingRepository
 
 ## NHibernate
 

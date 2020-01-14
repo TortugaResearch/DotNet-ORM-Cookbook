@@ -45,8 +45,10 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			InitDivisionEntityInfo();
 			InitEmployeeEntityInfo();
 			InitEmployeeClassificationEntityInfo();
+			InitEmployeeDetailEntityInfo();
+			InitProductEntityInfo();
+			InitProductLineEntityInfo();
 			InitDepartmentDetailTypedViewInfo();
-			InitEmployeeDetailTypedViewInfo();
 			this.BuildInternalStructures();
 		}
 
@@ -91,6 +93,42 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			this.AddElementFieldInfo("EmployeeClassificationEntity", "IsExempt", typeof(System.Boolean), false, false, false, false,  (int)EmployeeClassificationFieldIndex.IsExempt, 0, 0, 0);
 		}
 
+		/// <summary>Inits EmployeeDetailEntity's info objects</summary>
+		private void InitEmployeeDetailEntityInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(EmployeeDetailFieldIndex), "EmployeeDetailEntity");
+			this.AddElementFieldInfo("EmployeeDetailEntity", "CellPhone", typeof(System.String), false, false, false, true,  (int)EmployeeDetailFieldIndex.CellPhone, 15, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "EmployeeClassificationKey", typeof(System.Int32), false, false, false, false,  (int)EmployeeDetailFieldIndex.EmployeeClassificationKey, 0, 0, 10);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "EmployeeClassificationName", typeof(System.String), false, false, false, false,  (int)EmployeeDetailFieldIndex.EmployeeClassificationName, 30, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "EmployeeKey", typeof(System.Int32), false, false, false, false,  (int)EmployeeDetailFieldIndex.EmployeeKey, 0, 0, 10);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "FirstName", typeof(System.String), false, false, false, false,  (int)EmployeeDetailFieldIndex.FirstName, 50, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "IsEmployee", typeof(System.Boolean), false, false, false, false,  (int)EmployeeDetailFieldIndex.IsEmployee, 0, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "IsExempt", typeof(System.Boolean), false, false, false, false,  (int)EmployeeDetailFieldIndex.IsExempt, 0, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "LastName", typeof(System.String), false, false, false, false,  (int)EmployeeDetailFieldIndex.LastName, 50, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "MiddleName", typeof(System.String), false, false, false, true,  (int)EmployeeDetailFieldIndex.MiddleName, 50, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "OfficePhone", typeof(System.String), false, false, false, true,  (int)EmployeeDetailFieldIndex.OfficePhone, 15, 0, 0);
+			this.AddElementFieldInfo("EmployeeDetailEntity", "Title", typeof(System.String), false, false, false, true,  (int)EmployeeDetailFieldIndex.Title, 100, 0, 0);
+		}
+
+		/// <summary>Inits ProductEntity's info objects</summary>
+		private void InitProductEntityInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(ProductFieldIndex), "ProductEntity");
+			this.AddElementFieldInfo("ProductEntity", "ProductKey", typeof(System.Int32), true, false, true, false,  (int)ProductFieldIndex.ProductKey, 0, 0, 10);
+			this.AddElementFieldInfo("ProductEntity", "ProductLineKey", typeof(System.Int32), false, true, false, false,  (int)ProductFieldIndex.ProductLineKey, 0, 0, 10);
+			this.AddElementFieldInfo("ProductEntity", "ProductName", typeof(System.String), false, false, false, false,  (int)ProductFieldIndex.ProductName, 50, 0, 0);
+			this.AddElementFieldInfo("ProductEntity", "ProductWeight", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)ProductFieldIndex.ProductWeight, 0, 4, 10);
+			this.AddElementFieldInfo("ProductEntity", "ShippingWeight", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)ProductFieldIndex.ShippingWeight, 0, 4, 10);
+		}
+
+		/// <summary>Inits ProductLineEntity's info objects</summary>
+		private void InitProductLineEntityInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(ProductLineFieldIndex), "ProductLineEntity");
+			this.AddElementFieldInfo("ProductLineEntity", "ProductLineKey", typeof(System.Int32), true, false, true, false,  (int)ProductLineFieldIndex.ProductLineKey, 0, 0, 10);
+			this.AddElementFieldInfo("ProductLineEntity", "ProductLineName", typeof(System.String), false, false, false, false,  (int)ProductLineFieldIndex.ProductLineName, 50, 0, 0);
+		}
+
 		/// <summary>Inits DepartmentDetailView's info objects</summary>
 		private void InitDepartmentDetailTypedViewInfo()
 		{
@@ -99,23 +137,6 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			this.AddElementFieldInfo("DepartmentDetailTypedView", "DepartmentName", typeof(System.String), false, false, true, false, (int)DepartmentDetailFieldIndex.DepartmentName, 30, 0, 0);
 			this.AddElementFieldInfo("DepartmentDetailTypedView", "DivisionKey", typeof(System.Int32), false, false, true, false, (int)DepartmentDetailFieldIndex.DivisionKey, 0, 0, 10);
 			this.AddElementFieldInfo("DepartmentDetailTypedView", "DivisionName", typeof(System.String), false, false, true, false, (int)DepartmentDetailFieldIndex.DivisionName, 30, 0, 0);
-		}
-
-		/// <summary>Inits EmployeeDetailView's info objects</summary>
-		private void InitEmployeeDetailTypedViewInfo()
-		{
-			this.AddFieldIndexEnumForElementName(typeof(EmployeeDetailFieldIndex), "EmployeeDetailTypedView");
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "EmployeeKey", typeof(System.Int32), false, false, true, false, (int)EmployeeDetailFieldIndex.EmployeeKey, 0, 0, 10);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "FirstName", typeof(System.String), false, false, true, false, (int)EmployeeDetailFieldIndex.FirstName, 50, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "MiddleName", typeof(System.String), false, false, true, false, (int)EmployeeDetailFieldIndex.MiddleName, 50, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "LastName", typeof(System.String), false, false, true, false, (int)EmployeeDetailFieldIndex.LastName, 50, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "Title", typeof(System.String), false, false, true, false, (int)EmployeeDetailFieldIndex.Title, 100, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "OfficePhone", typeof(System.String), false, false, true, false, (int)EmployeeDetailFieldIndex.OfficePhone, 15, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "CellPhone", typeof(System.String), false, false, true, false, (int)EmployeeDetailFieldIndex.CellPhone, 15, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "EmployeeClassificationKey", typeof(System.Int32), false, false, true, false, (int)EmployeeDetailFieldIndex.EmployeeClassificationKey, 0, 0, 10);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "EmployeeClassificationName", typeof(System.String), false, false, true, false, (int)EmployeeDetailFieldIndex.EmployeeClassificationName, 30, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "IsExempt", typeof(System.Boolean), false, false, true, false, (int)EmployeeDetailFieldIndex.IsExempt, 0, 0, 0);
-			this.AddElementFieldInfo("EmployeeDetailTypedView", "IsEmployee", typeof(System.Boolean), false, false, true, false, (int)EmployeeDetailFieldIndex.IsEmployee, 0, 0, 0);
 		}
 	}
 }

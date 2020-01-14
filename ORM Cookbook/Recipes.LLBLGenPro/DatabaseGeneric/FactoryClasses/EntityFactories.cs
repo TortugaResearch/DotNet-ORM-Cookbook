@@ -106,6 +106,36 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new EmployeeClassificationEntity(fields); }
 	}
 
+	/// <summary>Factory to create new, empty EmployeeDetailEntity objects.</summary>
+	[Serializable]
+	public partial class EmployeeDetailEntityFactory : EntityFactoryBase2<EmployeeDetailEntity> 
+	{
+		/// <summary>CTor</summary>
+		public EmployeeDetailEntityFactory() : base("EmployeeDetailEntity", LLBLGenPro.OrmCookbook.EntityType.EmployeeDetailEntity, false) { }
+		/// <inheritdoc/>
+		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new EmployeeDetailEntity(fields); }
+	}
+
+	/// <summary>Factory to create new, empty ProductEntity objects.</summary>
+	[Serializable]
+	public partial class ProductEntityFactory : EntityFactoryBase2<ProductEntity> 
+	{
+		/// <summary>CTor</summary>
+		public ProductEntityFactory() : base("ProductEntity", LLBLGenPro.OrmCookbook.EntityType.ProductEntity, false) { }
+		/// <inheritdoc/>
+		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new ProductEntity(fields); }
+	}
+
+	/// <summary>Factory to create new, empty ProductLineEntity objects.</summary>
+	[Serializable]
+	public partial class ProductLineEntityFactory : EntityFactoryBase2<ProductLineEntity> 
+	{
+		/// <summary>CTor</summary>
+		public ProductLineEntityFactory() : base("ProductLineEntity", LLBLGenPro.OrmCookbook.EntityType.ProductLineEntity, false) { }
+		/// <inheritdoc/>
+		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new ProductLineEntity(fields); }
+	}
+
 	/// <summary>Factory to create new, empty Entity objects based on the entity type specified. Uses  entity specific factory objects</summary>
 	[Serializable]
 	public partial class GeneralEntityFactory
@@ -161,6 +191,12 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 					return new EmployeeEntityFactory();
 				case LLBLGenPro.OrmCookbook.EntityType.EmployeeClassificationEntity:
 					return new EmployeeClassificationEntityFactory();
+				case LLBLGenPro.OrmCookbook.EntityType.EmployeeDetailEntity:
+					return new EmployeeDetailEntityFactory();
+				case LLBLGenPro.OrmCookbook.EntityType.ProductEntity:
+					return new ProductEntityFactory();
+				case LLBLGenPro.OrmCookbook.EntityType.ProductLineEntity:
+					return new ProductLineEntityFactory();
 				default:
 					return null;
 			}

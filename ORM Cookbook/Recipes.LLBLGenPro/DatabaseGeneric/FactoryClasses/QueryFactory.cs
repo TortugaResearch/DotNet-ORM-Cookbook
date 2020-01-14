@@ -30,6 +30,15 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 		/// <summary>Creates and returns a new EntityQuery for the EmployeeClassification entity</summary>
 		public EntityQuery<EmployeeClassificationEntity> EmployeeClassification { get { return Create<EmployeeClassificationEntity>(); } }
 
+		/// <summary>Creates and returns a new EntityQuery for the EmployeeDetail entity</summary>
+		public EntityQuery<EmployeeDetailEntity> EmployeeDetail { get { return Create<EmployeeDetailEntity>(); } }
+
+		/// <summary>Creates and returns a new EntityQuery for the Product entity</summary>
+		public EntityQuery<ProductEntity> Product { get { return Create<ProductEntity>(); } }
+
+		/// <summary>Creates and returns a new EntityQuery for the ProductLine entity</summary>
+		public EntityQuery<ProductLineEntity> ProductLine { get { return Create<ProductLineEntity>(); } }
+
 		/// <inheritdoc/>
 		protected override IElementCreatorCore CreateElementCreator() { return new ElementCreator(); }
  
@@ -37,12 +46,6 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 		public DynamicQuery<LLBLGenPro.OrmCookbook.TypedViewClasses.DepartmentDetailRow> DepartmentDetail
 		{
 			get { return this.Create().Select<LLBLGenPro.OrmCookbook.TypedViewClasses.DepartmentDetailRow, LLBLGenPro.OrmCookbook.HelperClasses.DepartmentDetailFields>(); }
-		}
-
-		/// <summary>Creates and returns the query to fetch the typed view EmployeeDetail</summary>
-		public DynamicQuery<LLBLGenPro.OrmCookbook.TypedViewClasses.EmployeeDetailRow> EmployeeDetail
-		{
-			get { return this.Create().Select<LLBLGenPro.OrmCookbook.TypedViewClasses.EmployeeDetailRow, LLBLGenPro.OrmCookbook.HelperClasses.EmployeeDetailFields>(); }
 		}
 
 	}
