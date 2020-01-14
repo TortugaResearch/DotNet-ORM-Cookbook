@@ -7,7 +7,6 @@ using LLBLGenPro.OrmCookbook.DatabaseSpecific;
 using LLBLGenPro.OrmCookbook.Linq;
 using SD.LLBLGen.Pro.DQE.SqlServer;
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.Tools.OrmProfiler.Interceptor;
 
 namespace Recipes.LLBLGenPro
 {
