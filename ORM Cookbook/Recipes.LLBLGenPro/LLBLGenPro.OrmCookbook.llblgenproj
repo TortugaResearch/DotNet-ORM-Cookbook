@@ -190,6 +190,7 @@
             <Interface Name="Recipes.ModelWithLookup.IEmployeeComplex" />
             <Interface Name="Recipes.Views.IEmployeeSimple" />
             <Interface Name="Recipes.Sorting.IEmployeeSimple" />
+            <Interface Name="Recipes.Joins.IEmployeeSimple" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -213,6 +214,7 @@
             <Interface Name="Recipes.SingleModelCrudAsync.IEmployeeClassification" />
             <Interface Name="Recipes.TryCrud.IEmployeeClassification" />
             <Interface Name="Recipes.Views.IEmployeeClassification" />
+            <Interface Name="Recipes.Joins.IEmployeeClassification" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -233,6 +235,7 @@
         <OutputSettingValues>
           <Interfaces>
             <Interface Name="Recipes.Views.IEmployeeDetail" />
+            <Interface Name="Recipes.Joins.IEmployeeDetail" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -286,6 +289,38 @@
     </Relationships>
     <InheritanceHierarchies />
   </EntityModel>
+  <TypedListDefinitions>
+    <TypedListDefinition Name="EmployeeJoined">
+      <EntityAliases>
+        <EntityAlias Entity=":Employee" />
+        <EntityAlias Entity=":EmployeeClassification" />
+      </EntityAliases>
+      <Fields>
+        <Field FieldAlias="CellPhone" TargetField="Employee.CellPhone" />
+        <Field FieldAlias="EmployeeKey" TargetField="Employee.EmployeeKey" />
+        <Field FieldAlias="FirstName" TargetField="Employee.FirstName" />
+        <Field FieldAlias="LastName" TargetField="Employee.LastName" />
+        <Field FieldAlias="MiddleName" TargetField="Employee.MiddleName" />
+        <Field FieldAlias="OfficePhone" TargetField="Employee.OfficePhone" />
+        <Field FieldAlias="Title" TargetField="Employee.Title" />
+        <Field FieldAlias="EmployeeClassificationKey" TargetField="EmployeeClassification.EmployeeClassificationKey" />
+        <Field FieldAlias="EmployeeClassificationName" TargetField="EmployeeClassification.EmployeeClassificationName" />
+        <Field FieldAlias="IsEmployee" TargetField="EmployeeClassification.IsEmployee" />
+        <Field FieldAlias="IsExempt" TargetField="EmployeeClassification.IsExempt" />
+      </Fields>
+      <Relationships>
+        <Relationship Name="Employee.EmployeeClassification-EmployeeClassification.Employees" StartAlias="Employee" EndAlias="EmployeeClassification" JoinHint="1" StartAliasIsStartVertex="true" />
+      </Relationships>
+      <OutputSettingValues>
+        <SettingValues>
+          <SettingValue Name="8:OutputType" Value="PocoWithLinqQuery" Type="18" />
+        </SettingValues>
+        <Interfaces>
+          <Interface Name="Recipes.Joins.IEmployeeDetail" />
+        </Interfaces>
+      </OutputSettingValues>
+    </TypedListDefinition>
+  </TypedListDefinitions>
   <TypedViewDefinitions>
     <TypedViewDefinition Name="DepartmentDetail" ObjectID="72413255-845d-4d05-81ad-5a835eb02ee1">
       <Fields>

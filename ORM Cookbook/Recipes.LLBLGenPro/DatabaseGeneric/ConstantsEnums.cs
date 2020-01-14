@@ -24,6 +24,34 @@ namespace LLBLGenPro.OrmCookbook
 		AmountOfFields
 	}
 
+	/// <summary>Index enum to fast-access TypedList Fields in the Columns collection of the Typed List: EmployeeJoined</summary>
+	public enum EmployeeJoinedTypedListFieldIndex
+	{
+		///<summary>CellPhone</summary>
+		CellPhone,
+		///<summary>EmployeeKey</summary>
+		EmployeeKey,
+		///<summary>FirstName</summary>
+		FirstName,
+		///<summary>LastName</summary>
+		LastName,
+		///<summary>MiddleName</summary>
+		MiddleName,
+		///<summary>OfficePhone</summary>
+		OfficePhone,
+		///<summary>Title</summary>
+		Title,
+		///<summary>EmployeeClassificationKey</summary>
+		EmployeeClassificationKey,
+		///<summary>EmployeeClassificationName</summary>
+		EmployeeClassificationName,
+		///<summary>IsEmployee</summary>
+		IsEmployee,
+		///<summary>IsExempt</summary>
+		IsExempt,
+		/// <summary></summary>
+		AmountOfFields
+	}
 
 	/// <summary>Enum definition for all the entity types defined in this namespace. Used by the entityfields factory.</summary>
 	public enum EntityType

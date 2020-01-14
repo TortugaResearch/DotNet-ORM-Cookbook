@@ -22,7 +22,7 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	/// <summary>Entity class which represents the entity 'EmployeeDetail'.<br/><br/></summary>
 	[Serializable]
-	public partial class EmployeeDetailEntity : CommonEntityBase, Recipes.Views.IEmployeeDetail
+	public partial class EmployeeDetailEntity : CommonEntityBase, Recipes.Views.IEmployeeDetail, Recipes.Joins.IEmployeeDetail
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{

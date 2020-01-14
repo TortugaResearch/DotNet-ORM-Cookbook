@@ -94,6 +94,18 @@ namespace LLBLGenPro.OrmCookbook.Linq
 		public DataSource2<ProductLineEntity> ProductLine {	get { return new DataSource2<ProductLineEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
 		
 
+		/// <summary>Gets the query to fetch the typed list EmployeeJoined</summary>
+		/// <param name="root">Optional. If specified (not null) it's used as the root of the query to fetch the typed list, otherwise a new IQueryable(Of EmployeeClassificationEntity) is used</param>
+		/// <returns>IQueryable</returns>
+		public IQueryable<LLBLGenPro.OrmCookbook.TypedListClasses.EmployeeJoinedRow> GetEmployeeJoinedTypedList(IQueryable<EmployeeClassificationEntity> root = null)
+		{
+			var current0 = root ?? this.EmployeeClassification;
+			var current1 = from employeeClassification in current0
+						   join employee in this.Employee on employeeClassification.EmployeeClassificationKey equals employee.EmployeeClassificationKey
+						   select new LLBLGenPro.OrmCookbook.TypedListClasses.EmployeeJoinedRow() { CellPhone = employee.CellPhone, EmployeeKey = employee.EmployeeKey, FirstName = employee.FirstName, LastName = employee.LastName, MiddleName = employee.MiddleName, OfficePhone = employee.OfficePhone, Title = employee.Title, EmployeeClassificationKey = employeeClassification.EmployeeClassificationKey, EmployeeClassificationName = employeeClassification.EmployeeClassificationName, IsEmployee = employeeClassification.IsEmployee, IsExempt = employeeClassification.IsExempt };
+			return current1;
+		}
+
 
 		/// <summary> Gets / sets the IDataAccessAdapter to use for the queries created with this meta data object.</summary>
 		/// <remarks> Be aware that the IDataAccessAdapter object set via this property is kept alive by the LLBLGenProQuery objects created with this meta data
