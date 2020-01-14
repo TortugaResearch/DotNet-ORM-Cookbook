@@ -52,6 +52,10 @@ namespace LLBLGenPro.OrmCookbook.Linq
 					return this.Employee;
 				case LLBLGenPro.OrmCookbook.EntityType.EmployeeClassificationEntity:
 					return this.EmployeeClassification;
+				case LLBLGenPro.OrmCookbook.EntityType.ProductEntity:
+					return this.Product;
+				case LLBLGenPro.OrmCookbook.EntityType.ProductLineEntity:
+					return this.ProductLine;
 				default:
 					return null;
 			}
@@ -77,6 +81,12 @@ namespace LLBLGenPro.OrmCookbook.Linq
 		
 		/// <summary>returns the datasource to use in a Linq query when targeting EmployeeClassificationEntity instances in the database.</summary>
 		public DataSource2<EmployeeClassificationEntity> EmployeeClassification {	get { return new DataSource2<EmployeeClassificationEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
+		
+		/// <summary>returns the datasource to use in a Linq query when targeting ProductEntity instances in the database.</summary>
+		public DataSource2<ProductEntity> Product {	get { return new DataSource2<ProductEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
+		
+		/// <summary>returns the datasource to use in a Linq query when targeting ProductLineEntity instances in the database.</summary>
+		public DataSource2<ProductLineEntity> ProductLine {	get { return new DataSource2<ProductLineEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
 		
 
 

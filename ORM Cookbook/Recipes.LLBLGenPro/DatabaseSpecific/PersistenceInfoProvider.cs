@@ -40,6 +40,8 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 			InitDivisionEntityMappings();
 			InitEmployeeEntityMappings();
 			InitEmployeeClassificationEntityMappings();
+			InitProductEntityMappings();
+			InitProductLineEntityMappings();
 			InitDepartmentDetailTypedViewMappings();
 			InitEmployeeDetailTypedViewMappings();
 		}
@@ -83,6 +85,25 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 			this.AddElementFieldMapping("EmployeeClassificationEntity", "EmployeeClassificationName", "EmployeeClassificationName", false, "VarChar", 30, 0, 0, false, "", null, typeof(System.String), 1);
 			this.AddElementFieldMapping("EmployeeClassificationEntity", "IsEmployee", "IsEmployee", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 2);
 			this.AddElementFieldMapping("EmployeeClassificationEntity", "IsExempt", "IsExempt", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 3);
+		}
+
+		/// <summary>Inits ProductEntity's mappings</summary>
+		private void InitProductEntityMappings()
+		{
+			this.AddElementMapping("ProductEntity", @"ORMCookbook", @"Production", "Product", 5, 0);
+			this.AddElementFieldMapping("ProductEntity", "ProductKey", "ProductKey", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
+			this.AddElementFieldMapping("ProductEntity", "ProductLineKey", "ProductLineKey", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 1);
+			this.AddElementFieldMapping("ProductEntity", "ProductName", "ProductName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 2);
+			this.AddElementFieldMapping("ProductEntity", "ProductWeight", "ProductWeight", true, "Decimal", 0, 10, 4, false, "", null, typeof(System.Decimal), 3);
+			this.AddElementFieldMapping("ProductEntity", "ShippingWeight", "ShippingWeight", true, "Decimal", 0, 10, 4, false, "", null, typeof(System.Decimal), 4);
+		}
+
+		/// <summary>Inits ProductLineEntity's mappings</summary>
+		private void InitProductLineEntityMappings()
+		{
+			this.AddElementMapping("ProductLineEntity", @"ORMCookbook", @"Production", "ProductLine", 2, 0);
+			this.AddElementFieldMapping("ProductLineEntity", "ProductLineKey", "ProductLineKey", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
+			this.AddElementFieldMapping("ProductLineEntity", "ProductLineName", "ProductLineName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 1);
 		}
 
 

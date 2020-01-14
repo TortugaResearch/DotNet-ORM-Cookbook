@@ -45,6 +45,8 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			InitDivisionEntityInfo();
 			InitEmployeeEntityInfo();
 			InitEmployeeClassificationEntityInfo();
+			InitProductEntityInfo();
+			InitProductLineEntityInfo();
 			InitDepartmentDetailTypedViewInfo();
 			InitEmployeeDetailTypedViewInfo();
 			this.BuildInternalStructures();
@@ -89,6 +91,25 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			this.AddElementFieldInfo("EmployeeClassificationEntity", "EmployeeClassificationName", typeof(System.String), false, false, false, false,  (int)EmployeeClassificationFieldIndex.EmployeeClassificationName, 30, 0, 0);
 			this.AddElementFieldInfo("EmployeeClassificationEntity", "IsEmployee", typeof(System.Boolean), false, false, false, false,  (int)EmployeeClassificationFieldIndex.IsEmployee, 0, 0, 0);
 			this.AddElementFieldInfo("EmployeeClassificationEntity", "IsExempt", typeof(System.Boolean), false, false, false, false,  (int)EmployeeClassificationFieldIndex.IsExempt, 0, 0, 0);
+		}
+
+		/// <summary>Inits ProductEntity's info objects</summary>
+		private void InitProductEntityInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(ProductFieldIndex), "ProductEntity");
+			this.AddElementFieldInfo("ProductEntity", "ProductKey", typeof(System.Int32), true, false, true, false,  (int)ProductFieldIndex.ProductKey, 0, 0, 10);
+			this.AddElementFieldInfo("ProductEntity", "ProductLineKey", typeof(System.Int32), false, true, false, false,  (int)ProductFieldIndex.ProductLineKey, 0, 0, 10);
+			this.AddElementFieldInfo("ProductEntity", "ProductName", typeof(System.String), false, false, false, false,  (int)ProductFieldIndex.ProductName, 50, 0, 0);
+			this.AddElementFieldInfo("ProductEntity", "ProductWeight", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)ProductFieldIndex.ProductWeight, 0, 4, 10);
+			this.AddElementFieldInfo("ProductEntity", "ShippingWeight", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)ProductFieldIndex.ShippingWeight, 0, 4, 10);
+		}
+
+		/// <summary>Inits ProductLineEntity's info objects</summary>
+		private void InitProductLineEntityInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(ProductLineFieldIndex), "ProductLineEntity");
+			this.AddElementFieldInfo("ProductLineEntity", "ProductLineKey", typeof(System.Int32), true, false, true, false,  (int)ProductLineFieldIndex.ProductLineKey, 0, 0, 10);
+			this.AddElementFieldInfo("ProductLineEntity", "ProductLineName", typeof(System.String), false, false, false, false,  (int)ProductLineFieldIndex.ProductLineName, 50, 0, 0);
 		}
 
 		/// <summary>Inits DepartmentDetailView's info objects</summary>

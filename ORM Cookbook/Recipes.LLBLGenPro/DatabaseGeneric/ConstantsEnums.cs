@@ -63,7 +63,11 @@ namespace LLBLGenPro.OrmCookbook
 		///<summary>Employee</summary>
 		EmployeeEntity,
 		///<summary>EmployeeClassification</summary>
-		EmployeeClassificationEntity
+		EmployeeClassificationEntity,
+		///<summary>Product</summary>
+		ProductEntity,
+		///<summary>ProductLine</summary>
+		ProductLineEntity
 	}
 
 	/// <summary>Enum definition for all the typed view types defined in this namespace. Used by the entityfields factory.</summary>

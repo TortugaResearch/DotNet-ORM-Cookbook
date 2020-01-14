@@ -30,6 +30,12 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 		/// <summary>Creates and returns a new EntityQuery for the EmployeeClassification entity</summary>
 		public EntityQuery<EmployeeClassificationEntity> EmployeeClassification { get { return Create<EmployeeClassificationEntity>(); } }
 
+		/// <summary>Creates and returns a new EntityQuery for the Product entity</summary>
+		public EntityQuery<ProductEntity> Product { get { return Create<ProductEntity>(); } }
+
+		/// <summary>Creates and returns a new EntityQuery for the ProductLine entity</summary>
+		public EntityQuery<ProductLineEntity> ProductLine { get { return Create<ProductLineEntity>(); } }
+
 		/// <inheritdoc/>
 		protected override IElementCreatorCore CreateElementCreator() { return new ElementCreator(); }
  

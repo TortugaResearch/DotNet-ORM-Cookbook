@@ -7,6 +7,7 @@ using LLBLGenPro.OrmCookbook.DatabaseSpecific;
 using LLBLGenPro.OrmCookbook.Linq;
 using SD.LLBLGen.Pro.DQE.SqlServer;
 using SD.LLBLGen.Pro.ORMSupportClasses;
+using SD.Tools.OrmProfiler.Interceptor;
 
 namespace Recipes.LLBLGenPro
 {
@@ -25,7 +26,10 @@ namespace Recipes.LLBLGenPro
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
             var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
             RuntimeConfiguration.AddConnectionString("ConnectionString.SQL Server (SqlClient)", sqlServerConnectionString);
-            RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c => c.AddDbProviderFactory(typeof(Microsoft.Data.SqlClient.SqlClientFactory))
+			// wrap the factory with the orm profiler's factory so we get real time query interception and can see what's going on.
+			// ORM Profiler is a free tool for every LLBLGen Pro customer.
+            RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c => c.AddDbProviderFactory(InterceptorCore.Initialize("ORM CookBook",
+																																typeof(Microsoft.Data.SqlClient.SqlClientFactory)))
                                                                                .SetDefaultCompatibilityLevel(SqlServerCompatibilityLevel.SqlServer2012));
             RuntimeConfiguration.Entity.SetMarkSavedEntitiesAsFetched(true);
             try
