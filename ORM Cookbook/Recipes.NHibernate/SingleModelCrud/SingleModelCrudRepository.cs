@@ -1,10 +1,8 @@
 ﻿using NHibernate;
-using NHibernate.Criterion;
 using Recipes.NHibernate.Entities;
 using Recipes.SingleModelCrud;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Recipes.NHibernate.SingleModelCrud
 {
@@ -56,11 +54,7 @@ namespace Recipes.NHibernate.SingleModelCrud
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .Add(Restrictions.Eq("EmployeeClassificationName", employeeClassificationName))
-                    .List<EmployeeClassification>()
-                    .SingleOrDefault();
+                return session.QueryOver<EmployeeClassification>().Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
             }
         }
 
@@ -68,9 +62,7 @@ namespace Recipes.NHibernate.SingleModelCrud
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .List<EmployeeClassification>();
+                return session.QueryOver<EmployeeClassification>().List();
             }
         }
 

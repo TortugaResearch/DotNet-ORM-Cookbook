@@ -1,5 +1,4 @@
 ﻿using NHibernate;
-using NHibernate.Criterion;
 using Recipes.NHibernate.Entities;
 using Recipes.SingleModelCrudAsync;
 using System;
@@ -58,11 +57,9 @@ namespace Recipes.NHibernate.SingleModelCrudAsync
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return (await session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .Add(Restrictions.Eq("EmployeeClassificationName", employeeClassificationName))
-                    .ListAsync<EmployeeClassification>(cancellationToken)
-                    .ConfigureAwait(false))
+                return (await session.QueryOver<EmployeeClassification>()
+                    .Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
+                    .ListAsync(cancellationToken).ConfigureAwait(false))
                     .SingleOrDefault();
             }
         }
@@ -72,8 +69,8 @@ namespace Recipes.NHibernate.SingleModelCrudAsync
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
                 return await session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .ListAsync<EmployeeClassification>(cancellationToken).ConfigureAwait(false);
+                    .QueryOver<EmployeeClassification>()
+                    .ListAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 

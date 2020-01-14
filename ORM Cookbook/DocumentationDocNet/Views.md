@@ -1,6 +1,6 @@
 ﻿# Reading from Views
 
-These use cases demonstrate how to reads from a view. 
+These use cases demonstrate how to read from a view. 
 
 Note: While writing to views is supported by some databases, that capability is outside the scope of this use case.
 

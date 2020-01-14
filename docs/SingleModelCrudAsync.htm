@@ -66,6 +66,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
 </li>
 <li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
@@ -716,11 +718,9 @@
     {
         using (var session = m_SessionFactory.OpenStatelessSession())
         {
-            return (await session
-                .CreateCriteria(typeof(EmployeeClassification))
-                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
-                .ListAsync&lt;EmployeeClassification&gt;(cancellationToken)
-                .ConfigureAwait(false))
+            return (await session.QueryOver&lt;EmployeeClassification&gt;()
+                .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+                .ListAsync(cancellationToken).ConfigureAwait(false))
                 .SingleOrDefault();
         }
     }
@@ -730,8 +730,8 @@
         using (var session = m_SessionFactory.OpenStatelessSession())
         {
             return await session
-                .CreateCriteria(typeof(EmployeeClassification))
-                .ListAsync&lt;EmployeeClassification&gt;(cancellationToken).ConfigureAwait(false);
+                .QueryOver&lt;EmployeeClassification&gt;()
+                .ListAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 

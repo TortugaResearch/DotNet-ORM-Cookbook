@@ -1,5 +1,4 @@
 ﻿using NHibernate;
-using NHibernate.Criterion;
 using Recipes.ModelWithChildren;
 using Recipes.NHibernate.Entities;
 using System;
@@ -59,10 +58,7 @@ namespace Recipes.NHibernate.ModelWithChildren
         {
             using (var session = m_SessionFactory.OpenSession())
             {
-                var result = session
-                    .CreateCriteria(typeof(ProductLine))
-                    .Add(Restrictions.Eq("ProductLineName", productLineName))
-                    .List<ProductLine>();
+                var result = session.QueryOver<ProductLine>().Where(pl => pl.ProductLineName == productLineName).List();
 
                 if (includeProducts)
                     result.SelectMany(x => x.Products).All(x => true); //force lazy-load
@@ -78,9 +74,7 @@ namespace Recipes.NHibernate.ModelWithChildren
         {
             using (var session = m_SessionFactory.OpenSession())
             {
-                var result = session
-                    .CreateCriteria(typeof(ProductLine))
-                    .List<ProductLine>();
+                var result = session.QueryOver<ProductLine>().List();
 
                 if (includeProducts)
                     result.SelectMany(x => x.Products).All(x => true); //force lazy-load
