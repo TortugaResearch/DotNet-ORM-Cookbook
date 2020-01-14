@@ -49,6 +49,12 @@
       "title": "Reading from Views"
     },
     {
+      "location": "Sorting.htm",
+      "breadcrumbs": "Home / Basic Sorting",
+      "keywords": "1 a A Ado ADO against are as at attacks basic Basic be but by case cases Chain checked chosed columns Columns Core cs Dapper demonstrate dynamically Entity EntityFrameworkCore expressions for Framework handled how in injection is ISortingRepository list LLBLGen needed NET NHibernate Note object of or passed perform prevent Pro Prototype Recipes RepoDb Repository reverse runtime separate ServiceStack snippet sorted SortExpression sorting Sorting SortingRepository sorts SQL strings TEmployee the These to TODO Tortuga use will",
+      "title": "Basic Sorting"
+    },
+    {
       "location": "PopulateDataTable.htm",
       "breadcrumbs": "Home / Populate DataTable",
       "keywords": "a A add Ado ADO also an are area as be before bulk but can Chain chosen classes columns consider Core creating cs custom Dapper data DataTable DataTableResultTransformer displayed does dynamically each EF Entity EntityFrameworkCore ExecuteReader for Framework from generalize grid holding IDataReader in In inconjunction inline insert IPopulateDataTableRepository IResultTransformer is it It library LLBLGen LLBLGenPro Load may method must natively NET NHibernate not Note object of often onerous operation or performing Populate PopulateDataTable PopulateDataTableRepository PopulateDataTableRepository2 primarily Pro Prototype provided Recipes reflection RepoDb report Repository results returned ServiceStack snippet some sort SQL staging support supports that the then this to TODO Tortuga used using when with you You",
