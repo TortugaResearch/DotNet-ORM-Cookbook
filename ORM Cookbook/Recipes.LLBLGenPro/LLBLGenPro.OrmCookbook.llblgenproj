@@ -189,6 +189,7 @@
             <Interface Name="Recipes.ModelWithLookup.IEmployeeSimple" />
             <Interface Name="Recipes.ModelWithLookup.IEmployeeComplex" />
             <Interface Name="Recipes.Views.IEmployeeSimple" />
+            <Interface Name="Recipes.Sorting.IEmployeeSimple" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>

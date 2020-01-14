@@ -374,7 +374,49 @@ VALUES
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class SortingRepository : ISortingRepository&lt;EmployeeEntity&gt;
+{
+    public int Create(EmployeeEntity employee)
+    {
+        if(employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            adapter.SaveEntity(employee);
+            return employee.EmployeeKey;
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; SortByLastName()
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.OrderBy(x =&gt; x.LastName).ToList();
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; SortByLastNameDescFirstName()
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.OrderByDescending(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; SortByLastNameFirstName()
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class SortingRepository : ISortingRepository&lt;Employee&gt;
 {
