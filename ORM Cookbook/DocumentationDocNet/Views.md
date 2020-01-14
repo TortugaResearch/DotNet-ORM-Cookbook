@@ -36,7 +36,10 @@ Starting with EF Core 3.0, views are treated like tables, but with two additiona
 
 ## LLBLGen Pro 
 
-TODO
+The views are mapped as regular entities and marked as 'readonly' in the designer. Alternatively we could have mapped them as Typed View
+POCOs however these aren't able to participate in entity relationships.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Views\ViewsRepository.cs] ViewsRepository
 
 ## NHibernate
 

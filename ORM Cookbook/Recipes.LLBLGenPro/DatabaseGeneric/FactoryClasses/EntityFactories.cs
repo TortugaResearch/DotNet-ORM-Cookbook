@@ -106,6 +106,16 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new EmployeeClassificationEntity(fields); }
 	}
 
+	/// <summary>Factory to create new, empty EmployeeDetailEntity objects.</summary>
+	[Serializable]
+	public partial class EmployeeDetailEntityFactory : EntityFactoryBase2<EmployeeDetailEntity> 
+	{
+		/// <summary>CTor</summary>
+		public EmployeeDetailEntityFactory() : base("EmployeeDetailEntity", LLBLGenPro.OrmCookbook.EntityType.EmployeeDetailEntity, false) { }
+		/// <inheritdoc/>
+		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new EmployeeDetailEntity(fields); }
+	}
+
 	/// <summary>Factory to create new, empty ProductEntity objects.</summary>
 	[Serializable]
 	public partial class ProductEntityFactory : EntityFactoryBase2<ProductEntity> 
@@ -181,6 +191,8 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 					return new EmployeeEntityFactory();
 				case LLBLGenPro.OrmCookbook.EntityType.EmployeeClassificationEntity:
 					return new EmployeeClassificationEntityFactory();
+				case LLBLGenPro.OrmCookbook.EntityType.EmployeeDetailEntity:
+					return new EmployeeDetailEntityFactory();
 				case LLBLGenPro.OrmCookbook.EntityType.ProductEntity:
 					return new ProductEntityFactory();
 				case LLBLGenPro.OrmCookbook.EntityType.ProductLineEntity:

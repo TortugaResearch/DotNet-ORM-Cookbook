@@ -188,6 +188,7 @@
           <Interfaces>
             <Interface Name="Recipes.ModelWithLookup.IEmployeeSimple" />
             <Interface Name="Recipes.ModelWithLookup.IEmployeeComplex" />
+            <Interface Name="Recipes.Views.IEmployeeSimple" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -210,6 +211,27 @@
             <Interface Name="Recipes.SingleModelCrud.IEmployeeClassification" />
             <Interface Name="Recipes.SingleModelCrudAsync.IEmployeeClassification" />
             <Interface Name="Recipes.TryCrud.IEmployeeClassification" />
+            <Interface Name="Recipes.Views.IEmployeeClassification" />
+          </Interfaces>
+        </OutputSettingValues>
+      </EntityDefinition>
+      <EntityDefinition Name="EmployeeDetail" ObjectID="d285084d-1d9f-4692-b79d-3c99d3a08768">
+        <Fields>
+          <Field Name="CellPhone" Type="string" IsOptional="true" MaxLength="15" />
+          <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
+          <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
+          <Field Name="EmployeeKey" Type="int" Precision="10" />
+          <Field Name="FirstName" Type="string" MaxLength="50" />
+          <Field Name="IsEmployee" Type="bool" />
+          <Field Name="IsExempt" Type="bool" />
+          <Field Name="LastName" Type="string" MaxLength="50" />
+          <Field Name="MiddleName" Type="string" IsOptional="true" MaxLength="50" />
+          <Field Name="OfficePhone" Type="string" IsOptional="true" MaxLength="15" />
+          <Field Name="Title" Type="string" IsOptional="true" MaxLength="100" />
+        </Fields>
+        <OutputSettingValues>
+          <Interfaces>
+            <Interface Name="Recipes.Views.IEmployeeDetail" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -270,21 +292,6 @@
         <Field Name="DepartmentName" Type="string" MaxLength="30" />
         <Field Name="DivisionKey" Type="int" Precision="10" />
         <Field Name="DivisionName" Type="string" IsOptional="true" MaxLength="30" />
-      </Fields>
-    </TypedViewDefinition>
-    <TypedViewDefinition Name="EmployeeDetail" ObjectID="c297ea4c-33a7-425a-8e04-727481005bfb">
-      <Fields>
-        <Field Name="CellPhone" Type="string" IsOptional="true" MaxLength="15" />
-        <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
-        <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
-        <Field Name="EmployeeKey" Type="int" Precision="10" />
-        <Field Name="FirstName" Type="string" MaxLength="50" />
-        <Field Name="IsEmployee" Type="bool" />
-        <Field Name="IsExempt" Type="bool" />
-        <Field Name="LastName" Type="string" MaxLength="50" />
-        <Field Name="MiddleName" Type="string" IsOptional="true" MaxLength="50" />
-        <Field Name="OfficePhone" Type="string" IsOptional="true" MaxLength="15" />
-        <Field Name="Title" Type="string" IsOptional="true" MaxLength="100" />
       </Fields>
     </TypedViewDefinition>
   </TypedViewDefinitions>
@@ -469,6 +476,21 @@
             <FieldMapping FieldName="IsExempt" TargetFieldName="IsExempt" />
           </FieldMappings>
         </EntityMapping>
+        <EntityMapping EntityName=":EmployeeDetail" TargetName="ORMCookbook:HR:EmployeeDetail" ActionCombination="4">
+          <FieldMappings>
+            <FieldMapping FieldName="CellPhone" TargetFieldName="CellPhone" />
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
+            <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="EmployeeClassificationName" />
+            <FieldMapping FieldName="EmployeeKey" TargetFieldName="EmployeeKey" />
+            <FieldMapping FieldName="FirstName" TargetFieldName="FirstName" />
+            <FieldMapping FieldName="IsEmployee" TargetFieldName="IsEmployee" />
+            <FieldMapping FieldName="IsExempt" TargetFieldName="IsExempt" />
+            <FieldMapping FieldName="LastName" TargetFieldName="LastName" />
+            <FieldMapping FieldName="MiddleName" TargetFieldName="MiddleName" />
+            <FieldMapping FieldName="OfficePhone" TargetFieldName="OfficePhone" />
+            <FieldMapping FieldName="Title" TargetFieldName="Title" />
+          </FieldMappings>
+        </EntityMapping>
         <EntityMapping EntityName=":Product" TargetName="ORMCookbook:Production:Product">
           <FieldMappings>
             <FieldMapping FieldName="ProductKey" TargetFieldName="ProductKey" SequenceToUse="SCOPE_IDENTITY()" />
@@ -492,21 +514,6 @@
             <FieldMapping FieldName="DepartmentName" TargetFieldName="DepartmentName" />
             <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" />
             <FieldMapping FieldName="DivisionName" TargetFieldName="DivisionName" />
-          </FieldMappings>
-        </TypedViewMapping>
-        <TypedViewMapping TypedViewName=":EmployeeDetail" TargetName="ORMCookbook:HR:EmployeeDetail">
-          <FieldMappings>
-            <FieldMapping FieldName="CellPhone" TargetFieldName="CellPhone" />
-            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
-            <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="EmployeeClassificationName" />
-            <FieldMapping FieldName="EmployeeKey" TargetFieldName="EmployeeKey" />
-            <FieldMapping FieldName="FirstName" TargetFieldName="FirstName" />
-            <FieldMapping FieldName="IsEmployee" TargetFieldName="IsEmployee" />
-            <FieldMapping FieldName="IsExempt" TargetFieldName="IsExempt" />
-            <FieldMapping FieldName="LastName" TargetFieldName="LastName" />
-            <FieldMapping FieldName="MiddleName" TargetFieldName="MiddleName" />
-            <FieldMapping FieldName="OfficePhone" TargetFieldName="OfficePhone" />
-            <FieldMapping FieldName="Title" TargetFieldName="Title" />
           </FieldMappings>
         </TypedViewMapping>
       </TypedViewMappings>

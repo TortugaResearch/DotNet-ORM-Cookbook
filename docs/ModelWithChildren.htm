@@ -425,7 +425,7 @@
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With LLBLGen Pro we can utilize straightforward ORM functionality with this, utilizing the stand-alone, database agnostic Unit of Work
 class for easy transaction management and order-of-operation control. For the partial deletes two variants are implemented, one
-with a removal tracker, which tracks which entities are removed and which can be deleted in one go (the alternative <code>UpdateAlt</code> method), 
+with a removal tracker, which tracks which entities are removed and which can be deleted in one go (the <code>Update</code> method in the alt repository), 
 and one with a direct delete on the table using a not-in predicate, available in the regular <code>Update</code> method. </p>
 <p>Nested deletes are implemented explicitly, as cascading deletes aren't supported at the ORM level; to have cascading deletes you 
 have to set up the deletes as cascading on the foreign key constraint. </p>
@@ -520,7 +520,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
     }
 
 
-    public void Update(ProductLineEntity productLine)
+    public virtual void Update(ProductLineEntity productLine)
     {
         if(productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -541,8 +541,23 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-    
-    public void UpdateAlt(ProductLineEntity productLine)
+    public void Update(ProductEntity product)
+    {
+        if (product == null)
+            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.SaveEntity(product);
+        }
+    }
+}
+</code></pre>
+
+<p>Alternative Update method using removal tracker functionality</p>
+<pre><code class="cs">public class ModelWithChildrenRepositoryAlt : ModelWithChildrenRepository
+{
+    public override void Update(ProductLineEntity productLine)
     {
         if(productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -556,21 +571,10 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         uow.AddCollectionForDelete(productLine.Products.RemovedEntitiesTracker);
         using (var adapter = new DataAccessAdapter())
         {
-                uow.Commit(adapter);
+            uow.Commit(adapter);
         }
     }
-    
 
-    public void Update(ProductEntity product)
-    {
-        if (product == null)
-            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            adapter.SaveEntity(product);
-        }
-    }
 }
 </code></pre>
 

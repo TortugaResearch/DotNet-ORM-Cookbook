@@ -39,13 +39,18 @@ For deletes, ensure the child record in DBContext is setup with `.OnDelete(Delet
 
 With LLBLGen Pro we can utilize straightforward ORM functionality with this, utilizing the stand-alone, database agnostic Unit of Work
 class for easy transaction management and order-of-operation control. For the partial deletes two variants are implemented, one
-with a removal tracker, which tracks which entities are removed and which can be deleted in one go (the alternative `UpdateAlt` method), 
+with a removal tracker, which tracks which entities are removed and which can be deleted in one go (the `Update` method in the alt repository), 
 and one with a direct delete on the table using a not-in predicate, available in the regular `Update` method. 
 
 Nested deletes are implemented explicitly, as cascading deletes aren't supported at the ORM level; to have cascading deletes you 
 have to set up the deletes as cascading on the foreign key constraint. 
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithChildren\ModelWithChildrenRepository.cs] ModelWithChildrenRepository
+
+Alternative Update method using removal tracker functionality
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithChildren\ModelWithChildrenRepositoryAlt.cs] ModelWithChildrenRepositoryAlt
+
 
 ## NHibernate
 

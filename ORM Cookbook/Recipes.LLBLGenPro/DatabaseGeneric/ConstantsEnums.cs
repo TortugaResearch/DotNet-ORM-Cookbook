@@ -23,34 +23,6 @@ namespace LLBLGenPro.OrmCookbook
 		/// <summary></summary>
 		AmountOfFields
 	}
-	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : EmployeeDetail.</summary>
-	public enum EmployeeDetailFieldIndex
-	{
-		///<summary>EmployeeKey</summary>
-		EmployeeKey,
-		///<summary>FirstName</summary>
-		FirstName,
-		///<summary>MiddleName</summary>
-		MiddleName,
-		///<summary>LastName</summary>
-		LastName,
-		///<summary>Title</summary>
-		Title,
-		///<summary>OfficePhone</summary>
-		OfficePhone,
-		///<summary>CellPhone</summary>
-		CellPhone,
-		///<summary>EmployeeClassificationKey</summary>
-		EmployeeClassificationKey,
-		///<summary>EmployeeClassificationName</summary>
-		EmployeeClassificationName,
-		///<summary>IsExempt</summary>
-		IsExempt,
-		///<summary>IsEmployee</summary>
-		IsEmployee,
-		/// <summary></summary>
-		AmountOfFields
-	}
 
 
 	/// <summary>Enum definition for all the entity types defined in this namespace. Used by the entityfields factory.</summary>
@@ -64,6 +36,8 @@ namespace LLBLGenPro.OrmCookbook
 		EmployeeEntity,
 		///<summary>EmployeeClassification</summary>
 		EmployeeClassificationEntity,
+		///<summary>EmployeeDetail</summary>
+		EmployeeDetailEntity,
 		///<summary>Product</summary>
 		ProductEntity,
 		///<summary>ProductLine</summary>
@@ -74,9 +48,7 @@ namespace LLBLGenPro.OrmCookbook
 	public enum TypedViewType
 	{
 		///<summary>DepartmentDetail</summary>
-		DepartmentDetailTypedView,
-		///<summary>EmployeeDetail</summary>
-		EmployeeDetailTypedView
+		DepartmentDetailTypedView
 	}
 
 
