@@ -1,5 +1,4 @@
 ﻿using NHibernate;
-using NHibernate.Criterion;
 using Recipes.Immutable;
 using Recipes.NHibernate.Entities;
 using System;
@@ -48,12 +47,8 @@ namespace Recipes.NHibernate.Immutable
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .Add(Restrictions.Eq("EmployeeClassificationName", employeeClassificationName))
-                    .List<EmployeeClassification>()
-                    .Select(x => new ReadOnlyEmployeeClassification(x))
-                    .SingleOrDefault();
+                return session.QueryOver<EmployeeClassification>().Where(e => e.EmployeeClassificationName == employeeClassificationName).List()
+                    .Select(x => new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
             }
         }
 
@@ -61,11 +56,8 @@ namespace Recipes.NHibernate.Immutable
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .List<EmployeeClassification>()
-                    .Select(x => new ReadOnlyEmployeeClassification(x))
-                    .ToImmutableArray();
+                return session.QueryOver<EmployeeClassification>().List()
+                    .Select(x => new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
             }
         }
 

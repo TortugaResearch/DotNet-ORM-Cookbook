@@ -43,9 +43,15 @@
       "title": "Immutable CRUD"
     },
     {
+      "location": "Joins.htm",
+      "breadcrumbs": "Home / Projecting with a Join",
+      "keywords": "2 a Ado ADO and as Based be but cases Chain Child Core CRUD cs Dapper database define demonstrate doesn EF EmployeeDetail Entity EntityFrameworkCore examples explicitly fallback for For Foreign Framework has hbm how htm IJoinsRepository into join Join joins Joins JoinsRepository Key LLBLGen mapped Mappings may Model ModelWithChildren ModelWithLookupComplex Multiple native natively need NET NHibernate not object Object objects of on Operations or other performing Pro project Projecting projections Prototype purpose raw Recipes Records RepoDb Repository reults See ServiceStack simple snippet so SQL support supports TEmployeeDetail TEmployeeSimple the these These to TODO Tortuga use used view with xml",
+      "title": "Projecting with a Join"
+    },
+    {
       "location": "Views.htm",
       "breadcrumbs": "Home / Reading from Views",
-      "keywords": "0 2 3 a additional Ado ADO also are as be but by capability case cases Chain column configuration configured Core cs Dapper Database databases demonstrate EF EmployeeDetail entity Entity EntityFrameworkCore false Framework from HasNoKey hbm how HR ID in In is IViewsRepository like LLBLGen Mappings modelBuilder must mutable name NET NHibernate Note of OrmCookbookDB outside Pro Prototype Reading reads Recipes RepoDb Repository require requirements schema scope ServiceStack snippet some sql Starting supported tables TEmployeeDetail TEmployeeSimple text that the These They this to TODO Tortuga ToView treated two unique use view views Views ViewsRepository While with writing xml",
+      "keywords": "0 2 3 a additional Ado ADO also are as be but by capability case cases Chain column configuration configured Core cs Dapper Database databases demonstrate EF EmployeeDetail entity Entity EntityFrameworkCore false Framework from HasNoKey hbm how HR ID in In is IViewsRepository like LLBLGen Mappings modelBuilder must mutable name NET NHibernate Note of OrmCookbookDB outside Pro Prototype read Reading Recipes RepoDb Repository require requirements schema scope ServiceStack snippet some sql Starting supported tables TEmployeeDetail TEmployeeSimple text that the These They this to TODO Tortuga ToView treated two unique use view views Views ViewsRepository While with writing xml",
       "title": "Reading from Views"
     },
     {

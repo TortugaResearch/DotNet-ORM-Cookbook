@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Projecting with a Join - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry current"><a class="current" href="Joins.htm">Projecting with a Join</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Joins.htm">Projecting with a Join</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="projecting-with-a-join">Projecting with a Join<a class="headerlink" href="#projecting-with-a-join" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These use cases demonstrate how to define a join and project the reults into a simple object. </p>
+<p>See <a href="ModelWithLookupComplex.htm">CRUD Operations on Model with Object-Based Foreign Key</a> and <a href="ModelWithChildren.htm">CRUD Operations on Model with Child Records</a> for other examples of performing joins.</p>
+<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>For the purpose of these examples, a database view may not be used.</p>
+<pre><code class="cs">public interface IJoinsRepository&lt;TEmployeeDetail, TEmployeeSimple&gt;
+   where TEmployeeDetail : class, IEmployeeDetail
+   where TEmployeeSimple : class, IEmployeeSimple, new()
+{
+    /// &lt;summary&gt;
+    /// Gets an EmployeeDetail row by its primary key.
+    /// &lt;/summary&gt;
+    TEmployeeDetail? GetByEmployeeKey(int employeeKey);
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeDetail row by its primary key.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeDetail row by its name. Assume the name is not unique.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployeeDetail&gt; FindByLastName(string lastName);
+
+    /// &lt;summary&gt;
+    /// Gets all EmployeeDetail rows.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployeeDetail&gt; GetAll();
+
+    /// &lt;summary&gt;
+    /// Create a new Employee row, returning the new primary key.
+    /// &lt;/summary&gt;
+    int Create(TEmployeeSimple employee);
+
+    /// &lt;summary&gt;
+    /// Get an EmployeeClassification by key.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employeeClassificationKey&quot;&gt;The employee classification key.&lt;/param&gt;
+    IEmployeeClassification? GetClassification(int employeeClassificationKey);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">    public class JoinsRepository : IJoinsRepository&lt;EmployeeDetail, EmployeeSimple&gt;
+    {
+        readonly string m_ConnectionString;
+
+        public JoinsRepository(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
+
+        public int Create(EmployeeSimple employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+            const string sql = @&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES
+(@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, employee.FirstName);
+                cmd.Parameters.AddWithValue(&quot;@MiddleName&quot;, (object?)employee.MiddleName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, employee.LastName);
+                cmd.Parameters.AddWithValue(&quot;@Title&quot;, (object?)employee.Title ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@OfficePhone&quot;, (object?)employee.OfficePhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@CellPhone&quot;, (object?)employee.CellPhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employee.EmployeeClassificationKey);
+
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+
+                var results = new List&lt;EmployeeDetail&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeDetail(reader));
+
+                return results;
+            }
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+                var results = new List&lt;EmployeeDetail&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeDetail(reader));
+
+                return results;
+            }
+        }
+
+        public IList&lt;EmployeeDetail&gt; GetAll()
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                var results = new List&lt;EmployeeDetail&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeDetail(reader));
+
+                return results;
+            }
+        }
+
+        public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employeeKey);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return new EmployeeDetail(reader);
+                    else
+                        return null;
+                }
+            }
+        }
+
+        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+        {
+            const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return new EmployeeClassification(reader);
+                    else
+                        return null;
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Opens a database connection.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
+        }
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain doesn't natively support joins, so raw SQL (or a view) has to be used as a fallback. </p>
+<pre><code class="cs">public class JoinsRepository : IJoinsRepository&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public JoinsRepository(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return m_DataSource.Insert(employee).ToInt32().Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        return m_DataSource.Sql(sql, new { employeeClassificationKey }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
+
+        return m_DataSource.Sql(sql, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey&quot;;
+
+        return m_DataSource.Sql(sql).ToCollection&lt;EmployeeDetail&gt;().Execute();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
+
+        return m_DataSource.Sql(sql, new { employeeKey }).ToObject&lt;EmployeeDetail&gt;(RowOptions.AllowEmptyResults).Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return m_DataSource.From(ClassificationTableName, new { employeeClassificationKey }).ToObject&lt;EmployeeClassification&gt;().Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">    public class JoinsRepository : IJoinsRepository&lt;EmployeeDetail, EmployeeSimple&gt;
+    {
+        readonly string m_ConnectionString;
+
+        public JoinsRepository(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
+
+        public int Create(EmployeeSimple employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+            const string sql = @&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES
+(@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+            using (var con = OpenConnection())
+                return con.ExecuteScalar&lt;int&gt;(sql, employee);
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).ToList();
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeDetail&gt;(sql, new { lastName }).ToList();
+        }
+
+        public IList&lt;EmployeeDetail&gt; GetAll()
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeDetail&gt;(sql).ToList();
+        }
+
+        public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
+
+            using (var con = OpenConnection())
+                return con.QuerySingleOrDefault&lt;EmployeeDetail&gt;(sql, new { employeeKey });
+        }
+
+        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+        {
+            const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+                return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
+        }
+
+        /// &lt;summary&gt;
+        /// Opens a database connection.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
+        }
+    }
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>EF Core native supports joins, but not projections. Multiple objects need to be explicitly mapped.</p>
+<pre><code class="cs">public class JoinsRepository : IJoinsRepository&lt;EmployeeDetail, Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public JoinsRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Employee.Add(employee);
+            context.SaveChanges();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new EmployeeDetail()
+                    {
+                        EmployeeKey = e.EmployeeKey,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        CellPhone = e.CellPhone,
+                        OfficePhone = e.OfficePhone,
+                        Title = e.Title,
+                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ec.EmployeeClassificationName,
+                        IsEmployee = ec.IsEmployee ?? true,
+                        IsExempt = ec.IsExempt,
+                    })
+                .Where(ed =&gt; ed.EmployeeClassificationKey == employeeClassificationKey)
+                .ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new EmployeeDetail()
+                    {
+                        EmployeeKey = e.EmployeeKey,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        CellPhone = e.CellPhone,
+                        OfficePhone = e.OfficePhone,
+                        Title = e.Title,
+                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ec.EmployeeClassificationName,
+                        IsEmployee = ec.IsEmployee ?? true,
+                        IsExempt = ec.IsExempt,
+                    })
+                .Where(ed =&gt; ed.LastName == lastName)
+                .ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new EmployeeDetail()
+                    {
+                        EmployeeKey = e.EmployeeKey,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        CellPhone = e.CellPhone,
+                        OfficePhone = e.OfficePhone,
+                        Title = e.Title,
+                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ec.EmployeeClassificationName,
+                        IsEmployee = ec.IsEmployee ?? true,
+                        IsExempt = ec.IsExempt,
+                    })
+                .ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new EmployeeDetail()
+                    {
+                        EmployeeKey = e.EmployeeKey,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        CellPhone = e.CellPhone,
+                        OfficePhone = e.OfficePhone,
+                        Title = e.Title,
+                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ec.EmployeeClassificationName,
+                        IsEmployee = ec.IsEmployee ?? true,
+                        IsExempt = ec.IsExempt,
+                    })
+                .Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>EF Core native supports joins, but not projections. Multiple objects need to be explicitly mapped.</p>
+<pre><code class="xml">&lt;hibernate-mapping
+  assembly=&quot;Recipes.NHibernate&quot;
+  namespace=&quot;Recipes.NHibernate.Entities&quot;&gt;
+  &lt;class
+    name=&quot;EmployeeDetail&quot;
+    table=&quot;EmployeeDetail&quot;
+    schema=&quot;HR&quot;
+    mutable=&quot;false&quot;&gt;
+    &lt;id
+      name=&quot;EmployeeKey&quot; /&gt;
+    &lt;property
+      name=&quot;FirstName&quot; /&gt;
+    &lt;property
+      name=&quot;MiddleName&quot; /&gt;
+    &lt;property
+      name=&quot;LastName&quot; /&gt;
+    &lt;property
+      name=&quot;Title&quot; /&gt;
+    &lt;property
+      name=&quot;OfficePhone&quot; /&gt;
+    &lt;property
+      name=&quot;CellPhone&quot; /&gt;
+    &lt;property
+      name=&quot;EmployeeClassificationKey&quot; /&gt;
+    &lt;property
+      name=&quot;EmployeeClassificationName&quot; /&gt;
+    &lt;property
+      name=&quot;IsExempt&quot; /&gt;
+    &lt;property
+      name=&quot;IsEmployee&quot; /&gt;
+  &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+</code></pre>
+
+<pre><code class="cs">public class JoinsRepository : IJoinsRepository&lt;EmployeeDetail, Employee&gt;
+{
+    readonly ISessionFactory m_SessionFactory;
+
+    public JoinsRepository(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            session.Save(employee);
+            session.Flush();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session.QueryOver&lt;EmployeeComplex&gt;()
+                .JoinQueryOver(e =&gt; e.EmployeeClassification)
+                .Where(ec =&gt; ec!.EmployeeClassificationKey == employeeClassificationKey)
+                .List()
+                .Select(e =&gt; new EmployeeDetail()
+                {
+                    EmployeeKey = e.EmployeeKey,
+                    FirstName = e.FirstName,
+                    MiddleName = e.MiddleName,
+                    LastName = e.LastName,
+                    CellPhone = e.CellPhone,
+                    OfficePhone = e.OfficePhone,
+                    Title = e.Title,
+                    EmployeeClassificationKey = e.EmployeeClassification!.EmployeeClassificationKey,
+                    EmployeeClassificationName = e.EmployeeClassification.EmployeeClassificationName,
+                    IsEmployee = e.EmployeeClassification.IsEmployee,
+                    IsExempt = e.EmployeeClassification.IsExempt,
+                })
+                .ToList();
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session.QueryOver&lt;EmployeeComplex&gt;()
+                .Where(e =&gt; e.LastName == lastName)
+                .JoinQueryOver(e =&gt; e.EmployeeClassification)
+                .List()
+                .Select(e =&gt; new EmployeeDetail()
+                {
+                    EmployeeKey = e.EmployeeKey,
+                    FirstName = e.FirstName,
+                    MiddleName = e.MiddleName,
+                    LastName = e.LastName,
+                    CellPhone = e.CellPhone,
+                    OfficePhone = e.OfficePhone,
+                    Title = e.Title,
+                    EmployeeClassificationKey = e.EmployeeClassification!.EmployeeClassificationKey,
+                    EmployeeClassificationName = e.EmployeeClassification.EmployeeClassificationName,
+                    IsEmployee = e.EmployeeClassification.IsEmployee,
+                    IsExempt = e.EmployeeClassification.IsExempt,
+                })
+                .ToList();
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session.QueryOver&lt;EmployeeComplex&gt;()
+                .JoinQueryOver(e =&gt; e.EmployeeClassification)
+                .List()
+                .Select(e =&gt; new EmployeeDetail()
+                {
+                    EmployeeKey = e.EmployeeKey,
+                    FirstName = e.FirstName,
+                    MiddleName = e.MiddleName,
+                    LastName = e.LastName,
+                    CellPhone = e.CellPhone,
+                    OfficePhone = e.OfficePhone,
+                    Title = e.Title,
+                    EmployeeClassificationKey = e.EmployeeClassification!.EmployeeClassificationKey,
+                    EmployeeClassificationName = e.EmployeeClassification.EmployeeClassificationName,
+                    IsEmployee = e.EmployeeClassification.IsEmployee,
+                    IsExempt = e.EmployeeClassification.IsExempt,
+                })
+                .ToList();
+        }
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+            return session.QueryOver&lt;EmployeeComplex&gt;()
+                .Where(e =&gt; e.EmployeeKey == employeeKey)
+                .JoinQueryOver(e =&gt; e.EmployeeClassification)
+                .List()
+                .Select(e =&gt; new EmployeeDetail()
+                {
+                    EmployeeKey = e.EmployeeKey,
+                    FirstName = e.FirstName,
+                    MiddleName = e.MiddleName,
+                    LastName = e.LastName,
+                    CellPhone = e.CellPhone,
+                    OfficePhone = e.OfficePhone,
+                    Title = e.Title,
+                    EmployeeClassificationKey = e.EmployeeClassification!.EmployeeClassificationKey,
+                    EmployeeClassificationName = e.EmployeeClassification.EmployeeClassificationName,
+                    IsEmployee = e.EmployeeClassification.IsEmployee,
+                    IsExempt = e.EmployeeClassification.IsExempt,
+                })
+                .SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

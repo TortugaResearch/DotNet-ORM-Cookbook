@@ -1,11 +1,8 @@
-﻿using Recipes.Views;
+﻿using NHibernate;
+using Recipes.NHibernate.Entities;
+using Recipes.Views;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using NHibernate;
-using NHibernate.Criterion;
-using Recipes.NHibernate.Entities;
 
 namespace Recipes.NHibernate.Views
 {
@@ -35,10 +32,9 @@ namespace Recipes.NHibernate.Views
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeDetail))
-                    .Add(Restrictions.Eq("EmployeeClassificationKey", employeeClassificationKey))
-                    .List<EmployeeDetail>();
+                return session.QueryOver<EmployeeDetail>()
+                    .Where(ed => ed.EmployeeClassificationKey == employeeClassificationKey)
+                    .List();
             }
         }
 
@@ -46,10 +42,7 @@ namespace Recipes.NHibernate.Views
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeDetail))
-                    .Add(Restrictions.Eq("LastName", lastName))
-                    .List<EmployeeDetail>();
+                return session.QueryOver<EmployeeDetail>().Where(ed => ed.LastName == lastName).List();
             }
         }
 
@@ -57,9 +50,7 @@ namespace Recipes.NHibernate.Views
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeDetail))
-                    .List<EmployeeDetail>();
+                return session.QueryOver<EmployeeDetail>().List();
             }
         }
 

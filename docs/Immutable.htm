@@ -66,6 +66,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
 </li>
 <li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
@@ -785,12 +787,8 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
     {
         using (var session = m_SessionFactory.OpenStatelessSession())
         {
-            return session
-                .CreateCriteria(typeof(EmployeeClassification))
-                .Add(Restrictions.Eq(&quot;EmployeeClassificationName&quot;, employeeClassificationName))
-                .List&lt;EmployeeClassification&gt;()
-                .Select(x =&gt; new ReadOnlyEmployeeClassification(x))
-                .SingleOrDefault();
+            return session.QueryOver&lt;EmployeeClassification&gt;().Where(e =&gt; e.EmployeeClassificationName == employeeClassificationName).List()
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
         }
     }
 
@@ -798,11 +796,8 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
     {
         using (var session = m_SessionFactory.OpenStatelessSession())
         {
-            return session
-                .CreateCriteria(typeof(EmployeeClassification))
-                .List&lt;EmployeeClassification&gt;()
-                .Select(x =&gt; new ReadOnlyEmployeeClassification(x))
-                .ToImmutableArray();
+            return session.QueryOver&lt;EmployeeClassification&gt;().List()
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
         }
     }
 

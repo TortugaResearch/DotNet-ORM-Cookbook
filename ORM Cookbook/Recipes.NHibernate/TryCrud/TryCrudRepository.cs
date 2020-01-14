@@ -1,5 +1,4 @@
 ﻿using NHibernate;
-using NHibernate.Criterion;
 using Recipes.NHibernate.Entities;
 using Recipes.TryCrud;
 using System;
@@ -89,11 +88,9 @@ namespace Recipes.NHibernate.TryCrud
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .Add(Restrictions.Eq("EmployeeClassificationName", employeeClassificationName))
-                    .List<EmployeeClassification>()
-                    .Single();
+                return session.QueryOver<EmployeeClassification>()
+                    .Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
+                    .List().Single();
             }
         }
 
@@ -101,11 +98,9 @@ namespace Recipes.NHibernate.TryCrud
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .CreateCriteria(typeof(EmployeeClassification))
-                    .Add(Restrictions.Eq("EmployeeClassificationName", employeeClassificationName))
-                    .List<EmployeeClassification>()
-                    .SingleOrDefault();
+                return session.QueryOver<EmployeeClassification>()
+                    .Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
+                    .List().SingleOrDefault();
             }
         }
 

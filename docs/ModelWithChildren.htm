@@ -66,6 +66,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
 </li>
 <li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
@@ -477,10 +479,7 @@
     {
         using (var session = m_SessionFactory.OpenSession())
         {
-            var result = session
-                .CreateCriteria(typeof(ProductLine))
-                .Add(Restrictions.Eq(&quot;ProductLineName&quot;, productLineName))
-                .List&lt;ProductLine&gt;();
+            var result = session.QueryOver&lt;ProductLine&gt;().Where(pl =&gt; pl.ProductLineName == productLineName).List();
 
             if (includeProducts)
                 result.SelectMany(x =&gt; x.Products).All(x =&gt; true); //force lazy-load
@@ -496,9 +495,7 @@
     {
         using (var session = m_SessionFactory.OpenSession())
         {
-            var result = session
-                .CreateCriteria(typeof(ProductLine))
-                .List&lt;ProductLine&gt;();
+            var result = session.QueryOver&lt;ProductLine&gt;().List();
 
             if (includeProducts)
                 result.SelectMany(x =&gt; x.Products).All(x =&gt; true); //force lazy-load
