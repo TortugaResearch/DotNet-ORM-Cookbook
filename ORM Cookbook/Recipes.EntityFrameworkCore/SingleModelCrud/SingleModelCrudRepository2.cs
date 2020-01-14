@@ -17,7 +17,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
         {
             using (var context = CreateDbContext())
             {
-                context.Database.ExecuteSqlInterpolated($"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = {employeeClassificationKey}");
+                var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
+                context.Entry(temp).State = EntityState.Deleted;
+                context.SaveChanges();
             }
         }
 
@@ -28,7 +30,8 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
 
             using (var context = CreateDbContext())
             {
-                context.Database.ExecuteSqlInterpolated($"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = {classification.EmployeeClassificationKey}");
+                context.Entry(classification).State = EntityState.Deleted;
+                context.SaveChanges();
             }
         }
 

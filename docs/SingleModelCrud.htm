@@ -622,7 +622,9 @@ public partial class EmployeeClassification
     {
         using (var context = CreateDbContext())
         {
-            context.Database.ExecuteSqlInterpolated($&quot;DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = {employeeClassificationKey}&quot;);
+            var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
+            context.Entry(temp).State = EntityState.Deleted;
+            context.SaveChanges();
         }
     }
 
@@ -633,7 +635,8 @@ public partial class EmployeeClassification
 
         using (var context = CreateDbContext())
         {
-            context.Database.ExecuteSqlInterpolated($&quot;DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = {classification.EmployeeClassificationKey}&quot;);
+            context.Entry(classification).State = EntityState.Deleted;
+            context.SaveChanges();
         }
     }
 
