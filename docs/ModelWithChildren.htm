@@ -146,10 +146,28 @@
     int Create(TProductLine productLine);
 
     /// &lt;summary&gt;
-    /// Update a ProductLine row.
+    /// Update a ProductLine row only.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST not save any attached Product records.&lt;/remarks&gt;
+    void Update(TProductLine productLine);
+
+    /// &lt;summary&gt;
+    /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be ignored.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST save any attached Product records. It MUST NOT delete any Product records that were removed from the collection.&lt;/remarks&gt;
+    void UpdateGraph(TProductLine productLine);
+
+    /// &lt;summary&gt;
+    /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be deleted.
     /// &lt;/summary&gt;
     /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST save any attached Product records. It MUST delete any Product records that were removed from the collection.&lt;/remarks&gt;
-    void Update(TProductLine productLine);
+    void UpdateGraphWithDeletes(TProductLine productLine);
+
+    /// &lt;summary&gt;
+    /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be ignored. Delete any product rows in the productKeysToRemove list.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. Behavior when a row in productKeysToRemove wasn't part of the original ProductLine is not defined.&lt;/remarks&gt;
+    void UpdateGraphWithDeletes(TProductLine productLine, IList&lt;int&gt; productKeysToRemove);
 
     /// &lt;summary&gt;
     /// Update a Product row.
@@ -261,7 +279,7 @@
         return result;
     }
 
-    public void Update(ProductLine productLine)
+    public void UpdateGraphWithDeletes(ProductLine productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -294,6 +312,21 @@
     public void Update(Product product)
     {
         m_DataSource.Update(product).Execute();
+    }
+
+    public void Update(ProductLine productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraph(ProductLine productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
+    {
+        throw new AssertInconclusiveException();
     }
 }
 </code></pre>
@@ -382,7 +415,7 @@
         }
     }
 
-    public void Update(ProductLine productLine)
+    public void UpdateGraphWithDeletes(ProductLine productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -418,6 +451,21 @@
             context.Entry(product).State = EntityState.Modified;
             context.SaveChanges();
         }
+    }
+
+    public void Update(ProductLine productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraph(ProductLine productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
+    {
+        throw new AssertInconclusiveException();
     }
 }
 </code></pre>
@@ -461,9 +509,9 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 
     public void DeleteByKey(int productLineKey)
     {
-        // let's directly delete the entities, without fetching them. Use a unit of work for this 
-        // to wrap everything neatly in a transaction when it's committed. A Unit of work is a 
-        // persistence agnostic object you can pass on freely to add work and then have all the work 
+        // let's directly delete the entities, without fetching them. Use a unit of work for this
+        // to wrap everything neatly in a transaction when it's committed. A Unit of work is a
+        // persistence agnostic object you can pass on freely to add work and then have all the work
         // performed in a single transaction.
         var uow = new UnitOfWork2();
         uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductLineKey.Equal(productLineKey)));
@@ -479,7 +527,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         using (var adapter = new DataAccessAdapter())
         {
             var metaData = new LinqMetaData(adapter);
-            if(includeProducts)
+            if (includeProducts)
             {
                 return metaData.ProductLine.Where(x =&gt; x.ProductLineName == productLineName).WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).ToList();
             }
@@ -492,7 +540,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         using (var adapter = new DataAccessAdapter())
         {
             var metaData = new LinqMetaData(adapter);
-            if(includeProducts)
+            if (includeProducts)
             {
                 return metaData.ProductLine.WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).ToList();
             }
@@ -505,12 +553,12 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         using (var adapter = new DataAccessAdapter())
         {
             var metaData = new LinqMetaData(adapter);
-            if(includeProducts)
+            if (includeProducts)
             {
                 var toReturn = metaData.ProductLine.Where(x =&gt; x.ProductLineKey == productLineKey).WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).SingleOrDefault();
-                if(toReturn != null)
+                if (toReturn != null)
                 {
-                    // insert removal tracker for tracking removed entities. 
+                    // insert removal tracker for tracking removed entities.
                     toReturn.Products.RemovedEntitiesTracker = new EntityCollection&lt;ProductEntity&gt;();
                 }
                 return toReturn;
@@ -519,20 +567,19 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-
-    public virtual void Update(ProductLineEntity productLine)
+    public virtual void UpdateGraphWithDeletes(ProductLineEntity productLine)
     {
-        if(productLine == null)
+        if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        // this update method will update the related products. Any removed product has to be removed as it's orphaned. 
+        // this update method will update the related products. Any removed product has to be removed as it's orphaned.
         // We have to remove all products which key isn't in the set of products currently related to the passed in productline.
         // To do that we'll do a delete directly using a where clause where all entities with a key not in the set of
         // keys of the current related product entities are removed. We'll wrap it all in a unit of work for easy transaction handling.
         // In the unit of work, we have to schedule the direct deletes before the insert of the new row, otherwise it's removed,
         // as it doesn't have a PK yet, so the IN clause we're using won't match it.
         var currentKeys = productLine.Products.Select(p =&gt; p.ProductKey).ToList();
-        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() {UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates});
+        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
         uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.NotIn(currentKeys)));
         uow.AddForSave(productLine);
         using (var adapter = new DataAccessAdapter())
@@ -551,13 +598,28 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
             adapter.SaveEntity(product);
         }
     }
+
+    public void Update(ProductLineEntity productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraph(ProductLineEntity productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraphWithDeletes(ProductLineEntity productLine, IList&lt;int&gt; productKeysToRemove)
+    {
+        throw new AssertInconclusiveException();
+    }
 }
 </code></pre>
 
 <p>Alternative Update method using removal tracker functionality</p>
 <pre><code class="cs">public class ModelWithChildrenRepositoryAlt : ModelWithChildrenRepository
 {
-    public override void Update(ProductLineEntity productLine)
+    public override void UpdateGraphWithDeletes(ProductLineEntity productLine)
     {
         if(productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -677,7 +739,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-    public void Update(ProductLine productLine)
+    public void UpdateGraphWithDeletes(ProductLine productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -701,6 +763,21 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
             session.Merge(product);
             session.Flush();
         }
+    }
+
+    public void Update(ProductLine productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraph(ProductLine productLine)
+    {
+        throw new AssertInconclusiveException();
+    }
+
+    public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
+    {
+        throw new AssertInconclusiveException();
     }
 }
 </code></pre>

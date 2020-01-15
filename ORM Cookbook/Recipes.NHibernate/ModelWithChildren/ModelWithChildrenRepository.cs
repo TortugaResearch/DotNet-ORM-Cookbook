@@ -1,4 +1,5 @@
-﻿using NHibernate;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NHibernate;
 using Recipes.ModelWithChildren;
 using Recipes.NHibernate.Entities;
 using System;
@@ -102,7 +103,7 @@ namespace Recipes.NHibernate.ModelWithChildren
             }
         }
 
-        public void Update(ProductLine productLine)
+        public void UpdateGraphWithChildDeletes(ProductLine productLine)
         {
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
@@ -126,6 +127,21 @@ namespace Recipes.NHibernate.ModelWithChildren
                 session.Merge(product);
                 session.Flush();
             }
+        }
+
+        public void Update(ProductLine productLine)
+        {
+            throw new AssertInconclusiveException();
+        }
+
+        public void UpdateGraph(ProductLine productLine)
+        {
+            throw new AssertInconclusiveException();
+        }
+
+        public void UpdateGraphWithDeletes(ProductLine productLine, IList<int> productKeysToRemove)
+        {
+            throw new AssertInconclusiveException();
         }
     }
 }

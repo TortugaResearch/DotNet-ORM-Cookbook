@@ -1,4 +1,5 @@
-﻿using Recipes.ModelWithChildren;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.ModelWithChildren;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace Recipes.Chain.ModelWithChildren
             return result;
         }
 
-        public void Update(ProductLine productLine)
+        public void UpdateGraphWithChildDeletes(ProductLine productLine)
         {
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
@@ -124,6 +125,21 @@ namespace Recipes.Chain.ModelWithChildren
         public void Update(Product product)
         {
             m_DataSource.Update(product).Execute();
+        }
+
+        public void Update(ProductLine productLine)
+        {
+            throw new AssertInconclusiveException();
+        }
+
+        public void UpdateGraph(ProductLine productLine)
+        {
+            throw new AssertInconclusiveException();
+        }
+
+        public void UpdateGraphWithDeletes(ProductLine productLine, IList<int> productKeysToRemove)
+        {
+            throw new AssertInconclusiveException();
         }
     }
 }

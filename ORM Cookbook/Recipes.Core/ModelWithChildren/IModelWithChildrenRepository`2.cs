@@ -32,10 +32,28 @@ namespace Recipes.ModelWithChildren
         int Create(TProductLine productLine);
 
         /// <summary>
-        /// Update a ProductLine row.
+        /// Update a ProductLine row only.
+        /// </summary>
+        /// <remarks>Behavior when row doesn't exist is not defined. This MUST not save any attached Product records.</remarks>
+        void Update(TProductLine productLine);
+
+        /// <summary>
+        /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be ignored.
+        /// </summary>
+        /// <remarks>Behavior when row doesn't exist is not defined. This MUST save any attached Product records. It MUST NOT delete any Product records that were removed from the collection.</remarks>
+        void UpdateGraph(TProductLine productLine);
+
+        /// <summary>
+        /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be deleted.
         /// </summary>
         /// <remarks>Behavior when row doesn't exist is not defined. This MUST save any attached Product records. It MUST delete any Product records that were removed from the collection.</remarks>
-        void Update(TProductLine productLine);
+        void UpdateGraphWithChildDeletes(TProductLine productLine);
+
+        /// <summary>
+        /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be ignored. Delete any product rows in the productKeysToRemove list.
+        /// </summary>
+        /// <remarks>Behavior when row doesn't exist is not defined. Behavior when a row in productKeysToRemove wasn't part of the original ProductLine is not defined.</remarks>
+        void UpdateGraphWithDeletes(TProductLine productLine, IList<int> productKeysToRemove);
 
         /// <summary>
         /// Update a Product row.

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.EntityFrameworkCore.Entities;
 using Recipes.ModelWithChildren;
 using System;
@@ -85,7 +86,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             }
         }
 
-        public void Update(ProductLine productLine)
+        public void UpdateGraphWithChildDeletes(ProductLine productLine)
         {
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
@@ -121,6 +122,21 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
                 context.Entry(product).State = EntityState.Modified;
                 context.SaveChanges();
             }
+        }
+
+        public void Update(ProductLine productLine)
+        {
+            throw new AssertInconclusiveException();
+        }
+
+        public void UpdateGraph(ProductLine productLine)
+        {
+            throw new AssertInconclusiveException();
+        }
+
+        public void UpdateGraphWithDeletes(ProductLine productLine, IList<int> productKeysToRemove)
+        {
+            throw new AssertInconclusiveException();
         }
     }
 }
