@@ -6,7 +6,7 @@ Note: While writing to views is supported by some databases, that capability is 
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\Views\IViewsScenario`2.cs] IViewsScenario{TEmployeeDetail, TEmployeeSimple}
+@snippet cs [..\Recipes\Views\IViewsScenario`2.cs] IViewsScenario{TEmployeeDetail, TEmployeeSimple}
 
 ## Database Views
 

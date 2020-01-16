@@ -6,7 +6,7 @@ A `DataTable` may also be used as a staging area before performing a bulk insert
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\PopulateDataTable\IPopulateDataTableScenario.cs] IPopulateDataTableScenario
+@snippet cs [..\Recipes\PopulateDataTable\IPopulateDataTableScenario.cs] IPopulateDataTableScenario
 
 ## ADO.NET
 

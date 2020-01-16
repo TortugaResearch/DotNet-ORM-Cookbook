@@ -4,7 +4,7 @@ This scenario covers the basic Create-Read-Update-Delete operations on a model t
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\SingleModelCrud\ISingleModelCrudScenario`1.cs] ISingleModelCrudScenario{TEmployeeClassification}
+@snippet cs [..\Recipes\SingleModelCrud\ISingleModelCrudScenario`1.cs] ISingleModelCrudScenario{TEmployeeClassification}
 
 
 ## ADO.NET

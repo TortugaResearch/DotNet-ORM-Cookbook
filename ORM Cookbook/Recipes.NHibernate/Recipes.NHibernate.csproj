@@ -56,9 +56,8 @@
     <PackageReference Include="NHibernate" Version="5.2.6" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Recipes.Core\Recipes.Core.csproj" />
+    <ProjectReference Include="..\Recipes\Recipes.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,6 @@
     <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.6.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Recipes.Core\Recipes.Core.csproj" />
+    <ProjectReference Include="..\..\Recipes\Recipes.csproj" />
   </ItemGroup>
 </Project>

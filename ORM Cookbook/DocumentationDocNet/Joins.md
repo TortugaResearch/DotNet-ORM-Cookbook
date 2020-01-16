@@ -8,7 +8,7 @@ See [CRUD Operations on Model with Object-Based Foreign Key](ModelWithLookupComp
 
 For the purpose of these examples, a database view may not be used.
 
-@snippet cs [..\Recipes.Core\Joins\IJoinsScenario`2.cs] IJoinsScenario{TEmployeeDetail, TEmployeeSimple}
+@snippet cs [..\Recipes\Joins\IJoinsScenario`2.cs] IJoinsScenario{TEmployeeDetail, TEmployeeSimple}
 
 ## ADO.NET
 

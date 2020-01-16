@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentationDocNet", "DocumentationDocNet\DocumentationDocNet.csproj", "{AE70FDA3-C882-4255-A389-8364D4FDB01C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Core", "Recipes.Core\Recipes.Core.csproj", "{355C414A-76DC-4A3A-9BD7-3B64A5C4CEBE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Tortuga.Chain", "Recipes.Tortuga.Chain\Recipes.Tortuga.Chain.csproj", "{DCEAA258-6984-42A1-8780-11E0CA4CB026}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.EntityFrameworkCore", "Recipes.EntityFrameworkCore\Recipes.EntityFrameworkCore.csproj", "{47C88905-5CA8-4092-8DF2-651D2BBA3C56}"
@@ -54,6 +52,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configurat
 		Configuration\appsettings.json = Configuration\appsettings.json
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes", "Recipes\Recipes.csproj", "{BBEE8672-C36F-4F7C-A69B-1DCCD65DF36A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,10 +70,6 @@ Global
 		{AE70FDA3-C882-4255-A389-8364D4FDB01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE70FDA3-C882-4255-A389-8364D4FDB01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE70FDA3-C882-4255-A389-8364D4FDB01C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{355C414A-76DC-4A3A-9BD7-3B64A5C4CEBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{355C414A-76DC-4A3A-9BD7-3B64A5C4CEBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{355C414A-76DC-4A3A-9BD7-3B64A5C4CEBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{355C414A-76DC-4A3A-9BD7-3B64A5C4CEBE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCEAA258-6984-42A1-8780-11E0CA4CB026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCEAA258-6984-42A1-8780-11E0CA4CB026}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCEAA258-6984-42A1-8780-11E0CA4CB026}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -130,6 +126,10 @@ Global
 		{412263F3-027B-4EB5-94C7-B7DE9D64D9FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{412263F3-027B-4EB5-94C7-B7DE9D64D9FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{412263F3-027B-4EB5-94C7-B7DE9D64D9FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBEE8672-C36F-4F7C-A69B-1DCCD65DF36A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBEE8672-C36F-4F7C-A69B-1DCCD65DF36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBEE8672-C36F-4F7C-A69B-1DCCD65DF36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBEE8672-C36F-4F7C-A69B-1DCCD65DF36A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

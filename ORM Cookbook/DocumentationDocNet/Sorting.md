@@ -6,7 +6,7 @@ Note: Sorting by dynamically chosed columns or by expressions will be handled in
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\Sorting\ISortingScenario`1.cs] ISortingScenario{TEmployee}
+@snippet cs [..\Recipes\Sorting\ISortingScenario`1.cs] ISortingScenario{TEmployee}
 
 ## ADO.NET
 
