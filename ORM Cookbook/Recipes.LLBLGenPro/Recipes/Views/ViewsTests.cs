@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.Views
     [TestClass]
     public class ViewsTests : ViewsTests<EmployeeDetailEntity, EmployeeEntity>
     {
-        protected override IViewsRepository<EmployeeDetailEntity, EmployeeEntity> GetRepository()
+        protected override IViewsScenario<EmployeeDetailEntity, EmployeeEntity> GetScenario()
         {
-            return new ViewsRepository();
+            return new ViewsScenario();
         }
     }
 }

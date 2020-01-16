@@ -6,18 +6,18 @@ namespace Recipes.EntityFrameworkCore.PopulateDataTable
     [TestClass]
     public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
     {
-        protected override IPopulateDataTableRepository GetRepository()
+        protected override IPopulateDataTableScenario GetScenario()
         {
-            return new PopulateDataTableRepository(Setup.DBContextFactory);
+            return new PopulateDataTableScenario(Setup.DBContextFactory);
         }
     }
 
     [TestClass]
     public class PopulateDataTableTests2 : Recipes.PopulateDataTable.PopulateDataTableTests
     {
-        protected override IPopulateDataTableRepository GetRepository()
+        protected override IPopulateDataTableScenario GetScenario()
         {
-            return new PopulateDataTableRepository2(Setup.DBContextFactory);
+            return new PopulateDataTableScenario2(Setup.DBContextFactory);
         }
     }
 }

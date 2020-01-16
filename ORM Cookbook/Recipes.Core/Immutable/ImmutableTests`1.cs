@@ -8,14 +8,14 @@ using Tortuga.Anchor.Metadata;
 namespace Recipes.Immutable
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a simple model without children.
+    /// This scenario performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
     [TestCategory("ImmutableTests")]
     public abstract class ImmutableTests<TModel> : TestBase
         where TModel : class, IReadOnlyEmployeeClassification
     {
-        protected abstract IImmutableRepository<TModel> GetRepository();
+        protected abstract IImmutableScenario<TModel> GetScenario();
 
         protected abstract TModel CreateWithValues(string name, bool isExempt, bool isEmployee);
 
@@ -24,7 +24,7 @@ namespace Recipes.Immutable
         [TestMethod]
         public void GetByKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             var row1 = repository.GetByKey(1);
 
             Assert.IsNotNull(row1);
@@ -44,7 +44,7 @@ namespace Recipes.Immutable
         [TestMethod]
         public void FindByName()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             var row1 = repository.FindByName("Full Time Salary");
 
             Assert.IsNotNull(row1);
@@ -64,7 +64,7 @@ namespace Recipes.Immutable
         [TestMethod]
         public void GetAll()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             var allRows = repository.GetAll();
 
             var row1 = allRows.SingleOrDefault(x => x.EmployeeClassificationKey == 1);
@@ -83,7 +83,7 @@ namespace Recipes.Immutable
 
             // Ensure that the returned list is actually an immutable list.
             var properties = MetadataCache.GetMetadata(allRows.GetType()).Properties;
-            Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this use case");
+            Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this scenario");
 
             if (allRows is IList list)
             {
@@ -105,7 +105,7 @@ namespace Recipes.Immutable
         [TestMethod]
         public void CreateAndReadBack()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = CreateWithValues("Test " + DateTime.Now.Ticks, false, false);
             var newKey = repository.Create(newRecord);
@@ -119,7 +119,7 @@ namespace Recipes.Immutable
                 Assert.AreEqual(false, echo.IsExempt);
                 Assert.AreEqual(false, echo.IsEmployee);
                 var properties = MetadataCache.GetMetadata(echo.GetType()).Properties;
-                Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this use case");
+                Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this scenario");
             }
 
             {
@@ -130,7 +130,7 @@ namespace Recipes.Immutable
                 Assert.AreEqual(false, search.IsExempt);
                 Assert.AreEqual(false, search.IsEmployee);
                 var properties = MetadataCache.GetMetadata(search.GetType()).Properties;
-                Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this use case");
+                Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this scenario");
             }
         }
 
@@ -140,7 +140,7 @@ namespace Recipes.Immutable
         [TestMethod]
         public void CreateAndUpdate()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = CreateWithValues("Test " + DateTime.Now.Ticks, false, false);
             var newKey = repository.Create(newRecord);
@@ -192,7 +192,7 @@ namespace Recipes.Immutable
         [TestMethod]
         public void CreateAndDelete()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = CreateWithValues("Test " + DateTime.Now.Ticks, false, false);
             var newKey = repository.Create(newRecord);
@@ -214,31 +214,31 @@ namespace Recipes.Immutable
         [TestMethod]
         public void ModelMutabilityCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             var row = CreateWithValues("Test", false, false);
 
             var properties = MetadataCache.GetMetadata(row.GetType()).Properties;
-            Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this use case");
+            Assert.IsFalse(properties.Any(p => p.CanWrite || p.CanWriteIndexed), "Mutable properties are not allowed in this scenario");
         }
 
         [TestMethod]
         public void Create_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             AssertThrowsException<ArgumentNullException>(() => repository.Create(null!));
         }
 
         [TestMethod]
         public void Update_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             AssertThrowsException<ArgumentNullException>(() => repository.Update(null!));
         }
 
         [TestMethod]
         public void Delete_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             AssertThrowsException<ArgumentNullException>(() => repository.Delete(null!));
         }
     }

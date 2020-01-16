@@ -7,9 +7,9 @@ namespace Recipes.RepoDb.PartialUpdate
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassificationPartialUpdate>
     {
-        protected override IPartialUpdateRepository<EmployeeClassificationPartialUpdate> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassificationPartialUpdate> GetScenario()
         {
-            return new PartialUpdateRepository(Setup.ConnectionString);
+            return new PartialUpdateScenario(Setup.ConnectionString);
         }
     }
 }

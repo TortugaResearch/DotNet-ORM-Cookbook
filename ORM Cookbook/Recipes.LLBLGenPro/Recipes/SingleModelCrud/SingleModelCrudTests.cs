@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
     [TestClass]
     public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassificationEntity>
     {
-        protected override ISingleModelCrudRepository<EmployeeClassificationEntity> GetRepository()
+        protected override ISingleModelCrudScenario<EmployeeClassificationEntity> GetScenario()
         {
-            return new SingleModelCrudRepository();
+            return new SingleModelCrudScenario();
         }
     }
 }

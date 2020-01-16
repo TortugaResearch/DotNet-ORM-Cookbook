@@ -8,9 +8,9 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
     [TestClass]
     public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeEntity>
     {
-        protected override IModelWithLookupComplexRepository<EmployeeEntity> GetRepository()
+        protected override IModelWithLookupComplexScenario<EmployeeEntity> GetScenario()
         {
-            return new ModelWithLookupComplexRepository();
+            return new ModelWithLookupComplexScenario();
         }
     }
 }

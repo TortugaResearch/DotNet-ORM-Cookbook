@@ -6,9 +6,9 @@ namespace Recipes.NHibernate.PopulateDataTable
     [TestClass]
     public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
     {
-        protected override IPopulateDataTableRepository GetRepository()
+        protected override IPopulateDataTableScenario GetScenario()
         {
-            return new PopulateDataTableRepository(Setup.SessionFactory);
+            return new PopulateDataTableScenario(Setup.SessionFactory);
         }
     }
 }

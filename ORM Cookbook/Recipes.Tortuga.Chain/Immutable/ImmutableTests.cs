@@ -12,9 +12,9 @@ namespace Recipes.Chain.Immutable
             return new ReadOnlyEmployeeClassification(0, name, isExempt, isEmployee);
         }
 
-        protected override IImmutableRepository<ReadOnlyEmployeeClassification> GetRepository()
+        protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableRepository(Setup.PrimaryDataSource);
+            return new ImmutableScenario(Setup.PrimaryDataSource);
         }
 
         protected override ReadOnlyEmployeeClassification UpdateWithValues(ReadOnlyEmployeeClassification original, string name, bool isExempt, bool isEmployee)

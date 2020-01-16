@@ -5,7 +5,7 @@ using System.Linq;
 namespace Recipes.ModelWithChildren
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a model that contains a collection of child objects.
+    /// This scenario performs basic CRUD operations on a model that contains a collection of child objects.
     [TestCategory("ModelWithChildren")]
     public abstract class ModelWithChildrenTests<TProductLine, TProduct> : TestBase
        where TProductLine : class, IProductLine<TProduct>, new()
@@ -16,7 +16,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndAddChild()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -47,7 +47,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndDelete()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -70,7 +70,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndDeleteByKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -90,7 +90,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndDeleteChild()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -116,7 +116,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndFindByName()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -145,7 +145,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndReadBack_WithChildren()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -163,7 +163,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndReadBack_NoChildren()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -181,7 +181,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndUpdateChild()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -209,7 +209,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndUpdateChildSeparately()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -238,7 +238,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void CreateAndUpdateParent()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             TProductLine line = CreateProductLine();
 
@@ -261,7 +261,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void GetAll_NoChildren()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             var results = repository.GetAll(false);
             foreach (var line in results)
                 Assert.IsTrue(line.Products == null || line.Products.Count == 0, "Child records were not requested");
@@ -270,7 +270,7 @@ namespace Recipes.ModelWithChildren
         [TestMethod]
         public void GetAll_WithChildren()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             var results = repository.GetAll(true);
             var hasChildRows = false;
             foreach (var line in results)
@@ -279,7 +279,7 @@ namespace Recipes.ModelWithChildren
             Assert.IsTrue(hasChildRows, "Child records were requested");
         }
 
-        protected abstract IModelWithChildrenRepository<TProductLine, TProduct> GetRepository();
+        protected abstract IModelWithChildrenScenario<TProductLine, TProduct> GetScenario();
 
         static void CompareLineAndProducts(int newKey, TProductLine line, TProductLine? echo)
         {

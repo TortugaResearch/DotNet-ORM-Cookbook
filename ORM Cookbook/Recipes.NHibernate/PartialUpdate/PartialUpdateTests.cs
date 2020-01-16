@@ -7,9 +7,9 @@ namespace Recipes.NHibernate.PartialUpdate
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassification>
     {
-        protected override IPartialUpdateRepository<EmployeeClassification> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassification> GetScenario()
         {
-            return new PartialUpdateRepository(Setup.SessionFactory);
+            return new PartialUpdateScenario(Setup.SessionFactory);
         }
     }
 }

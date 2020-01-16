@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 namespace Recipes.SingleModelCrudAsync
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a simple model without children.
+    /// This scenario performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
     [TestCategory("SingleModelCrudAsync")]
     public abstract class SingleModelCrudAsyncTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {
-        protected abstract ISingleModelCrudAsyncRepository<TModel> GetRepository();
+        protected abstract ISingleModelCrudAsyncScenario<TModel> GetScenario();
 
         /// <summary>
         /// Create and read back a row.
@@ -21,7 +21,7 @@ namespace Recipes.SingleModelCrudAsync
         [TestMethod]
         public async Task CreateAndReadBackAsync()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -45,7 +45,7 @@ namespace Recipes.SingleModelCrudAsync
         [TestMethod]
         public async Task CreateAndDeleteByModelAsync()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -67,7 +67,7 @@ namespace Recipes.SingleModelCrudAsync
         [TestMethod]
         public async Task CreateAndDeleteByKeyAsync()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -86,7 +86,7 @@ namespace Recipes.SingleModelCrudAsync
         [TestMethod]
         public async Task GetAllAsync()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var all = await repository.GetAllAsync().ConfigureAwait(false);
             Assert.IsNotNull(all);
@@ -99,7 +99,7 @@ namespace Recipes.SingleModelCrudAsync
         [TestMethod]
         public async Task GetByKeyAsync()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var ec1 = await repository.GetByKeyAsync(1).ConfigureAwait(false);
             var ec2 = await repository.GetByKeyAsync(2).ConfigureAwait(false);
@@ -120,7 +120,7 @@ namespace Recipes.SingleModelCrudAsync
         [TestMethod]
         public async Task CreateAndUpdateAsync()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -142,21 +142,21 @@ namespace Recipes.SingleModelCrudAsync
         [TestMethod]
         public async Task CreateAsync_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             await AssertThrowsExceptionAsync<ArgumentNullException>(() => repository.CreateAsync(null!)).ConfigureAwait(false);
         }
 
         [TestMethod]
         public async Task UpdateAsync_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             await AssertThrowsExceptionAsync<ArgumentNullException>(() => repository.UpdateAsync(null!)).ConfigureAwait(false);
         }
 
         [TestMethod]
         public async Task DeleteAsync_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             await AssertThrowsExceptionAsync<ArgumentNullException>(() => repository.DeleteAsync(null!)).ConfigureAwait(false);
         }
     }

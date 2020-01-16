@@ -6,9 +6,9 @@ namespace Recipes.Chain.Joins
     [TestClass]
     public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
     {
-        protected override IJoinsRepository<EmployeeDetail, EmployeeSimple> GetRepository()
+        protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
         {
-            return new JoinsRepository(Setup.PrimaryDataSource);
+            return new JoinsScenario(Setup.PrimaryDataSource);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Recipes.TryCrud
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a simple model without children.
+    /// This scenario performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
     [TestCategory("TryCrud")]
@@ -15,7 +15,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void UpdateWithStatus_Pass()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -30,7 +30,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void UpdateWithStatus_Fail()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = new TModel()
             {
@@ -46,7 +46,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void UpdateOrException_Pass()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -61,7 +61,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void UpdateOrException_Fail()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = new TModel()
             {
@@ -77,7 +77,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void DeleteByKeyOrException()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -91,7 +91,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void DeleteByKeyWithStatus()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -105,7 +105,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void DeleteOrException()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -119,7 +119,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void DeleteWithStatus()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -136,7 +136,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void FindByNameOrException_Fail()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             AssertThrowsException(() => repository.FindByNameOrException("XXX"));
         }
@@ -147,7 +147,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void FindByNameOrException_Pass()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -161,7 +161,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void FindByNameOrNull_Fail()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
             var result = repository.FindByNameOrNull("XXX");
@@ -174,7 +174,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void FindByNameOrNull_Pass()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -188,7 +188,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void GetByKeyOrException_Fail()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             AssertThrowsException(() => repository.GetByKeyOrException(-1));
         }
@@ -199,7 +199,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void GetByKeyOrException_Pass()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -213,7 +213,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void GetByKeyOrNull_Fail()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var result = repository.GetByKeyOrNull(-1);
             Assert.IsNull(result);
@@ -225,7 +225,7 @@ namespace Recipes.TryCrud
         [TestMethod]
         public void GetByKeyOrNull_Pass()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var original = CreateRow(repository);
 
@@ -233,7 +233,7 @@ namespace Recipes.TryCrud
             AssertMatch(original, result);
         }
 
-        protected abstract ITryCrudRepository<TModel> GetRepository();
+        protected abstract ITryCrudScenario<TModel> GetScenario();
 
         static void AssertMatch(TModel original, TModel? result)
         {
@@ -242,7 +242,7 @@ namespace Recipes.TryCrud
             Assert.AreEqual(original.EmployeeClassificationName, result!.EmployeeClassificationName);
         }
 
-        static TModel CreateRow(ITryCrudRepository<TModel> repository)
+        static TModel CreateRow(ITryCrudScenario<TModel> repository)
         {
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;

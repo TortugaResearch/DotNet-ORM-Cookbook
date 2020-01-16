@@ -6,13 +6,13 @@ using System.Linq;
 namespace Recipes.PopulateDataTable
 {
     /// <summary>
-    /// This use case is for populating a DataTable.
+    /// This scenario is for populating a DataTable.
     /// </summary>
     [TestCategory("PopulateDataTable")]
     public abstract class PopulateDataTableTests : TestBase
 
     {
-        protected abstract IPopulateDataTableRepository GetRepository();
+        protected abstract IPopulateDataTableScenario GetScenario();
 
         /// <summary>
         /// Get all rows from a table.
@@ -20,7 +20,7 @@ namespace Recipes.PopulateDataTable
         [TestMethod]
         public void GetAll()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var dt = repository.GetAll();
             Assert.IsNotNull(dt);
@@ -44,7 +44,7 @@ namespace Recipes.PopulateDataTable
         [TestMethod]
         public void FindByFlags(bool isExempt, bool isEmployee)
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var dt = repository.FindByFlags(isExempt, isEmployee);
             Assert.IsNotNull(dt);

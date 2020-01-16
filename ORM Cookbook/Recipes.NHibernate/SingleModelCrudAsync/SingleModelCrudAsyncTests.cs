@@ -7,9 +7,9 @@ namespace Recipes.NHibernate.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncRepository(Setup.SessionFactory);
+            return new SingleModelCrudAsyncScenario(Setup.SessionFactory);
         }
     }
 }

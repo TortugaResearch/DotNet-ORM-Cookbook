@@ -6,9 +6,9 @@ namespace Recipes.Dapper.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncRepository(Setup.ConnectionString);
+            return new SingleModelCrudAsyncScenario(Setup.ConnectionString);
         }
     }
 }

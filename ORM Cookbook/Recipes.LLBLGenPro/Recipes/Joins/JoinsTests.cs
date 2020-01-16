@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.Joins
     [TestClass]
     public class JoinsTests : JoinsTests<EmployeeDetailEntity, EmployeeEntity>
     {
-        protected override IJoinsRepository<EmployeeDetailEntity, EmployeeEntity> GetRepository()
+        protected override IJoinsScenario<EmployeeDetailEntity, EmployeeEntity> GetScenario()
         {
-            return new JoinsRepository();
+            return new JoinsScenario();
         }
     }
 }

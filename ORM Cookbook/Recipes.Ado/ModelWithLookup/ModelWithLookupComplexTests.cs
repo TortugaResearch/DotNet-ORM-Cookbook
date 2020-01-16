@@ -6,9 +6,9 @@ namespace Recipes.Ado.ModelWithLookup
     [TestClass]
     public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeComplex>
     {
-        protected override IModelWithLookupComplexRepository<EmployeeComplex> GetRepository()
+        protected override IModelWithLookupComplexScenario<EmployeeComplex> GetScenario()
         {
-            return new ModelWithLookupComplexRepository(Setup.ConnectionString);
+            return new ModelWithLookupComplexScenario(Setup.ConnectionString);
         }
     }
 }

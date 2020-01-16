@@ -5,19 +5,19 @@ using System.Linq;
 namespace Recipes.Joins
 {
     /// <summary>
-    /// This use case reads from a view.
+    /// This scenario reads from a view.
     /// </summary>
     [TestCategory("Joins")]
     public abstract class JoinsTests<TEmployeeDetail, TEmployeeSimple> : TestBase
        where TEmployeeDetail : class, IEmployeeDetail
        where TEmployeeSimple : class, IEmployeeSimple, new()
     {
-        protected abstract IJoinsRepository<TEmployeeDetail, TEmployeeSimple> GetRepository();
+        protected abstract IJoinsScenario<TEmployeeDetail, TEmployeeSimple> GetScenario();
 
         [TestMethod]
         public void GetByEmployeeKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(3);
             Assert.IsNotNull(employeeClassification);
@@ -47,7 +47,7 @@ namespace Recipes.Joins
         [TestMethod]
         public void FindByEmployeeClassificationKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(3);
             Assert.IsNotNull(employeeClassification);
@@ -78,7 +78,7 @@ namespace Recipes.Joins
         [TestMethod]
         public void FindByName()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(3);
             Assert.IsNotNull(employeeClassification);
@@ -109,7 +109,7 @@ namespace Recipes.Joins
         [TestMethod]
         public void GetAll()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             //Ensure at least one record exists
             var employeeClassification = repository.GetClassification(3);

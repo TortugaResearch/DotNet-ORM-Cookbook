@@ -7,9 +7,9 @@ namespace Recipes.NHibernate.Views
     [TestClass]
     public class ViewsTests : ViewsTests<EmployeeDetail, Employee>
     {
-        protected override IViewsRepository<EmployeeDetail, Employee> GetRepository()
+        protected override IViewsScenario<EmployeeDetail, Employee> GetScenario()
         {
-            return new ViewsRepository(Setup.SessionFactory);
+            return new ViewsScenario(Setup.SessionFactory);
         }
     }
 }

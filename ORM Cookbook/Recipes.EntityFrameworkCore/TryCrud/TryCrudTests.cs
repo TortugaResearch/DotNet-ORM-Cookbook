@@ -7,9 +7,9 @@ namespace Recipes.EntityFrameworkCore.TryCrud
     [TestClass]
     public class TryCrudTests : TryCrudTests<EmployeeClassification>
     {
-        protected override ITryCrudRepository<EmployeeClassification> GetRepository()
+        protected override ITryCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new TryCrudRepository(Setup.DBContextFactory);
+            return new TryCrudScenario(Setup.DBContextFactory);
         }
     }
 }

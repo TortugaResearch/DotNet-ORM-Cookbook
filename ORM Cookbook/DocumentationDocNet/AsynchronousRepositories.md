@@ -1,13 +1,13 @@
-﻿# Use Case: Asynchronous Repositories
+﻿# Asynchronous Scenarios
 
-This use case demonstrates the use of asynchronous CRUD operations. Asynchronous database calls are generally preferable, as they allow for more throughput in server applications and prevent UI blocking in GUI applications.
+This scenario demonstrates the use of asynchronous CRUD operations. Asynchronous database calls are generally preferable, as they allow for more throughput in server applications and prevent UI blocking in GUI applications.
 
-## Prototype Repository
+## Scenario Prototype
 
-The prototype repository based on our “Single Model Repositories” use case, with a slight modification to the signatures. 
+The prototype repository based on our “Single Model” scenario, with a slight modification to the signatures. 
 
 ```csharp
-public interface IEmployeeClassificationAsynchronousRepository
+public interface IEmployeeClassificationAsynchronousScenario
 {
 	Task<EmployeeClassification> GetByKeyAsync(int employeeClassificationKey);
 
@@ -28,31 +28,31 @@ No changes are needed for the model in any of these examples.
 
 To make an ADO.NET repository asynchronous, simply add `await` and `Async` in the appropriate places. 
 
-@snippet cs [../Recipes.Ado/Repositories/EmployeeClassificationAsynchronousRepository.cs] EmployeeClassificationAsynchronousRepository
+@snippet cs [../Recipes.Ado/Repositories/EmployeeClassificationAsynchronousScenario.cs] EmployeeClassificationAsynchronousScenario
 
 ## Dapper
 
 To make a Dapper repository asynchronous, simply add `await` and `Async` in the appropriate places. 
 
-@snippet cs [../Recipes.Dapper/Repositories/EmployeeClassificationAsynchronousRepository.cs] EmployeeClassificationAsynchronousRepository
+@snippet cs [../Recipes.Dapper/Repositories/EmployeeClassificationAsynchronousScenario.cs] EmployeeClassificationAsynchronousScenario
 
 ## Tortuga Chain
 
 In Chain, calls to `.Execute()` are replaced with `.ExecuteAsync()`.
 
-@snippet cs [../Recipes.Tortuga.Chain/Repositories/EmployeeClassificationAsynchronousRepository.cs] EmployeeClassificationAsynchronousRepository
+@snippet cs [../Recipes.Tortuga.Chain/Repositories/EmployeeClassificationAsynchronousScenario.cs] EmployeeClassificationAsynchronousScenario
 
 ## Entity Framework
 
 To make an Entity Framework repository asynchronous, you need to import the `System.Data.Entity` namespace. This creates the async version of the LINQ extension methods needed. 
 
-@snippet cs [../Recipes.EntityFramework/Repositories/EmployeeClassificationAsynchronousRepository.cs] EmployeeClassificationAsynchronousRepository
+@snippet cs [../Recipes.EntityFramework/Repositories/EmployeeClassificationAsynchronousScenario.cs] EmployeeClassificationAsynchronousScenario
 
 ## RepoDb
 
 To make a RepoDb repository asynchronous, simply add `await` and `Async` in the appropriate places.
 
-@snippet cs [../Recipes.RepoDb/Repositories/EmployeeClassificationAsynchronousRepository.cs] EmployeeClassificationAsynchronousRepository
+@snippet cs [../Recipes.RepoDb/Repositories/EmployeeClassificationAsynchronousScenario.cs] EmployeeClassificationAsynchronousScenario
 
 ## NHibernate
 

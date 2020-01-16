@@ -4,19 +4,19 @@ using System;
 namespace Recipes.Sorting
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a model containing a foreign key represented by an integer.
+    /// This scenario performs basic CRUD operations on a model containing a foreign key represented by an integer.
     /// </summary>
     /// <typeparam name="TModel">An Employee model or entity</typeparam>
     [TestCategory("Sorting")]
     public abstract class SortingTests<TModel> : TestBase
     where TModel : class, IEmployeeSimple, new()
     {
-        protected abstract ISortingRepository<TModel> GetRepository();
+        protected abstract ISortingScenario<TModel> GetScenario();
 
         [TestMethod]
         public void SortByLastName()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             //Ensure some records exist
             CreateEmployees(repository);
@@ -31,7 +31,7 @@ namespace Recipes.Sorting
         [TestMethod]
         public void SortByLastNameFirstName()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             //Ensure some records exist
             CreateEmployees(repository);
@@ -50,7 +50,7 @@ namespace Recipes.Sorting
         [TestMethod]
         public void SortByLastNameDescFirstName()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             //Ensure some records exist
             CreateEmployees(repository);
@@ -66,7 +66,7 @@ namespace Recipes.Sorting
             }
         }
 
-        static void CreateEmployees(ISortingRepository<TModel> repository)
+        static void CreateEmployees(ISortingScenario<TModel> repository)
         {
             long ticks = DateTime.Now.Ticks;
 

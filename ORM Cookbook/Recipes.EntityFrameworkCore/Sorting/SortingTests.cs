@@ -7,9 +7,9 @@ namespace Recipes.EntityFrameworkCore.Sorting
     [TestClass]
     public class SortingTests : SortingTests<Employee>
     {
-        protected override ISortingRepository<Employee> GetRepository()
+        protected override ISortingScenario<Employee> GetScenario()
         {
-            return new SortingRepository(Setup.DBContextFactory);
+            return new SortingScenario(Setup.DBContextFactory);
         }
     }
 }

@@ -4,19 +4,19 @@ using System;
 namespace Recipes.PartialUpdate
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a simple model without children.
+    /// This scenario performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
     [TestCategory("PartialUpdate")]
     public abstract class PartialUpdateTests<TModel>
         where TModel : class, IEmployeeClassification, new()
     {
-        protected abstract IPartialUpdateRepository<TModel> GetRepository();
+        protected abstract IPartialUpdateScenario<TModel> GetScenario();
 
         [TestMethod]
-        public void PartialUpdate_OneRepositoryTwoMessages()
+        public void PartialUpdate_OneScenarioTwoMessages()
         {
-            var repositoryA = GetRepository();
+            var repositoryA = GetScenario();
 
             //Setup the new record
             var newRecord = new TModel() { EmployeeClassificationName = "Test " + DateTime.Now.Ticks, IsExempt = true, IsEmployee = false };
@@ -64,8 +64,8 @@ namespace Recipes.PartialUpdate
         [TestMethod]
         public void PartialUpdate_TwoRepositories()
         {
-            var repositoryA = GetRepository();
-            var repositoryB = GetRepository();
+            var repositoryA = GetScenario();
+            var repositoryB = GetScenario();
 
             //Setup the new record
             var newRecord = new TModel() { EmployeeClassificationName = "Test " + DateTime.Now.Ticks, IsExempt = true, IsEmployee = false };
@@ -123,7 +123,7 @@ namespace Recipes.PartialUpdate
         [TestMethod]
         public void PartialUpdate_IndividualParameters()
         {
-            var repositoryA = GetRepository();
+            var repositoryA = GetScenario();
 
             //Setup the new record
             var newRecord = new TModel() { EmployeeClassificationName = "Test " + DateTime.Now.Ticks, IsExempt = true, IsEmployee = false };
@@ -160,14 +160,14 @@ namespace Recipes.PartialUpdate
         [TestMethod]
         public void Create_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             Assert.ThrowsException<ArgumentNullException>(() => repository.Create(null!));
         }
 
         [TestMethod]
         public void Update1_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             EmployeeClassificationFlagsUpdater value = null!;
             Assert.ThrowsException<ArgumentNullException>(() => repository.UpdateWithObject(value));
         }
@@ -175,7 +175,7 @@ namespace Recipes.PartialUpdate
         [TestMethod]
         public void Update2_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             EmployeeClassificationNameUpdater value = null!;
             Assert.ThrowsException<ArgumentNullException>(() => repository.UpdateWithObject(value));
         }
