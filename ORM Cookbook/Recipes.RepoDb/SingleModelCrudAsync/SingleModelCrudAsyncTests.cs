@@ -5,9 +5,9 @@ using Recipes.SingleModelCrudAsync;
 namespace Recipes.RepoDb.SingleModelCrudAsync
 {
     [TestClass]
-    public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassificationSingleModelCrudAsync>
+    public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncScenario<EmployeeClassificationSingleModelCrudAsync> GetScenario()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
             return new SingleModelCrudAsyncScenario(Setup.ConnectionString);
         }

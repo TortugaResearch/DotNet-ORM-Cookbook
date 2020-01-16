@@ -25,16 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.RepoDb", "Recipes.R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.NHibernate", "Recipes.NHibernate\Recipes.NHibernate.csproj", "{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BenchmarkRunners", "BenchmarkRunners", "{BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Performance.SingleModelCrud", "BenchmarkRunners\Performance.SingleModelCrud\Performance.SingleModelCrud.csproj", "{17AD2807-0B37-49C6-98D7-3471A0E9E378}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Performance.SingleModelCrudAsync", "BenchmarkRunners\Performance.SingleModelCrudAsync\Performance.SingleModelCrudAsync.csproj", "{CB12C942-565B-4E60-AFB6-1370391A1CC0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Performance.PartialUpdate", "BenchmarkRunners\Performance.PartialUpdate\Performance.PartialUpdate.csproj", "{735A1D4F-A911-4E3B-A626-73914900B4AD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Performance.TryCrud", "BenchmarkRunners\Performance.TryCrud\Performance.TryCrud.csproj", "{81B5551F-C45B-4F65-80F2-8DF4EE31CB8B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.ServiceStack", "Recipes.ServiceStack\Recipes.ServiceStack.csproj", "{1F101225-F4DD-41C0-BEEE-564939BB98ED}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatabaseSchema", "DatabaseSchema", "{F0D99CDC-D310-419F-A1DA-0BBC2AE8E08B}"
@@ -54,7 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configurat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes", "Recipes\Recipes.csproj", "{BBEE8672-C36F-4F7C-A69B-1DCCD65DF36A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.Interfaces", "Recipes.Interfaces\Recipes.Interfaces.csproj", "{F4FCD753-4D82-4505-B3E9-B3D74BAFAA5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Interfaces", "Recipes.Interfaces\Recipes.Interfaces.csproj", "{F4FCD753-4D82-4505-B3E9-B3D74BAFAA5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,22 +86,6 @@ Global
 		{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17AD2807-0B37-49C6-98D7-3471A0E9E378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17AD2807-0B37-49C6-98D7-3471A0E9E378}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17AD2807-0B37-49C6-98D7-3471A0E9E378}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17AD2807-0B37-49C6-98D7-3471A0E9E378}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB12C942-565B-4E60-AFB6-1370391A1CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB12C942-565B-4E60-AFB6-1370391A1CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB12C942-565B-4E60-AFB6-1370391A1CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB12C942-565B-4E60-AFB6-1370391A1CC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{735A1D4F-A911-4E3B-A626-73914900B4AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{735A1D4F-A911-4E3B-A626-73914900B4AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{735A1D4F-A911-4E3B-A626-73914900B4AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{735A1D4F-A911-4E3B-A626-73914900B4AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81B5551F-C45B-4F65-80F2-8DF4EE31CB8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81B5551F-C45B-4F65-80F2-8DF4EE31CB8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81B5551F-C45B-4F65-80F2-8DF4EE31CB8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81B5551F-C45B-4F65-80F2-8DF4EE31CB8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F101225-F4DD-41C0-BEEE-564939BB98ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1F101225-F4DD-41C0-BEEE-564939BB98ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F101225-F4DD-41C0-BEEE-564939BB98ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -142,10 +116,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{96CECE81-7A5D-4E56-8828-647FF24B9B57} = {F0D99CDC-D310-419F-A1DA-0BBC2AE8E08B}
-		{17AD2807-0B37-49C6-98D7-3471A0E9E378} = {BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}
-		{CB12C942-565B-4E60-AFB6-1370391A1CC0} = {BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}
-		{735A1D4F-A911-4E3B-A626-73914900B4AD} = {BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}
-		{81B5551F-C45B-4F65-80F2-8DF4EE31CB8B} = {BA91F0D7-3D2E-4CFF-8A1D-DDBBE9D89870}
 		{5AC7E920-B3B2-49A7-9F65-A881B2446630} = {72EA0402-E82D-4BE3-BF45-5F27062BDE33}
 		{0718CD00-6656-4595-93A1-51572AE17462} = {72EA0402-E82D-4BE3-BF45-5F27062BDE33}
 		{412263F3-027B-4EB5-94C7-B7DE9D64D9FA} = {72EA0402-E82D-4BE3-BF45-5F27062BDE33}

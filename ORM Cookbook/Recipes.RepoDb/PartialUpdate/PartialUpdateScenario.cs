@@ -7,14 +7,14 @@ using System.Linq;
 
 namespace Recipes.RepoDb.PartialUpdate
 {
-    public class PartialUpdateScenario : BaseRepository<EmployeeClassificationPartialUpdate, SqlConnection>,
-        IPartialUpdateScenario<EmployeeClassificationPartialUpdate>
+    public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlConnection>,
+        IPartialUpdateScenario<EmployeeClassification>
     {
         public PartialUpdateScenario(string connectionString)
             : base(connectionString)
         { }
 
-        public int Create(EmployeeClassificationPartialUpdate classification)
+        public int Create(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -22,7 +22,7 @@ namespace Recipes.RepoDb.PartialUpdate
             return Insert<int>(classification);
         }
 
-        public EmployeeClassificationPartialUpdate? GetByKey(int employeeClassificationKey)
+        public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
             return Query(employeeClassificationKey).FirstOrDefault();
         }
@@ -34,7 +34,7 @@ namespace Recipes.RepoDb.PartialUpdate
 
             using (var connection = CreateConnection(true))
             {
-                connection.Update(ClassMappedNameCache.Get<EmployeeClassificationPartialUpdate>(), updateMessage);
+                connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
             }
         }
 
@@ -45,7 +45,7 @@ namespace Recipes.RepoDb.PartialUpdate
 
             using (var connection = CreateConnection(true))
             {
-                connection.Update(ClassMappedNameCache.Get<EmployeeClassificationPartialUpdate>(), updateMessage);
+                connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Recipes.RepoDb.PartialUpdate
         {
             using (var connection = CreateConnection(true))
             {
-                connection.Update(ClassMappedNameCache.Get<EmployeeClassificationPartialUpdate>(),
+                connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(),
                     new { employeeClassificationKey, isExempt, isEmployee });
             }
         }

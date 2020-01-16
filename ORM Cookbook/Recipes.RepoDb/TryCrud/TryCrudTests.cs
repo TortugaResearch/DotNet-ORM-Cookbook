@@ -5,9 +5,9 @@ using Recipes.TryCrud;
 namespace Recipes.RepoDb.TryCrud
 {
     [TestClass]
-    public class TryCrudTests : TryCrudTests<EmployeeClassificationTryCrud>
+    public class TryCrudTests : TryCrudTests<EmployeeClassification>
     {
-        protected override ITryCrudScenario<EmployeeClassificationTryCrud> GetScenario()
+        protected override ITryCrudScenario<EmployeeClassification> GetScenario()
         {
             return new TryCrudScenario(Setup.ConnectionString);
         }
