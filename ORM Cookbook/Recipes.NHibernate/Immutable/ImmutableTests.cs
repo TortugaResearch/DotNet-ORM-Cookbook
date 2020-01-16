@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.Immutable;
+using Recipes.NHibernate.Models;
 using System;
 
 namespace Recipes.NHibernate.Immutable

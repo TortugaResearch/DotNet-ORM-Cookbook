@@ -1,5 +1,5 @@
+using Recipes;
 using System.Collections.Generic;
-using Recipes.ModelWithChildren;
 
 namespace LLBLGenPro.OrmCookbook.EntityClasses
 {

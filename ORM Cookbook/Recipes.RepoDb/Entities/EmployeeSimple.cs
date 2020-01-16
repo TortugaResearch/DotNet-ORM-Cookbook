@@ -1,10 +1,9 @@
-﻿using Recipes.ModelWithLookup;
-using RepoDb.Attributes;
+﻿using RepoDb.Attributes;
 
 namespace Recipes.RepoDb.Entities
 {
     [Map("[HR].[Employee]")]
-    public class EmployeeSimple : IEmployeeSimple, Recipes.Sorting.IEmployeeSimple
+    public class EmployeeSimple : IEmployeeSimple
     {
         [Primary]
         public int EmployeeKey { get; set; }

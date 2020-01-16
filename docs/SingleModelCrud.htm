@@ -150,12 +150,25 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With ADO.NET, the model does not actually participate in database operations so it needs no adornment.</p>
-<pre><code class="cs">public class EmployeeClassification : Recipes.SingleModelCrud.IEmployeeClassification
+<pre><code class="cs">public class EmployeeClassification : IEmployeeClassification
 {
-    public int EmployeeClassificationKey { get; set; }
+    public EmployeeClassification() { }
 
-    /// &lt;exclude /&gt;
+    public EmployeeClassification(IDataReader reader)
+    {
+        if (reader == null)
+            throw new ArgumentNullException(nameof(reader), $&quot;{nameof(reader)} is null.&quot;);
+
+        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;));
+        EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;));
+        IsExempt = reader.GetBoolean(reader.GetOrdinal(&quot;IsExempt&quot;));
+        IsEmployee = reader.GetBoolean(reader.GetOrdinal(&quot;IsEmployee&quot;));
+    }
+
+    public int EmployeeClassificationKey { get; set; }
     public string? EmployeeClassificationName { get; set; }
+    public bool IsExempt { get; set; }
+    public bool IsEmployee { get; set; }
 }
 </code></pre>
 
@@ -320,9 +333,9 @@
 public class EmployeeClassification : IEmployeeClassification
 {
     public int EmployeeClassificationKey { get; set; }
-
-    /// &lt;exclude /&gt;
     public string? EmployeeClassificationName { get; set; }
+    public bool IsExempt { get; set; }
+    public bool IsEmployee { get; set; }
 }
 </code></pre>
 
@@ -751,7 +764,7 @@ public partial class EmployeeClassification
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s Hibernate, it heavily relies on XML configuration files and interfaces.</p>
 <p>The models are interesting in that every property needs to be virtual. Without this, you’ll get a runtime error.</p>
-<pre><code class="cs">public partial class EmployeeClassification
+<pre><code class="cs">public partial class EmployeeClassification : IEmployeeClassification
 {
     public virtual int EmployeeClassificationKey { get; set; }
 
@@ -972,6 +985,14 @@ public partial class EmployeeClassification
 
     [Required, StringLength(30)]
     public string? EmployeeClassificationName { get; set; }
+}
+
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class EmployeeClassification : IEmployeeClassification
+    {
+        int IEmployeeClassification.EmployeeClassificationKey { get =&gt; Id; set =&gt; Id = value; }
+        int IReadOnlyEmployeeClassification.EmployeeClassificationKey { get =&gt; Id; }
+    }
 }
 </code></pre>
 

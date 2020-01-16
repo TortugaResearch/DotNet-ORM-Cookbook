@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using Recipes.Dapper.Models;
 using Recipes.TryCrud;
 using System;
 using System.Data;

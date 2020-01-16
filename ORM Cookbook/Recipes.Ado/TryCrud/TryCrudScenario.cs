@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Recipes.Ado.Models;
 using Recipes.TryCrud;
 using System;
 using System.Data;

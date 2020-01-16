@@ -1,6 +1,7 @@
 ﻿using NHibernate;
 using Recipes.Immutable;
 using Recipes.NHibernate.Entities;
+using Recipes.NHibernate.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;

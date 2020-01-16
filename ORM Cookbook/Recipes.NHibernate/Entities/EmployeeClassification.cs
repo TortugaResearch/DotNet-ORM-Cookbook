@@ -1,6 +1,6 @@
 namespace Recipes.NHibernate.Entities
 {
-    public partial class EmployeeClassification
+    public partial class EmployeeClassification : IEmployeeClassification
     {
         public virtual int EmployeeClassificationKey { get; set; }
 
@@ -8,4 +8,6 @@ namespace Recipes.NHibernate.Entities
         public virtual bool IsExempt { get; set; }
         public virtual bool IsEmployee { get; set; }
     }
+
+
 }

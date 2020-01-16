@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.Models;
 using Recipes.Chain.SingleModelCrudAsync;
 using System;
 using System.Diagnostics.CodeAnalysis;

@@ -4,7 +4,7 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Interfaces\ModelWithLookup\IEmployeeSimple.cs] IEmployeeSimple
+@snippet cs [..\Recipes.Interfaces\IEmployeeSimple.cs] IEmployeeSimple
 
 @snippet cs [..\Recipes\ModelWithLookup\IModelWithLookupSimpleScenario`1.cs] IModelWithLookupSimpleScenario{TEmployee}
 
@@ -12,7 +12,7 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 
 In order to promote code reuse, object population has been moved into the model's constructor.
 
-@snippet cs [..\Recipes.Ado\ModelWithLookup\EmployeeSimple.cs] EmployeeSimple
+@snippet cs [..\Recipes.Ado\Models\EmployeeSimple.cs] EmployeeSimple
 
 @snippet cs [..\Recipes.Ado\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario
 

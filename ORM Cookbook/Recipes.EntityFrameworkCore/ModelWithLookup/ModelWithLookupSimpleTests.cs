@@ -12,13 +12,4 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
             return new ModelWithLookupSimpleScenario(Setup.DBContextFactory);
         }
     }
-
-    [TestClass]
-    public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<Employee>
-    {
-        protected override IModelWithLookupComplexScenario<Employee> GetScenario()
-        {
-            return new ModelWithLookupComplexScenario(Setup.DBContextFactory);
-        }
-    }
 }

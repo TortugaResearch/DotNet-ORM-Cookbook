@@ -1,4 +1,5 @@
-﻿using Recipes.PartialUpdate;
+﻿using Recipes.Chain.Models;
+using Recipes.PartialUpdate;
 using System;
 using Tortuga.Chain;
 

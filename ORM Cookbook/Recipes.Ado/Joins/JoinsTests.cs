@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Ado.Models;
 using Recipes.Joins;
 
 namespace Recipes.Ado.Joins

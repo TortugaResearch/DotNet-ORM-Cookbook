@@ -1,5 +1,4 @@
-﻿using Recipes.ModelWithLookup;
-using RepoDb.Attributes;
+﻿using RepoDb.Attributes;
 
 namespace Recipes.RepoDb.Entities
 {
@@ -18,7 +17,7 @@ namespace Recipes.RepoDb.Entities
         public EmployeeClassificationModelWithLookup? EmployeeClassification { get; set; }
 
         //Used for linking the entity to the test framework. Not part of the recipe.
-        IEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
         {
             get => EmployeeClassification;
             set

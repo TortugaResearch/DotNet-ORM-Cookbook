@@ -1,6 +1,6 @@
 ﻿namespace Recipes.NHibernate.Entities
 {
-    public partial class EmployeeDetail
+    public partial class EmployeeDetail: IEmployeeDetail
     {
         public virtual int EmployeeKey { get; set; }
         public virtual string? FirstName { get; set; }
@@ -14,4 +14,6 @@
         public virtual bool IsExempt { get; set; }
         public virtual bool IsEmployee { get; set; }
     }
+
+
 }

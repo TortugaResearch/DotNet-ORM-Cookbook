@@ -123,7 +123,7 @@ namespace Recipes.Immutable
             }
 
             {
-                var search = repository.FindByName(newRecord.EmployeeClassificationName);
+                var search = repository.FindByName(newRecord.EmployeeClassificationName!);
                 Assert.IsNotNull(search);
                 Assert.AreEqual(newKey, search!.EmployeeClassificationKey);
                 Assert.AreEqual(newRecord.EmployeeClassificationName, search.EmployeeClassificationName);
@@ -156,7 +156,7 @@ namespace Recipes.Immutable
             }
 
             {
-                var search = repository.FindByName(newRecord.EmployeeClassificationName);
+                var search = repository.FindByName(newRecord.EmployeeClassificationName!);
                 Assert.IsNotNull(search);
                 Assert.AreEqual(newKey, search!.EmployeeClassificationKey);
                 Assert.AreEqual(newRecord.EmployeeClassificationName, search.EmployeeClassificationName);
@@ -177,7 +177,7 @@ namespace Recipes.Immutable
             }
 
             {
-                var search2 = repository.FindByName(updater.EmployeeClassificationName);
+                var search2 = repository.FindByName(updater.EmployeeClassificationName!);
                 Assert.IsNotNull(search2);
                 Assert.AreEqual(newKey, search2!.EmployeeClassificationKey);
                 Assert.AreEqual(updater.EmployeeClassificationName, search2.EmployeeClassificationName);
@@ -204,7 +204,7 @@ namespace Recipes.Immutable
 
             repository.Delete(echo);
 
-            var search = repository.FindByName(newRecord.EmployeeClassificationName);
+            var search = repository.FindByName(newRecord.EmployeeClassificationName!);
             Assert.IsNull(search);
         }
 

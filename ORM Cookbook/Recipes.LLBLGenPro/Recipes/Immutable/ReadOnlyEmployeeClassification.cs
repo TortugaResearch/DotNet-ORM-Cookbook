@@ -1,5 +1,4 @@
-﻿using Recipes.Immutable;
-using System;
+﻿using System;
 using LLBLGenPro.OrmCookbook.EntityClasses;
 
 namespace Recipes.LLBLGenPro.Immutable

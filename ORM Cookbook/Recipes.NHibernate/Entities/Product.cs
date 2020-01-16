@@ -1,6 +1,6 @@
 ﻿namespace Recipes.NHibernate.Entities
 {
-    public partial class Product
+    public partial class Product : IProduct
     {
         public virtual int ProductKey { get; set; }
 

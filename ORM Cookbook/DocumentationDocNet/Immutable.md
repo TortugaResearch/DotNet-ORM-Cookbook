@@ -6,7 +6,7 @@ These scenarios demonstrate how to perform Create, Read, Update, and Delete oper
 
 @snippet cs [..\Recipes\Immutable\IImmutableScenario`1.cs] IImmutableScenario{TReadOnlyModel}
 
-@snippet cs [..\Recipes.Interfaces\Immutable\IReadOnlyEmployeeClassification.cs] IReadOnlyEmployeeClassification
+@snippet cs [..\Recipes.Interfaces\IReadOnlyEmployeeClassification.cs] IReadOnlyEmployeeClassification
 
 
 ## ADO.NET
@@ -35,9 +35,9 @@ No special handling is needed to call a non-default constructor.
 
 Entity Framework Core does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.
 
-@snippet cs [..\Recipes.EntityFrameworkCore\Immutable\ReadOnlyEmployeeClassification.cs] <Constructor>(EmployeeClassification)
+@snippet cs [..\Recipes.EntityFrameworkCore\Models\ReadOnlyEmployeeClassification.cs] <Constructor>(EmployeeClassification)
 
-@snippet cs [..\Recipes.EntityFrameworkCore\Immutable\ReadOnlyEmployeeClassification.cs] ToEntity
+@snippet cs [..\Recipes.EntityFrameworkCore\Models\ReadOnlyEmployeeClassification.cs] ToEntity
 
 These conversions are used in the repository before write operations and after read operations.
 
@@ -61,9 +61,9 @@ These conversions are used in the repository before write operations and after r
 NHibernate does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.
 
 
-@snippet cs [..\Recipes.NHibernate\Immutable\ReadOnlyEmployeeClassification.cs] <Constructor>(EmployeeClassification)
+@snippet cs [..\Recipes.NHibernate\Models\ReadOnlyEmployeeClassification.cs] <Constructor>(EmployeeClassification)
 
-@snippet cs [..\Recipes.NHibernate\Immutable\ReadOnlyEmployeeClassification.cs] ToEntity
+@snippet cs [..\Recipes.NHibernate\Models\ReadOnlyEmployeeClassification.cs] ToEntity
 
 These conversions are used in the repository before write operations and after read operations.
 

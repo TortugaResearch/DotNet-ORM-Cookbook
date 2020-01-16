@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using Recipes.Dapper.Models;
 using Recipes.Sorting;
 using System;
 using System.Collections.Generic;

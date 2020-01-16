@@ -123,7 +123,7 @@
     string? Title { get; set; }
     string? OfficePhone { get; set; }
     string? CellPhone { get; set; }
-    IEmployeeClassification? EmployeeClassification { get; set; }
+    IReadOnlyEmployeeClassification? EmployeeClassification { get; set; }
 }
 </code></pre>
 
@@ -221,13 +221,7 @@ FROM HR.Employee e
         if (!reader.IsDBNull(reader.GetOrdinal(&quot;CellPhone&quot;)))
             CellPhone = reader.GetString(reader.GetOrdinal(&quot;CellPhone&quot;));
 
-        EmployeeClassification = new EmployeeClassification()
-        {
-            EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
-            EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;)),
-            IsExempt = reader.GetBoolean(reader.GetOrdinal(&quot;IsExempt&quot;)),
-            IsEmployee = reader.GetBoolean(reader.GetOrdinal(&quot;IsEmployee&quot;))
-        };
+        EmployeeClassification = new EmployeeClassification(reader);
     }
 
     public int EmployeeKey { get; set; }
@@ -237,7 +231,7 @@ FROM HR.Employee e
     public string? Title { get; set; }
     public string? OfficePhone { get; set; }
     public string? CellPhone { get; set; }
-    public IEmployeeClassification? EmployeeClassification { get; set; }
+    public IReadOnlyEmployeeClassification? EmployeeClassification { get; set; }
 }
 </code></pre>
 
@@ -458,11 +452,12 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         public EmployeeClassification? EmployeeClassification { get; set; }
 
         //Used for linking the entity to the test framework. Not part of the recipe.
-        IEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
         {
             get =&gt; EmployeeClassification;
             set =&gt; EmployeeClassification = (EmployeeClassification?)value;
         }
+
     }
 }
 </code></pre>
@@ -548,7 +543,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         public int EmployeeClassificationKey =&gt; EmployeeClassification?.EmployeeClassificationKey ?? 0;
 
         //Used for linking the entity to the test framework. Not part of the recipe.
-        IEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
         {
             get =&gt; EmployeeClassification;
             set =&gt; EmployeeClassification = (EmployeeClassification?)value;
@@ -941,7 +936,7 @@ only entity classes. </p>
         public EmployeeClassificationModelWithLookup? EmployeeClassification { get; set; }
 
         //Used for linking the entity to the test framework. Not part of the recipe.
-        IEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
         {
             get =&gt; EmployeeClassification;
             set

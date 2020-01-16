@@ -1,5 +1,4 @@
-﻿using Recipes.Immutable;
-using RepoDb.Attributes;
+﻿using RepoDb.Attributes;
 using System;
 
 namespace Recipes.RepoDb.Entities

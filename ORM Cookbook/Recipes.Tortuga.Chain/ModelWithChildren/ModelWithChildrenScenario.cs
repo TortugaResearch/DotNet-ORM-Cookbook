@@ -1,4 +1,5 @@
-﻿using Recipes.ModelWithChildren;
+﻿using Recipes.Chain.Models;
+using Recipes.ModelWithChildren;
 using System;
 using System.Collections.Generic;
 using System.Linq;

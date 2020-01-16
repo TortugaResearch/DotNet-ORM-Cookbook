@@ -1,5 +1,4 @@
-﻿using Recipes.ModelWithLookup;
-using RepoDb.Attributes;
+﻿using RepoDb.Attributes;
 
 namespace Recipes.RepoDb.Entities
 {

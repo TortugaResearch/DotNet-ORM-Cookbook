@@ -1,4 +1,5 @@
-﻿using Recipes.SingleModelCrud;
+﻿using Recipes.Chain.Models;
+using Recipes.SingleModelCrud;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;

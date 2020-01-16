@@ -11,4 +11,13 @@
         public virtual string? CellPhone { get; set; }
         public virtual EmployeeClassification? EmployeeClassification { get; set; }
     }
+
+    partial class EmployeeComplex : IEmployeeComplex
+    {
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        {
+            get => EmployeeClassification;
+            set => EmployeeClassification = (EmployeeClassification?)value;
+        }
+    }
 }

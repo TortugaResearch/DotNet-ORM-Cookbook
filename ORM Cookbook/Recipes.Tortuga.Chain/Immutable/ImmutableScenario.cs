@@ -1,4 +1,5 @@
-﻿using Recipes.Immutable;
+﻿using Recipes.Chain.Models;
+using Recipes.Immutable;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;
