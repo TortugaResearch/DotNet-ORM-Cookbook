@@ -16,7 +16,7 @@ namespace LLBLGenPro.OrmCookbook.TypedListClasses
 	/// Entity: EmployeeClassification. <br/>
 	/// </remarks>
 	[Serializable]
-	public partial class EmployeeJoinedRow : Recipes.Joins.IEmployeeDetail
+	public partial class EmployeeJoinedRow : Recipes.IEmployeeDetail
 	{
 		partial void OnCreated();
 		

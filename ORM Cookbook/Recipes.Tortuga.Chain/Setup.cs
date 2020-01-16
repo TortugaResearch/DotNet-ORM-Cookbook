@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.SingleModelCrudAsync;
+using Recipes.Chain.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Tortuga.Chain;
 
 namespace Recipes.Chain

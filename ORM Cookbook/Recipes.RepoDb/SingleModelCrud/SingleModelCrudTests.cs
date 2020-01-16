@@ -5,11 +5,11 @@ using Recipes.SingleModelCrud;
 namespace Recipes.RepoDb.SingleModelCrud
 {
     [TestClass]
-    public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassificationSingleModelCrud>
+    public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudRepository<EmployeeClassificationSingleModelCrud> GetRepository()
+        protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudRepository(Setup.ConnectionString);
+            return new SingleModelCrudScenario(Setup.ConnectionString);
         }
     }
 }

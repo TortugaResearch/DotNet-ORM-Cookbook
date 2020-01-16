@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.TryCrud
     [TestClass]
     public class TryCrudTests : TryCrudTests<EmployeeClassificationEntity>
     {
-        protected override ITryCrudRepository<EmployeeClassificationEntity> GetRepository()
+        protected override ITryCrudScenario<EmployeeClassificationEntity> GetScenario()
         {
-            return new TryCrudRepository();
+            return new TryCrudScenario();
         }
     }
 }

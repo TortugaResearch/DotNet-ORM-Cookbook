@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.Models;
 using Recipes.Sorting;
 
 namespace Recipes.Chain.Sorting
@@ -6,9 +7,9 @@ namespace Recipes.Chain.Sorting
     [TestClass]
     public class SortingTests : SortingTests<EmployeeSimple>
     {
-        protected override ISortingRepository<EmployeeSimple> GetRepository()
+        protected override ISortingScenario<EmployeeSimple> GetScenario()
         {
-            return new SortingRepository(Setup.PrimaryDataSource);
+            return new SortingScenario(Setup.PrimaryDataSource);
         }
     }
 }

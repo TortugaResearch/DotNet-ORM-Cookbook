@@ -58,7 +58,7 @@
 <li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span></li>
 <li class="tocentry current"><a class="current" href="ModelWithLookupSimple.htm">Integer-Based Foreign Key</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
@@ -110,55 +110,28 @@
                 <div role="main">
                     <div class="section">
 <h1 id="crud-operations-on-model-with-integer-based-foreign-key">CRUD Operations on Model with Integer-Based Foreign Key<a class="headerlink" href="#crud-operations-on-model-with-integer-based-foreign-key" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This use case demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an integer.</p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>This scenario demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an integer.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public interface IEmployeeSimple
 {
-    int EmployeeKey { get; set; }
-    string? FirstName { get; set; }
-    string? MiddleName { get; set; }
-    string? LastName { get; set; }
-    string? Title { get; set; }
-    string? OfficePhone { get; set; }
     string? CellPhone { get; set; }
     int EmployeeClassificationKey { get; set; }
+    int EmployeeKey { get; set; }
+    string? FirstName { get; set; }
+    string? LastName { get; set; }
+    string? MiddleName { get; set; }
+    string? OfficePhone { get; set; }
+    string? Title { get; set; }
 }
 </code></pre>
 
-<pre><code class="cs">public interface IModelWithLookupSimpleRepository&lt;TEmployee&gt;
+<pre><code class="cs">public interface IModelWithLookupSimpleScenario&lt;TEmployee&gt;
    where TEmployee : class, IEmployeeSimple, new()
 {
-    /// &lt;summary&gt;
-    /// Get an employee classification by key.
-    /// &lt;/summary&gt;
-    /// &lt;param name=&quot;employeeClassificationKey&quot;&gt;The employee classification key.&lt;/param&gt;
-    IEmployeeClassification? GetClassification(int employeeClassificationKey);
-
-    /// &lt;summary&gt;
-    /// Gets an Employee row by its primary key.
-    /// &lt;/summary&gt;
-    TEmployee? GetByKey(int employeeKey);
-
-    /// &lt;summary&gt;
-    /// Gets an Employee row by its name.
-    /// &lt;/summary&gt;
-    IList&lt;TEmployee&gt; FindByLastName(string lastName);
-
-    /// &lt;summary&gt;
-    /// Gets all Employee rows.
-    /// &lt;/summary&gt;
-    IList&lt;TEmployee&gt; GetAll();
-
     /// &lt;summary&gt;
     /// Create a new Employee row, returning the new primary key.
     /// &lt;/summary&gt;
     int Create(TEmployee employee);
-
-    /// &lt;summary&gt;
-    /// Update a Employee row.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
-    void Update(TEmployee employee);
 
     /// &lt;summary&gt;
     /// Delete a Employee row using an object.
@@ -171,6 +144,33 @@
     /// &lt;/summary&gt;
     /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
     void DeleteByKey(int employeeKey);
+
+    /// &lt;summary&gt;
+    /// Gets an Employee row by its name.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployee&gt; FindByLastName(string lastName);
+
+    /// &lt;summary&gt;
+    /// Gets all Employee rows.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployee&gt; GetAll();
+
+    /// &lt;summary&gt;
+    /// Gets an Employee row by its primary key.
+    /// &lt;/summary&gt;
+    TEmployee? GetByKey(int employeeKey);
+
+    /// &lt;summary&gt;
+    /// Get an employee classification by key.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employeeClassificationKey&quot;&gt;The employee classification key.&lt;/param&gt;
+    IEmployeeClassification? GetClassification(int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Update a Employee row.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Update(TEmployee employee);
 }
 </code></pre>
 
@@ -201,22 +201,22 @@
         EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;));
     }
 
-    public int EmployeeKey { get; set; }
-    public string? FirstName { get; set; }
-    public string? MiddleName { get; set; }
-    public string? LastName { get; set; }
-    public string? Title { get; set; }
-    public string? OfficePhone { get; set; }
     public string? CellPhone { get; set; }
     public int EmployeeClassificationKey { get; set; }
+    public int EmployeeKey { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? MiddleName { get; set; }
+    public string? OfficePhone { get; set; }
+    public string? Title { get; set; }
 }
 </code></pre>
 
-<pre><code class="cs">    public class ModelWithLookupSimpleRepository : IModelWithLookupSimpleRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
     {
         readonly string m_ConnectionString;
 
-        public ModelWithLookupSimpleRepository(string connectionString)
+        public ModelWithLookupSimpleScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
         }
@@ -404,13 +404,13 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class ModelWithLookupSimpleRepository : IModelWithLookupSimpleRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
 {
-    const string TableName = &quot;HR.Employee&quot;;
     const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
+    const string TableName = &quot;HR.Employee&quot;;
     readonly SqlServerDataSource m_DataSource;
 
-    public ModelWithLookupSimpleRepository(SqlServerDataSource dataSource)
+    public ModelWithLookupSimpleScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource;
     }
@@ -467,11 +467,11 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class ModelWithLookupSimpleRepository : IModelWithLookupSimpleRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
     {
         readonly string m_ConnectionString;
 
-        public ModelWithLookupSimpleRepository(string connectionString)
+        public ModelWithLookupSimpleScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
         }
@@ -581,11 +581,11 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class ModelWithLookupSimpleRepository : IModelWithLookupSimpleRepository&lt;Employee&gt;
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;Employee&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public ModelWithLookupSimpleRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public ModelWithLookupSimpleScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -673,7 +673,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class ModelWithLookupSimpleRepository : IModelWithLookupSimpleRepository&lt;EmployeeEntity&gt;
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeEntity&gt;
 {
     public int Create(EmployeeEntity employee)
     {
@@ -682,7 +682,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
         using (var adapter = new DataAccessAdapter())
         {
-            adapter.SaveEntity(employee, true, recurse:false);
+            adapter.SaveEntity(employee, true, recurse: false);
             return employee.EmployeeKey;
         }
     }
@@ -735,7 +735,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec=&gt;ec.EmployeeClassificationKey==employeeClassificationKey);
+            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
         }
     }
 
@@ -752,7 +752,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         using (var adapter = new DataAccessAdapter())
         {
             EmployeeEntity toPersist = employee;
-            if(toPersist.IsNew)
+            if (toPersist.IsNew)
             {
                 toPersist = new EmployeeEntity(employee.EmployeeKey);
                 adapter.FetchEntity(toPersist);
@@ -765,9 +765,9 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
                 toPersist.Title = employee.Title;
                 toPersist.EmployeeClassificationKey = employee.EmployeeClassificationKey;
             }
-            if(!toPersist.IsNew)
+            if (!toPersist.IsNew)
             {
-                adapter.SaveEntity(toPersist, refetchAfterSave:false, recurse:false);
+                adapter.SaveEntity(toPersist, refetchAfterSave: false, recurse: false);
             }
         }
     }
@@ -777,10 +777,10 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class ModelWithLookupSimpleRepository : DbRepository&lt;SqlConnection&gt;,
-    IModelWithLookupSimpleRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : DbRepository&lt;SqlConnection&gt;,
+    IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
 {
-    public ModelWithLookupSimpleRepository(string connectionString)
+    public ModelWithLookupSimpleScenario(string connectionString)
         : base(connectionString)
     { }
 
@@ -822,7 +822,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return Query&lt;EmployeeClassificationModelWithLookup&gt;(employeeClassificationKey).FirstOrDefault();
+        return Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
     }
 
     public void Update(EmployeeSimple employee)

@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.Sorting
     [TestClass]
     public class SortingTests : SortingTests<EmployeeEntity>
     {
-        protected override ISortingRepository<EmployeeEntity> GetRepository()
+        protected override ISortingScenario<EmployeeEntity> GetScenario()
         {
-            return new SortingRepository();
+            return new SortingScenario();
         }
     }
 }

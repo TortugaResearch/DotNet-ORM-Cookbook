@@ -6,9 +6,9 @@ namespace Recipes.Chain.PopulateDataTable
     [TestClass]
     public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
     {
-        protected override IPopulateDataTableRepository GetRepository()
+        protected override IPopulateDataTableScenario GetScenario()
         {
-            return new PopulateDataTableRepository(Setup.PrimaryDataSource);
+            return new PopulateDataTableScenario(Setup.PrimaryDataSource);
         }
     }
 }

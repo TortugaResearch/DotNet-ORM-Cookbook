@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.Immutable;
+using System;
 
 namespace Recipes.ServiceStack.Immutable
 {
@@ -12,9 +12,9 @@ namespace Recipes.ServiceStack.Immutable
             return new ReadOnlyEmployeeClassification(0, name, isExempt, isEmployee);
         }
 
-        protected override IImmutableRepository<ReadOnlyEmployeeClassification> GetRepository()
+        protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableRepository(Setup.DbConnectionFactory);
+            return new ImmutableScenario(Setup.DbConnectionFactory);
         }
 
         protected override ReadOnlyEmployeeClassification UpdateWithValues(ReadOnlyEmployeeClassification original, string name, bool isExempt, bool isEmployee)

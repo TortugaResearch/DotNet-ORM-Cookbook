@@ -7,9 +7,9 @@ namespace Recipes.EntityFrameworkCore.Joins
     [TestClass]
     public class JoinsTests : JoinsTests<EmployeeDetail, Employee>
     {
-        protected override IJoinsRepository<EmployeeDetail, Employee> GetRepository()
+        protected override IJoinsScenario<EmployeeDetail, Employee> GetScenario()
         {
-            return new JoinsRepository(Setup.DBContextFactory);
+            return new JoinsScenario(Setup.DBContextFactory);
         }
     }
 }

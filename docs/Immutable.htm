@@ -45,7 +45,7 @@
 </li>
 <li class="tocentry current"><a class="current" href="Immutable.htm">Immutable CRUD</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
@@ -103,21 +103,21 @@
                 <div role="main">
                     <div class="section">
 <h1 id="crud-operations-on-immutable-objects">CRUD Operations on Immutable Objects<a class="headerlink" href="#crud-operations-on-immutable-objects" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>These use cases demonstrate how to perform Create, Read, Update, and Delete operations on immutable objects. </p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public interface IImmutableRepository&lt;TReadOnlyModel&gt;
+<p>These scenarios demonstrate how to perform Create, Read, Update, and Delete operations on immutable objects. </p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IImmutableScenario&lt;TReadOnlyModel&gt;
    where TReadOnlyModel : class, IReadOnlyEmployeeClassification
 {
     /// &lt;summary&gt;
-    /// Gets an EmployeeClassification row by its primary key.
+    /// Create a new EmployeeClassification row, returning the new primary key.
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
-    TReadOnlyModel? GetByKey(int employeeClassificationKey);
+    int Create(TReadOnlyModel classification);
 
     /// &lt;summary&gt;
-    /// Gets all EmployeeClassification rows.
+    /// Delete a EmployeeClassification row using an object.
     /// &lt;/summary&gt;
-    IReadOnlyList&lt;TReadOnlyModel&gt; GetAll();
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Delete(TReadOnlyModel classification);
 
     /// &lt;summary&gt;
     /// Gets an EmployeeClassification row by its name. Assume the name is unique.
@@ -126,40 +126,40 @@
     TReadOnlyModel? FindByName(string employeeClassificationName);
 
     /// &lt;summary&gt;
-    /// Create a new EmployeeClassification row, returning the new primary key.
+    /// Gets all EmployeeClassification rows.
     /// &lt;/summary&gt;
-    int Create(TReadOnlyModel classification);
+    IReadOnlyList&lt;TReadOnlyModel&gt; GetAll();
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its primary key.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    TReadOnlyModel? GetByKey(int employeeClassificationKey);
 
     /// &lt;summary&gt;
     /// Update a EmployeeClassification row.
     /// &lt;/summary&gt;
     /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
     void Update(TReadOnlyModel classification);
-
-    /// &lt;summary&gt;
-    /// Delete a EmployeeClassification row using an object.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
-    void Delete(TReadOnlyModel classification);
 }
 </code></pre>
 
 <pre><code class="cs">public interface IReadOnlyEmployeeClassification
 {
     int EmployeeClassificationKey { get; }
-    string EmployeeClassificationName { get; }
-    bool IsExempt { get; }
+    string? EmployeeClassificationName { get; }
     bool IsEmployee { get; }
+    bool IsExempt { get; }
 }
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Since ADO doesn't directly interact with models, no changes are needed for immutable objects other than to call a constructor instead of setting individual properties.</p>
-<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
 
-    public ImmutableRepository(string connectionString)
+    public ImmutableScenario(string connectionString)
     {
         m_ConnectionString = connectionString;
     }
@@ -320,12 +320,12 @@
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain natively supports working with immutable objects, no conversions are needed.</p>
 <p>To populate immutable objects, use either the <code>InferConstructor</code> option or a <code>.WithConstructor&lt;...&gt;</code> link to indicate that a non-default constructor should be used.</p>
-<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
-    public ImmutableRepository(SqlServerDataSource dataSource)
+    public ImmutableScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource;
     }
@@ -374,22 +374,11 @@
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Dapper natively supports working with immutable objects, no conversions are needed.</p>
 <p>No special handling is needed to call a non-default constructor.</p>
-<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
 
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    SqlConnection OpenConnection()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        con.Open();
-        return con;
-    }
-
-    public ImmutableRepository(string connectionString)
+    public ImmutableScenario(string connectionString)
     {
         m_ConnectionString = connectionString;
     }
@@ -407,14 +396,6 @@
             return con.ExecuteScalar&lt;int&gt;(sql, classification);
     }
 
-    public void DeleteByKey(int employeeClassificationKey)
-    {
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
-
-        using (var con = OpenConnection())
-            con.Execute(sql, new { employeeClassificationKey });
-    }
-
     public void Delete(ReadOnlyEmployeeClassification classification)
     {
         if (classification == null)
@@ -424,6 +405,14 @@
 
         using (var con = OpenConnection())
             con.Execute(sql, classification);
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = OpenConnection())
+            con.Execute(sql, new { employeeClassificationKey });
     }
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
@@ -466,6 +455,17 @@
         using (var con = OpenConnection())
             con.Execute(sql, classification);
     }
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    SqlConnection OpenConnection()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        con.Open();
+        return con;
+    }
 }
 </code></pre>
 
@@ -500,11 +500,11 @@
 </code></pre>
 
 <p>These conversions are used in the repository before write operations and after read operations.</p>
-<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public ImmutableRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public ImmutableScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -523,20 +523,6 @@
         }
     }
 
-    public virtual void DeleteByKey(int employeeClassificationKey)
-    {
-        using (var context = CreateDbContext())
-        {
-            //Find the row you wish to delete
-            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
-            if (temp != null)
-            {
-                context.EmployeeClassification.Remove(temp);
-                context.SaveChanges();
-            }
-        }
-    }
-
     public virtual void Delete(ReadOnlyEmployeeClassification classification)
     {
         if (classification == null)
@@ -546,6 +532,20 @@
         {
             //Find the row you wish to delete
             var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
             if (temp != null)
             {
                 context.EmployeeClassification.Remove(temp);
@@ -635,7 +635,7 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
 </code></pre>
 
 <p>These conversions are used in the repository before write operations and after read operations.</p>
-<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     public int Create(ReadOnlyEmployeeClassification classification)
     {
@@ -650,6 +650,14 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
         }
     }
 
+    public virtual void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        DeleteByKey(classification.EmployeeClassificationKey);
+    }
+
     public virtual void DeleteByKey(int employeeClassificationKey)
     {
         using (var adapter = new DataAccessAdapter())
@@ -657,14 +665,6 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
             adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
                                            new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
         }
-    }
-
-    public virtual void Delete(ReadOnlyEmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        DeleteByKey(classification.EmployeeClassificationKey);
     }
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
@@ -748,11 +748,11 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
 </code></pre>
 
 <p>These conversions are used in the repository before write operations and after read operations.</p>
-<pre><code class="cs">public class ImmutableRepository : IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     readonly ISessionFactory m_SessionFactory;
 
-    public ImmutableRepository(ISessionFactory sessionFactory)
+    public ImmutableScenario(ISessionFactory sessionFactory)
     {
         m_SessionFactory = sessionFactory;
     }
@@ -830,7 +830,7 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
 <pre><code class="cs">[Map(&quot;[HR].[EmployeeClassification]&quot;)]
 public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
 {
-    public ReadOnlyEmployeeClassification(MutableEmployeeClassification classification)
+    public ReadOnlyEmployeeClassification(EmployeeClassification classification)
     {
         if (classification?.EmployeeClassificationName == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification.EmployeeClassificationName)} is null.&quot;);
@@ -856,20 +856,20 @@ public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
     public int EmployeeClassificationKey { get; }
 
     public string EmployeeClassificationName { get; }
-
-    public bool IsExempt { get; }
-
     public bool IsEmployee { get; }
+    public bool IsExempt { get; }
 }
 </code></pre>
 
 <p>Below is a sample snippet for <em>mutable</em> class.</p>
 <pre><code class="cs">[Map(&quot;[HR].[EmployeeClassification]&quot;)]
-public class MutableEmployeeClassification
+public class EmployeeClassification : IEmployeeClassification
 {
-    public MutableEmployeeClassification() { }
+    public EmployeeClassification()
+    {
+    }
 
-    public MutableEmployeeClassification(IReadOnlyEmployeeClassification classification)
+    public EmployeeClassification(IReadOnlyEmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
@@ -885,9 +885,9 @@ public class MutableEmployeeClassification
 
     public string? EmployeeClassificationName { get; set; }
 
-    public bool IsExempt { get; set; }
-
     public bool IsEmployee { get; set; }
+
+    public bool IsExempt { get; set; }
 
     internal ReadOnlyEmployeeClassification ToImmutable()
     {
@@ -897,10 +897,10 @@ public class MutableEmployeeClassification
 </code></pre>
 
 <p>Below is the <em>immutable repository</em>.</p>
-<pre><code class="cs">public class ImmutableRepository : DbRepository&lt;SqlConnection&gt;,
-    IImmutableRepository&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : DbRepository&lt;SqlConnection&gt;,
+    IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
-    public ImmutableRepository(string connectionString)
+    public ImmutableScenario(string connectionString)
         : base(connectionString)
     { }
 
@@ -909,12 +909,7 @@ public class MutableEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        return Insert&lt;MutableEmployeeClassification, int&gt;(new MutableEmployeeClassification(classification));
-    }
-
-    public void DeleteByKey(int employeeClassificationKey)
-    {
-        Delete&lt;MutableEmployeeClassification&gt;(employeeClassificationKey);
+        return Insert&lt;EmployeeClassification, int&gt;(new EmployeeClassification(classification));
     }
 
     public void Delete(ReadOnlyEmployeeClassification classification)
@@ -922,26 +917,31 @@ public class MutableEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        Delete(new MutableEmployeeClassification(classification));
+        Delete(new EmployeeClassification(classification));
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        Delete&lt;EmployeeClassification&gt;(employeeClassificationKey);
     }
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
-        return Query&lt;MutableEmployeeClassification&gt;(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
+        return Query&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
             .FirstOrDefault()?
             .ToImmutable();
     }
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
-        return QueryAll&lt;MutableEmployeeClassification&gt;()
+        return QueryAll&lt;EmployeeClassification&gt;()
             .Select(e =&gt; e.ToImmutable())
             .ToImmutableList();
     }
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return Query&lt;MutableEmployeeClassification&gt;(employeeClassificationKey)
+        return Query&lt;EmployeeClassification&gt;(employeeClassificationKey)
             .FirstOrDefault()?
             .ToImmutable();
     }
@@ -951,7 +951,7 @@ public class MutableEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        base.Update&lt;MutableEmployeeClassification&gt;(new MutableEmployeeClassification(classification));
+        base.Update&lt;EmployeeClassification&gt;(new EmployeeClassification(classification));
     }
 }
 </code></pre>

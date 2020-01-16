@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Ado.Models;
 using Recipes.Views;
 
 namespace Recipes.Ado.Views
@@ -6,9 +7,9 @@ namespace Recipes.Ado.Views
     [TestClass]
     public class ViewsTests : ViewsTests<EmployeeDetail, EmployeeSimple>
     {
-        protected override IViewsRepository<EmployeeDetail, EmployeeSimple> GetRepository()
+        protected override IViewsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
         {
-            return new ViewsRepository(Setup.ConnectionString);
+            return new ViewsScenario(Setup.ConnectionString);
         }
     }
 }

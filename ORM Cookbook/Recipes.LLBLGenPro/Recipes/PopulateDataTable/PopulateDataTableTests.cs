@@ -6,9 +6,9 @@ namespace Recipes.LLBLGenPro.PopulateDataTable
     [TestClass]
     public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
     {
-        protected override IPopulateDataTableRepository GetRepository()
+        protected override IPopulateDataTableScenario GetScenario()
         {
-            return new PopulateDataTableRepository();
+            return new PopulateDataTableScenario();
         }
     }
 }

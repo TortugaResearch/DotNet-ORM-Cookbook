@@ -1,44 +1,44 @@
 ﻿# Basic Sorting
 
-These use cases demonstrate how to perform basic sorts. 
+These scenarios demonstrate how to perform basic sorts. 
 
-Note: Sorting by dynamically chosed columns or by expressions will be handled in a separate use case.
+Note: Sorting by dynamically chosed columns or by expressions will be handled in a separate scenarios.
 
-## Prototype Repository
+## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\Sorting\ISortingRepository`1.cs] ISortingRepository{TEmployee}
+@snippet cs [..\Recipes\Sorting\ISortingScenario`1.cs] ISortingScenario{TEmployee}
 
 ## ADO.NET
 
-@snippet cs [..\Recipes.Ado\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.Ado\Sorting\SortingScenario.cs] SortingScenario
 
 ## Chain
 
 Columns to be sorted by are passed in as strings, but checked against the list of columns at runtime to prevent SQL injection attacks. A `SortExpression` object is needed for reverse sorting.
 
-@snippet cs [..\Recipes.Tortuga.Chain\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.Tortuga.Chain\Sorting\SortingScenario.cs] SortingScenario
 
 ## Dapper
 
-@snippet cs [..\Recipes.Dapper\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.Dapper\Sorting\SortingScenario.cs] SortingScenario
 
 ## Entity Framework Core
 
-@snippet cs [..\Recipes.EntityFrameworkCore\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.EntityFrameworkCore\Sorting\SortingScenario.cs] SortingScenario
 
 ## LLBLGen Pro 
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Sorting\SortingScenario.cs] SortingScenario
 
 ## NHibernate
 
-@snippet cs [..\Recipes.NHibernate\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.NHibernate\Sorting\SortingScenario.cs] SortingScenario
 
 ## RepoDb
 
-@snippet cs [..\Recipes.RepoDb\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.RepoDb\Sorting\SortingScenario.cs] SortingScenario
 
 ## ServiceStack
 
-@snippet cs [..\Recipes.ServiceStack\Sorting\SortingRepository.cs] SortingRepository
+@snippet cs [..\Recipes.ServiceStack\Sorting\SortingScenario.cs] SortingScenario
 

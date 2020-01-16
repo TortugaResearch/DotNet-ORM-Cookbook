@@ -1,6 +1,5 @@
 ﻿using LLBLGenPro.OrmCookbook.EntityClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.LLBLGenPro.ModelWithLookup;
 using Recipes.ModelWithLookup;
 
 namespace Recipes.LLBLGenPro.ModelWithLookup
@@ -8,9 +7,9 @@ namespace Recipes.LLBLGenPro.ModelWithLookup
     [TestClass]
     public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeEntity>
     {
-        protected override IModelWithLookupComplexRepository<EmployeeEntity> GetRepository()
+        protected override IModelWithLookupComplexScenario<EmployeeEntity> GetScenario()
         {
-            return new ModelWithLookupComplexRepository();
+            return new ModelWithLookupComplexScenario();
         }
     }
 }

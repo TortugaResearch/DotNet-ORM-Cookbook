@@ -1,15 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ModelWithChildren;
 using Recipes.EntityFrameworkCore.Entities;
+using Recipes.ModelWithChildren;
 
 namespace Recipes.EntityFrameworkCore.ModelWithChildren
 {
     [TestClass]
     public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLine, Product>
     {
-        protected override IModelWithChildrenRepository<ProductLine, Product> GetRepository()
+        protected override IModelWithChildrenScenario<ProductLine, Product> GetScenario()
         {
-            return new ModelWithChildrenRepository(Setup.DBContextFactory);
+            return new ModelWithChildrenScenario(Setup.DBContextFactory);
         }
     }
 }

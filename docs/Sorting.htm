@@ -51,7 +51,7 @@
 </li>
 <li class="tocentry current"><a class="current" href="Sorting.htm">Basic Sorting</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
@@ -103,10 +103,10 @@
                 <div role="main">
                     <div class="section">
 <h1 id="basic-sorting">Basic Sorting<a class="headerlink" href="#basic-sorting" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>These use cases demonstrate how to perform basic sorts. </p>
-<p>Note: Sorting by dynamically chosed columns or by expressions will be handled in a separate use case.</p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public interface ISortingRepository&lt;TEmployee&gt;
+<p>These scenarios demonstrate how to perform basic sorts. </p>
+<p>Note: Sorting by dynamically chosed columns or by expressions will be handled in a separate scenarios.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface ISortingScenario&lt;TEmployee&gt;
    where TEmployee : class, IEmployeeSimple, new()
 {
     /// &lt;summary&gt;
@@ -120,23 +120,23 @@
     IList&lt;TEmployee&gt; SortByLastName();
 
     /// &lt;summary&gt;
-    /// Sorts by the last name, then the first name.
-    /// &lt;/summary&gt;
-    IList&lt;TEmployee&gt; SortByLastNameFirstName();
-
-    /// &lt;summary&gt;
     /// Sorts by the last name in reverse order, then the first name.
     /// &lt;/summary&gt;
     IList&lt;TEmployee&gt; SortByLastNameDescFirstName();
+
+    /// &lt;summary&gt;
+    /// Sorts by the last name, then the first name.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployee&gt; SortByLastNameFirstName();
 }
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class SortingRepository : ISortingRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class SortingScenario : ISortingScenario&lt;EmployeeSimple&gt;
     {
         readonly string m_ConnectionString;
 
-        public SortingRepository(string connectionString)
+        public SortingScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
         }
@@ -233,12 +233,12 @@ VALUES
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Columns to be sorted by are passed in as strings, but checked against the list of columns at runtime to prevent SQL injection attacks. A <code>SortExpression</code> object is needed for reverse sorting.</p>
-<pre><code class="cs">public class SortingRepository : ISortingRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;EmployeeSimple&gt;
 {
     const string EmployeeTableName = &quot;HR.Employee&quot;;
     readonly SqlServerDataSource m_DataSource;
 
-    public SortingRepository(SqlServerDataSource dataSource)
+    public SortingScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource;
     }
@@ -269,11 +269,11 @@ VALUES
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class SortingRepository : ISortingRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class SortingScenario : ISortingScenario&lt;EmployeeSimple&gt;
     {
         readonly string m_ConnectionString;
 
-        public SortingRepository(string connectionString)
+        public SortingScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
         }
@@ -331,11 +331,11 @@ VALUES
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingRepository : ISortingRepository&lt;Employee&gt;
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public SortingRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public SortingScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -374,42 +374,39 @@ VALUES
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingRepository : ISortingRepository&lt;EmployeeEntity&gt;
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;EmployeeEntity&gt;
 {
     public int Create(EmployeeEntity employee)
     {
-        if(employee == null)
+        if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        using(var adapter = new DataAccessAdapter())
+        using (var adapter = new DataAccessAdapter())
         {
             adapter.SaveEntity(employee);
             return employee.EmployeeKey;
         }
     }
 
-
     public IList&lt;EmployeeEntity&gt; SortByLastName()
     {
-        using(var adapter = new DataAccessAdapter())
+        using (var adapter = new DataAccessAdapter())
         {
             return new LinqMetaData(adapter).Employee.OrderBy(x =&gt; x.LastName).ToList();
         }
     }
 
-
     public IList&lt;EmployeeEntity&gt; SortByLastNameDescFirstName()
     {
-        using(var adapter = new DataAccessAdapter())
+        using (var adapter = new DataAccessAdapter())
         {
             return new LinqMetaData(adapter).Employee.OrderByDescending(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
         }
     }
 
-
     public IList&lt;EmployeeEntity&gt; SortByLastNameFirstName()
     {
-        using(var adapter = new DataAccessAdapter())
+        using (var adapter = new DataAccessAdapter())
         {
             return new LinqMetaData(adapter).Employee.OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
         }
@@ -418,11 +415,11 @@ VALUES
 </code></pre>
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingRepository : ISortingRepository&lt;Employee&gt;
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
 {
     readonly ISessionFactory m_SessionFactory;
 
-    public SortingRepository(ISessionFactory sessionFactory)
+    public SortingScenario(ISessionFactory sessionFactory)
     {
         m_SessionFactory = sessionFactory;
     }
@@ -478,10 +475,10 @@ VALUES
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingRepository : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
-    ISortingRepository&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class SortingScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
+    ISortingScenario&lt;EmployeeSimple&gt;
 {
-    public SortingRepository(string connectionString)
+    public SortingScenario(string connectionString)
         : base(connectionString)
     { }
 
@@ -498,24 +495,24 @@ VALUES
         return QueryAll().OrderBy(x =&gt; x.LastName).AsList();
     }
 
-    public IList&lt;EmployeeSimple&gt; SortByLastNameFirstName()
-    {
-        return QueryAll().OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).AsList();
-    }
-
     public IList&lt;EmployeeSimple&gt; SortByLastNameDescFirstName()
     {
         return QueryAll().OrderByDescending(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; SortByLastNameFirstName()
+    {
+        return QueryAll().OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).AsList();
     }
 }
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingRepository : ISortingRepository&lt;Employee&gt;
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
 
-    public SortingRepository(IDbConnectionFactory dbConnectionFactory)
+    public SortingScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
     }

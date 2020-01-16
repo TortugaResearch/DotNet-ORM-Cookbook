@@ -6,9 +6,9 @@ namespace Recipes.Ado.PopulateDataTable
     [TestClass]
     public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
     {
-        protected override IPopulateDataTableRepository GetRepository()
+        protected override IPopulateDataTableScenario GetScenario()
         {
-            return new PopulateDataTableRepository(Setup.ConnectionString);
+            return new PopulateDataTableScenario(Setup.ConnectionString);
         }
     }
 }

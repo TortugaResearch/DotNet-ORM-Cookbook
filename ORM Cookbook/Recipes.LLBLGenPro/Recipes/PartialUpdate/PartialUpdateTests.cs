@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.PartialUpdate
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassificationEntity>
     {
-        protected override IPartialUpdateRepository<EmployeeClassificationEntity> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassificationEntity> GetScenario()
         {
-            return new PartialUpdateRepository();
+            return new PartialUpdateScenario();
         }
     }
 }

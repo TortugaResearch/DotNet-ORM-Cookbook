@@ -20,4 +20,11 @@ namespace Recipes.ServiceStack.Entities
         [Required, StringLength(30)]
         public string? EmployeeClassificationName { get; set; }
     }
+
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class EmployeeClassification : IEmployeeClassification
+    {
+        int IEmployeeClassification.EmployeeClassificationKey { get => Id; set => Id = value; }
+        int IReadOnlyEmployeeClassification.EmployeeClassificationKey { get => Id; }
+    }
 }

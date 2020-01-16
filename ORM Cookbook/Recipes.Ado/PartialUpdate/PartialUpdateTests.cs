@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Ado.Models;
 using Recipes.PartialUpdate;
 
 namespace Recipes.Ado.PartialUpdate
@@ -6,9 +7,9 @@ namespace Recipes.Ado.PartialUpdate
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassification>
     {
-        protected override IPartialUpdateRepository<EmployeeClassification> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassification> GetScenario()
         {
-            return new PartialUpdateRepository(Setup.ConnectionString);
+            return new PartialUpdateScenario(Setup.ConnectionString);
         }
     }
 }

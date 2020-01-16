@@ -37,7 +37,7 @@
 </li>
 <li class="tocentry current"><a class="current" href="ModelWithChildren.htm">Model with Childern CRUD</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
@@ -103,8 +103,8 @@
                 <div role="main">
                     <div class="section">
 <h1 id="crud-operations-on-model-with-child-records">CRUD Operations on Model with Child Records<a class="headerlink" href="#crud-operations-on-model-with-child-records" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This use case demonstrates performing Create, Read, Update, and Delete operations on an object that includes a collection of child records.</p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>This scenario demonstrates performing Create, Read, Update, and Delete operations on an object that includes a collection of child records.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public interface IProductLine&lt;TProduct&gt;
     where TProduct : IProduct
 {
@@ -116,16 +116,27 @@
 }
 </code></pre>
 
-<pre><code class="cs">public interface IModelWithChildrenRepository&lt;TProductLine, TProduct&gt;
+<pre><code class="cs">public interface IModelWithChildrenScenario&lt;TProductLine, TProduct&gt;
    where TProductLine : class, IProductLine&lt;TProduct&gt;, new()
    where TProduct : class, IProduct, new()
 {
     /// &lt;summary&gt;
-    /// Gets an TProductLine row by its primary key.
+    /// Create a new ProductLine row, returning the new primary key.
     /// &lt;/summary&gt;
-    /// &lt;param name=&quot;employeeKey&quot;&gt;The employee key.&lt;/param&gt;
-    /// &lt;param name=&quot;includeChildern&quot;&gt;if set to &lt;c&gt;true&lt;/c&gt; include Product records.&lt;/param&gt;
-    TProductLine? GetByKey(int productLineKey, bool includeProducts);
+    /// &lt;remarks&gt;This MUST save any attached Product records.&lt;/remarks&gt;
+    int Create(TProductLine productLine);
+
+    /// &lt;summary&gt;
+    /// Delete a ProductLine row using an object.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.&lt;/remarks&gt;
+    void Delete(TProductLine productLine);
+
+    /// &lt;summary&gt;
+    /// Delete a ProductLine row using a key.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.&lt;/remarks&gt;
+    void DeleteByKey(int productLineKey);
 
     /// &lt;summary&gt;
     /// Get a list of product lines by name.
@@ -140,10 +151,11 @@
     IList&lt;TProductLine&gt; GetAll(bool includeProducts);
 
     /// &lt;summary&gt;
-    /// Create a new ProductLine row, returning the new primary key.
+    /// Gets an TProductLine row by its primary key.
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;This MUST save any attached Product records.&lt;/remarks&gt;
-    int Create(TProductLine productLine);
+    /// &lt;param name=&quot;employeeKey&quot;&gt;The employee key.&lt;/param&gt;
+    /// &lt;param name=&quot;includeChildern&quot;&gt;if set to &lt;c&gt;true&lt;/c&gt; include Product records.&lt;/param&gt;
+    TProductLine? GetByKey(int productLineKey, bool includeProducts);
 
     /// &lt;summary&gt;
     /// Update a ProductLine row only.
@@ -161,7 +173,7 @@
     /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be deleted.
     /// &lt;/summary&gt;
     /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST save any attached Product records. It MUST delete any Product records that were removed from the collection.&lt;/remarks&gt;
-    void UpdateGraphWithDeletes(TProductLine productLine);
+    void UpdateGraphWithChildDeletes(TProductLine productLine);
 
     /// &lt;summary&gt;
     /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be ignored. Delete any product rows in the productKeysToRemove list.
@@ -175,18 +187,6 @@
     /// &lt;param name=&quot;product&quot;&gt;The product.&lt;/param&gt;
     /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
     void Update(TProduct product);
-
-    /// &lt;summary&gt;
-    /// Delete a ProductLine row using an object.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.&lt;/remarks&gt;
-    void Delete(TProductLine productLine);
-
-    /// &lt;summary&gt;
-    /// Delete a ProductLine row using a key.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.&lt;/remarks&gt;
-    void DeleteByKey(int productLineKey);
 }
 </code></pre>
 
@@ -194,13 +194,13 @@
 <p>TODO</p>
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain requires operating on the parent and child objects separately.</p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLine, Product&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     readonly SqlServerDataSource m_DataSource;
     readonly string ProductLineTable = &quot;Production.ProductLine&quot;;
     readonly string ProductTable = &quot;Production.Product&quot;;
 
-    public ModelWithChildrenRepository(SqlServerDataSource dataSource)
+    public ModelWithChildrenScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource;
     }
@@ -279,7 +279,7 @@
         return result;
     }
 
-    public void UpdateGraphWithDeletes(ProductLine productLine)
+    public void UpdateGraphWithChildDeletes(ProductLine productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -337,11 +337,11 @@
 <p>When performing an update, ensure that the <code>EntityState</code> is correctly set for each child record based on whether it is an insert or update.</p>
 <p>For partial deletes, you have to explicitly find and delete the child rows that are no longer needed.</p>
 <p>For deletes, ensure the child record in DBContext is setup with <code>.OnDelete(DeleteBehavior.Cascade)</code></p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLine, Product&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public ModelWithChildrenRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public ModelWithChildrenScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -415,7 +415,7 @@
         }
     }
 
-    public void UpdateGraphWithDeletes(ProductLine productLine)
+    public void UpdateGraphWithChildDeletes(ProductLine productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -477,7 +477,7 @@ with a removal tracker, which tracks which entities are removed and which can be
 and one with a direct delete on the table using a not-in predicate, available in the regular <code>Update</code> method. </p>
 <p>Nested deletes are implemented explicitly, as cascading deletes aren't supported at the ORM level; to have cascading deletes you 
 have to set up the deletes as cascading on the foreign key constraint. </p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLineEntity, ProductEntity&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLineEntity, ProductEntity&gt;
 {
     public int Create(ProductLineEntity productLine)
     {
@@ -567,7 +567,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-    public virtual void UpdateGraphWithDeletes(ProductLineEntity productLine)
+    public virtual void Update(ProductLineEntity productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -599,33 +599,33 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-    public void Update(ProductLineEntity productLine)
-    {
-        throw new AssertInconclusiveException();
-    }
-
     public void UpdateGraph(ProductLineEntity productLine)
     {
-        throw new AssertInconclusiveException();
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
     }
 
     public void UpdateGraphWithDeletes(ProductLineEntity productLine, IList&lt;int&gt; productKeysToRemove)
     {
-        throw new AssertInconclusiveException();
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
     }
 }
 </code></pre>
 
 <p>Alternative Update method using removal tracker functionality</p>
-<pre><code class="cs">public class ModelWithChildrenRepositoryAlt : ModelWithChildrenRepository
+<pre><code class="cs">public class ModelWithChildrenScenarioAlt : ModelWithChildrenScenario
 {
-    public override void UpdateGraphWithDeletes(ProductLineEntity productLine)
+    public override void Update(ProductLineEntity productLine)
     {
-        if(productLine == null)
+        if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        // this update method will update the related products. Any removed product has to be removed as it's orphaned. 
-        // we inserted a removal tracker in the productline entity to track these, so we can just delete them from 
+        // this update method will update the related products. Any removed product has to be removed as it's orphaned.
+        // we inserted a removal tracker in the productline entity to track these, so we can just delete them from
         // this collection. We also have to update the entity and related entities. We'll use a unit of work object
         // for this to have easy transaction management.
         var uow = new UnitOfWork2();
@@ -636,7 +636,6 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
             uow.Commit(adapter);
         }
     }
-
 }
 </code></pre>
 
@@ -644,11 +643,11 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 <p>By default, NHibernate does not support a clean separation between the data access layer and the rest of the application. This is due to the way the lazy-loading works, which requires an active <code>ISession</code> even when lazy-loading isn't desired.</p>
 <p>The work-around is to explicitly trigger lazy-loading when the child rows are desired. When the child rows are not desired, block lazy-loading by setting the collection property to an empty list.</p>
 <p>For partial deletes, ensure that you are using <code>cascade=&quot;all-delete-orphan&quot;</code>. Otherwise it will ignore the missing child rows. (Alternately, you can pass in a separate list of rows to delete.)</p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLine, Product&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     readonly ISessionFactory m_SessionFactory;
 
-    public ModelWithChildrenRepository(ISessionFactory sessionFactory)
+    public ModelWithChildrenScenario(ISessionFactory sessionFactory)
     {
         m_SessionFactory = sessionFactory;
     }
@@ -739,7 +738,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-    public void UpdateGraphWithDeletes(ProductLine productLine)
+    public void UpdateGraphWithChildDeletes(ProductLine productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Ado.Models;
 using Recipes.Joins;
 
 namespace Recipes.Ado.Joins
@@ -6,9 +7,9 @@ namespace Recipes.Ado.Joins
     [TestClass]
     public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
     {
-        protected override IJoinsRepository<EmployeeDetail, EmployeeSimple> GetRepository()
+        protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
         {
-            return new JoinsRepository(Setup.ConnectionString);
+            return new JoinsScenario(Setup.ConnectionString);
         }
     }
 }

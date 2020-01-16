@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Ado.Models;
 using Recipes.Immutable;
 using System;
 
@@ -12,9 +13,9 @@ namespace Recipes.Ado.Immutable
             return new ReadOnlyEmployeeClassification(0, name, isExempt, isEmployee);
         }
 
-        protected override IImmutableRepository<ReadOnlyEmployeeClassification> GetRepository()
+        protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableRepository(Setup.ConnectionString);
+            return new ImmutableScenario(Setup.ConnectionString);
         }
 
         protected override ReadOnlyEmployeeClassification UpdateWithValues(ReadOnlyEmployeeClassification original, string name, bool isExempt, bool isEmployee)

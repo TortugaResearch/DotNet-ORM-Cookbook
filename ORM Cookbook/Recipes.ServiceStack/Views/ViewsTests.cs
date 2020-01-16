@@ -7,9 +7,9 @@ namespace Recipes.ServiceStack.Views
     [TestClass]
     public class ViewsTests : ViewsTests<EmployeeDetail, Employee>
     {
-        protected override IViewsRepository<EmployeeDetail, Employee> GetRepository()
+        protected override IViewsScenario<EmployeeDetail, Employee> GetScenario()
         {
-            return new ViewsRepository(Setup.DbConnectionFactory);
+            return new ViewsScenario(Setup.DbConnectionFactory);
         }
     }
 }

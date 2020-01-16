@@ -5,11 +5,11 @@ using Recipes.RepoDb.Entities;
 namespace Recipes.RepoDb.PartialUpdate
 {
     [TestClass]
-    public class PartialUpdateTests : PartialUpdateTests<EmployeeClassificationPartialUpdate>
+    public class PartialUpdateTests : PartialUpdateTests<EmployeeClassification>
     {
-        protected override IPartialUpdateRepository<EmployeeClassificationPartialUpdate> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassification> GetScenario()
         {
-            return new PartialUpdateRepository(Setup.ConnectionString);
+            return new PartialUpdateScenario(Setup.ConnectionString);
         }
     }
 }

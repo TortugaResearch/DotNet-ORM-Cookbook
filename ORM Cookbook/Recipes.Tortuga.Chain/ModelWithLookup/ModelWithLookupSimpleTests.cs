@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.Models;
 using Recipes.ModelWithLookup;
 
 namespace Recipes.Chain.ModelWithLookup
@@ -6,9 +7,9 @@ namespace Recipes.Chain.ModelWithLookup
     [TestClass]
     public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<EmployeeSimple>
     {
-        protected override IModelWithLookupSimpleRepository<EmployeeSimple> GetRepository()
+        protected override IModelWithLookupSimpleScenario<EmployeeSimple> GetScenario()
         {
-            return new ModelWithLookupSimpleRepository(Setup.PrimaryDataSource);
+            return new ModelWithLookupSimpleScenario(Setup.PrimaryDataSource);
         }
     }
 }

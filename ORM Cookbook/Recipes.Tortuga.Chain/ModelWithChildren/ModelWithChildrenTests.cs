@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.Models;
 using Recipes.ModelWithChildren;
 
 namespace Recipes.Chain.ModelWithChildren
@@ -6,9 +7,9 @@ namespace Recipes.Chain.ModelWithChildren
     [TestClass]
     public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLine, Product>
     {
-        protected override IModelWithChildrenRepository<ProductLine, Product> GetRepository()
+        protected override IModelWithChildrenScenario<ProductLine, Product> GetScenario()
         {
-            return new ModelWithChildrenRepository(Setup.PrimaryDataSource);
+            return new ModelWithChildrenScenario(Setup.PrimaryDataSource);
         }
     }
 }

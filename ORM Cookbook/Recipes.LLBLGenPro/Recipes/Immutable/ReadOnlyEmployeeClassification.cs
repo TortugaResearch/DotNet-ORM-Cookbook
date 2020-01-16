@@ -1,6 +1,5 @@
-﻿using Recipes.Immutable;
+﻿using LLBLGenPro.OrmCookbook.EntityClasses;
 using System;
-using LLBLGenPro.OrmCookbook.EntityClasses;
 
 namespace Recipes.LLBLGenPro.Immutable
 {
@@ -27,6 +26,14 @@ namespace Recipes.LLBLGenPro.Immutable
             IsEmployee = isEmployee;
         }
 
+        public int EmployeeClassificationKey { get; }
+
+        public string EmployeeClassificationName { get; }
+
+        public bool IsEmployee { get; }
+
+        public bool IsExempt { get; }
+
         public EmployeeClassificationEntity ToEntity()
         {
             return new EmployeeClassificationEntity()
@@ -37,10 +44,5 @@ namespace Recipes.LLBLGenPro.Immutable
                 IsEmployee = IsEmployee
             };
         }
-
-        public int EmployeeClassificationKey { get; }
-        public string EmployeeClassificationName { get; }
-        public bool IsExempt { get; }
-        public bool IsEmployee { get; }
     }
 }

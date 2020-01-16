@@ -39,7 +39,7 @@
 </li>
 <li class="tocentry current"><a class="current" href="SingleModelCrudAsync.htm">Async Operations</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
@@ -103,46 +103,35 @@
                 <div role="main">
                     <div class="section">
 <h1 id="single-model-crud-async">Single Model CRUD Async<a class="headerlink" href="#single-model-crud-async" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This use case adds async support to the <a href="SingleModelCrud.htm">Single Model CRUD use case</a>.</p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>As a general rule, cancellation tokens are provided for read operations but not write operations. The reason is that users may wish to cancel loading a record or set of records, and this can be done safely. But if they try to cancel a write operation then it becomes a race condition between the database operation completing (including any open transactions) and the user's cancellation attempt. (There are exceptions, which will be handled in future use cases.)</p>
-<pre><code class="cs">public interface ISingleModelCrudAsyncRepository&lt;TEmployeeClassification&gt;
+<p>This scenario adds async support to the <a href="SingleModelCrud.htm">Single Model CRUD scenario</a>.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>As a general rule, cancellation tokens are provided for read operations but not write operations. The reason is that users may wish to cancel loading a record or set of records, and this can be done safely. But if they try to cancel a write operation then it becomes a race condition between the database operation completing (including any open transactions) and the user's cancellation attempt. (There are exceptions, which will be handled in future scenarios.)</p>
+<pre><code class="cs">public interface ISingleModelCrudAsyncScenario&lt;TEmployeeClassification&gt;
    where TEmployeeClassification : class, IEmployeeClassification, new()
 {
-    Task&lt;TEmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default);
+    Task&lt;int&gt; CreateAsync(TEmployeeClassification classification);
+
+    Task DeleteAsync(TEmployeeClassification classification);
+
+    Task DeleteByKeyAsync(int employeeClassificationKey);
 
     Task&lt;TEmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default);
 
     Task&lt;IList&lt;TEmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default);
 
-    Task&lt;int&gt; CreateAsync(TEmployeeClassification classification);
+    Task&lt;TEmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default);
 
     Task UpdateAsync(TEmployeeClassification classification);
-
-    Task DeleteAsync(TEmployeeClassification classification);
-
-    Task DeleteByKeyAsync(int employeeClassificationKey);
 }
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With ADO.NET, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
 
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    async Task&lt;SqlConnection&gt; OpenConnectionAsync()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        await con.OpenAsync().ConfigureAwait(false);
-        return con;
-    }
-
-    public SingleModelCrudAsyncRepository(string connectionString)
+    public SingleModelCrudAsyncScenario(string connectionString)
     {
         m_ConnectionString = connectionString;
     }
@@ -164,18 +153,6 @@
         }
     }
 
-    public async Task DeleteByKeyAsync(int employeeClassificationKey)
-    {
-        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
-
-        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
-        using (var cmd = new SqlCommand(sql, con))
-        {
-            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
-            await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
-        }
-    }
-
     public async Task DeleteAsync(EmployeeClassification classification)
     {
         if (classification == null)
@@ -187,6 +164,18 @@
         using (var cmd = new SqlCommand(sql, con))
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, classification.EmployeeClassificationKey);
+            await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+        }
+    }
+
+    public async Task DeleteByKeyAsync(int employeeClassificationKey)
+    {
+        const string sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
             await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
     }
@@ -278,17 +267,28 @@
             await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
     }
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    async Task&lt;SqlConnection&gt; OpenConnectionAsync()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        await con.OpenAsync().ConfigureAwait(false);
+        return con;
+    }
 }
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With Tortuga Chain, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
-    public SingleModelCrudAsyncRepository(SqlServerDataSource dataSource)
+    public SingleModelCrudAsyncScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource), $&quot;{nameof(dataSource)} is null.&quot;);
     }
@@ -368,22 +368,11 @@
 </code></pre>
 
 <p>Here is the full repository.</p>
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
 
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    async Task&lt;SqlConnection&gt; OpenConnectionAsync()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        await con.OpenAsync().ConfigureAwait(false);
-        return con;
-    }
-
-    public SingleModelCrudAsyncRepository(string connectionString)
+    public SingleModelCrudAsyncScenario(string connectionString)
     {
         m_ConnectionString = connectionString;
     }
@@ -401,14 +390,6 @@
             return await con.ExecuteScalarAsync&lt;int&gt;(sql, classification).ConfigureAwait(false);
     }
 
-    public async Task DeleteByKeyAsync(int employeeClassificationKey)
-    {
-        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
-
-        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
-            await con.ExecuteAsync(sql, new { employeeClassificationKey }).ConfigureAwait(false);
-    }
-
     public async Task DeleteAsync(EmployeeClassification classification)
     {
         if (classification == null)
@@ -418,6 +399,14 @@
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
+    }
+
+    public async Task DeleteByKeyAsync(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+            await con.ExecuteAsync(sql, new { employeeClassificationKey }).ConfigureAwait(false);
     }
 
     public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
@@ -462,6 +451,17 @@
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
     }
+
+    /// &lt;summary&gt;
+    /// Opens a database connection.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+    async Task&lt;SqlConnection&gt; OpenConnectionAsync()
+    {
+        var con = new SqlConnection(m_ConnectionString);
+        await con.OpenAsync().ConfigureAwait(false);
+        return con;
+    }
 }
 </code></pre>
 
@@ -488,11 +488,11 @@
 }
 </code></pre>
 
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public SingleModelCrudAsyncRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public SingleModelCrudAsyncScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -583,7 +583,7 @@
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With LLBLGen Pro, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassificationEntity&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassificationEntity&gt;
 {
     public async Task&lt;int&gt; CreateAsync(EmployeeClassificationEntity classification)
     {
@@ -639,7 +639,7 @@
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return await new LinqMetaData(adapter).EmployeeClassification.FirstOrDefaultAsync(ec=&gt;ec.EmployeeClassificationKey==employeeClassificationKey, cancellationToken).ConfigureAwait(false);
+            return await new LinqMetaData(adapter).EmployeeClassification.FirstOrDefaultAsync(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -651,17 +651,17 @@
         using (var adapter = new DataAccessAdapter())
         {
             EmployeeClassificationEntity toPersist = classification;
-            if(classification.IsNew)
+            if (classification.IsNew)
             {
-                toPersist = new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec=&gt;ec.EmployeeClassificationKey==classification.EmployeeClassificationKey);
-                if(toPersist != null)
+                toPersist = new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == classification.EmployeeClassificationKey);
+                if (toPersist != null)
                 {
                     toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
                 }
             }
             if (toPersist != null &amp;&amp; !toPersist.IsNew)
             {
-                await adapter.SaveEntityAsync(toPersist, refetchAfterSave:false, recurse:false).ConfigureAwait(false);
+                await adapter.SaveEntityAsync(toPersist, refetchAfterSave: false, recurse: false).ConfigureAwait(false);
             }
         }
     }
@@ -670,11 +670,11 @@
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With NHibernate, the only changes are to add <code>await</code>, <code>async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     readonly ISessionFactory m_SessionFactory;
 
-    public SingleModelCrudAsyncRepository(ISessionFactory sessionFactory)
+    public SingleModelCrudAsyncScenario(ISessionFactory sessionFactory)
     {
         m_SessionFactory = sessionFactory;
     }
@@ -757,14 +757,14 @@
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With RepoDb, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : BaseRepository&lt;EmployeeClassificationSingleModelCrudAsync, SqlConnection&gt;,
-    ISingleModelCrudAsyncRepository&lt;EmployeeClassificationSingleModelCrudAsync&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : BaseRepository&lt;EmployeeClassification, SqlConnection&gt;,
+    ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
-    public SingleModelCrudAsyncRepository(string connectionString)
+    public SingleModelCrudAsyncScenario(string connectionString)
         : base(connectionString)
     { }
 
-    public async Task&lt;int&gt; CreateAsync(EmployeeClassificationSingleModelCrudAsync classification)
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
@@ -772,12 +772,7 @@
         return await InsertAsync&lt;int&gt;(classification).ConfigureAwait(false);
     }
 
-    public async Task DeleteByKeyAsync(int employeeClassificationKey)
-    {
-        await DeleteAsync(employeeClassificationKey).ConfigureAwait(false);
-    }
-
-    public async Task DeleteAsync(EmployeeClassificationSingleModelCrudAsync classification)
+    public async Task DeleteAsync(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
@@ -785,23 +780,28 @@
         await base.DeleteAsync(classification).ConfigureAwait(false);
     }
 
-    public async Task&lt;EmployeeClassificationSingleModelCrudAsync?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+    public async Task DeleteByKeyAsync(int employeeClassificationKey)
+    {
+        await DeleteAsync(employeeClassificationKey).ConfigureAwait(false);
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
     {
         return (await QueryAsync(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
             .ConfigureAwait(false)).FirstOrDefault();
     }
 
-    public async Task&lt;IList&lt;EmployeeClassificationSingleModelCrudAsync&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
     {
         return (await QueryAllAsync().ConfigureAwait(false)).AsList();
     }
 
-    public async Task&lt;EmployeeClassificationSingleModelCrudAsync?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
         return (await QueryAsync(employeeClassificationKey).ConfigureAwait(false)).FirstOrDefault();
     }
 
-    public async Task UpdateAsync(EmployeeClassificationSingleModelCrudAsync classification)
+    public async Task UpdateAsync(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
@@ -813,11 +813,11 @@
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With ServiceStack, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncRepository : ISingleModelCrudAsyncRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
 
-    public SingleModelCrudAsyncRepository(IDbConnectionFactory dbConnectionFactory)
+    public SingleModelCrudAsyncScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
     }
@@ -829,7 +829,18 @@
 
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            return (int) await db.InsertAsync(classification, true).ConfigureAwait(false);
+            return (int)await db.InsertAsync(classification, true).ConfigureAwait(false);
+        }
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            await db.DeleteAsync(classification).ConfigureAwait(false);
         }
     }
 
@@ -841,37 +852,16 @@
         }
     }
 
-    public async Task DeleteAsync(EmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-        
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-        {
-            await db.DeleteAsync(classification).ConfigureAwait(false);
-        }
-    }
-
     public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(employeeClassificationName))
             throw new ArgumentNullException(nameof(employeeClassificationName), $&quot;{nameof(employeeClassificationName)} is null or whitespace.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             return await db.SingleAsync&lt;EmployeeClassification&gt;(
                     r =&gt; r.EmployeeClassificationName == employeeClassificationName, cancellationToken)
-                .ConfigureAwait(false);
-        }
-    }
-
-    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey,
-        CancellationToken cancellationToken = default)
-    {
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-        {
-            return await db.SingleByIdAsync&lt;EmployeeClassification&gt;(employeeClassificationKey, cancellationToken)
                 .ConfigureAwait(false);
         }
     }
@@ -881,6 +871,16 @@
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             return await db.SelectAsync&lt;EmployeeClassification&gt;(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey,
+                CancellationToken cancellationToken = default)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return await db.SingleByIdAsync&lt;EmployeeClassification&gt;(employeeClassificationKey, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 

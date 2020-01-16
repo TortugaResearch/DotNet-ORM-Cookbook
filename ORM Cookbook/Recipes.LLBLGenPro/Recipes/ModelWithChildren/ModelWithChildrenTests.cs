@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
     [TestClass]
     public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLineEntity, ProductEntity>
     {
-        protected override IModelWithChildrenRepository<ProductLineEntity, ProductEntity> GetRepository()
+        protected override IModelWithChildrenScenario<ProductLineEntity, ProductEntity> GetScenario()
         {
-            return new ModelWithChildrenRepository();
+            return new ModelWithChildrenScenario();
         }
     }
 }
