@@ -13,10 +13,10 @@ namespace Performance
         }
 
         [Benchmark]
-        public void Chain_PartialUpdateTests_PartialUpdate_OneRepositoryTwoMessages()
+        public void Chain_PartialUpdateTests_PartialUpdate_OneScenarioTwoMessages()
         {
             var test = new PartialUpdateTests();
-            test.PartialUpdate_OneRepositoryTwoMessages();
+            test.PartialUpdate_OneScenarioTwoMessages();
         }
 
         [Benchmark]

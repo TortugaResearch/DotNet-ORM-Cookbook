@@ -8,9 +8,9 @@ namespace Recipes.EntityFrameworkCore.Immutable
     [TestClass]
     public class ImmutableTests : ImmutableTests<ReadOnlyEmployeeClassification>
     {
-        protected override IImmutableRepository<ReadOnlyEmployeeClassification> GetRepository()
+        protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableRepository(Setup.DBContextFactory);
+            return new ImmutableScenario(Setup.DBContextFactory);
         }
 
         protected override ReadOnlyEmployeeClassification CreateWithValues(string name, bool isExempt, bool isEmployee)

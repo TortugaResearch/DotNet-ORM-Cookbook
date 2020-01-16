@@ -12,9 +12,9 @@ namespace Recipes.NHibernate.Immutable
             return new ReadOnlyEmployeeClassification(0, name, isExempt, isEmployee);
         }
 
-        protected override IImmutableRepository<ReadOnlyEmployeeClassification> GetRepository()
+        protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableRepository(Setup.SessionFactory);
+            return new ImmutableScenario(Setup.SessionFactory);
         }
 
         protected override ReadOnlyEmployeeClassification UpdateWithValues(ReadOnlyEmployeeClassification original, string name, bool isExempt, bool isEmployee)

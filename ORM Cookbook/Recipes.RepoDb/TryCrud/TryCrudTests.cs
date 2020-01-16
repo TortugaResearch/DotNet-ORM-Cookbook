@@ -7,9 +7,9 @@ namespace Recipes.RepoDb.TryCrud
     [TestClass]
     public class TryCrudTests : TryCrudTests<EmployeeClassificationTryCrud>
     {
-        protected override ITryCrudRepository<EmployeeClassificationTryCrud> GetRepository()
+        protected override ITryCrudScenario<EmployeeClassificationTryCrud> GetScenario()
         {
-            return new TryCrudRepository(Setup.ConnectionString);
+            return new TryCrudScenario(Setup.ConnectionString);
         }
     }
 }

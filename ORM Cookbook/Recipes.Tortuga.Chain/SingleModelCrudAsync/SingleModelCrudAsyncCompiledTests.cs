@@ -6,9 +6,9 @@ namespace Recipes.Chain.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncCompiledTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncCompiledRepository(Setup.PrimaryDataSource);
+            return new SingleModelCrudAsyncCompiledScenario(Setup.PrimaryDataSource);
         }
     }
 }

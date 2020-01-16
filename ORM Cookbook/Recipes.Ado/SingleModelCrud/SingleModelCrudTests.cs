@@ -6,9 +6,9 @@ namespace Recipes.Ado.SingleModelCrud
     [TestClass]
     public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudRepository(Setup.ConnectionString);
+            return new SingleModelCrudScenario(Setup.ConnectionString);
         }
     }
 }

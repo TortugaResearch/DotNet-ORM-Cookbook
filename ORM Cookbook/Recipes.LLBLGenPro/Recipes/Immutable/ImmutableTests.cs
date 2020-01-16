@@ -7,9 +7,9 @@ namespace Recipes.LLBLGenPro.Immutable
     [TestClass]
     public class ImmutableTests : ImmutableTests<ReadOnlyEmployeeClassification>
     {
-        protected override IImmutableRepository<ReadOnlyEmployeeClassification> GetRepository()
+        protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableRepository();
+            return new ImmutableScenario();
         }
 
         protected override ReadOnlyEmployeeClassification CreateWithValues(string name, bool isExempt, bool isEmployee)

@@ -7,18 +7,18 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
     [TestClass]
     public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<Employee>
     {
-        protected override IModelWithLookupSimpleRepository<Employee> GetRepository()
+        protected override IModelWithLookupSimpleScenario<Employee> GetScenario()
         {
-            return new ModelWithLookupSimpleRepository(Setup.DBContextFactory);
+            return new ModelWithLookupSimpleScenario(Setup.DBContextFactory);
         }
     }
 
     [TestClass]
     public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<Employee>
     {
-        protected override IModelWithLookupComplexRepository<Employee> GetRepository()
+        protected override IModelWithLookupComplexScenario<Employee> GetScenario()
         {
-            return new ModelWithLookupComplexRepository(Setup.DBContextFactory);
+            return new ModelWithLookupComplexScenario(Setup.DBContextFactory);
         }
     }
 }

@@ -5,14 +5,14 @@ using System.Linq;
 namespace Recipes.SingleModelCrud
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a simple model without children.
+    /// This scenario performs basic CRUD operations on a simple model without children.
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
     [TestCategory("SingleModelCrud")]
     public abstract class SingleModelCrudTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {
-        protected abstract ISingleModelCrudRepository<TModel> GetRepository();
+        protected abstract ISingleModelCrudScenario<TModel> GetScenario();
 
         /// <summary>
         /// Create and read back a row.
@@ -20,7 +20,7 @@ namespace Recipes.SingleModelCrud
         [TestMethod]
         public void CreateAndReadBack()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -44,7 +44,7 @@ namespace Recipes.SingleModelCrud
         [TestMethod]
         public void CreateAndDeleteByModel()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -65,7 +65,7 @@ namespace Recipes.SingleModelCrud
         [TestMethod]
         public void CreateAndDeleteByKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -84,7 +84,7 @@ namespace Recipes.SingleModelCrud
         [TestMethod]
         public void GetAll()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var allRows = repository.GetAll();
             Assert.IsNotNull(allRows);
@@ -107,7 +107,7 @@ namespace Recipes.SingleModelCrud
         [TestMethod]
         public void GetByKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var ec1 = repository.GetByKey(1);
             var ec2 = repository.GetByKey(2);
@@ -128,7 +128,7 @@ namespace Recipes.SingleModelCrud
         [TestMethod]
         public void CreateAndUpdate()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var newRecord = new TModel();
             newRecord.EmployeeClassificationName = "Test " + DateTime.Now.Ticks;
@@ -149,21 +149,21 @@ namespace Recipes.SingleModelCrud
         [TestMethod]
         public void Create_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             AssertThrowsException<ArgumentNullException>(() => repository.Create(null!));
         }
 
         [TestMethod]
         public void Update_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             AssertThrowsException<ArgumentNullException>(() => repository.Update(null!));
         }
 
         [TestMethod]
         public void Delete_ParameterCheck()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
             AssertThrowsException<ArgumentNullException>(() => repository.Delete(null!));
         }
     }

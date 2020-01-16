@@ -4,14 +4,14 @@ using System;
 namespace Recipes.ModelWithLookup
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a model containing a foreign key represented by a model.
+    /// This scenario performs basic CRUD operations on a model containing a foreign key represented by a model.
     /// </summary>
     /// <typeparam name="TModel">An Employee model or entity</typeparam>
     [TestCategory("ModelWithLookupComplex")]
     public abstract class ModelWithLookupComplexTests<TModel> : TestBase
         where TModel : class, IEmployeeComplex, new()
     {
-        protected abstract IModelWithLookupComplexRepository<TModel> GetRepository();
+        protected abstract IModelWithLookupComplexScenario<TModel> GetScenario();
 
         /// <summary>
         /// Create and read back a row.
@@ -19,7 +19,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndReadBack()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);
@@ -50,7 +50,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndDelete()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);
@@ -87,7 +87,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndDeleteByKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);
@@ -124,7 +124,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndUpdate()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);
@@ -170,7 +170,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void FoulLookupTable()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(1);
             Assert.IsNotNull(employeeClassification);

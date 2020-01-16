@@ -7,9 +7,9 @@ namespace Recipes.RepoDb.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassificationSingleModelCrudAsync>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassificationSingleModelCrudAsync> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassificationSingleModelCrudAsync> GetScenario()
         {
-            return new SingleModelCrudAsyncRepository(Setup.ConnectionString);
+            return new SingleModelCrudAsyncScenario(Setup.ConnectionString);
         }
     }
 }

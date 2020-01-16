@@ -4,14 +4,14 @@ using System;
 namespace Recipes.ModelWithLookup
 {
     /// <summary>
-    /// This use case performs basic CRUD operations on a model containing a foreign key represented by an integer.
+    /// This scenario performs basic CRUD operations on a model containing a foreign key represented by an integer.
     /// </summary>
     /// <typeparam name="TModel">An Employee model or entity</typeparam>
     [TestCategory("ModelWithLookupSimple")]
     public abstract class ModelWithLookupSimpleTests<TModel> : TestBase
     where TModel : class, IEmployeeSimple, new()
     {
-        protected abstract IModelWithLookupSimpleRepository<TModel> GetRepository();
+        protected abstract IModelWithLookupSimpleScenario<TModel> GetScenario();
 
         /// <summary>
         /// Create and read back a row.
@@ -19,7 +19,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndReadBack()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);
@@ -48,7 +48,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndDelete()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);
@@ -84,7 +84,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndDeleteByKey()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);
@@ -120,7 +120,7 @@ namespace Recipes.ModelWithLookup
         [TestMethod]
         public void CreateAndUpdate()
         {
-            var repository = GetRepository();
+            var repository = GetScenario();
 
             var employeeClassification = repository.GetClassification(2);
             Assert.IsNotNull(employeeClassification);

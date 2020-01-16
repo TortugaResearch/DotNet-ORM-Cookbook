@@ -60,7 +60,7 @@
 </li>
 <li class="tocentry current"><a class="current" href="ModelWithLookupComplex.htm">Object-Based Foreign Key</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#database-views">Database Views</a></li>
 
@@ -112,8 +112,8 @@
                 <div role="main">
                     <div class="section">
 <h1 id="crud-operations-on-model-with-object-based-foreign-key">CRUD Operations on Model with Object-Based Foreign Key<a class="headerlink" href="#crud-operations-on-model-with-object-based-foreign-key" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This use case demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an object.</p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>This scenario demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an object.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public interface IEmployeeComplex
 {
     int EmployeeKey { get; set; }
@@ -127,7 +127,7 @@
 }
 </code></pre>
 
-<pre><code class="cs">public interface IModelWithLookupComplexRepository&lt;TEmployee&gt;
+<pre><code class="cs">public interface IModelWithLookupComplexScenario&lt;TEmployee&gt;
    where TEmployee : class, IEmployeeComplex, new()
 {
     /// &lt;summary&gt;
@@ -242,11 +242,11 @@ FROM HR.Employee e
 </code></pre>
 
 <p>Likewise, a database view was used to join the Employee table with its lookup table(s).</p>
-<pre><code class="cs">    public class ModelWithLookupComplexRepository : IModelWithLookupComplexRepository&lt;EmployeeComplex&gt;
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
     {
         readonly string m_ConnectionString;
 
-        public ModelWithLookupComplexRepository(string connectionString)
+        public ModelWithLookupComplexScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
         }
@@ -467,14 +467,14 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 }
 </code></pre>
 
-<pre><code class="cs">public class ModelWithLookupComplexRepository : IModelWithLookupComplexRepository&lt;EmployeeComplex&gt;
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
 {
     const string WriteTableName = &quot;HR.Employee&quot;;
     const string ReadViewName = &quot;HR.EmployeeDetail&quot;;
     const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
-    public ModelWithLookupComplexRepository(SqlServerDataSource dataSource)
+    public ModelWithLookupComplexScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource;
     }
@@ -557,11 +557,11 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 }
 </code></pre>
 
-<pre><code class="cs">    public class ModelWithLookupComplexRepository : IModelWithLookupComplexRepository&lt;EmployeeComplex&gt;
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
     {
         readonly string m_ConnectionString;
 
-        public ModelWithLookupComplexRepository(string connectionString)
+        public ModelWithLookupComplexScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
         }
@@ -688,11 +688,11 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Child objects outside of the DBContext (e.g. from a REST call) need to be mapped to an object created by the DBContext.</p>
 <p>This provides a layer of safety, as otherwise clients could override data in the lookup table.</p>
-<pre><code class="cs">public class ModelWithLookupComplexRepository : IModelWithLookupComplexRepository&lt;Employee&gt;
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;Employee&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public ModelWithLookupComplexRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public ModelWithLookupComplexScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -802,7 +802,7 @@ illustrates this. As it also by default persists all reachable entities in a gra
 entity that's passed in is persisted. </p>
 <p>Entity classes are always derived from a known base class so types created by the user aren't taken into account when traversing the graph, 
 only entity classes. </p>
-<pre><code class="cs">public class ModelWithLookupComplexRepository : IModelWithLookupComplexRepository&lt;EmployeeEntity&gt;
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeEntity&gt;
 {
     public int Create(EmployeeEntity employee)
     {
@@ -954,10 +954,10 @@ only entity classes. </p>
 }
 </code></pre>
 
-<pre><code class="cs">public class ModelWithLookupComplexRepository : DbRepository&lt;SqlConnection&gt;,
-    IModelWithLookupComplexRepository&lt;EmployeeComplex&gt;
+<pre><code class="cs">public class ModelWithLookupComplexScenario : DbRepository&lt;SqlConnection&gt;,
+    IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
 {
-    public ModelWithLookupComplexRepository(string connectionString)
+    public ModelWithLookupComplexScenario(string connectionString)
         : base(connectionString)
     { }
 

@@ -1,13 +1,13 @@
 ﻿# CRUD Operations on Model with Child Records
 
-This use case demonstrates performing Create, Read, Update, and Delete operations on an object that includes a collection of child records.
+This scenario demonstrates performing Create, Read, Update, and Delete operations on an object that includes a collection of child records.
 
-## Prototype Repository
+## Scenario Prototype
 
 @snippet cs [..\Recipes.Core\ModelWithChildren\IProductLine`1.cs] IProductLine{TProduct}
 @snippet cs [..\Recipes.Core\ModelWithChildren\IProduct.cs] IProduct
 
-@snippet cs [..\Recipes.Core\ModelWithChildren\IModelWithChildrenRepository`2.cs] IModelWithChildrenRepository{TProductLine, TProduct}
+@snippet cs [..\Recipes.Core\ModelWithChildren\IModelWithChildrenScenario`2.cs] IModelWithChildrenScenario{TProductLine, TProduct}
 
 
 
@@ -19,7 +19,7 @@ TODO
 
 Chain requires operating on the parent and child objects separately.
 
-@snippet cs [..\Recipes.Tortuga.Chain\ModelWithChildren\ModelWithChildrenRepository.cs] ModelWithChildrenRepository
+@snippet cs [..\Recipes.Tortuga.Chain\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
 ## Dapper
 
@@ -33,7 +33,7 @@ For partial deletes, you have to explicitly find and delete the child rows that 
 
 For deletes, ensure the child record in DBContext is setup with `.OnDelete(DeleteBehavior.Cascade)`
 
-@snippet cs [..\Recipes.EntityFrameworkCore\ModelWithChildren\ModelWithChildrenRepository.cs] ModelWithChildrenRepository
+@snippet cs [..\Recipes.EntityFrameworkCore\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
 ## LLBLGen Pro
 
@@ -45,11 +45,11 @@ and one with a direct delete on the table using a not-in predicate, available in
 Nested deletes are implemented explicitly, as cascading deletes aren't supported at the ORM level; to have cascading deletes you 
 have to set up the deletes as cascading on the foreign key constraint. 
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithChildren\ModelWithChildrenRepository.cs] ModelWithChildrenRepository
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
 Alternative Update method using removal tracker functionality
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithChildren\ModelWithChildrenRepositoryAlt.cs] ModelWithChildrenRepositoryAlt
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithChildren\ModelWithChildrenScenarioAlt.cs] ModelWithChildrenScenarioAlt
 
 
 ## NHibernate
@@ -60,7 +60,7 @@ The work-around is to explicitly trigger lazy-loading when the child rows are de
 
 For partial deletes, ensure that you are using `cascade="all-delete-orphan"`. Otherwise it will ignore the missing child rows. (Alternately, you can pass in a separate list of rows to delete.)
 
-@snippet cs [..\Recipes.NHibernate\ModelWithChildren\ModelWithChildrenRepository.cs] ModelWithChildrenRepository
+@snippet cs [..\Recipes.NHibernate\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
 ## RepoDb
 

@@ -7,9 +7,9 @@ namespace Recipes.ServiceStack.SingleModelCrud
     [TestClass]
     public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudRepository(Setup.DbConnectionFactory);
+            return new SingleModelCrudScenario(Setup.DbConnectionFactory);
         }
     }
 }

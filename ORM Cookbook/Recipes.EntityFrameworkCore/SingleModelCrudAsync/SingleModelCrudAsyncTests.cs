@@ -7,9 +7,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncRepository(Setup.DBContextFactory);
+            return new SingleModelCrudAsyncScenario(Setup.DBContextFactory);
         }
     }
 }

@@ -7,9 +7,9 @@ namespace Recipes.ServiceStack.PartialUpdate
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassificationPartial>
     {
-        protected override IPartialUpdateRepository<EmployeeClassificationPartial> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassificationPartial> GetScenario()
         {
-            return new PartialUpdateRepository(Setup.DbConnectionFactory);
+            return new PartialUpdateScenario(Setup.DbConnectionFactory);
         }
     }
 }

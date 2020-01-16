@@ -6,9 +6,9 @@ namespace Recipes.Dapper.ModelWithLookup
     [TestClass]
     public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<EmployeeSimple>
     {
-        protected override IModelWithLookupSimpleRepository<EmployeeSimple> GetRepository()
+        protected override IModelWithLookupSimpleScenario<EmployeeSimple> GetScenario()
         {
-            return new ModelWithLookupSimpleRepository(Setup.ConnectionString);
+            return new ModelWithLookupSimpleScenario(Setup.ConnectionString);
         }
     }
 }

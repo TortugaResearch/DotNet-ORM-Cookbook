@@ -8,21 +8,11 @@ Yes. If you are willing to abide by our basic conventions, you may add any .NET 
 
 ORMs for other databases will be permitted once we create the associated database headers. This is currently in the planning phase.
 
-## What do you mean by “use case”?
+## What do you mean by “scenario”?
 
-In the context of this cookbook, a **use case** is something that a developer wants to achieve in order to fulfill a business or design requirement. For example, the developer may be tasked with “create a function that returns an `EmployeeClassification` record or null if the record doesn’t exist”.
+In the context of this cookbook, a **scenario** is something that a developer wants to achieve in order to fulfill a business or design requirement. For example, the developer may be tasked with “create a function that returns an `EmployeeClassification` record or null if the record doesn’t exist”.
 
-Generally speaking, the use cases do not dictate *how* something is to be accomplished. Different ORMs are allowed to have different solutions so long as the test cases are passed.
-
-## What do you mean by “repository”?
-
-In the context of this cookbook, a **Repository** is a class with the **Data Access Layer** that is used by higher level code to perform data access. That class does not necessarily need to adhere to a specific interface and may encapsulate other classes that perform the actual work.
-
-The term “repository” may also have a specific meaning for a given ORM or design pattern.
-
-## What not call it a “DAL”?
-
-The term DAL or Data Access Layer applies to the entire layer involved in storage logic, not just a specific class. This may include the repositories, DTOs, helper/utility classes, etc.
+Generally speaking, the scenarios do not dictate *how* something is to be accomplished. Different ORMs are allowed to have different solutions so long as the test cases are passed.
 
 ## Why don’t you inject an open connection/DBContext/ISession?
 
@@ -39,4 +29,4 @@ The term DAL or Data Access Layer applies to the entire layer involved in storag
 
 -- Microsoft Application Architecture Guide, 2nd Edition
 
-Another reason is that not all databases expose an `IQueryable` interface. The intention is that use cases are based around goals, not specific techniques/technologies.
+Another reason is that not all databases expose an `IQueryable` interface. The intention is that scenarios are based around goals, not specific techniques/technologies.

@@ -7,9 +7,9 @@ namespace Recipes.NHibernate.ModelWithChildren
     [TestClass]
     public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLine, Product>
     {
-        protected override IModelWithChildrenRepository<ProductLine, Product> GetRepository()
+        protected override IModelWithChildrenScenario<ProductLine, Product> GetScenario()
         {
-            return new ModelWithChildrenRepository(Setup.SessionFactory);
+            return new ModelWithChildrenScenario(Setup.SessionFactory);
         }
     }
 }

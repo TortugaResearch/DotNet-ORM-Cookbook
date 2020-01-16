@@ -1,12 +1,12 @@
 ﻿# CRUD Operations on Model with Object-Based Foreign Key
 
-This use case demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an object.
+This scenario demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an object.
 
-## Prototype Repository
+## Scenario Prototype
 
 @snippet cs [..\Recipes.Core\ModelWithLookup\IEmployeeComplex.cs] IEmployeeComplex
 
-@snippet cs [..\Recipes.Core\ModelWithLookup\IModelWithLookupComplexRepository`1.cs] IModelWithLookupComplexRepository{TEmployee}
+@snippet cs [..\Recipes.Core\ModelWithLookup\IModelWithLookupComplexScenario`1.cs] IModelWithLookupComplexScenario{TEmployee}
 
 ## Database Views
 
@@ -20,7 +20,7 @@ In order to promote code reuse, object population has been moved into the model'
 
 Likewise, a database view was used to join the Employee table with its lookup table(s).
 
-@snippet cs [..\Recipes.Ado\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
+@snippet cs [..\Recipes.Ado\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
 
 ## Chain
@@ -31,7 +31,7 @@ Read operations must occur against a database view in order to get the propertie
 
 @snippet cs [..\Recipes.Tortuga.Chain\ModelWithLookup\EmployeeComplex.cs] EmployeeComplex
 
-@snippet cs [..\Recipes.Tortuga.Chain\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
+@snippet cs [..\Recipes.Tortuga.Chain\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
 
 ## Dapper
@@ -42,7 +42,7 @@ Read operations must occur against a database view in order to get the propertie
 
 @snippet cs [..\Recipes.Dapper\ModelWithLookup\EmployeeComplex.cs] EmployeeComplex
 
-@snippet cs [..\Recipes.Dapper\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
+@snippet cs [..\Recipes.Dapper\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
 ## Entity Framework Core
 
@@ -50,7 +50,7 @@ Child objects outside of the DBContext (e.g. from a REST call) need to be mapped
 
 This provides a layer of safety, as otherwise clients could override data in the lookup table.
 
-@snippet cs [..\Recipes.EntityFrameworkCore\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
+@snippet cs [..\Recipes.EntityFrameworkCore\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
 ## LLBLGen Pro
 
@@ -61,7 +61,7 @@ entity that's passed in is persisted.
 Entity classes are always derived from a known base class so types created by the user aren't taken into account when traversing the graph, 
 only entity classes. 
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
 
 ## NHibernate
@@ -78,7 +78,7 @@ Read operations must occur against a database view in order to get the propertie
 
 @snippet cs [..\Recipes.RepoDb\Entities\EmployeeComplex.cs] EmployeeComplex
 
-@snippet cs [..\Recipes.RepoDb\ModelWithLookup\ModelWithLookupComplexRepository.cs] ModelWithLookupComplexRepository
+@snippet cs [..\Recipes.RepoDb\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
 ## ServiceStack
 

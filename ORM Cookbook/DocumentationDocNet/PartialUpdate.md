@@ -1,55 +1,55 @@
 ﻿# Partial Updates
 
-These use cases demonstrate how to perform partial updates on a row. 
+These scenarios demonstrate how to perform partial updates on a row. 
 
-## Prototype Repository
+## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\PartialUpdate\IPartialUpdateRepository`1.cs] UpdateWithObject
+@snippet cs [..\Recipes.Core\PartialUpdate\IPartialUpdateScenario`1.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.Core\PartialUpdate\IPartialUpdateRepository`1.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.Core\PartialUpdate\IPartialUpdateScenario`1.cs] UpdateWithSeparateParameters
 
 ## ADO.NET
 
-@snippet cs [..\Recipes.Ado\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.Ado\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.Ado\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.Ado\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## Chain
 
-@snippet cs [..\Recipes.Tortuga.Chain\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.Tortuga.Chain\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.Tortuga.Chain\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.Tortuga.Chain\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## Dapper
 
-@snippet cs [..\Recipes.Dapper\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.Dapper\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.Dapper\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.Dapper\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## Entity Framework Core
 
 To perform a partial update, first fetch a record and then modify it.
 
-@snippet cs [..\Recipes.EntityFrameworkCore\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.EntityFrameworkCore\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.EntityFrameworkCore\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.EntityFrameworkCore\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## LLBLGen Pro
 
 To perform a partial update, you can decide to first fetch a record and then modify it, or to update directly without fetching 
 it first. 
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## NHibernate
 
 To perform a partial update, first fetch a record and then modify it.
 
-@snippet cs [..\Recipes.NHibernate\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.NHibernate\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.NHibernate\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.NHibernate\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## RepoDb
 
@@ -62,17 +62,17 @@ The *ClassMappedNameCache* class  will help you extract the target table from th
 
 Code snippets below resembles item #2 above.
 
-@snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.RepoDb\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## ServiceStack
 
 In ServiceStack, partial updates have to be 'unpacked'. Updated columns are passed in one parameter and filter column(s) (e.g. primary key) in a separate parameter.
 
-@snippet cs [..\Recipes.ServiceStack\PartialUpdate\PartialUpdateRepository.cs] UpdateWithObject
+@snippet cs [..\Recipes.ServiceStack\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.ServiceStack\PartialUpdate\PartialUpdateRepository.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes.ServiceStack\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 
 

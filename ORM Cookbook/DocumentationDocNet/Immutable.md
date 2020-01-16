@@ -1,10 +1,10 @@
 ﻿# CRUD Operations on Immutable Objects
 
-These use cases demonstrate how to perform Create, Read, Update, and Delete operations on immutable objects. 
+These scenarios demonstrate how to perform Create, Read, Update, and Delete operations on immutable objects. 
 
-## Prototype Repository
+## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\Immutable\IImmutableRepository`1.cs] IImmutableRepository{TReadOnlyModel}
+@snippet cs [..\Recipes.Core\Immutable\IImmutableScenario`1.cs] IImmutableScenario{TReadOnlyModel}
 
 @snippet cs [..\Recipes.Core\Immutable\IReadOnlyEmployeeClassification.cs] IReadOnlyEmployeeClassification
 
@@ -13,7 +13,7 @@ These use cases demonstrate how to perform Create, Read, Update, and Delete oper
 
 Since ADO doesn't directly interact with models, no changes are needed for immutable objects other than to call a constructor instead of setting individual properties.
 
-@snippet cs [..\Recipes.ADO\Immutable\ImmutableRepository.cs] ImmutableRepository
+@snippet cs [..\Recipes.ADO\Immutable\ImmutableScenario.cs] ImmutableScenario
 
 ## Chain
 
@@ -21,7 +21,7 @@ Chain natively supports working with immutable objects, no conversions are neede
 
 To populate immutable objects, use either the `InferConstructor` option or a `.WithConstructor<...>` link to indicate that a non-default constructor should be used.
 
-@snippet cs [..\Recipes.Tortuga.Chain\Immutable\ImmutableRepository.cs] ImmutableRepository
+@snippet cs [..\Recipes.Tortuga.Chain\Immutable\ImmutableScenario.cs] ImmutableScenario
 
 ## Dapper
 
@@ -29,7 +29,7 @@ Dapper natively supports working with immutable objects, no conversions are need
 
 No special handling is needed to call a non-default constructor.
 
-@snippet cs [..\Recipes.Dapper\Immutable\ImmutableRepository.cs] ImmutableRepository
+@snippet cs [..\Recipes.Dapper\Immutable\ImmutableScenario.cs] ImmutableScenario
 
 ## Entity Framework Core
 
@@ -41,7 +41,7 @@ Entity Framework Core does not directly support immutable objects. You can overc
 
 These conversions are used in the repository before write operations and after read operations.
 
-@snippet cs [..\Recipes.EntityFrameworkCore\Immutable\ImmutableRepository.cs] ImmutableRepository
+@snippet cs [..\Recipes.EntityFrameworkCore\Immutable\ImmutableScenario.cs] ImmutableScenario
 
 ## LLBLGen Pro 
 
@@ -54,7 +54,7 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
 
 These conversions are used in the repository before write operations and after read operations.
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\Immutable\ImmutableRepository.cs] ImmutableRepository
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Immutable\ImmutableScenario.cs] ImmutableScenario
 
 ## NHibernate
 
@@ -67,7 +67,7 @@ NHibernate does not directly support immutable objects. You can overcome this by
 
 These conversions are used in the repository before write operations and after read operations.
 
-@snippet cs [..\Recipes.NHibernate\Immutable\ImmutableRepository.cs] ImmutableRepository
+@snippet cs [..\Recipes.NHibernate\Immutable\ImmutableScenario.cs] ImmutableScenario
 
 ## RepoDb
 
@@ -83,7 +83,7 @@ Below is a sample snippet for *mutable* class.
 
 Below is the *immutable repository*.
 
-@snippet cs [..\Recipes.RepoDb\Immutable\ImmutableRepository.cs] ImmutableRepository
+@snippet cs [..\Recipes.RepoDb\Immutable\ImmutableScenario.cs] ImmutableScenario
 
 ## ServiceStack
 

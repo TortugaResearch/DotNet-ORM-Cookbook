@@ -7,9 +7,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
     [TestClass]
     public class SingleModelCrudTests2 : SingleModelCrudTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudRepository2(Setup.DBContextFactory);
+            return new SingleModelCrudScenario2(Setup.DBContextFactory);
         }
     }
 }

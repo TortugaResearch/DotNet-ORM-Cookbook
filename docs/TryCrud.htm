@@ -41,7 +41,7 @@
 </li>
 <li class="tocentry current"><a class="current" href="TryCrud.htm">TryGet/Update/Delete Operations</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
@@ -103,9 +103,9 @@
                 <div role="main">
                     <div class="section">
 <h1 id="tryget-tryupdate-and-trydelete-operations">TryGet, TryUpdate, and TryDelete Operations<a class="headerlink" href="#tryget-tryupdate-and-trydelete-operations" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>These use cases demonstrate the difference between operations that fail silently and operations that fail with an exception.</p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public interface ITryCrudRepository&lt;TEmployeeClassification&gt;
+<p>These scenarios demonstrate the difference between operations that fail silently and operations that fail with an exception.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface ITryCrudScenario&lt;TEmployeeClassification&gt;
    where TEmployeeClassification : class, IEmployeeClassification, new()
 {
     /// &lt;summary&gt;
@@ -172,11 +172,11 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>The trick to the <code>Update</code> and <code>Delete</code> methods is to read back the row counts from <code>ExecuteNonQuery</code>.</p>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
 
-    public TryCrudRepository(string connectionString)
+    public TryCrudScenario(string connectionString)
     {
         m_ConnectionString = connectionString;
     }
@@ -404,12 +404,12 @@
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
 {
     const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
-    public TryCrudRepository(SqlServerDataSource dataSource)
+    public TryCrudScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource;
     }
@@ -492,7 +492,7 @@
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Like ADO.NET, this uses the row counts returned from the <code>Execute</code> command.</p>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
 
@@ -507,7 +507,7 @@
         return con;
     }
 
-    public TryCrudRepository(string connectionString)
+    public TryCrudScenario(string connectionString)
     {
         m_ConnectionString = connectionString;
     }
@@ -644,11 +644,11 @@
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public TryCrudRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public TryCrudScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -814,7 +814,7 @@
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassificationEntity&gt;
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassificationEntity&gt;
 {
     public int Create(EmployeeClassificationEntity classification)
     {
@@ -963,11 +963,11 @@
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>In some cases you'll need to catch a <code>StaleStateException</code> as there is no TryUpdate or TryDelete.</p>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
 {
     readonly ISessionFactory m_SessionFactory;
 
-    public TryCrudRepository(ISessionFactory sessionFactory)
+    public TryCrudScenario(ISessionFactory sessionFactory)
     {
         m_SessionFactory = sessionFactory;
     }
@@ -1107,10 +1107,10 @@
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class TryCrudRepository : BaseRepository&lt;EmployeeClassificationTryCrud, SqlConnection&gt;,
-    ITryCrudRepository&lt;EmployeeClassificationTryCrud&gt;
+<pre><code class="cs">public class TryCrudScenario : BaseRepository&lt;EmployeeClassificationTryCrud, SqlConnection&gt;,
+    ITryCrudScenario&lt;EmployeeClassificationTryCrud&gt;
 {
-    public TryCrudRepository(string connectionString)
+    public TryCrudScenario(string connectionString)
         : base(connectionString)
     { }
 
@@ -1196,11 +1196,11 @@
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Like ADO.NET, this uses the row counts returned from the <code>Execute</code> command.</p>
-<pre><code class="cs">public class TryCrudRepository : ITryCrudRepository&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
 
-    public TryCrudRepository(IDbConnectionFactory dbConnectionFactory)
+    public TryCrudScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
     }

@@ -37,7 +37,7 @@
 </li>
 <li class="tocentry current"><a class="current" href="ModelWithChildren.htm">Model with Childern CRUD</a>
 <ul class="currentrelative">
-<li class="tocentry"><a href="#prototype-repository">Prototype Repository</a></li>
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
 <li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
 
@@ -103,8 +103,8 @@
                 <div role="main">
                     <div class="section">
 <h1 id="crud-operations-on-model-with-child-records">CRUD Operations on Model with Child Records<a class="headerlink" href="#crud-operations-on-model-with-child-records" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This use case demonstrates performing Create, Read, Update, and Delete operations on an object that includes a collection of child records.</p>
-<h2 id="prototype-repository">Prototype Repository<a class="headerlink" href="#prototype-repository" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>This scenario demonstrates performing Create, Read, Update, and Delete operations on an object that includes a collection of child records.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public interface IProductLine&lt;TProduct&gt;
     where TProduct : IProduct
 {
@@ -116,7 +116,7 @@
 }
 </code></pre>
 
-<pre><code class="cs">public interface IModelWithChildrenRepository&lt;TProductLine, TProduct&gt;
+<pre><code class="cs">public interface IModelWithChildrenScenario&lt;TProductLine, TProduct&gt;
    where TProductLine : class, IProductLine&lt;TProduct&gt;, new()
    where TProduct : class, IProduct, new()
 {
@@ -176,13 +176,13 @@
 <p>TODO</p>
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain requires operating on the parent and child objects separately.</p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLine, Product&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     readonly SqlServerDataSource m_DataSource;
     readonly string ProductLineTable = &quot;Production.ProductLine&quot;;
     readonly string ProductTable = &quot;Production.Product&quot;;
 
-    public ModelWithChildrenRepository(SqlServerDataSource dataSource)
+    public ModelWithChildrenScenario(SqlServerDataSource dataSource)
     {
         m_DataSource = dataSource;
     }
@@ -304,11 +304,11 @@
 <p>When performing an update, ensure that the <code>EntityState</code> is correctly set for each child record based on whether it is an insert or update.</p>
 <p>For partial deletes, you have to explicitly find and delete the child rows that are no longer needed.</p>
 <p>For deletes, ensure the child record in DBContext is setup with <code>.OnDelete(DeleteBehavior.Cascade)</code></p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLine, Product&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
 
-    public ModelWithChildrenRepository(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    public ModelWithChildrenScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
     {
         CreateDbContext = dBContextFactory;
     }
@@ -429,7 +429,7 @@ with a removal tracker, which tracks which entities are removed and which can be
 and one with a direct delete on the table using a not-in predicate, available in the regular <code>Update</code> method. </p>
 <p>Nested deletes are implemented explicitly, as cascading deletes aren't supported at the ORM level; to have cascading deletes you 
 have to set up the deletes as cascading on the foreign key constraint. </p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLineEntity, ProductEntity&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLineEntity, ProductEntity&gt;
 {
     public int Create(ProductLineEntity productLine)
     {
@@ -555,7 +555,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 </code></pre>
 
 <p>Alternative Update method using removal tracker functionality</p>
-<pre><code class="cs">public class ModelWithChildrenRepositoryAlt : ModelWithChildrenRepository
+<pre><code class="cs">public class ModelWithChildrenScenarioAlt : ModelWithChildrenScenario
 {
     public override void Update(ProductLineEntity productLine)
     {
@@ -582,11 +582,11 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 <p>By default, NHibernate does not support a clean separation between the data access layer and the rest of the application. This is due to the way the lazy-loading works, which requires an active <code>ISession</code> even when lazy-loading isn't desired.</p>
 <p>The work-around is to explicitly trigger lazy-loading when the child rows are desired. When the child rows are not desired, block lazy-loading by setting the collection property to an empty list.</p>
 <p>For partial deletes, ensure that you are using <code>cascade=&quot;all-delete-orphan&quot;</code>. Otherwise it will ignore the missing child rows. (Alternately, you can pass in a separate list of rows to delete.)</p>
-<pre><code class="cs">public class ModelWithChildrenRepository : IModelWithChildrenRepository&lt;ProductLine, Product&gt;
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     readonly ISessionFactory m_SessionFactory;
 
-    public ModelWithChildrenRepository(ISessionFactory sessionFactory)
+    public ModelWithChildrenScenario(ISessionFactory sessionFactory)
     {
         m_SessionFactory = sessionFactory;
     }
