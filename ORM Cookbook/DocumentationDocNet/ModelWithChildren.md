@@ -4,8 +4,8 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes\ModelWithChildren\IProductLine`1.cs] IProductLine{TProduct}
-@snippet cs [..\Recipes\ModelWithChildren\IProduct.cs] IProduct
+@snippet cs [..\Recipes.Interfaces\ModelWithChildren\IProductLine`1.cs] IProductLine{TProduct}
+@snippet cs [..\Recipes.Interfaces\ModelWithChildren\IProduct.cs] IProduct
 
 @snippet cs [..\Recipes\ModelWithChildren\IModelWithChildrenScenario`2.cs] IModelWithChildrenScenario{TProductLine, TProduct}
 

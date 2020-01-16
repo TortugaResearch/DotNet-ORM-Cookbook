@@ -6,7 +6,7 @@ These scenarios demonstrate how to perform Create, Read, Update, and Delete oper
 
 @snippet cs [..\Recipes\Immutable\IImmutableScenario`1.cs] IImmutableScenario{TReadOnlyModel}
 
-@snippet cs [..\Recipes\Immutable\IReadOnlyEmployeeClassification.cs] IReadOnlyEmployeeClassification
+@snippet cs [..\Recipes.Interfaces\Immutable\IReadOnlyEmployeeClassification.cs] IReadOnlyEmployeeClassification
 
 
 ## ADO.NET

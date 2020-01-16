@@ -4,7 +4,7 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes\ModelWithLookup\IEmployeeSimple.cs] IEmployeeSimple
+@snippet cs [..\Recipes.Interfaces\ModelWithLookup\IEmployeeSimple.cs] IEmployeeSimple
 
 @snippet cs [..\Recipes\ModelWithLookup\IModelWithLookupSimpleScenario`1.cs] IModelWithLookupSimpleScenario{TEmployee}
 
