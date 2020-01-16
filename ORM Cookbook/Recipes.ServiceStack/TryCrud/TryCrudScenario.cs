@@ -1,8 +1,8 @@
-﻿using System;
-using Recipes.ServiceStack.Entities;
+﻿using Recipes.ServiceStack.Entities;
 using Recipes.TryCrud;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using System;
 using DataException = System.Data.DataException;
 
 namespace Recipes.ServiceStack.TryCrud
@@ -23,7 +23,7 @@ namespace Recipes.ServiceStack.TryCrud
 
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return (int) db.Insert(classification, true);
+                return (int)db.Insert(classification, true);
             }
         }
 

@@ -54,14 +54,14 @@ namespace Recipes.RepoDb.ModelWithLookup
             var employee = Query<EmployeeComplex>(employeeKey).FirstOrDefault();
             if (employee != null)
             {
-                employee.EmployeeClassification = Query<EmployeeClassificationModelWithLookup>(employee.EmployeeClassificationKey).FirstOrDefault();
+                employee.EmployeeClassification = Query<EmployeeClassification>(employee.EmployeeClassificationKey).FirstOrDefault();
             }
             return employee;
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
-            return Query<EmployeeClassificationModelWithLookup>(employeeClassificationKey).FirstOrDefault();
+            return Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
         }
 
         public void Update(EmployeeComplex employee)

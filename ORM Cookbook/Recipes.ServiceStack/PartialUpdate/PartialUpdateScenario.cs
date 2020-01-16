@@ -1,8 +1,8 @@
-﻿using System;
-using Recipes.PartialUpdate;
+﻿using Recipes.PartialUpdate;
 using Recipes.ServiceStack.Entities;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using System;
 
 namespace Recipes.ServiceStack.PartialUpdate
 {
@@ -22,7 +22,7 @@ namespace Recipes.ServiceStack.PartialUpdate
 
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return (int) db.Insert(classification, true);
+                return (int)db.Insert(classification, true);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Recipes.ServiceStack.PartialUpdate
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
                 db.Update<EmployeeClassificationPartial>(
-                    new {updateMessage.EmployeeClassificationName},
+                    new { updateMessage.EmployeeClassificationName },
                     r => r.Id == updateMessage.EmployeeClassificationKey);
             }
         }
@@ -55,7 +55,7 @@ namespace Recipes.ServiceStack.PartialUpdate
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
                 db.Update<EmployeeClassificationPartial>(
-                    new {updateMessage.IsEmployee, updateMessage.IsExempt},
+                    new { updateMessage.IsEmployee, updateMessage.IsExempt },
                     r => r.Id == updateMessage.EmployeeClassificationKey);
             }
         }
@@ -65,7 +65,7 @@ namespace Recipes.ServiceStack.PartialUpdate
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
                 db.Update<EmployeeClassificationPartial>(
-                    new {isExempt, isEmployee},
+                    new { isExempt, isEmployee },
                     r => r.Id == employeeClassificationKey);
             }
         }

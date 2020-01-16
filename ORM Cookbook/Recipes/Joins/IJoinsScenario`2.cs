@@ -7,9 +7,9 @@ namespace Recipes.Joins
        where TEmployeeSimple : class, IEmployeeSimple, new()
     {
         /// <summary>
-        /// Gets an EmployeeDetail row by its primary key.
+        /// Create a new Employee row, returning the new primary key.
         /// </summary>
-        TEmployeeDetail? GetByEmployeeKey(int employeeKey);
+        int Create(TEmployeeSimple employee);
 
         /// <summary>
         /// Gets an EmployeeDetail row by its primary key.
@@ -27,9 +27,9 @@ namespace Recipes.Joins
         IList<TEmployeeDetail> GetAll();
 
         /// <summary>
-        /// Create a new Employee row, returning the new primary key.
+        /// Gets an EmployeeDetail row by its primary key.
         /// </summary>
-        int Create(TEmployeeSimple employee);
+        TEmployeeDetail? GetByEmployeeKey(int employeeKey);
 
         /// <summary>
         /// Get an EmployeeClassification by key.

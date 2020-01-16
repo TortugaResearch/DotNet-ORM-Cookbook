@@ -1,12 +1,13 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace Recipes.Ado.Models
 {
     public class EmployeeClassification : IEmployeeClassification
     {
-        public EmployeeClassification() { }
+        public EmployeeClassification()
+        {
+        }
 
         public EmployeeClassification(IDataReader reader)
         {
@@ -21,7 +22,7 @@ namespace Recipes.Ado.Models
 
         public int EmployeeClassificationKey { get; set; }
         public string? EmployeeClassificationName { get; set; }
-        public bool IsExempt { get; set; }
         public bool IsEmployee { get; set; }
+        public bool IsExempt { get; set; }
     }
 }

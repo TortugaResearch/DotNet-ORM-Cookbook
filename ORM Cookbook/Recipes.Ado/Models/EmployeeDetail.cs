@@ -1,6 +1,4 @@
-﻿using Recipes.Joins;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 using System.Data;
 
 namespace Recipes.Ado.Models
@@ -29,16 +27,16 @@ namespace Recipes.Ado.Models
             IsEmployee = reader.GetBoolean(reader.GetOrdinal("IsEmployee"));
         }
 
-        public int EmployeeKey { get; set; }
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Title { get; set; }
-        public string? OfficePhone { get; set; }
         public string? CellPhone { get; set; }
         public int EmployeeClassificationKey { get; set; }
         public string? EmployeeClassificationName { get; set; }
-        public bool IsExempt { get; set; }
+        public int EmployeeKey { get; set; }
+        public string? FirstName { get; set; }
         public bool IsEmployee { get; set; }
+        public bool IsExempt { get; set; }
+        public string? LastName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? OfficePhone { get; set; }
+        public string? Title { get; set; }
     }
 }

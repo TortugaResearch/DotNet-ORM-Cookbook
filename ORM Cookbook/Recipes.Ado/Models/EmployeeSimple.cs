@@ -1,4 +1,3 @@
-using Recipes.Joins;
 using System;
 using System.Data;
 
@@ -29,13 +28,13 @@ namespace Recipes.Ado.Models
             EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal("EmployeeClassificationKey"));
         }
 
-        public int EmployeeKey { get; set; }
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Title { get; set; }
-        public string? OfficePhone { get; set; }
         public string? CellPhone { get; set; }
         public int EmployeeClassificationKey { get; set; }
+        public int EmployeeKey { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? OfficePhone { get; set; }
+        public string? Title { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace Recipes.Ado.Models
+﻿namespace Recipes.Ado.Models
 {
     public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
     {
@@ -13,7 +12,7 @@ namespace Recipes.Ado.Models
 
         public int EmployeeClassificationKey { get; }
         public string EmployeeClassificationName { get; }
-        public bool IsExempt { get; }
         public bool IsEmployee { get; }
+        public bool IsExempt { get; }
     }
 }

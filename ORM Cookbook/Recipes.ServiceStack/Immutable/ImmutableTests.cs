@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.Immutable;
+using System;
 
 namespace Recipes.ServiceStack.Immutable
 {

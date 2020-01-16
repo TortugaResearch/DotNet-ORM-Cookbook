@@ -7,11 +7,22 @@ namespace Recipes.ModelWithChildren
        where TProduct : class, IProduct, new()
     {
         /// <summary>
-        /// Gets an TProductLine row by its primary key.
+        /// Create a new ProductLine row, returning the new primary key.
         /// </summary>
-        /// <param name="employeeKey">The employee key.</param>
-        /// <param name="includeChildern">if set to <c>true</c> include Product records.</param>
-        TProductLine? GetByKey(int productLineKey, bool includeProducts);
+        /// <remarks>This MUST save any attached Product records.</remarks>
+        int Create(TProductLine productLine);
+
+        /// <summary>
+        /// Delete a ProductLine row using an object.
+        /// </summary>
+        /// <remarks>Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.</remarks>
+        void Delete(TProductLine productLine);
+
+        /// <summary>
+        /// Delete a ProductLine row using a key.
+        /// </summary>
+        /// <remarks>Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.</remarks>
+        void DeleteByKey(int productLineKey);
 
         /// <summary>
         /// Get a list of product lines by name.
@@ -26,10 +37,11 @@ namespace Recipes.ModelWithChildren
         IList<TProductLine> GetAll(bool includeProducts);
 
         /// <summary>
-        /// Create a new ProductLine row, returning the new primary key.
+        /// Gets an TProductLine row by its primary key.
         /// </summary>
-        /// <remarks>This MUST save any attached Product records.</remarks>
-        int Create(TProductLine productLine);
+        /// <param name="employeeKey">The employee key.</param>
+        /// <param name="includeChildern">if set to <c>true</c> include Product records.</param>
+        TProductLine? GetByKey(int productLineKey, bool includeProducts);
 
         /// <summary>
         /// Update a ProductLine row.
@@ -43,17 +55,5 @@ namespace Recipes.ModelWithChildren
         /// <param name="product">The product.</param>
         /// <remarks>Behavior when row doesn't exist is not defined.</remarks>
         void Update(TProduct product);
-
-        /// <summary>
-        /// Delete a ProductLine row using an object.
-        /// </summary>
-        /// <remarks>Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.</remarks>
-        void Delete(TProductLine productLine);
-
-        /// <summary>
-        /// Delete a ProductLine row using a key.
-        /// </summary>
-        /// <remarks>Behavior when row doesn't exist is not defined. This MUST delete any orphaned Product records.</remarks>
-        void DeleteByKey(int productLineKey);
     }
 }

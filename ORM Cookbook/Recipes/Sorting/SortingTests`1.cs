@@ -11,8 +11,6 @@ namespace Recipes.Sorting
     public abstract class SortingTests<TModel> : TestBase
     where TModel : class, IEmployeeSimple, new()
     {
-        protected abstract ISortingScenario<TModel> GetScenario();
-
         [TestMethod]
         public void SortByLastName()
         {
@@ -25,6 +23,25 @@ namespace Recipes.Sorting
             for (var i = 1; i < results.Count; i++)
             {
                 Assert.IsTrue(string.Compare(results[i - 1].LastName, results[i].LastName, StringComparison.OrdinalIgnoreCase) <= 0);
+            }
+        }
+
+        [TestMethod]
+        public void SortByLastNameDescFirstName()
+        {
+            var repository = GetScenario();
+
+            //Ensure some records exist
+            CreateEmployees(repository);
+
+            var results = repository.SortByLastNameDescFirstName();
+            for (var i = 1; i < results.Count; i++)
+            {
+                Assert.IsTrue(string.Compare(results[i - 1].LastName, results[i].LastName, StringComparison.OrdinalIgnoreCase) >= 0);
+                if (string.Equals(results[i - 1].LastName, results[i].LastName, StringComparison.OrdinalIgnoreCase))
+                {
+                    Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+                }
             }
         }
 
@@ -47,24 +64,7 @@ namespace Recipes.Sorting
             }
         }
 
-        [TestMethod]
-        public void SortByLastNameDescFirstName()
-        {
-            var repository = GetScenario();
-
-            //Ensure some records exist
-            CreateEmployees(repository);
-
-            var results = repository.SortByLastNameDescFirstName();
-            for (var i = 1; i < results.Count; i++)
-            {
-                Assert.IsTrue(string.Compare(results[i - 1].LastName, results[i].LastName, StringComparison.OrdinalIgnoreCase) >= 0);
-                if (string.Equals(results[i - 1].LastName, results[i].LastName, StringComparison.OrdinalIgnoreCase))
-                {
-                    Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
-                }
-            }
-        }
+        protected abstract ISortingScenario<TModel> GetScenario();
 
         static void CreateEmployees(ISortingScenario<TModel> repository)
         {

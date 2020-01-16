@@ -1,5 +1,4 @@
-﻿using Recipes.Chain.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipes.Chain.Models

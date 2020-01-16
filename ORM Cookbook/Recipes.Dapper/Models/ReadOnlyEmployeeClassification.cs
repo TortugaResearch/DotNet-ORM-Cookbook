@@ -1,5 +1,4 @@
-﻿
-namespace Recipes.Dapper.Models
+﻿namespace Recipes.Dapper.Models
 {
     public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
     {
@@ -13,7 +12,7 @@ namespace Recipes.Dapper.Models
 
         public int EmployeeClassificationKey { get; }
         public string EmployeeClassificationName { get; }
-        public bool IsExempt { get; }
         public bool IsEmployee { get; }
+        public bool IsExempt { get; }
     }
 }

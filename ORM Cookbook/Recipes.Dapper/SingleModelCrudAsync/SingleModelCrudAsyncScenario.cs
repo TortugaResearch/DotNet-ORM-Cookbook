@@ -14,17 +14,6 @@ namespace Recipes.Dapper.SingleModelCrudAsync
     {
         readonly string m_ConnectionString;
 
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        async Task<SqlConnection> OpenConnectionAsync()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            await con.OpenAsync().ConfigureAwait(false);
-            return con;
-        }
-
         public SingleModelCrudAsyncScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
@@ -43,14 +32,6 @@ namespace Recipes.Dapper.SingleModelCrudAsync
                 return await con.ExecuteScalarAsync<int>(sql, classification).ConfigureAwait(false);
         }
 
-        public async Task DeleteByKeyAsync(int employeeClassificationKey)
-        {
-            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
-
-            using (var con = await OpenConnectionAsync().ConfigureAwait(false))
-                await con.ExecuteAsync(sql, new { employeeClassificationKey }).ConfigureAwait(false);
-        }
-
         public async Task DeleteAsync(EmployeeClassification classification)
         {
             if (classification == null)
@@ -60,6 +41,14 @@ namespace Recipes.Dapper.SingleModelCrudAsync
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
                 await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
+        }
+
+        public async Task DeleteByKeyAsync(int employeeClassificationKey)
+        {
+            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+
+            using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+                await con.ExecuteAsync(sql, new { employeeClassificationKey }).ConfigureAwait(false);
         }
 
         public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
@@ -103,6 +92,17 @@ namespace Recipes.Dapper.SingleModelCrudAsync
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
                 await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Opens a database connection.
+        /// </summary>
+        /// <remarks>Caller must dispose the connection.</remarks>
+        async Task<SqlConnection> OpenConnectionAsync()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            await con.OpenAsync().ConfigureAwait(false);
+            return con;
         }
     }
 }

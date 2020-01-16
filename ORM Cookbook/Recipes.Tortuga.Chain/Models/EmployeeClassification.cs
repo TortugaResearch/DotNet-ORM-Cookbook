@@ -7,7 +7,7 @@ namespace Recipes.Chain.Models
     {
         public int EmployeeClassificationKey { get; set; }
         public string? EmployeeClassificationName { get; set; }
-        public bool IsExempt { get; set; }
         public bool IsEmployee { get; set; }
+        public bool IsExempt { get; set; }
     }
 }

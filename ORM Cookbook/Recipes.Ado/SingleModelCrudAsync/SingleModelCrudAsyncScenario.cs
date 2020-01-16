@@ -12,17 +12,6 @@ namespace Recipes.Ado.SingleModelCrudAsync
     {
         readonly string m_ConnectionString;
 
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        async Task<SqlConnection> OpenConnectionAsync()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            await con.OpenAsync().ConfigureAwait(false);
-            return con;
-        }
-
         public SingleModelCrudAsyncScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
@@ -45,18 +34,6 @@ namespace Recipes.Ado.SingleModelCrudAsync
             }
         }
 
-        public async Task DeleteByKeyAsync(int employeeClassificationKey)
-        {
-            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
-
-            using (var con = await OpenConnectionAsync().ConfigureAwait(false))
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
-                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
-            }
-        }
-
         public async Task DeleteAsync(EmployeeClassification classification)
         {
             if (classification == null)
@@ -68,6 +45,18 @@ namespace Recipes.Ado.SingleModelCrudAsync
             using (var cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
+                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async Task DeleteByKeyAsync(int employeeClassificationKey)
+        {
+            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+
+            using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
                 await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
         }
@@ -158,6 +147,17 @@ namespace Recipes.Ado.SingleModelCrudAsync
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
                 await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
+        }
+
+        /// <summary>
+        /// Opens a database connection.
+        /// </summary>
+        /// <remarks>Caller must dispose the connection.</remarks>
+        async Task<SqlConnection> OpenConnectionAsync()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            await con.OpenAsync().ConfigureAwait(false);
+            return con;
         }
     }
 }

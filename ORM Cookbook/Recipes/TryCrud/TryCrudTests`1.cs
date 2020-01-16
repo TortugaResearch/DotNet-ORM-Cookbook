@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Recipes.TryCrud
 {
@@ -12,68 +11,6 @@ namespace Recipes.TryCrud
     public abstract class TryCrudTests<TModel> : TestBase
         where TModel : class, IEmployeeClassification, new()
     {
-        [TestMethod]
-        public void UpdateWithStatus_Pass()
-        {
-            var repository = GetScenario();
-
-            var original = CreateRow(repository);
-
-            var echo = repository.GetByKeyOrException(original.EmployeeClassificationKey);
-            AssertMatch(original, echo);
-
-            echo.EmployeeClassificationName = "Updated " + DateTime.Now.Ticks;
-
-            Assert.IsTrue(repository.UpdateWithStatus(echo));
-        }
-
-        [TestMethod]
-        public void UpdateWithStatus_Fail()
-        {
-            var repository = GetScenario();
-
-            var original = new TModel()
-            {
-                EmployeeClassificationKey = -1,
-                EmployeeClassificationName = "Fake " + DateTime.Now.Ticks
-            };
-
-            Assert.IsNull(repository.GetByKeyOrNull(original.EmployeeClassificationKey)); //make sure the row doesn't exist
-
-            Assert.IsFalse(repository.UpdateWithStatus(original));
-        }
-
-        [TestMethod]
-        public void UpdateOrException_Pass()
-        {
-            var repository = GetScenario();
-
-            var original = CreateRow(repository);
-
-            var echo = repository.GetByKeyOrException(original.EmployeeClassificationKey);
-            AssertMatch(original, echo);
-
-            echo.EmployeeClassificationName = "Updated " + DateTime.Now.Ticks;
-
-            repository.UpdateOrException(echo);
-        }
-
-        [TestMethod]
-        public void UpdateOrException_Fail()
-        {
-            var repository = GetScenario();
-
-            var original = new TModel()
-            {
-                EmployeeClassificationKey = -1,
-                EmployeeClassificationName = "Fake " + DateTime.Now.Ticks
-            };
-
-            Assert.IsNull(repository.GetByKeyOrNull(original.EmployeeClassificationKey)); //make sure the row doesn't exist
-
-            AssertThrowsException(() => repository.UpdateOrException(original));
-        }
-
         [TestMethod]
         public void DeleteByKeyOrException()
         {
@@ -231,6 +168,68 @@ namespace Recipes.TryCrud
 
             var result = repository.GetByKeyOrNull(original.EmployeeClassificationKey);
             AssertMatch(original, result);
+        }
+
+        [TestMethod]
+        public void UpdateOrException_Fail()
+        {
+            var repository = GetScenario();
+
+            var original = new TModel()
+            {
+                EmployeeClassificationKey = -1,
+                EmployeeClassificationName = "Fake " + DateTime.Now.Ticks
+            };
+
+            Assert.IsNull(repository.GetByKeyOrNull(original.EmployeeClassificationKey)); //make sure the row doesn't exist
+
+            AssertThrowsException(() => repository.UpdateOrException(original));
+        }
+
+        [TestMethod]
+        public void UpdateOrException_Pass()
+        {
+            var repository = GetScenario();
+
+            var original = CreateRow(repository);
+
+            var echo = repository.GetByKeyOrException(original.EmployeeClassificationKey);
+            AssertMatch(original, echo);
+
+            echo.EmployeeClassificationName = "Updated " + DateTime.Now.Ticks;
+
+            repository.UpdateOrException(echo);
+        }
+
+        [TestMethod]
+        public void UpdateWithStatus_Fail()
+        {
+            var repository = GetScenario();
+
+            var original = new TModel()
+            {
+                EmployeeClassificationKey = -1,
+                EmployeeClassificationName = "Fake " + DateTime.Now.Ticks
+            };
+
+            Assert.IsNull(repository.GetByKeyOrNull(original.EmployeeClassificationKey)); //make sure the row doesn't exist
+
+            Assert.IsFalse(repository.UpdateWithStatus(original));
+        }
+
+        [TestMethod]
+        public void UpdateWithStatus_Pass()
+        {
+            var repository = GetScenario();
+
+            var original = CreateRow(repository);
+
+            var echo = repository.GetByKeyOrException(original.EmployeeClassificationKey);
+            AssertMatch(original, echo);
+
+            echo.EmployeeClassificationName = "Updated " + DateTime.Now.Ticks;
+
+            Assert.IsTrue(repository.UpdateWithStatus(echo));
         }
 
         protected abstract ITryCrudScenario<TModel> GetScenario();

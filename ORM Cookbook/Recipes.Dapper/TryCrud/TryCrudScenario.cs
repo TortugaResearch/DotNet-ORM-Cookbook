@@ -11,17 +11,6 @@ namespace Recipes.Dapper.TryCrud
     {
         readonly string m_ConnectionString;
 
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
-
         public TryCrudScenario(string connectionString)
         {
             m_ConnectionString = connectionString;
@@ -154,6 +143,17 @@ namespace Recipes.Dapper.TryCrud
 
             using (var con = OpenConnection())
                 return 1 == con.Execute(sql, classification);
+        }
+
+        /// <summary>
+        /// Opens a database connection.
+        /// </summary>
+        /// <remarks>Caller must dispose the connection.</remarks>
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
         }
     }
 }

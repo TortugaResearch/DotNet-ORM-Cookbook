@@ -30,13 +30,13 @@ namespace Recipes.Ado.ModelWithLookup
             EmployeeClassification = new EmployeeClassification(reader);
         }
 
-        public int EmployeeKey { get; set; }
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Title { get; set; }
-        public string? OfficePhone { get; set; }
         public string? CellPhone { get; set; }
         public IReadOnlyEmployeeClassification? EmployeeClassification { get; set; }
+        public int EmployeeKey { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? OfficePhone { get; set; }
+        public string? Title { get; set; }
     }
 }

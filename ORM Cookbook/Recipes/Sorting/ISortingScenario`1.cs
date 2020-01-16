@@ -16,13 +16,13 @@ namespace Recipes.Sorting
         IList<TEmployee> SortByLastName();
 
         /// <summary>
-        /// Sorts by the last name, then the first name.
-        /// </summary>
-        IList<TEmployee> SortByLastNameFirstName();
-
-        /// <summary>
         /// Sorts by the last name in reverse order, then the first name.
         /// </summary>
         IList<TEmployee> SortByLastNameDescFirstName();
+
+        /// <summary>
+        /// Sorts by the last name, then the first name.
+        /// </summary>
+        IList<TEmployee> SortByLastNameFirstName();
     }
 }

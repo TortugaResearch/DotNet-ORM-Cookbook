@@ -12,7 +12,28 @@ namespace Recipes.PopulateDataTable
     public abstract class PopulateDataTableTests : TestBase
 
     {
-        protected abstract IPopulateDataTableScenario GetScenario();
+        [DataRow(false, false)]
+        [DataRow(false, true)]
+        [DataRow(true, false)]
+        [DataRow(true, true)]
+        [TestMethod]
+        public void FindByFlags(bool isExempt, bool isEmployee)
+        {
+            var repository = GetScenario();
+
+            var dt = repository.FindByFlags(isExempt, isEmployee);
+            Assert.IsNotNull(dt);
+            Assert.AreNotEqual(0, dt.Rows.Count);
+
+            foreach (var row in dt.AsEnumerable())
+            {
+                Assert.IsNotNull(row["EmployeeClassificationName"]);
+                Assert.AreNotEqual(DBNull.Value, row["EmployeeClassificationName"]);
+
+                Assert.AreEqual(isExempt, (bool)row["IsExempt"]);
+                Assert.AreEqual(isEmployee, (bool)row["IsEmployee"]);
+            }
+        }
 
         /// <summary>
         /// Get all rows from a table.
@@ -37,27 +58,6 @@ namespace Recipes.PopulateDataTable
             Assert.AreEqual("Contractor", (string)(row4["EmployeeClassificationName"]));
         }
 
-        [DataRow(false, false)]
-        [DataRow(false, true)]
-        [DataRow(true, false)]
-        [DataRow(true, true)]
-        [TestMethod]
-        public void FindByFlags(bool isExempt, bool isEmployee)
-        {
-            var repository = GetScenario();
-
-            var dt = repository.FindByFlags(isExempt, isEmployee);
-            Assert.IsNotNull(dt);
-            Assert.AreNotEqual(0, dt.Rows.Count);
-
-            foreach (var row in dt.AsEnumerable())
-            {
-                Assert.IsNotNull(row["EmployeeClassificationName"]);
-                Assert.AreNotEqual(DBNull.Value, row["EmployeeClassificationName"]);
-
-                Assert.AreEqual(isExempt, (bool)row["IsExempt"]);
-                Assert.AreEqual(isEmployee, (bool)row["IsEmployee"]);
-            }
-        }
+        protected abstract IPopulateDataTableScenario GetScenario();
     }
 }

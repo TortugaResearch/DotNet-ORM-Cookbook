@@ -4,11 +4,13 @@ using System;
 namespace Recipes.RepoDb.Entities
 {
     [Map("[HR].[EmployeeClassification]")]
-    public class MutableEmployeeClassification
+    public class EmployeeClassification : IEmployeeClassification
     {
-        public MutableEmployeeClassification() { }
+        public EmployeeClassification()
+        {
+        }
 
-        public MutableEmployeeClassification(IReadOnlyEmployeeClassification classification)
+        public EmployeeClassification(IReadOnlyEmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -24,9 +26,9 @@ namespace Recipes.RepoDb.Entities
 
         public string? EmployeeClassificationName { get; set; }
 
-        public bool IsExempt { get; set; }
-
         public bool IsEmployee { get; set; }
+
+        public bool IsExempt { get; set; }
 
         internal ReadOnlyEmployeeClassification ToImmutable()
         {

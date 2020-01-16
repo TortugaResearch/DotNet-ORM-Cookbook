@@ -24,6 +24,16 @@ namespace Recipes.NHibernate
             ConfigureSessionFactory();
         }
 
+        [TestMethod]
+        public void Warmup()
+        {
+            //Make sure we can connect to the database. This will also pool a connection for future use.
+            using (var session = SessionFactory.OpenSession())
+            {
+                Assert.IsTrue(session.IsOpen);
+            }
+        }
+
         private static void ConfigureSessionFactory()
         {
             var configuration = new Configuration();
@@ -36,16 +46,6 @@ namespace Recipes.NHibernate
                 (new Setup()).Warmup();
             }
             catch { }
-        }
-
-        [TestMethod]
-        public void Warmup()
-        {
-            //Make sure we can connect to the database. This will also pool a connection for future use.
-            using (var session = SessionFactory.OpenSession())
-            {
-                Assert.IsTrue(session.IsOpen);
-            }
         }
     }
 }
