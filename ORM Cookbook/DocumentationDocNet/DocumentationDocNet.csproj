@@ -50,13 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AsynchronousRepositories.md" />
-    <None Include="index.md" />
-    <None Include="readme.md" />
-    <None Include="PartialUpdate.md" />
-    <None Include="TryCrud.md" />
-    <None Include="SingleModelCrudAsync.md" />
-    <None Include="SingleModelCrud.md" />
+    <None Include="*.md" />
     <None Include="docnet.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

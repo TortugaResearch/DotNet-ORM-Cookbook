@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Ado.Models;
 using Recipes.SingleModelCrud;
 
 namespace Recipes.Ado.SingleModelCrud
@@ -6,9 +7,9 @@ namespace Recipes.Ado.SingleModelCrud
     [TestClass]
     public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudRepository(Setup.ConnectionString);
+            return new SingleModelCrudScenario(Setup.ConnectionString);
         }
     }
 }

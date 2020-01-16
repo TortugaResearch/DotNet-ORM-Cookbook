@@ -8,9 +8,20 @@
   "ConvertLocalLinks": "true",
   "Pages": {
     "__index": "index.md",
+    "FAQ": "FAQ.md",
     "Single Model CRUD": "SingleModelCrud.md",
+    "Model with Childern CRUD": "ModelWithChildren.md",
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",
-    "Partial Updates": "PartialUpdate.md"
+    "Partial Updates": "PartialUpdate.md",
+    "Immutable CRUD": "Immutable.md",
+    "Projecting with a Join": "Joins.md",
+    "Reading from Views": "Views.md",
+    "Basic Sorting": "Sorting.md",
+    "Populate DataTable": "PopulateDataTable.md",
+    "Foreign Key to Lookup Table CRUD": {
+      "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
+      "Object-Based Foreign Key": "ModelWithLookupComplex.md"
+    }
   }
 }

@@ -14,10 +14,9 @@ namespace Recipes.ServiceStack
     {
         static Lazy<IDbConnectionFactory> DbConnectionFactoryFactory = new Lazy<IDbConnectionFactory>(() =>
         {
-            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json").Build();
-            var con = configuration.GetSection("ConnectionStrings").GetChildren().Single();
-            return new OrmLiteConnectionFactory(con.Value, SqlServerDialect.Provider);
+            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
+            var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
+            return new OrmLiteConnectionFactory(sqlServerConnectionString, SqlServerDialect.Provider);
         });
 
         internal static IDbConnectionFactory DbConnectionFactory => DbConnectionFactoryFactory.Value;
@@ -41,20 +40,23 @@ namespace Recipes.ServiceStack
         }
 
         [TestMethod]
-        public void Warmup()
+        public void CheckIncludes()
         {
-            long i = 0;
-
-            //Touch all of the models to validate entity mappings
+            var e = new Employee
+            {
+                EmployeeClassificationId = 2,
+                FirstName = "test",
+                LastName = "test"
+            };
             using (var db = DbConnectionFactory.OpenDbConnection())
             {
-                i = db.Count<Department>();
-                i += db.Count<Division>();
-                i += db.Count<Employee>();
-                i += db.Count<EmployeeClassification>();
+                using (var tx = db.OpenTransaction())
+                {
+                    db.Save(e);
+                    Assert.AreNotEqual(0, e.Id);
+                    tx.Rollback();
+                }
             }
-
-            Assert.AreNotEqual(0, i);
         }
 
         [TestMethod]
@@ -75,23 +77,20 @@ namespace Recipes.ServiceStack
         }
 
         [TestMethod]
-        public void CheckIncludes()
+        public void Warmup()
         {
-            var e = new Employee
-            {
-                EmployeeClassificationId = 2,
-                FirstName = "test",
-                LastName = "test"
-            };
+            long i = 0;
+
+            //Touch all of the models to validate entity mappings
             using (var db = DbConnectionFactory.OpenDbConnection())
             {
-                using (var tx = db.OpenTransaction())
-                {
-                    db.Save(e);
-                    Assert.AreNotEqual(0, e.Id);
-                    tx.Rollback();
-                }
+                i = db.Count<Department>();
+                i += db.Count<Division>();
+                i += db.Count<Employee>();
+                i += db.Count<EmployeeClassification>();
             }
+
+            Assert.AreNotEqual(0, i);
         }
     }
 }

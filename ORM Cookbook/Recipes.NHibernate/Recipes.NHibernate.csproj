@@ -10,7 +10,11 @@
 
   <ItemGroup>
     <None Remove="hibernate.cfg.xml" />
+    <None Remove="Mappings\Employee.hbm.xml" />
     <None Remove="Mappings\EmployeeClassification.hbm.xml" />
+    <None Remove="Mappings\EmployeeComplex.hbm.xml" />
+    <None Remove="Mappings\EmployeeDetail.hbm.xml" />
+    <None Remove="Mappings\Production.hbm.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,7 +24,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Mappings\EmployeeComplex.hbm.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Employee.hbm.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\EmployeeDetail.hbm.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Mappings\EmployeeClassification.hbm.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Production.hbm.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -33,16 +49,15 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
-    <PackageReference Include="coverlet.collector" Version="1.1.0">
+    <PackageReference Include="coverlet.collector" Version="1.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NHibernate" Version="5.2.6" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Recipes.Core\Recipes.Core.csproj" />
+    <ProjectReference Include="..\Recipes\Recipes.csproj" />
   </ItemGroup>
 
 </Project>

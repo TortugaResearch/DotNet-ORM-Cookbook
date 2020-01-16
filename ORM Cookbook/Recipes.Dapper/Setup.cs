@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Recipes.Dapper
 {
@@ -24,9 +23,9 @@ namespace Recipes.Dapper
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
-            var con = configuration.GetSection("ConnectionStrings").GetChildren().Single();
+            var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
 
-            ConnectionString = con.Value;
+            ConnectionString = sqlServerConnectionString;
 
             try
             {

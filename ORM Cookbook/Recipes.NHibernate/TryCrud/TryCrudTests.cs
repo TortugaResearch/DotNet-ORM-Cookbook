@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.NHibernate.Models;
+using Recipes.NHibernate.Entities;
 using Recipes.TryCrud;
 
 namespace Recipes.NHibernate.TryCrud
@@ -7,9 +7,9 @@ namespace Recipes.NHibernate.TryCrud
     [TestClass]
     public class TryCrudTests : TryCrudTests<EmployeeClassification>
     {
-        protected override ITryCrudRepository<EmployeeClassification> GetRepository()
+        protected override ITryCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new TryCrudRepository(Setup.SessionFactory);
+            return new TryCrudScenario(Setup.SessionFactory);
         }
     }
 }

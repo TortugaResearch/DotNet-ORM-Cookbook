@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.Models;
 using Recipes.SingleModelCrudAsync;
 
 namespace Recipes.Chain.SingleModelCrudAsync
@@ -6,9 +7,9 @@ namespace Recipes.Chain.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncCompiledTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncCompiledRepository(Setup.PrimaryDataSource);
+            return new SingleModelCrudAsyncCompiledScenario(Setup.PrimaryDataSource);
         }
     }
 }

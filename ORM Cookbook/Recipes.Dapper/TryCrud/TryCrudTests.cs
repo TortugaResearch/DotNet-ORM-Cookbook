@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Dapper.Models;
 using Recipes.TryCrud;
 
 namespace Recipes.Dapper.TryCrud
@@ -6,9 +7,9 @@ namespace Recipes.Dapper.TryCrud
     [TestClass]
     public class TryCrudTests : TryCrudTests<EmployeeClassification>
     {
-        protected override ITryCrudRepository<EmployeeClassification> GetRepository()
+        protected override ITryCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new TryCrudRepository(Setup.ConnectionString);
+            return new TryCrudScenario(Setup.ConnectionString);
         }
     }
 }

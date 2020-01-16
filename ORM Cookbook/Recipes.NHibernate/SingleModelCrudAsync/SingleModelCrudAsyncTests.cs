@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.NHibernate.Models;
+using Recipes.NHibernate.Entities;
 using Recipes.SingleModelCrudAsync;
 
 namespace Recipes.NHibernate.SingleModelCrudAsync
@@ -7,9 +7,9 @@ namespace Recipes.NHibernate.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncRepository(Setup.SessionFactory);
+            return new SingleModelCrudAsyncScenario(Setup.SessionFactory);
         }
     }
 }

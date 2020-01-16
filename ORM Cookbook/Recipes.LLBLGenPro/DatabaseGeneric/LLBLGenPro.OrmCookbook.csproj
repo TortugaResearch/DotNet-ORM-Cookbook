@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>LLBLGenPro.OrmCookbook</AssemblyName>
+    <RootNamespace>LLBLGenPro.OrmCookbook</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.6.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Recipes\Recipes.csproj" />
+  </ItemGroup>
+</Project>

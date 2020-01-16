@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.NHibernate.Models;
+using Recipes.NHibernate.Entities;
 using Recipes.PartialUpdate;
 
 namespace Recipes.NHibernate.PartialUpdate
@@ -7,9 +7,9 @@ namespace Recipes.NHibernate.PartialUpdate
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassification>
     {
-        protected override IPartialUpdateRepository<EmployeeClassification> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassification> GetScenario()
         {
-            return new PartialUpdateRepository(Setup.SessionFactory);
+            return new PartialUpdateScenario(Setup.SessionFactory);
         }
     }
 }

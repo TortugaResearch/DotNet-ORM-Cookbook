@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.RepoDb.Entities;
 using Recipes.SingleModelCrudAsync;
 
 namespace Recipes.RepoDb.SingleModelCrudAsync
@@ -6,9 +7,9 @@ namespace Recipes.RepoDb.SingleModelCrudAsync
     [TestClass]
     public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudAsyncRepository<EmployeeClassification> GetRepository()
+        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncRepository(Setup.ConnectionString);
+            return new SingleModelCrudAsyncScenario(Setup.ConnectionString);
         }
     }
 }

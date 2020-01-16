@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FAQ - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry current"><a class="current" href="FAQ.htm">FAQ</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#can-i-add-my-favorite-orm">Can I add my favorite ORM?</a></li>
+
+<li class="tocentry"><a href="#what-if-my-orm-doesnt-support-sql-server">What if my ORM doesn’t support SQL Server?</a></li>
+
+<li class="tocentry"><a href="#what-do-you-mean-by-scenario">What do you mean by “scenario”?</a></li>
+
+<li class="tocentry"><a href="#why-dont-you-inject-an-open-connectiondbcontextisession">Why don’t you inject an open connection/DBContext/ISession?</a></li>
+
+<li class="tocentry"><a href="#why-dont-you-expose--in-the-repositories">Why don’t you expose <code>IQueryable</code> in the repositories?</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="FAQ.htm">FAQ</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="frequently-asked-questions">Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<h2 id="can-i-add-my-favorite-orm">Can I add my favorite ORM?<a class="headerlink" href="#can-i-add-my-favorite-orm" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Yes. If you are willing to abide by our basic conventions, you may add any .NET Core ORM you want to the project.</p>
+<h2 id="what-if-my-orm-doesnt-support-sql-server">What if my ORM doesn’t support SQL Server?<a class="headerlink" href="#what-if-my-orm-doesnt-support-sql-server" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>ORMs for other databases will be permitted once we create the associated database headers. This is currently in the planning phase.</p>
+<h2 id="what-do-you-mean-by-scenario">What do you mean by “scenario”?<a class="headerlink" href="#what-do-you-mean-by-scenario" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In the context of this cookbook, a <strong>scenario</strong> is something that a developer wants to achieve in order to fulfill a business or design requirement. For example, the developer may be tasked with “create a function that returns an <code>EmployeeClassification</code> record or null if the record doesn’t exist”.</p>
+<p>Generally speaking, the scenarios do not dictate <em>how</em> something is to be accomplished. Different ORMs are allowed to have different solutions so long as the test cases are passed.</p>
+<h2 id="why-dont-you-inject-an-open-connectiondbcontextisession">Why don’t you inject an open connection/DBContext/ISession?<a class="headerlink" href="#why-dont-you-inject-an-open-connectiondbcontextisession" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<blockquote>
+<p>Connections to data sources are a fundamental part of the data layer. All data source connections should be managed by the data layer. Creating and managing connections uses valuable resources in both the data layer and the data source. To maximize performance and security, consider the following guidelines when designing for data layer connections:</p>
+<ul>
+<li>In general, open connections as late as possible and close them as early as possible. Never hold connections open for excessive periods.</li>
+</ul>
+</blockquote>
+<p>-- Microsoft Application Architecture Guide, 2nd Edition</p>
+<h2 id="why-dont-you-expose--in-the-repositories">Why don’t you expose <code>IQueryable</code> in the repositories?<a class="headerlink" href="#why-dont-you-expose--in-the-repositories" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<blockquote>
+<p><strong>Encapsulate data access functionality within the data access layer.</strong> The data access layer should hide the details of data source access. It should be responsible for managing connections, generating queries, and mapping application entities to data source structures. Consumers of the data access layer interact through abstract interfaces using application entities such as custom objects, TypedDataSets, and XML, and should have no knowledge of the internal details of the data access layer. Separating concerns in this way assists in application development and maintenance.</p>
+</blockquote>
+<p>-- Microsoft Application Architecture Guide, 2nd Edition</p>
+<p>Another reason is that not all databases expose an <code>IQueryable</code> interface. The intention is that scenarios are based around goals, not specific techniques/technologies.</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

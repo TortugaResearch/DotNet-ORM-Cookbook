@@ -16,7 +16,8 @@ VALUES	(1, 'Full Time Salary', 1, 1),
 		(3, 'Part Time Wage', 0, 1),
 		(4, 'Contractor', 0, 0),
 		(5, 'Paid Intern', 0, 1),
-		(6, 'Unpaid Intern', 1, 1);
+		(6, 'Unpaid Intern', 1, 1),
+		(7, 'Consultant', 1, 0);
 
 
 
@@ -29,14 +30,14 @@ ON t.EmployeeClassificationKey = s.EmployeeClassificationKey
 WHEN NOT MATCHED THEN
 	INSERT (EmployeeClassificationKey,
 			EmployeeClassificationName,
-			IsExempt
+			IsExempt, IsEmployee
 		   )
 	VALUES (s.EmployeeClassificationKey,
 			s.EmployeeClassificationName,
-			s.IsExempt
+			s.IsExempt, s.IsEmployee
 		   )
 WHEN MATCHED THEN
-	UPDATE SET t.EmployeeClassificationName = s.EmployeeClassificationName, t.IsExempt=s.IsExempt
+	UPDATE SET t.EmployeeClassificationName = s.EmployeeClassificationName, t.IsExempt=s.IsExempt, t.IsEmployee = s.IsEmployee
 WHEN NOT MATCHED BY SOURCE AND t.EmployeeClassificationKey < 1000 THEN
 	DELETE;
 

@@ -1,14 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.PartialUpdate;
+using Recipes.RepoDb.Entities;
 
 namespace Recipes.RepoDb.PartialUpdate
 {
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassification>
     {
-        protected override IPartialUpdateRepository<EmployeeClassification> GetRepository()
+        protected override IPartialUpdateScenario<EmployeeClassification> GetScenario()
         {
-            throw new AssertInconclusiveException("TODO");
+            return new PartialUpdateScenario(Setup.ConnectionString);
         }
     }
 }
