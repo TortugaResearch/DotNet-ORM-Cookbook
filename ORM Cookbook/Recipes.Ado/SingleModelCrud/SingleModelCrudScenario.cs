@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Recipes.Ado.Models;
 using Recipes.SingleModelCrud;
 using System;
 using System.Collections.Generic;
@@ -8,17 +9,6 @@ namespace Recipes.Ado.SingleModelCrud
     public class SingleModelCrudScenario : ISingleModelCrudScenario<EmployeeClassification>
     {
         readonly string m_ConnectionString;
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
 
         public SingleModelCrudScenario(string connectionString)
         {
@@ -42,18 +32,6 @@ namespace Recipes.Ado.SingleModelCrud
             }
         }
 
-        public void DeleteByKey(int employeeClassificationKey)
-        {
-            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
-                cmd.ExecuteNonQuery();
-            }
-        }
-
         public void Delete(EmployeeClassification classification)
         {
             if (classification == null)
@@ -65,6 +43,18 @@ namespace Recipes.Ado.SingleModelCrud
             using (var cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteByKey(int employeeClassificationKey)
+        {
+            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -155,6 +145,17 @@ namespace Recipes.Ado.SingleModelCrud
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        /// <summary>
+        /// Opens a database connection.
+        /// </summary>
+        /// <remarks>Caller must dispose the connection.</remarks>
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
         }
     }
 }

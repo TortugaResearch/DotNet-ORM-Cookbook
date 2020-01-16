@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using Recipes.Dapper.Models;
 using Recipes.Immutable;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,6 @@ namespace Recipes.Dapper.Immutable
     public class ImmutableScenario : IImmutableScenario<ReadOnlyEmployeeClassification>
     {
         readonly string m_ConnectionString;
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
 
         public ImmutableScenario(string connectionString)
         {
@@ -40,14 +30,6 @@ namespace Recipes.Dapper.Immutable
                 return con.ExecuteScalar<int>(sql, classification);
         }
 
-        public void DeleteByKey(int employeeClassificationKey)
-        {
-            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
-
-            using (var con = OpenConnection())
-                con.Execute(sql, new { employeeClassificationKey });
-        }
-
         public void Delete(ReadOnlyEmployeeClassification classification)
         {
             if (classification == null)
@@ -57,6 +39,14 @@ namespace Recipes.Dapper.Immutable
 
             using (var con = OpenConnection())
                 con.Execute(sql, classification);
+        }
+
+        public void DeleteByKey(int employeeClassificationKey)
+        {
+            var sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+
+            using (var con = OpenConnection())
+                con.Execute(sql, new { employeeClassificationKey });
         }
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
@@ -98,6 +88,17 @@ namespace Recipes.Dapper.Immutable
 
             using (var con = OpenConnection())
                 con.Execute(sql, classification);
+        }
+
+        /// <summary>
+        /// Opens a database connection.
+        /// </summary>
+        /// <remarks>Caller must dispose the connection.</remarks>
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ModelWithChildren;
 using Recipes.EntityFrameworkCore.Entities;
+using Recipes.ModelWithChildren;
 
 namespace Recipes.EntityFrameworkCore.ModelWithChildren
 {

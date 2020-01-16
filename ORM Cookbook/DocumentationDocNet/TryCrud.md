@@ -4,7 +4,7 @@ These scenarios demonstrate the difference between operations that fail silently
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\TryCrud\ITryCrudScenario`1.cs] ITryCrudScenario{TEmployeeClassification}
+@snippet cs [..\Recipes\TryCrud\ITryCrudScenario`1.cs] ITryCrudScenario{TEmployeeClassification}
 
 ## ADO.NET
 

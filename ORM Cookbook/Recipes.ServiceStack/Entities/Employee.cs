@@ -38,43 +38,10 @@ namespace Recipes.ServiceStack.Entities
         public virtual EmployeeClassification? EmployeeClassification { get; set; }
     }
 
-    [Alias("EmployeeDetail")]
-    [Schema("HR")]
-    public partial class EmployeeDetail
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class Employee : IEmployeeSimple
     {
-        [PrimaryKey, AutoIncrement]
-        [Alias("EmployeeKey")]
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string? FirstName { get; set; }
-
-        [StringLength(50)]
-        public string? MiddleName { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string? LastName { get; set; }
-
-        [StringLength(100)]
-        public string? Title { get; set; }
-
-        [StringLength(15)]
-        public string? OfficePhone { get; set; }
-
-        [StringLength(15)]
-        public string? CellPhone { get; set; }
-
-        [References(typeof(EmployeeClassification))]
-        [Alias("EmployeeClassificationKey")]
-        public int? EmployeeClassificationId { get; set; }
-
-        [Required, StringLength(30)]
-        public string? EmployeeClassificationName { get; set; }
-
-        public bool IsExempt { get; set; }
-
-        public bool IsEmployee { get; set; }
+        int IEmployeeSimple.EmployeeKey { get => Id; set => Id = value; }
+        int IEmployeeSimple.EmployeeClassificationKey { get => EmployeeClassificationId ?? 0; set => EmployeeClassificationId = value; }
     }
 }

@@ -34,9 +34,8 @@
     <PackageReference Include="Tortuga.Chain.SqlServer" Version="3.1.8000" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Recipes.Core\Recipes.Core.csproj" />
+    <ProjectReference Include="..\Recipes\Recipes.csproj" />
   </ItemGroup>
 
 </Project>

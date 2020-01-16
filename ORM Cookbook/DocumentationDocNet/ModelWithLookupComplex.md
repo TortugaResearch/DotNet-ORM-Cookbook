@@ -4,9 +4,9 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\ModelWithLookup\IEmployeeComplex.cs] IEmployeeComplex
+@snippet cs [..\Recipes.Interfaces\IEmployeeComplex.cs] IEmployeeComplex
 
-@snippet cs [..\Recipes.Core\ModelWithLookup\IModelWithLookupComplexScenario`1.cs] IModelWithLookupComplexScenario{TEmployee}
+@snippet cs [..\Recipes\ModelWithLookup\IModelWithLookupComplexScenario`1.cs] IModelWithLookupComplexScenario{TEmployee}
 
 ## Database Views
 
@@ -16,7 +16,7 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 
 In order to promote code reuse, object population has been moved into the model's constructor.
 
-@snippet cs [..\Recipes.Ado\ModelWithLookup\EmployeeComplex.cs] EmployeeComplex
+@snippet cs [..\Recipes.Ado\Models\EmployeeComplex.cs] EmployeeComplex
 
 Likewise, a database view was used to join the Employee table with its lookup table(s).
 
@@ -29,7 +29,7 @@ Chain does not support representing FK's as child objects for create/update oper
 
 Read operations must occur against a database view in order to get the properties from the child object. The `Decompose` attribute indicates that the child should be populated from the same view.
 
-@snippet cs [..\Recipes.Tortuga.Chain\ModelWithLookup\EmployeeComplex.cs] EmployeeComplex
+@snippet cs [..\Recipes.Tortuga.Chain\Models\EmployeeComplex.cs] EmployeeComplex
 
 @snippet cs [..\Recipes.Tortuga.Chain\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
@@ -40,7 +40,7 @@ Dapper does not support representing FK's as child objects for create/update ope
 
 Read operations must occur against a database view in order to get the properties from the child object. The [Multi Mapping](https://github.com/StackExchange/Dapper#multi-mapping) overload indicates that the child should be populated from the same view. Use the `splitOn` parameter to indicate the primary key of the second object.
 
-@snippet cs [..\Recipes.Dapper\ModelWithLookup\EmployeeComplex.cs] EmployeeComplex
+@snippet cs [..\Recipes.Dapper\Models\EmployeeComplex.cs] EmployeeComplex
 
 @snippet cs [..\Recipes.Dapper\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 

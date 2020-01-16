@@ -40,20 +40,23 @@ namespace Recipes.ServiceStack
         }
 
         [TestMethod]
-        public void Warmup()
+        public void CheckIncludes()
         {
-            long i = 0;
-
-            //Touch all of the models to validate entity mappings
+            var e = new Employee
+            {
+                EmployeeClassificationId = 2,
+                FirstName = "test",
+                LastName = "test"
+            };
             using (var db = DbConnectionFactory.OpenDbConnection())
             {
-                i = db.Count<Department>();
-                i += db.Count<Division>();
-                i += db.Count<Employee>();
-                i += db.Count<EmployeeClassification>();
+                using (var tx = db.OpenTransaction())
+                {
+                    db.Save(e);
+                    Assert.AreNotEqual(0, e.Id);
+                    tx.Rollback();
+                }
             }
-
-            Assert.AreNotEqual(0, i);
         }
 
         [TestMethod]
@@ -74,23 +77,20 @@ namespace Recipes.ServiceStack
         }
 
         [TestMethod]
-        public void CheckIncludes()
+        public void Warmup()
         {
-            var e = new Employee
-            {
-                EmployeeClassificationId = 2,
-                FirstName = "test",
-                LastName = "test"
-            };
+            long i = 0;
+
+            //Touch all of the models to validate entity mappings
             using (var db = DbConnectionFactory.OpenDbConnection())
             {
-                using (var tx = db.OpenTransaction())
-                {
-                    db.Save(e);
-                    Assert.AreNotEqual(0, e.Id);
-                    tx.Rollback();
-                }
+                i = db.Count<Department>();
+                i += db.Count<Division>();
+                i += db.Count<Employee>();
+                i += db.Count<EmployeeClassification>();
             }
+
+            Assert.AreNotEqual(0, i);
         }
     }
 }

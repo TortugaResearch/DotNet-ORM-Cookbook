@@ -1,4 +1,5 @@
-﻿using Recipes.TryCrud;
+﻿using Recipes.Chain.Models;
+using Recipes.TryCrud;
 using System;
 using Tortuga.Chain;
 

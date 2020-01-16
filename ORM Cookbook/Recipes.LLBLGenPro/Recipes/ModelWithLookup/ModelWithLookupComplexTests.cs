@@ -1,6 +1,5 @@
 ﻿using LLBLGenPro.OrmCookbook.EntityClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.LLBLGenPro.ModelWithLookup;
 using Recipes.ModelWithLookup;
 
 namespace Recipes.LLBLGenPro.ModelWithLookup

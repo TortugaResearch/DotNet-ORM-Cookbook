@@ -1,4 +1,5 @@
-﻿using Recipes.Sorting;
+﻿using Recipes.Chain.Models;
+using Recipes.Sorting;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;

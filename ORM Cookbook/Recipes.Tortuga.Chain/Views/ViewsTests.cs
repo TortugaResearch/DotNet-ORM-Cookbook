@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.Models;
 using Recipes.Views;
 
 namespace Recipes.Chain.Views

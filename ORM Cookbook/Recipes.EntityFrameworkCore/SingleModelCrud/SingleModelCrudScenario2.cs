@@ -13,16 +13,6 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
             CreateDbContext = dBContextFactory;
         }
 
-        public override void DeleteByKey(int employeeClassificationKey)
-        {
-            using (var context = CreateDbContext())
-            {
-                var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
-                context.Entry(temp).State = EntityState.Deleted;
-                context.SaveChanges();
-            }
-        }
-
         public override void Delete(EmployeeClassification classification)
         {
             if (classification == null)
@@ -31,6 +21,16 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
             using (var context = CreateDbContext())
             {
                 context.Entry(classification).State = EntityState.Deleted;
+                context.SaveChanges();
+            }
+        }
+
+        public override void DeleteByKey(int employeeClassificationKey)
+        {
+            using (var context = CreateDbContext())
+            {
+                var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
+                context.Entry(temp).State = EntityState.Deleted;
                 context.SaveChanges();
             }
         }

@@ -10,8 +10,8 @@ namespace Recipes.NHibernate
     [SuppressMessage("Design", "CA1001")]
     public class DataTableResultTransformer : IResultTransformer
     {
-        readonly Type?[] m_DataTypeOverrides = Array.Empty<Type?>();
         readonly DataTable m_DataTable = new DataTable();
+        readonly Type?[] m_DataTypeOverrides = Array.Empty<Type?>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataTableResultTransformer"/> class.

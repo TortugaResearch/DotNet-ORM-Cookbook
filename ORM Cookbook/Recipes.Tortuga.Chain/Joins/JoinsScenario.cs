@@ -1,4 +1,5 @@
-﻿using Recipes.Joins;
+﻿using Recipes.Chain.Models;
+using Recipes.Joins;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;

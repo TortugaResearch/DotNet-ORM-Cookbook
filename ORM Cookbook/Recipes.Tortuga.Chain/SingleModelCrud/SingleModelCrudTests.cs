@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Chain.Models;
 using Recipes.SingleModelCrud;
 
 namespace Recipes.Chain.SingleModelCrud

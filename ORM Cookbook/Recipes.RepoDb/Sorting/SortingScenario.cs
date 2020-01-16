@@ -29,14 +29,14 @@ namespace Recipes.RepoDb.Sorting
             return QueryAll().OrderBy(x => x.LastName).AsList();
         }
 
-        public IList<EmployeeSimple> SortByLastNameFirstName()
-        {
-            return QueryAll().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).AsList();
-        }
-
         public IList<EmployeeSimple> SortByLastNameDescFirstName()
         {
             return QueryAll().OrderByDescending(x => x.LastName).ThenBy(x => x.FirstName).AsList();
+        }
+
+        public IList<EmployeeSimple> SortByLastNameFirstName()
+        {
+            return QueryAll().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).AsList();
         }
     }
 }

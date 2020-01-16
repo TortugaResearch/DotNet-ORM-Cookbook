@@ -23,13 +23,12 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Recipes.Core\Recipes.Core.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="..\Configuration\appsettings.json" Link="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Recipes\Recipes.csproj" />
   </ItemGroup>
 </Project>

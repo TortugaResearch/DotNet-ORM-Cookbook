@@ -5,9 +5,9 @@ using Recipes.SingleModelCrud;
 namespace Recipes.RepoDb.SingleModelCrud
 {
     [TestClass]
-    public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassificationSingleModelCrud>
+    public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassification>
     {
-        protected override ISingleModelCrudScenario<EmployeeClassificationSingleModelCrud> GetScenario()
+        protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
             return new SingleModelCrudScenario(Setup.ConnectionString);
         }

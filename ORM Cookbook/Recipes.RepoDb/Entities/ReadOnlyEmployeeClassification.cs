@@ -1,5 +1,4 @@
-﻿using Recipes.Immutable;
-using RepoDb.Attributes;
+﻿using RepoDb.Attributes;
 using System;
 
 namespace Recipes.RepoDb.Entities
@@ -7,7 +6,7 @@ namespace Recipes.RepoDb.Entities
     [Map("[HR].[EmployeeClassification]")]
     public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
     {
-        public ReadOnlyEmployeeClassification(MutableEmployeeClassification classification)
+        public ReadOnlyEmployeeClassification(EmployeeClassification classification)
         {
             if (classification?.EmployeeClassificationName == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification.EmployeeClassificationName)} is null.");
@@ -33,9 +32,7 @@ namespace Recipes.RepoDb.Entities
         public int EmployeeClassificationKey { get; }
 
         public string EmployeeClassificationName { get; }
-
-        public bool IsExempt { get; }
-
         public bool IsEmployee { get; }
+        public bool IsExempt { get; }
     }
 }

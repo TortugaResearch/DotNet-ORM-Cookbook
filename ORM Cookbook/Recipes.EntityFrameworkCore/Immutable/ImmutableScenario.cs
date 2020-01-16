@@ -31,20 +31,6 @@ namespace Recipes.EntityFrameworkCore.Immutable
             }
         }
 
-        public virtual void DeleteByKey(int employeeClassificationKey)
-        {
-            using (var context = CreateDbContext())
-            {
-                //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
-                if (temp != null)
-                {
-                    context.EmployeeClassification.Remove(temp);
-                    context.SaveChanges();
-                }
-            }
-        }
-
         public virtual void Delete(ReadOnlyEmployeeClassification classification)
         {
             if (classification == null)
@@ -54,6 +40,20 @@ namespace Recipes.EntityFrameworkCore.Immutable
             {
                 //Find the row you wish to delete
                 var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+                if (temp != null)
+                {
+                    context.EmployeeClassification.Remove(temp);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public virtual void DeleteByKey(int employeeClassificationKey)
+        {
+            using (var context = CreateDbContext())
+            {
+                //Find the row you wish to delete
+                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
                 if (temp != null)
                 {
                     context.EmployeeClassification.Remove(temp);

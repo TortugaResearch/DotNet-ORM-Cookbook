@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Dapper.Models;
 using Recipes.ModelWithLookup;
 
 namespace Recipes.Dapper.ModelWithLookup

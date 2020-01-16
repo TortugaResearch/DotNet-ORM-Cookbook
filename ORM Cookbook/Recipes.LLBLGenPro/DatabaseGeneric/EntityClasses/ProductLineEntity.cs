@@ -22,7 +22,7 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	/// <summary>Entity class which represents the entity 'ProductLine'.<br/><br/></summary>
 	[Serializable]
-	public partial class ProductLineEntity : CommonEntityBase, Recipes.ModelWithChildren.IProductLine<ProductEntity>
+	public partial class ProductLineEntity : CommonEntityBase, Recipes.IProductLine<ProductEntity>
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{

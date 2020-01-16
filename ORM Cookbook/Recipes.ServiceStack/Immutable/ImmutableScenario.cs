@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Recipes.Immutable;
+﻿using Recipes.Immutable;
 using Recipes.ServiceStack.Entities;
 using ServiceStack;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Recipes.ServiceStack.Immutable
 {
@@ -24,19 +24,9 @@ namespace Recipes.ServiceStack.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using(var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return (int) db.Insert(new EmployeeClassification().PopulateWith(classification), true);
-            }
-        }
-
-        public void DeleteByKey(int employeeClassificationKey)
-        {
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                var deleted = db.Delete<EmployeeClassification>(r => r.Id == employeeClassificationKey);
-                if (deleted != 1)
-                    throw new DataException($"No row was found for key {employeeClassificationKey}.");
+                return (int)db.Insert(new EmployeeClassification().PopulateWith(classification), true);
             }
         }
 
@@ -50,6 +40,16 @@ namespace Recipes.ServiceStack.Immutable
                 var deleted = db.Delete<EmployeeClassification>(r => r.Id == classification.Id);
                 if (deleted != 1)
                     throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
+            }
+        }
+
+        public void DeleteByKey(int employeeClassificationKey)
+        {
+            using (var db = _dbConnectionFactory.OpenDbConnection())
+            {
+                var deleted = db.Delete<EmployeeClassification>(r => r.Id == employeeClassificationKey);
+                if (deleted != 1)
+                    throw new DataException($"No row was found for key {employeeClassificationKey}.");
             }
         }
 
@@ -90,7 +90,7 @@ namespace Recipes.ServiceStack.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using(var db = _dbConnectionFactory.OpenDbConnection())
+            using (var db = _dbConnectionFactory.OpenDbConnection())
             {
                 db.Update<EmployeeClassification>(new
                 {

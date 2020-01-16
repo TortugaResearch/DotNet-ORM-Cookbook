@@ -1,4 +1,5 @@
-﻿using Recipes.Views;
+﻿using Recipes.Chain.Models;
+using Recipes.Views;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;

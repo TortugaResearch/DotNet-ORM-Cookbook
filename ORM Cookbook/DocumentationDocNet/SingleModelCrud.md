@@ -4,14 +4,14 @@ This scenario covers the basic Create-Read-Update-Delete operations on a model t
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\SingleModelCrud\ISingleModelCrudScenario`1.cs] ISingleModelCrudScenario{TEmployeeClassification}
+@snippet cs [..\Recipes\SingleModelCrud\ISingleModelCrudScenario`1.cs] ISingleModelCrudScenario{TEmployeeClassification}
 
 
 ## ADO.NET
 
 With ADO.NET, the model does not actually participate in database operations so it needs no adornment.
 
-@snippet cs [../Recipes.Ado/SingleModelCrud/EmployeeClassification.cs] EmployeeClassification
+@snippet cs [../Recipes.Ado/Models/EmployeeClassification.cs] EmployeeClassification
 
 The repository methods use raw SQL strings. All other ORMs internally generate the same code. 
 
@@ -21,7 +21,7 @@ The repository methods use raw SQL strings. All other ORMs internally generate t
 
 Strictly speaking, Chain can use the same models as ADO.NET and Dapper so long as the column and property names match. However, it is more convenient to tag the class with what table it refers to.
 
-@snippet cs [../Recipes.Tortuga.Chain\SingleModelCrud\EmployeeClassification.cs] EmployeeClassification
+@snippet cs [../Recipes.Tortuga.Chain\Models\EmployeeClassification.cs] EmployeeClassification
 
 Without the Table attribute, the table name will have to be specified in every call in the repository.
 

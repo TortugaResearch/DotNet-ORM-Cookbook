@@ -1,4 +1,5 @@
-﻿using Recipes.ModelWithLookup;
+﻿using Recipes.Chain.Models;
+using Recipes.ModelWithLookup;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;
@@ -7,9 +8,9 @@ namespace Recipes.Chain.ModelWithLookup
 {
     public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario<EmployeeComplex>
     {
-        const string WriteTableName = "HR.Employee";
-        const string ReadViewName = "HR.EmployeeDetail";
         const string ClassificationTableName = "HR.EmployeeClassification";
+        const string ReadViewName = "HR.EmployeeDetail";
+        const string WriteTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public ModelWithLookupComplexScenario(SqlServerDataSource dataSource)

@@ -1,4 +1,5 @@
-﻿using Recipes.ModelWithLookup;
+﻿using Recipes.Chain.Models;
+using Recipes.ModelWithLookup;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;
@@ -7,8 +8,8 @@ namespace Recipes.Chain.ModelWithLookup
 {
     public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario<EmployeeSimple>
     {
-        const string TableName = "HR.Employee";
         const string ClassificationTableName = "HR.EmployeeClassification";
+        const string TableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public ModelWithLookupSimpleScenario(SqlServerDataSource dataSource)

@@ -1,4 +1,5 @@
-﻿using Recipes.SingleModelCrud;
+﻿using Recipes.Chain.Models;
+using Recipes.SingleModelCrud;
 using System;
 using System.Collections.Generic;
 using Tortuga.Chain;
@@ -23,17 +24,17 @@ namespace Recipes.Chain.SingleModelCrud
             return m_DataSource.Insert(classification).ToInt32().Execute();
         }
 
-        public void DeleteByKey(int employeeClassificationKey)
-        {
-            m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
-        }
-
         public void Delete(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
             m_DataSource.Delete(classification).Execute();
+        }
+
+        public void DeleteByKey(int employeeClassificationKey)
+        {
+            m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
         }
 
         public EmployeeClassification FindByName(string employeeClassificationName)

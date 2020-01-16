@@ -6,7 +6,7 @@ This scenario adds async support to the [Single Model CRUD scenario](SingleModel
 
 As a general rule, cancellation tokens are provided for read operations but not write operations. The reason is that users may wish to cancel loading a record or set of records, and this can be done safely. But if they try to cancel a write operation then it becomes a race condition between the database operation completing (including any open transactions) and the user's cancellation attempt. (There are exceptions, which will be handled in future scenarios.)
 
-@snippet cs [..\Recipes.Core\SingleModelCrudAsync\ISingleModelCrudAsyncScenario`1.cs] ISingleModelCrudAsyncScenario{TEmployeeClassification}
+@snippet cs [..\Recipes\SingleModelCrudAsync\ISingleModelCrudAsyncScenario`1.cs] ISingleModelCrudAsyncScenario{TEmployeeClassification}
 
 ## ADO.NET
 

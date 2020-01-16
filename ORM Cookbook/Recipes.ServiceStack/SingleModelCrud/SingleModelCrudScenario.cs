@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Recipes.ServiceStack.Entities;
+﻿using Recipes.ServiceStack.Entities;
 using Recipes.SingleModelCrud;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
+using System;
+using System.Collections.Generic;
 
 namespace Recipes.ServiceStack.SingleModelCrud
 {
@@ -23,15 +23,7 @@ namespace Recipes.ServiceStack.SingleModelCrud
 
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return (int) db.Insert(classification, true);
-            }
-        }
-
-        public virtual void DeleteByKey(int employeeClassificationKey)
-        {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                db.DeleteById<EmployeeClassification>(employeeClassificationKey);
+                return (int)db.Insert(classification, true);
             }
         }
 
@@ -43,6 +35,14 @@ namespace Recipes.ServiceStack.SingleModelCrud
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
                 db.Delete(classification);
+            }
+        }
+
+        public virtual void DeleteByKey(int employeeClassificationKey)
+        {
+            using (var db = _dbConnectionFactory.OpenDbConnection())
+            {
+                db.DeleteById<EmployeeClassification>(employeeClassificationKey);
             }
         }
 

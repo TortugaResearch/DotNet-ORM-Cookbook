@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Dapper.Models;
 using Recipes.PartialUpdate;
 
 namespace Recipes.Dapper.PartialUpdate

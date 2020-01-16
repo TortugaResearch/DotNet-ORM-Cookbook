@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Dapper.Models;
 using Recipes.Joins;
 
 namespace Recipes.Dapper.Joins

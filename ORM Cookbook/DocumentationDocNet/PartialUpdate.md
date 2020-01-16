@@ -4,9 +4,9 @@ These scenarios demonstrate how to perform partial updates on a row.
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes.Core\PartialUpdate\IPartialUpdateScenario`1.cs] UpdateWithObject
+@snippet cs [..\Recipes\PartialUpdate\IPartialUpdateScenario`1.cs] UpdateWithObject
 
-@snippet cs [..\Recipes.Core\PartialUpdate\IPartialUpdateScenario`1.cs] UpdateWithSeparateParameters
+@snippet cs [..\Recipes\PartialUpdate\IPartialUpdateScenario`1.cs] UpdateWithSeparateParameters
 
 ## ADO.NET
 

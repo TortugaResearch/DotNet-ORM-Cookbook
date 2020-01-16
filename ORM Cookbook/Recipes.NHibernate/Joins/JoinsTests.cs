@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.NHibernate.Entities;
 using Recipes.Joins;
+using Recipes.NHibernate.Entities;
 
 namespace Recipes.NHibernate.Joins
 {

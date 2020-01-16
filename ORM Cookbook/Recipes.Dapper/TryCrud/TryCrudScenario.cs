@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using Recipes.Dapper.Models;
 using Recipes.TryCrud;
 using System;
 using System.Data;
@@ -9,17 +10,6 @@ namespace Recipes.Dapper.TryCrud
     public class TryCrudScenario : ITryCrudScenario<EmployeeClassification>
     {
         readonly string m_ConnectionString;
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
 
         public TryCrudScenario(string connectionString)
         {
@@ -153,6 +143,17 @@ namespace Recipes.Dapper.TryCrud
 
             using (var con = OpenConnection())
                 return 1 == con.Execute(sql, classification);
+        }
+
+        /// <summary>
+        /// Opens a database connection.
+        /// </summary>
+        /// <remarks>Caller must dispose the connection.</remarks>
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
         }
     }
 }

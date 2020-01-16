@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.Ado.Models;
 using Recipes.ModelWithLookup;
 
 namespace Recipes.Ado.ModelWithLookup

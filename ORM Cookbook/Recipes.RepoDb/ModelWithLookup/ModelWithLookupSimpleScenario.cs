@@ -54,7 +54,7 @@ namespace Recipes.RepoDb.ModelWithLookup
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
-            return Query<EmployeeClassificationModelWithLookup>(employeeClassificationKey).FirstOrDefault();
+            return Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
         }
 
         public void Update(EmployeeSimple employee)
