@@ -1,9 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.ModelWithChildren;
 using System;
 using System.Collections.Generic;
 
-namespace Recipes.Ado.ModelWithChildren
+namespace Recipes.Ado.Models
 {
     public class ProductLine : IProductLine<Product>
     {

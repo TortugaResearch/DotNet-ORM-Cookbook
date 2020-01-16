@@ -2,7 +2,6 @@
 using LLBLGenPro.OrmCookbook.EntityClasses;
 using LLBLGenPro.OrmCookbook.HelperClasses;
 using LLBLGenPro.OrmCookbook.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.ModelWithChildren;
 using SD.LLBLGen.Pro.LinqSupportClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
@@ -104,7 +103,44 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
             }
         }
 
-        public virtual void Update(ProductLineEntity productLine)
+        public void Update(ProductEntity product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
+
+            using (var adapter = new DataAccessAdapter())
+            {
+                adapter.SaveEntity(product);
+            }
+        }
+
+        public void Update(ProductLineEntity productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
+
+            var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+            uow.AddForSave(productLine, null, refetch: true, recurse: false);
+            using (var adapter = new DataAccessAdapter())
+            {
+                uow.Commit(adapter);
+            }
+        }
+
+        public void UpdateGraph(ProductLineEntity productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
+
+            var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+            uow.AddForSave(productLine);
+            using (var adapter = new DataAccessAdapter())
+            {
+                uow.Commit(adapter);
+            }
+        }
+
+        public virtual void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
         {
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
@@ -125,30 +161,20 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
             }
         }
 
-        public void Update(ProductEntity product)
-        {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
-
-            using (var adapter = new DataAccessAdapter())
-            {
-                adapter.SaveEntity(product);
-            }
-        }
-
-        public void UpdateGraph(ProductLineEntity productLine)
-        {
-            throw new AssertInconclusiveException("TODO");
-        }
-
-        public void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
-        {
-            throw new AssertInconclusiveException("TODO");
-        }
-
         public void UpdateGraphWithDeletes(ProductLineEntity productLine, IList<int> productKeysToRemove)
         {
-            throw new AssertInconclusiveException("TODO");
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
+
+            var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+
+            if (productKeysToRemove?.Count > 0)
+                uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.In(productKeysToRemove)));
+            uow.AddForSave(productLine);
+            using (var adapter = new DataAccessAdapter())
+            {
+                uow.Commit(adapter);
+            }
         }
     }
 }

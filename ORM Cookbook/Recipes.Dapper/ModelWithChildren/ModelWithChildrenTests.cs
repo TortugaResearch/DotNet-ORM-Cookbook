@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Ado.Models;
+using Recipes.Dapper.Models;
 using Recipes.ModelWithChildren;
 
-namespace Recipes.Ado.ModelWithChildren
+namespace Recipes.Dapper.ModelWithChildren
 {
     [TestClass]
     public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLine, Product>

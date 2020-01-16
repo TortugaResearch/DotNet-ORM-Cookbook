@@ -13,7 +13,7 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 
 ## ADO.NET
 
-TODO
+@snippet cs [..\Recipes.ADO\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
 ## Chain
 
@@ -23,7 +23,7 @@ Chain requires operating on the parent and child objects separately.
 
 ## Dapper
 
-TODO
+@snippet cs [..\Recipes.Dapper\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
 ## Entity Framework Core
 

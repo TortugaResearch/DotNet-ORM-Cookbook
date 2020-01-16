@@ -239,7 +239,7 @@ namespace Recipes.ModelWithChildren
             var updated = repository.GetByKey(newKey, true);
             CompareLineOnly(newKey, echo, updated);
 
-            //Ensure childern were not modified
+            //Ensure children were not modified
             CompareProducts(line.Products, updated!.Products);
         }
 

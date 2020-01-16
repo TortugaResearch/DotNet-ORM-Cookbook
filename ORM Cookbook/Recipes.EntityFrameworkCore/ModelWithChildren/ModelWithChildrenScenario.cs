@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.EntityFrameworkCore.Entities;
 using Recipes.ModelWithChildren;
 using System;
@@ -86,6 +85,43 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             }
         }
 
+        public void Update(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
+
+            using (var context = CreateDbContext())
+            {
+                context.Entry(product).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public void Update(ProductLine productLine)
+        {
+            using (var context = CreateDbContext())
+            {
+                context.Entry(productLine).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public void UpdateGraph(ProductLine productLine)
+        {
+            using (var context = CreateDbContext())
+            {
+                context.Entry(productLine).State = EntityState.Modified;
+
+                foreach (var item in productLine.Product)
+                    if (item.ProductKey == 0)
+                        context.Entry(item).State = EntityState.Added;
+                    else
+                        context.Entry(item).State = EntityState.Modified;
+
+                context.SaveChanges();
+            }
+        }
+
         public void UpdateGraphWithChildDeletes(ProductLine productLine)
         {
             if (productLine == null)
@@ -112,31 +148,23 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             }
         }
 
-        public void Update(Product product)
-        {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
-
-            using (var context = CreateDbContext())
-            {
-                context.Entry(product).State = EntityState.Modified;
-                context.SaveChanges();
-            }
-        }
-
-        public void Update(ProductLine productLine)
-        {
-            throw new AssertInconclusiveException();
-        }
-
-        public void UpdateGraph(ProductLine productLine)
-        {
-            throw new AssertInconclusiveException();
-        }
-
         public void UpdateGraphWithDeletes(ProductLine productLine, IList<int> productKeysToRemove)
         {
-            throw new AssertInconclusiveException();
+            using (var context = CreateDbContext())
+            {
+                context.Entry(productLine).State = EntityState.Modified;
+                foreach (var item in productLine.Product)
+                    if (item.ProductKey == 0)
+                        context.Entry(item).State = EntityState.Added;
+                    else
+                        context.Entry(item).State = EntityState.Modified;
+
+                if (productKeysToRemove != null)
+                    foreach (var key in productKeysToRemove)
+                        context.Entry(new Product() { ProductKey = key }).State = EntityState.Deleted;
+
+                context.SaveChanges();
+            }
         }
     }
 }

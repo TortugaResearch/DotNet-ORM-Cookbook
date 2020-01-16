@@ -1,5 +1,4 @@
 ﻿using Recipes.Chain.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.ModelWithChildren;
 using System;
 using System.Collections.Generic;
@@ -93,6 +92,43 @@ namespace Recipes.Chain.ModelWithChildren
             return result;
         }
 
+        public void Update(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
+
+            m_DataSource.Update(product).Execute();
+        }
+
+        public void Update(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
+
+            m_DataSource.Update(productLine).Execute();
+        }
+
+        public void UpdateGraph(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
+
+            using (var trans = m_DataSource.BeginTransaction())
+            {
+                //Update parent row
+                trans.Update(productLine).Execute();
+
+                //Ensure new child rows have their parent's key
+                productLine.ApplyKeys();
+
+                //Insert/update the remaining child rows
+                foreach (var row in productLine.Products)
+                    trans.Upsert(row).Execute();
+
+                trans.Commit();
+            }
+        }
+
         public void UpdateGraphWithChildDeletes(ProductLine productLine)
         {
             if (productLine == null)
@@ -115,7 +151,7 @@ namespace Recipes.Chain.ModelWithChildren
                 //Ensure new child rows have their parent's key
                 productLine.ApplyKeys();
 
-                //Insert/update the remaining child rows
+                //Insert/update the child rows
                 foreach (var row in productLine.Products)
                     trans.Upsert(row).Execute();
 
@@ -123,24 +159,28 @@ namespace Recipes.Chain.ModelWithChildren
             }
         }
 
-        public void Update(Product product)
-        {
-            m_DataSource.Update(product).Execute();
-        }
-
-        public void Update(ProductLine productLine)
-        {
-            throw new AssertInconclusiveException();
-        }
-
-        public void UpdateGraph(ProductLine productLine)
-        {
-            throw new AssertInconclusiveException();
-        }
-
         public void UpdateGraphWithDeletes(ProductLine productLine, IList<int> productKeysToRemove)
         {
-            throw new AssertInconclusiveException();
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
+
+            using (var trans = m_DataSource.BeginTransaction())
+            {
+                //Update parent row
+                trans.Update(productLine).Execute();
+
+                //Ensure new child rows have their parent's key
+                productLine.ApplyKeys();
+
+                //Insert/update the child rows
+                foreach (var row in productLine.Products)
+                    trans.Upsert(row).Execute();
+
+                if (productKeysToRemove?.Count > 0)
+                    trans.DeleteByKeyList(ProductTable, productKeysToRemove).Execute();
+
+                trans.Commit();
+            }
         }
     }
 }

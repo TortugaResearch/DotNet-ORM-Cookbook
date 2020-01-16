@@ -1,8 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.ModelWithChildren;
 using System;
 
-namespace Recipes.Ado.ModelWithChildren
+namespace Recipes.Ado.Models
 {
     public class Product : IProduct
     {
@@ -27,12 +26,9 @@ namespace Recipes.Ado.ModelWithChildren
 
         public int ProductKey { get; set; }
 
-        public string? ProductName { get; set; }
-
         public int ProductLineKey { get; set; }
-
-        public decimal? ShippingWeight { get; set; }
-
+        public string? ProductName { get; set; }
         public decimal? ProductWeight { get; set; }
+        public decimal? ShippingWeight { get; set; }
     }
 }

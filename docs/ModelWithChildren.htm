@@ -191,7 +191,341 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">    public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
+    {
+        readonly string m_ConnectionString;
+
+        public ModelWithChildrenScenario(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
+
+        public int Create(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            const string sql = &quot;INSERT INTO Production.ProductLine ( ProductLineName ) OUTPUT Inserted.ProductLineKey VALUES (@ProductLineName);&quot;;
+
+            using (var con = OpenConnection())
+            {
+                using (var cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue(&quot;@ProductLineName&quot;, productLine.ProductLineName);
+                    productLine.ProductLineKey = (int)cmd.ExecuteScalar();
+                    productLine.ApplyKeys();
+                }
+
+                foreach (var item in productLine.Products)
+                    InsertProduct(con, item);
+            }
+            return productLine.ProductLineKey;
+        }
+
+        public void Delete(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            const string sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
+DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductLineKey&quot;, productLine.ProductLineKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteByKey(int productLineKey)
+        {
+            const string sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
+DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductLineKey&quot;, productLineKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public IList&lt;ProductLine&gt; FindByName(string productLineName, bool includeProducts)
+        {
+            const string sqlA = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineName = @ProductLineName;
+SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.ProductWeight FROM Production.Product p INNER JOIN Production.ProductLine pl ON p.ProductLineKey = pl.ProductLineKey WHERE pl.ProductLineName = @ProductLineName;&quot;;
+
+            const string sqlB = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineName = @ProductLineName;&quot;;
+
+            var sql = includeProducts ? sqlA : sqlB;
+            var results = new List&lt;ProductLine&gt;();
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductLineName&quot;, productLineName);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        results.Add(new ProductLine(reader));
+                    }
+
+                    if (includeProducts)
+                    {
+                        var lookup = results.ToDictionary(x =&gt; x.ProductLineKey);
+                        reader.NextResult();
+                        while (reader.Read())
+                        {
+                            var product = new Product(reader);
+                            lookup[product.ProductLineKey].Products.Add(product);
+                        }
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        public IList&lt;ProductLine&gt; GetAll(bool includeProducts)
+        {
+            const string sqlA = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl;
+SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.ProductWeight FROM Production.Product p INNER JOIN Production.ProductLine pl ON p.ProductLineKey = pl.ProductLineKey;&quot;;
+
+            const string sqlB = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl;&quot;;
+
+            var sql = includeProducts ? sqlA : sqlB;
+            var results = new List&lt;ProductLine&gt;();
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                    results.Add(new ProductLine(reader));
+
+                if (includeProducts)
+                {
+                    var lookup = results.ToDictionary(x =&gt; x.ProductLineKey);
+                    reader.NextResult();
+                    while (reader.Read())
+                    {
+                        var product = new Product(reader);
+                        lookup[product.ProductLineKey].Products.Add(product);
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        public ProductLine? GetByKey(int productLineKey, bool includeProducts)
+        {
+            const string sqlA = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineKey = @ProductLineKey;
+SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.ProductWeight FROM Production.Product p WHERE p.ProductLineKey = @ProductLineKey;&quot;;
+
+            const string sqlB = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineKey = @ProductLineKey;&quot;;
+
+            var sql = includeProducts ? sqlA : sqlB;
+            ProductLine result;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductLineKey&quot;, productLineKey);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        result = new ProductLine(reader);
+                    else
+                        return null;
+
+                    if (includeProducts)
+                    {
+                        reader.NextResult();
+                        while (reader.Read())
+                            result.Products.Add(new Product(reader));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public void Update(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            using (var con = OpenConnection())
+                UpdateProductLine(con, productLine);
+        }
+
+        public void Update(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+            using (var con = OpenConnection())
+                UpdateProduct(con, product);
+        }
+
+        public void UpdateGraph(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            productLine.ApplyKeys();
+
+            using (var con = OpenConnection())
+            {
+                UpdateProductLine(con, productLine);
+                foreach (var item in productLine.Products)
+                {
+                    if (item.ProductKey == 0)
+                        InsertProduct(con, item);
+                    else
+                        UpdateProduct(con, item);
+                }
+            }
+        }
+
+        public void UpdateGraphWithChildDeletes(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            productLine.ApplyKeys();
+
+            using (var con = OpenConnection())
+            {
+                //Find products to remove
+                var originalProductKeys = GetProductKeys(con, productLine.ProductLineKey);
+                foreach (var item in productLine.Products)
+                    originalProductKeys.Remove(item.ProductKey);
+
+                UpdateProductLine(con, productLine);
+                foreach (var item in productLine.Products)
+                {
+                    if (item.ProductKey == 0)
+                        InsertProduct(con, item);
+                    else
+                        UpdateProduct(con, item);
+                }
+
+                //Remove products
+                foreach (var key in originalProductKeys)
+                    DeleteProduct(con, key);
+            }
+        }
+
+        public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            productLine.ApplyKeys();
+
+            using (var con = OpenConnection())
+            {
+                UpdateProductLine(con, productLine);
+
+                foreach (var item in productLine.Products)
+                {
+                    if (item.ProductKey == 0)
+                        InsertProduct(con, item);
+                    else
+                        UpdateProduct(con, item);
+                }
+
+                if (productKeysToRemove != null)
+                    foreach (var key in productKeysToRemove)
+                        DeleteProduct(con, key);
+            }
+        }
+
+        static void DeleteProduct(SqlConnection con, int productKey)
+        {
+            const string sql = &quot;DELETE Production.Product WHERE ProductKey = @ProductKey;&quot;;
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductKey&quot;, productKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        static HashSet&lt;int&gt; GetProductKeys(SqlConnection con, int productLineKey)
+        {
+            const string sql = &quot;SELECT p.ProductKey FROM Production.Product p WHERE p.ProductLineKey = @ProductLineKey&quot;;
+
+            var results = new HashSet&lt;int&gt;();
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductLineKey&quot;, productLineKey);
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(reader.GetInt32(0));
+            }
+            return results;
+        }
+
+        static void InsertProduct(SqlConnection con, Product product)
+        {
+            const string sql = &quot;INSERT INTO Production.Product ( ProductName, ProductLineKey, ShippingWeight, ProductWeight ) OUTPUT Inserted.ProductKey VALUES ( @ProductName, @ProductLineKey, @ShippingWeight, @ProductWeight )&quot;;
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductName&quot;, product.ProductName);
+                cmd.Parameters.AddWithValue(&quot;@ProductLineKey&quot;, product.ProductLineKey);
+                cmd.Parameters.AddWithValue(&quot;@ShippingWeight&quot;, product.ShippingWeight);
+                cmd.Parameters.AddWithValue(&quot;@ProductWeight&quot;, product.ProductWeight);
+                product.ProductKey = (int)cmd.ExecuteScalar();
+            }
+        }
+
+        static void UpdateProduct(SqlConnection con, Product product)
+        {
+            const string sql = &quot;UPDATE Production.Product SET ProductName = @ProductName, ProductLineKey = @ProductLineKey, ShippingWeight = @ShippingWeight, ProductWeight = @ProductWeight WHERE ProductKey = @ProductKey;&quot;;
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductKey&quot;, product.ProductKey);
+                cmd.Parameters.AddWithValue(&quot;@ProductName&quot;, product.ProductName);
+                cmd.Parameters.AddWithValue(&quot;@ProductLineKey&quot;, product.ProductLineKey);
+                cmd.Parameters.AddWithValue(&quot;@ShippingWeight&quot;, product.ShippingWeight);
+                cmd.Parameters.AddWithValue(&quot;@ProductWeight&quot;, product.ProductWeight);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        static void UpdateProductLine(SqlConnection con, ProductLine productLine)
+        {
+            const string sql = &quot;UPDATE Production.ProductLine SET ProductLineName = @ProductLineName WHERE ProductLineKey = @ProductLineKey;&quot;;
+
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@ProductLineKey&quot;, productLine.ProductLineKey);
+                cmd.Parameters.AddWithValue(&quot;@ProductLineName&quot;, productLine.ProductLineName);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Opens a database connection.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
+        }
+    }
+</code></pre>
+
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain requires operating on the parent and child objects separately.</p>
 <pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
@@ -332,7 +666,272 @@
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">    public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
+    {
+        readonly string m_ConnectionString;
+
+        public ModelWithChildrenScenario(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
+
+        public int Create(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            const string sql = &quot;INSERT INTO Production.ProductLine ( ProductLineName ) OUTPUT Inserted.ProductLineKey VALUES (@ProductLineName);&quot;;
+
+            using (var con = OpenConnection())
+            {
+                productLine.ProductLineKey = (int)con.ExecuteScalar(sql, productLine);
+                productLine.ApplyKeys();
+
+                foreach (var item in productLine.Products)
+                    InsertProduct(con, item);
+            }
+            return productLine.ProductLineKey;
+        }
+
+        public void Delete(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            const string sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
+DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql, productLine);
+        }
+
+        public void DeleteByKey(int productLineKey)
+        {
+            const string sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
+DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql, new { productLineKey });
+        }
+
+        public IList&lt;ProductLine&gt; FindByName(string productLineName, bool includeProducts)
+        {
+            const string sqlA = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineName = @ProductLineName;
+SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.ProductWeight FROM Production.Product p INNER JOIN Production.ProductLine pl ON p.ProductLineKey = pl.ProductLineKey WHERE pl.ProductLineName = @ProductLineName;&quot;;
+
+            const string sqlB = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineName = @ProductLineName;&quot;;
+
+            using (var con = OpenConnection())
+            {
+                var sql = includeProducts ? sqlA : sqlB;
+                var results = con.QueryMultiple(sql, new { productLineName });
+                var productLines = results.Read&lt;ProductLine&gt;().ToList();
+
+                if (includeProducts)
+                {
+                    var lookup = productLines.ToDictionary(x =&gt; x.ProductLineKey);
+                    foreach (var product in results.Read&lt;Product&gt;())
+                        lookup[product.ProductLineKey].Products.Add(product);
+                }
+
+                return productLines;
+            }
+        }
+
+        public IList&lt;ProductLine&gt; GetAll(bool includeProducts)
+        {
+            const string sqlA = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl;
+SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.ProductWeight FROM Production.Product p INNER JOIN Production.ProductLine pl ON p.ProductLineKey = pl.ProductLineKey;&quot;;
+
+            const string sqlB = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl;&quot;;
+
+            using (var con = OpenConnection())
+            {
+                var sql = includeProducts ? sqlA : sqlB;
+                var results = con.QueryMultiple(sql);
+                var productLines = results.Read&lt;ProductLine&gt;().ToList();
+
+                if (includeProducts)
+                {
+                    var lookup = productLines.ToDictionary(x =&gt; x.ProductLineKey);
+                    foreach (var product in results.Read&lt;Product&gt;())
+                        lookup[product.ProductLineKey].Products.Add(product);
+                }
+
+                return productLines;
+            }
+        }
+
+        public ProductLine? GetByKey(int productLineKey, bool includeProducts)
+        {
+            const string sqlA = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineKey = @ProductLineKey;
+SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.ProductWeight FROM Production.Product p WHERE p.ProductLineKey = @ProductLineKey;&quot;;
+
+            const string sqlB = @&quot;SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineKey = @ProductLineKey;&quot;;
+
+            using (var con = OpenConnection())
+            {
+                var sql = includeProducts ? sqlA : sqlB;
+                var results = con.QueryMultiple(sql, new { productLineKey });
+                var productLine = results.ReadSingleOrDefault&lt;ProductLine&gt;();
+
+                if (productLine == null)
+                    return null;
+
+                if (includeProducts)
+                    foreach (var product in results.Read&lt;Product&gt;())
+                        productLine.Products.Add(product);
+
+                return productLine;
+            }
+        }
+
+        public void Update(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            using (var con = OpenConnection())
+                UpdateProductLine(con, productLine);
+        }
+
+        public void Update(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+            using (var con = OpenConnection())
+                UpdateProduct(con, product);
+        }
+
+        public void UpdateGraph(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            productLine.ApplyKeys();
+
+            using (var con = OpenConnection())
+            {
+                UpdateProductLine(con, productLine);
+                foreach (var item in productLine.Products)
+                {
+                    if (item.ProductKey == 0)
+                        InsertProduct(con, item);
+                    else
+                        UpdateProduct(con, item);
+                }
+            }
+        }
+
+        public void UpdateGraphWithChildDeletes(ProductLine productLine)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            productLine.ApplyKeys();
+
+            using (var con = OpenConnection())
+            {
+                //Find products to remove
+                var originalProductKeys = GetProductKeys(con, productLine.ProductLineKey);
+                foreach (var item in productLine.Products)
+                    originalProductKeys.Remove(item.ProductKey);
+
+                UpdateProductLine(con, productLine);
+                foreach (var item in productLine.Products)
+                {
+                    if (item.ProductKey == 0)
+                        InsertProduct(con, item);
+                    else
+                        UpdateProduct(con, item);
+                }
+
+                //Remove products
+                foreach (var key in originalProductKeys)
+                    DeleteProduct(con, key);
+            }
+        }
+
+        public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
+        {
+            if (productLine == null)
+                throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+            productLine.ApplyKeys();
+
+            using (var con = OpenConnection())
+            {
+                UpdateProductLine(con, productLine);
+
+                foreach (var item in productLine.Products)
+                {
+                    if (item.ProductKey == 0)
+                        InsertProduct(con, item);
+                    else
+                        UpdateProduct(con, item);
+                }
+
+                if (productKeysToRemove != null)
+                    foreach (var key in productKeysToRemove)
+                        DeleteProduct(con, key);
+            }
+        }
+
+        static void DeleteProduct(SqlConnection con, int productKey)
+        {
+            const string sql = &quot;DELETE Production.Product WHERE ProductKey = @ProductKey;&quot;;
+
+            con.Execute(sql, new { productKey });
+        }
+
+        static HashSet&lt;int&gt; GetProductKeys(SqlConnection con, int productLineKey)
+        {
+            const string sql = &quot;SELECT p.ProductKey FROM Production.Product p WHERE p.ProductLineKey = @ProductLineKey&quot;;
+
+            var results = new HashSet&lt;int&gt;();
+
+            using (var reader = con.ExecuteReader(sql, new { productLineKey }))
+                while (reader.Read())
+                    results.Add(reader.GetInt32(0));
+
+            return results;
+        }
+
+        static void InsertProduct(SqlConnection con, Product product)
+        {
+            const string sql = &quot;INSERT INTO Production.Product ( ProductName, ProductLineKey, ShippingWeight, ProductWeight ) OUTPUT Inserted.ProductKey VALUES ( @ProductName, @ProductLineKey, @ShippingWeight, @ProductWeight )&quot;;
+
+            product.ProductKey = con.ExecuteScalar&lt;int&gt;(sql, product);
+        }
+
+        static void UpdateProduct(SqlConnection con, Product product)
+        {
+            const string sql = &quot;UPDATE Production.Product SET ProductName = @ProductName, ProductLineKey = @ProductLineKey, ShippingWeight = @ShippingWeight, ProductWeight = @ProductWeight WHERE ProductKey = @ProductKey;&quot;;
+
+            con.Execute(sql, product);
+        }
+
+        static void UpdateProductLine(SqlConnection con, ProductLine productLine)
+        {
+            const string sql = &quot;UPDATE Production.ProductLine SET ProductLineName = @ProductLineName WHERE ProductLineKey = @ProductLineKey;&quot;;
+
+            con.Execute(sql, productLine);
+        }
+
+        /// &lt;summary&gt;
+        /// Opens a database connection.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
+        }
+    }
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>When performing an update, ensure that the <code>EntityState</code> is correctly set for each child record based on whether it is an insert or update.</p>
 <p>For partial deletes, you have to explicitly find and delete the child rows that are no longer needed.</p>
@@ -567,7 +1166,28 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-    public virtual void Update(ProductLineEntity productLine)
+    public void Update(ProductEntity product)
+    {
+        if (product == null)
+            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.SaveEntity(product);
+        }
+    }
+
+    public void Update(ProductLineEntity productLine)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public void UpdateGraph(ProductLineEntity productLine)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public virtual void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
@@ -588,27 +1208,6 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         }
     }
 
-    public void Update(ProductEntity product)
-    {
-        if (product == null)
-            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            adapter.SaveEntity(product);
-        }
-    }
-
-    public void UpdateGraph(ProductLineEntity productLine)
-    {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
-    }
-
-    public void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
-    {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
-    }
-
     public void UpdateGraphWithDeletes(ProductLineEntity productLine, IList&lt;int&gt; productKeysToRemove)
     {
         throw new AssertInconclusiveException(&quot;TODO&quot;);
@@ -619,7 +1218,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 <p>Alternative Update method using removal tracker functionality</p>
 <pre><code class="cs">public class ModelWithChildrenScenarioAlt : ModelWithChildrenScenario
 {
-    public override void Update(ProductLineEntity productLine)
+    public override void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);

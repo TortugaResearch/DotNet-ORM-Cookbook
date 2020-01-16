@@ -1,11 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using Recipes.Ado.Models;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using Recipes.Dapper.Models;
 using Recipes.ModelWithChildren;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Recipes.Ado.ModelWithChildren
+namespace Recipes.Dapper.ModelWithChildren
 {
     public class ModelWithChildrenScenario : IModelWithChildrenScenario<ProductLine, Product>
     {
@@ -25,12 +26,8 @@ namespace Recipes.Ado.ModelWithChildren
 
             using (var con = OpenConnection())
             {
-                using (var cmd = new SqlCommand(sql, con))
-                {
-                    cmd.Parameters.AddWithValue("@ProductLineName", productLine.ProductLineName);
-                    productLine.ProductLineKey = (int)cmd.ExecuteScalar();
-                    productLine.ApplyKeys();
-                }
+                productLine.ProductLineKey = (int)con.ExecuteScalar(sql, productLine);
+                productLine.ApplyKeys();
 
                 foreach (var item in productLine.Products)
                     InsertProduct(con, item);
@@ -47,11 +44,7 @@ namespace Recipes.Ado.ModelWithChildren
 DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@ProductLineKey", productLine.ProductLineKey);
-                cmd.ExecuteNonQuery();
-            }
+                con.Execute(sql, productLine);
         }
 
         public void DeleteByKey(int productLineKey)
@@ -60,11 +53,7 @@ DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey";
 DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@ProductLineKey", productLineKey);
-                cmd.ExecuteNonQuery();
-            }
+                con.Execute(sql, new { productLineKey });
         }
 
         public IList<ProductLine> FindByName(string productLineName, bool includeProducts)
@@ -74,34 +63,21 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
             const string sqlB = @"SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineName = @ProductLineName;";
 
-            var sql = includeProducts ? sqlA : sqlB;
-            var results = new List<ProductLine>();
-
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
             {
-                cmd.Parameters.AddWithValue("@ProductLineName", productLineName);
-                using (var reader = cmd.ExecuteReader())
+                var sql = includeProducts ? sqlA : sqlB;
+                var results = con.QueryMultiple(sql, new { productLineName });
+                var productLines = results.Read<ProductLine>().ToList();
+
+                if (includeProducts)
                 {
-                    while (reader.Read())
-                    {
-                        results.Add(new ProductLine(reader));
-                    }
-
-                    if (includeProducts)
-                    {
-                        var lookup = results.ToDictionary(x => x.ProductLineKey);
-                        reader.NextResult();
-                        while (reader.Read())
-                        {
-                            var product = new Product(reader);
-                            lookup[product.ProductLineKey].Products.Add(product);
-                        }
-                    }
+                    var lookup = productLines.ToDictionary(x => x.ProductLineKey);
+                    foreach (var product in results.Read<Product>())
+                        lookup[product.ProductLineKey].Products.Add(product);
                 }
-            }
 
-            return results;
+                return productLines;
+            }
         }
 
         public IList<ProductLine> GetAll(bool includeProducts)
@@ -111,29 +87,21 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
             const string sqlB = @"SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl;";
 
-            var sql = includeProducts ? sqlA : sqlB;
-            var results = new List<ProductLine>();
-
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            using (var reader = cmd.ExecuteReader())
             {
-                while (reader.Read())
-                    results.Add(new ProductLine(reader));
+                var sql = includeProducts ? sqlA : sqlB;
+                var results = con.QueryMultiple(sql);
+                var productLines = results.Read<ProductLine>().ToList();
 
                 if (includeProducts)
                 {
-                    var lookup = results.ToDictionary(x => x.ProductLineKey);
-                    reader.NextResult();
-                    while (reader.Read())
-                    {
-                        var product = new Product(reader);
+                    var lookup = productLines.ToDictionary(x => x.ProductLineKey);
+                    foreach (var product in results.Read<Product>())
                         lookup[product.ProductLineKey].Products.Add(product);
-                    }
                 }
-            }
 
-            return results;
+                return productLines;
+            }
         }
 
         public ProductLine? GetByKey(int productLineKey, bool includeProducts)
@@ -143,30 +111,21 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
             const string sqlB = @"SELECT pl.ProductLineKey, pl.ProductLineName FROM Production.ProductLine pl WHERE pl.ProductLineKey = @ProductLineKey;";
 
-            var sql = includeProducts ? sqlA : sqlB;
-            ProductLine result;
-
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
             {
-                cmd.Parameters.AddWithValue("@ProductLineKey", productLineKey);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                        result = new ProductLine(reader);
-                    else
-                        return null;
+                var sql = includeProducts ? sqlA : sqlB;
+                var results = con.QueryMultiple(sql, new { productLineKey });
+                var productLine = results.ReadSingleOrDefault<ProductLine>();
 
-                    if (includeProducts)
-                    {
-                        reader.NextResult();
-                        while (reader.Read())
-                            result.Products.Add(new Product(reader));
-                    }
-                }
+                if (productLine == null)
+                    return null;
+
+                if (includeProducts)
+                    foreach (var product in results.Read<Product>())
+                        productLine.Products.Add(product);
+
+                return productLine;
             }
-
-            return result;
         }
 
         public void Update(ProductLine productLine)
@@ -265,11 +224,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         {
             const string sql = "DELETE Production.Product WHERE ProductKey = @ProductKey;";
 
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@ProductKey", productKey);
-                cmd.ExecuteNonQuery();
-            }
+            con.Execute(sql, new { productKey });
         }
 
         static HashSet<int> GetProductKeys(SqlConnection con, int productLineKey)
@@ -277,13 +232,11 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             const string sql = "SELECT p.ProductKey FROM Production.Product p WHERE p.ProductLineKey = @ProductLineKey";
 
             var results = new HashSet<int>();
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@ProductLineKey", productLineKey);
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(reader.GetInt32(0));
-            }
+
+            using (var reader = con.ExecuteReader(sql, new { productLineKey }))
+                while (reader.Read())
+                    results.Add(reader.GetInt32(0));
+
             return results;
         }
 
@@ -291,42 +244,21 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         {
             const string sql = "INSERT INTO Production.Product ( ProductName, ProductLineKey, ShippingWeight, ProductWeight ) OUTPUT Inserted.ProductKey VALUES ( @ProductName, @ProductLineKey, @ShippingWeight, @ProductWeight )";
 
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
-                cmd.Parameters.AddWithValue("@ProductLineKey", product.ProductLineKey);
-                cmd.Parameters.AddWithValue("@ShippingWeight", product.ShippingWeight);
-                cmd.Parameters.AddWithValue("@ProductWeight", product.ProductWeight);
-                product.ProductKey = (int)cmd.ExecuteScalar();
-            }
+            product.ProductKey = con.ExecuteScalar<int>(sql, product);
         }
 
         static void UpdateProduct(SqlConnection con, Product product)
         {
             const string sql = "UPDATE Production.Product SET ProductName = @ProductName, ProductLineKey = @ProductLineKey, ShippingWeight = @ShippingWeight, ProductWeight = @ProductWeight WHERE ProductKey = @ProductKey;";
 
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@ProductKey", product.ProductKey);
-                cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
-                cmd.Parameters.AddWithValue("@ProductLineKey", product.ProductLineKey);
-                cmd.Parameters.AddWithValue("@ShippingWeight", product.ShippingWeight);
-                cmd.Parameters.AddWithValue("@ProductWeight", product.ProductWeight);
-
-                cmd.ExecuteNonQuery();
-            }
+            con.Execute(sql, product);
         }
 
         static void UpdateProductLine(SqlConnection con, ProductLine productLine)
         {
             const string sql = "UPDATE Production.ProductLine SET ProductLineName = @ProductLineName WHERE ProductLineKey = @ProductLineKey;";
 
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@ProductLineKey", productLine.ProductLineKey);
-                cmd.Parameters.AddWithValue("@ProductLineName", productLine.ProductLineName);
-                cmd.ExecuteNonQuery();
-            }
+            con.Execute(sql, productLine);
         }
 
         /// <summary>
