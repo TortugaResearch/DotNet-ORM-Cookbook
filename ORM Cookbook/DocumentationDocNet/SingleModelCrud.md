@@ -119,7 +119,7 @@ RepoDb is a hybrid-ORM that supports both *raw-SQLs* and *fluent* calls. When ca
 
 However, by using a *fluent* calls in the repositories (as recommended), it often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
 
-@snippet cs [../Recipes.RepoDb\Entities\EmployeeClassificationSingleModelCrud.cs] EmployeeClassificationSingleModelCrud
+@snippet cs [../Recipes.RepoDb\Entities\EmployeeClassification.cs] EmployeeClassification
 
 The repository resembles Dapper, but with far less SQL.
 

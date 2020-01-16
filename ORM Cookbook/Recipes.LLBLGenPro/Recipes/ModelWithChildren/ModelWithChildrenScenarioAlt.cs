@@ -7,7 +7,7 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
 {
     public class ModelWithChildrenScenarioAlt : ModelWithChildrenScenario
     {
-        public override void Update(ProductLineEntity productLine)
+        public override void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
         {
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");

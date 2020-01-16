@@ -79,7 +79,7 @@ Below is a sample snippet for *immutable* class.
 
 Below is a sample snippet for *mutable* class.
 
-@snippet cs [..\Recipes.RepoDb\Entities\MutableEmployeeClassification.cs] MutableEmployeeClassification
+@snippet cs [..\Recipes.RepoDb\Entities\EmployeeClassification.cs] EmployeeClassification
 
 Below is the *immutable repository*.
 
