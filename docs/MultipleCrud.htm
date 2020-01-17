@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CRUD Operations on Multiple Objects - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry current"><a class="current" href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="crud-operations-on-multiple-objects">CRUD Operations on Multiple Objects<a class="headerlink" href="#crud-operations-on-multiple-objects" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to perform Create, Read, Update, and Delete operations on a collection of 100 objects. </p>
+<p>If the ORM supports it, the operation should be performed with a single SQL statement.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IMultipleCrudScenario&lt;TEmployeeSimple&gt;
+   where TEmployeeSimple : class, IEmployeeSimple, new()
+{
+    /// &lt;summary&gt;
+    /// Delete a collection of Employee rows.
+    /// &lt;/summary&gt;
+    void DeleteBatch(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Delete a collection of Employee rows by key.
+    /// &lt;/summary&gt;
+    void DeleteBatchByKey(IList&lt;int&gt; employeeKeys);
+
+    /// &lt;summary&gt;
+    /// Gets a collection of Employee rows by their name. Assume the name is not unique.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployeeSimple&gt; FindByLastName(string lastName);
+
+    /// &lt;summary&gt;
+    /// Insert a collection of Employee rows.
+    /// &lt;/summary&gt;
+    void InsertBatch(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Insert a collection of Employee rows, returning the newly created keys.
+    /// &lt;/summary&gt;
+    IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Insert a collection of Employee rows, returning the newly created rows.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;This MAY return the original objects or new objects.&lt;/remarks&gt;
+    IList&lt;TEmployeeSimple&gt; InsertBatchReturnRows(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Insert a collection of Employee rows and update the original rows with the new keys.
+    /// &lt;/summary&gt;
+    void InsertBatchWithRefresh(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Update a collection of Employee rows.
+    /// &lt;/summary&gt;
+    void UpdateBatch(IList&lt;TEmployeeSimple&gt; employees);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">    public class MultipleCrudScenario : IMultipleCrudScenario&lt;EmployeeSimple&gt;
+    {
+        readonly string m_ConnectionString;
+
+        public MultipleCrudScenario(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
+
+        public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var keyList = string.Join(&quot;, &quot;, employees.Select(x =&gt; x.EmployeeKey));
+            var sql = $&quot;DELETE FROM HR.Employee WHERE EmployeeKey IN ({keyList});&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+                cmd.ExecuteNonQuery();
+        }
+
+        public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+        {
+            if (employeeKeys == null || employeeKeys.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+            var keyList = string.Join(&quot;, &quot;, employeeKeys);
+            var sql = $&quot;DELETE FROM HR.Employee WHERE EmployeeKey IN ({keyList});&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+                cmd.ExecuteNonQuery();
+        }
+
+        public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.EmployeeDetail e WHERE e.LastName = @LastName&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+                var results = new List&lt;EmployeeSimple&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeSimple(reader));
+
+                return results;
+            }
+        }
+
+        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+VALUES &quot;);
+
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql.ToString(), con))
+            {
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                }
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES &quot;);
+
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql.ToString(), con))
+            {
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                }
+                var result = new List&lt;int&gt;();
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        result.Add(reader.GetInt32(0));
+                return result;
+            }
+        }
+
+        public IList&lt;EmployeeSimple&gt; InsertBatchReturnRows(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.LastName, Inserted.Title, Inserted.OfficePhone, Inserted.CellPhone, Inserted.EmployeeClassificationKey
+VALUES &quot;);
+
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql.ToString(), con))
+            {
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                }
+                var result = new List&lt;EmployeeSimple&gt;();
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        result.Add(new EmployeeSimple(reader));
+                return result;
+            }
+        }
+
+        public void InsertBatchWithRefresh(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder();
+
+            //In order to ensure the right objects are refreshed, each object is inserted separately.
+            //If we returned them all at the same time, they might not come back in the same order.
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                sql.AppendLine($@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.LastName, Inserted.Title, Inserted.OfficePhone, Inserted.CellPhone, Inserted.EmployeeClassificationKey
+VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i});&quot;);
+            }
+
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                using (var cmd = new SqlCommand(sql.ToString(), con, trans))
+                {
+                    for (var i = 0; i &lt; employees.Count; i++)
+                    {
+                        cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                        cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                        cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                    }
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        for (var i = 0; i &lt; employees.Count; i++)
+                        {
+                            reader.Read();
+                            employees[i].Refresh(reader);
+                            reader.NextResult(); //each row is coming back as a separate result set
+                        }
+                    }
+                }
+                trans.Commit();
+            }
+        }
+
+        public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder();
+
+            //In order to ensure the right objects are refreshed, each object is inserted separately.
+            //If we returned them all at the same time, they might not come back in the same order.
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                sql.AppendLine($@&quot;UPDATE HR.Employee
+SET FirstName = @FirstName_{i},
+    MiddleName = @MiddleName_{i},
+    LastName = @LastName_{i},
+    Title = @Title_{i},
+    OfficePhone = @OfficePhone_{i},
+    CellPhone = @CellPhone_{i},
+    EmployeeClassificationKey = @EmployeeClassificationKey_{i}
+WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
+            }
+
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                using (var cmd = new SqlCommand(sql.ToString(), con, trans))
+                {
+                    for (var i = 0; i &lt; employees.Count; i++)
+                    {
+                        cmd.Parameters.AddWithValue($&quot;@EmployeeKey_{i}&quot;, employees[i].EmployeeKey);
+                        cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                        cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                        cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                    }
+                    cmd.ExecuteNonQuery();
+                }
+                trans.Commit();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Opens a database connection.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
+        }
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;EmployeeSimple&gt;
+{
+    const string EmployeeTableName = &quot;HR.Employee&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public MultipleCrudScenario(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        m_DataSource.DeleteByKeyList(EmployeeTableName, employees.Select(x =&gt; x.EmployeeKey)).Execute();
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        m_DataSource.DeleteByKeyList(EmployeeTableName, employeeKeys).Execute();
+    }
+
+    public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+    {
+        return m_DataSource.From(EmployeeTableName, new { lastName }).ToCollection&lt;EmployeeSimple&gt;().Execute();
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        m_DataSource.InsertBatch((IReadOnlyList&lt;EmployeeSimple&gt;)employees).Execute();
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        return m_DataSource.InsertBatch((IReadOnlyList&lt;EmployeeSimple&gt;)employees).ToInt32List().Execute();
+    }
+
+    public IList&lt;EmployeeSimple&gt; InsertBatchReturnRows(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        return m_DataSource.InsertBatch((IReadOnlyList&lt;EmployeeSimple&gt;)employees).ToCollection&lt;EmployeeSimple&gt;().Execute();
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        //Chain does not support updating multiple rows at one time from objects
+        //Use the WithRefresh() link to update the original object.
+        using (var trans = m_DataSource.BeginTransaction())
+        {
+            foreach (var item in employees)
+                trans.Insert(item).WithRefresh().Execute();
+
+            trans.Commit();
+        }
+    }
+
+    public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        //Chain does not support updating multiple rows at one time from objects
+        using (var trans = m_DataSource.BeginTransaction())
+        {
+            foreach (var item in employees)
+                trans.Update(item).Execute();
+
+            trans.Commit();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>
