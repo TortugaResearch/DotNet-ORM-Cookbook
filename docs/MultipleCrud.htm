@@ -155,7 +155,276 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">    public class MultipleCrudScenario : IMultipleCrudScenario&lt;EmployeeSimple&gt;
+    {
+        readonly string m_ConnectionString;
+
+        public MultipleCrudScenario(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
+
+        public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var keyList = string.Join(&quot;, &quot;, employees.Select(x =&gt; x.EmployeeKey));
+            var sql = $&quot;DELETE FROM HR.Employee WHERE EmployeeKey IN ({keyList});&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+                cmd.ExecuteNonQuery();
+        }
+
+        public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+        {
+            if (employeeKeys == null || employeeKeys.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+            var keyList = string.Join(&quot;, &quot;, employeeKeys);
+            var sql = $&quot;DELETE FROM HR.Employee WHERE EmployeeKey IN ({keyList});&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+                cmd.ExecuteNonQuery();
+        }
+
+        public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.EmployeeDetail e WHERE e.LastName = @LastName&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+                var results = new List&lt;EmployeeSimple&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeSimple(reader));
+
+                return results;
+            }
+        }
+
+        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+VALUES &quot;);
+
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql.ToString(), con))
+            {
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                }
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES &quot;);
+
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql.ToString(), con))
+            {
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                }
+                var result = new List&lt;int&gt;();
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        result.Add(reader.GetInt32(0));
+                return result;
+            }
+        }
+
+        public IList&lt;EmployeeSimple&gt; InsertBatchReturnRows(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.LastName, Inserted.Title, Inserted.OfficePhone, Inserted.CellPhone, Inserted.EmployeeClassificationKey
+VALUES &quot;);
+
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql.ToString(), con))
+            {
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                }
+                var result = new List&lt;EmployeeSimple&gt;();
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        result.Add(new EmployeeSimple(reader));
+                return result;
+            }
+        }
+
+        public void InsertBatchWithRefresh(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder();
+
+            //In order to ensure the right objects are refreshed, each object is inserted separately.
+            //If we returned them all at the same time, they might not come back in the same order.
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                sql.AppendLine($@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.LastName, Inserted.Title, Inserted.OfficePhone, Inserted.CellPhone, Inserted.EmployeeClassificationKey
+VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i});&quot;);
+            }
+
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                using (var cmd = new SqlCommand(sql.ToString(), con, trans))
+                {
+                    for (var i = 0; i &lt; employees.Count; i++)
+                    {
+                        cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                        cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                        cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                    }
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        for (var i = 0; i &lt; employees.Count; i++)
+                        {
+                            reader.Read();
+                            employees[i].Refresh(reader);
+                            reader.NextResult(); //each row is coming back as a separate result set
+                        }
+                    }
+                }
+                trans.Commit();
+            }
+        }
+
+        public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder();
+
+            //In order to ensure the right objects are refreshed, each object is inserted separately.
+            //If we returned them all at the same time, they might not come back in the same order.
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                sql.AppendLine($@&quot;UPDATE HR.Employee
+SET FirstName = @FirstName_{i},
+    MiddleName = @MiddleName_{i},
+    LastName = @LastName_{i},
+    Title = @Title_{i},
+    OfficePhone = @OfficePhone_{i},
+    CellPhone = @CellPhone_{i},
+    EmployeeClassificationKey = @EmployeeClassificationKey_{i}
+WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
+            }
+
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                using (var cmd = new SqlCommand(sql.ToString(), con, trans))
+                {
+                    for (var i = 0; i &lt; employees.Count; i++)
+                    {
+                        cmd.Parameters.AddWithValue($&quot;@EmployeeKey_{i}&quot;, employees[i].EmployeeKey);
+                        cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                        cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                        cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                    }
+                    cmd.ExecuteNonQuery();
+                }
+                trans.Commit();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Opens a database connection.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
+        SqlConnection OpenConnection()
+        {
+            var con = new SqlConnection(m_ConnectionString);
+            con.Open();
+            return con;
+        }
+    }
+</code></pre>
+
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;EmployeeSimple&gt;
 {

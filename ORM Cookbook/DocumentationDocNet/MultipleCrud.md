@@ -10,7 +10,7 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 
 ## ADO.NET
 
-TODO
+@snippet cs [..\Recipes.ADO\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## Chain
 

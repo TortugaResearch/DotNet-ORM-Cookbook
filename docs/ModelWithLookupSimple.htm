@@ -186,6 +186,32 @@
 
     public EmployeeSimple(IDataReader reader)
     {
+        Refresh(reader);
+    }
+
+    public string? CellPhone { get; set; }
+
+    public int EmployeeClassificationKey { get; set; }
+
+    public int EmployeeKey { get; set; }
+
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
+
+    public string? MiddleName { get; set; }
+
+    public string? OfficePhone { get; set; }
+
+    public string? Title { get; set; }
+
+    /// &lt;summary&gt;
+    /// Refreshes the object, replacing all fields with values from the IDataReader.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;reader&quot;&gt;The reader.&lt;/param&gt;
+    /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;reader&lt;/exception&gt;
+    public void Refresh(IDataReader reader)
+    {
         if (reader == null)
             throw new ArgumentNullException(nameof(reader), $&quot;{nameof(reader)} is null.&quot;);
 
@@ -202,15 +228,6 @@
             CellPhone = reader.GetString(reader.GetOrdinal(&quot;CellPhone&quot;));
         EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;));
     }
-
-    public string? CellPhone { get; set; }
-    public int EmployeeClassificationKey { get; set; }
-    public int EmployeeKey { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? MiddleName { get; set; }
-    public string? OfficePhone { get; set; }
-    public string? Title { get; set; }
 }
 </code></pre>
 
