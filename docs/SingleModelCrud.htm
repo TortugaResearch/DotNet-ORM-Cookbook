@@ -175,14 +175,12 @@
 </code></pre>
 
 <p>The repository methods use raw SQL strings. All other ORMs internally generate the same code. </p>
-<pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudScenario : ScenarioBase, ISingleModelCrudScenario&lt;EmployeeClassification&gt;
 {
     readonly string m_ConnectionString;
 
-    public SingleModelCrudScenario(string connectionString)
-    {
-        m_ConnectionString = connectionString;
-    }
+    public SingleModelCrudScenario(string connectionString) : base(connectionString)
+    { }
 
     public int Create(EmployeeClassification classification)
     {

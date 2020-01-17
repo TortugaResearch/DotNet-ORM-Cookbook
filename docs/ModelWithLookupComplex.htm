@@ -236,14 +236,12 @@ FROM HR.Employee e
 </code></pre>
 
 <p>Likewise, a database view was used to join the Employee table with its lookup table(s).</p>
-<pre><code class="cs">    public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
     {
         readonly string m_ConnectionString;
 
-        public ModelWithLookupComplexScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeComplex employee)
         {

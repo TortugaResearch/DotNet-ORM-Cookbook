@@ -212,14 +212,12 @@
 }
 </code></pre>
 
-<pre><code class="cs">    public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class ModelWithLookupSimpleScenario : ScenarioBase, IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
     {
         readonly string m_ConnectionString;
 
-        public ModelWithLookupSimpleScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ModelWithLookupSimpleScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeSimple employee)
         {

@@ -172,14 +172,10 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>The trick to the <code>Update</code> and <code>Delete</code> methods is to read back the row counts from <code>ExecuteNonQuery</code>.</p>
-<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TryCrudScenario : ScenarioBase, ITryCrudScenario&lt;EmployeeClassification&gt;
 {
-    readonly string m_ConnectionString;
-
-    public TryCrudScenario(string connectionString)
-    {
-        m_ConnectionString = connectionString;
-    }
+    public TryCrudScenario(string connectionString) : base(connectionString)
+    { }
 
     public int Create(EmployeeClassification classification)
     {
@@ -388,17 +384,6 @@
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
             return 1 == cmd.ExecuteNonQuery();
         }
-    }
-
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    SqlConnection OpenConnection()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        con.Open();
-        return con;
     }
 }
 </code></pre>

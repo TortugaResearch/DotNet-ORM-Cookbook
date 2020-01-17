@@ -53,6 +53,10 @@
     <None Include="*.md" />
     <None Include="docnet.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ORMs\" />
+    <Folder Include="Scenarios\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd "$(ProjectDir)"

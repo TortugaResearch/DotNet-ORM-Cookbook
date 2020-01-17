@@ -6,14 +6,10 @@ using System.Data;
 
 namespace Recipes.Ado.TryCrud
 {
-    public class TryCrudScenario : ITryCrudScenario<EmployeeClassification>
+    public class TryCrudScenario : ScenarioBase, ITryCrudScenario<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public TryCrudScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public TryCrudScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeClassification classification)
         {
@@ -222,17 +218,6 @@ namespace Recipes.Ado.TryCrud
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
                 return 1 == cmd.ExecuteNonQuery();
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }
