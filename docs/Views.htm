@@ -45,6 +45,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry current"><a class="current" href="Views.htm">Reading from Views</a>
@@ -123,7 +125,7 @@
     IList&lt;TEmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey);
 
     /// &lt;summary&gt;
-    /// Gets an EmployeeDetail row by its name. Assume the name is not unique.
+    /// Gets a collection of EmployeeDetail rows by their name. Assume the name is not unique.
     /// &lt;/summary&gt;
     IList&lt;TEmployeeDetail&gt; FindByLastName(string lastName);
 

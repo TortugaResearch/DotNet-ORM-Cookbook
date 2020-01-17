@@ -66,6 +66,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -613,6 +615,43 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         return result;
     }
 
+    public void Update(Product product)
+    {
+        if (product == null)
+            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+        m_DataSource.Update(product).Execute();
+    }
+
+    public void Update(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        m_DataSource.Update(productLine).Execute();
+    }
+
+    public void UpdateGraph(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        using (var trans = m_DataSource.BeginTransaction())
+        {
+            //Update parent row
+            trans.Update(productLine).Execute();
+
+            //Ensure new child rows have their parent's key
+            productLine.ApplyKeys();
+
+            //Insert/update the remaining child rows
+            foreach (var row in productLine.Products)
+                trans.Upsert(row).Execute();
+
+            trans.Commit();
+        }
+    }
+
     public void UpdateGraphWithChildDeletes(ProductLine productLine)
     {
         if (productLine == null)
@@ -635,7 +674,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             //Ensure new child rows have their parent's key
             productLine.ApplyKeys();
 
-            //Insert/update the remaining child rows
+            //Insert/update the child rows
             foreach (var row in productLine.Products)
                 trans.Upsert(row).Execute();
 
@@ -643,24 +682,28 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         }
     }
 
-    public void Update(Product product)
-    {
-        m_DataSource.Update(product).Execute();
-    }
-
-    public void Update(ProductLine productLine)
-    {
-        throw new AssertInconclusiveException();
-    }
-
-    public void UpdateGraph(ProductLine productLine)
-    {
-        throw new AssertInconclusiveException();
-    }
-
     public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
     {
-        throw new AssertInconclusiveException();
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        using (var trans = m_DataSource.BeginTransaction())
+        {
+            //Update parent row
+            trans.Update(productLine).Execute();
+
+            //Ensure new child rows have their parent's key
+            productLine.ApplyKeys();
+
+            //Insert/update the child rows
+            foreach (var row in productLine.Products)
+                trans.Upsert(row).Execute();
+
+            if (productKeysToRemove?.Count &gt; 0)
+                trans.DeleteByKeyList(ProductTable, productKeysToRemove).Execute();
+
+            trans.Commit();
+        }
     }
 }
 </code></pre>
@@ -1014,6 +1057,43 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         }
     }
 
+    public void Update(Product product)
+    {
+        if (product == null)
+            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(product).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+
+    public void Update(ProductLine productLine)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Entry(productLine).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+
+    public void UpdateGraph(ProductLine productLine)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Entry(productLine).State = EntityState.Modified;
+
+            foreach (var item in productLine.Product)
+                if (item.ProductKey == 0)
+                    context.Entry(item).State = EntityState.Added;
+                else
+                    context.Entry(item).State = EntityState.Modified;
+
+            context.SaveChanges();
+        }
+    }
+
     public void UpdateGraphWithChildDeletes(ProductLine productLine)
     {
         if (productLine == null)
@@ -1040,31 +1120,23 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         }
     }
 
-    public void Update(Product product)
-    {
-        if (product == null)
-            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
-
-        using (var context = CreateDbContext())
-        {
-            context.Entry(product).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-    }
-
-    public void Update(ProductLine productLine)
-    {
-        throw new AssertInconclusiveException();
-    }
-
-    public void UpdateGraph(ProductLine productLine)
-    {
-        throw new AssertInconclusiveException();
-    }
-
     public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
     {
-        throw new AssertInconclusiveException();
+        using (var context = CreateDbContext())
+        {
+            context.Entry(productLine).State = EntityState.Modified;
+            foreach (var item in productLine.Product)
+                if (item.ProductKey == 0)
+                    context.Entry(item).State = EntityState.Added;
+                else
+                    context.Entry(item).State = EntityState.Modified;
+
+            if (productKeysToRemove != null)
+                foreach (var key in productKeysToRemove)
+                    context.Entry(new Product() { ProductKey = key }).State = EntityState.Deleted;
+
+            context.SaveChanges();
+        }
     }
 }
 </code></pre>
@@ -1179,12 +1251,28 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 
     public void Update(ProductLineEntity productLine)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+        uow.AddForSave(productLine, null, refetch: true, recurse: false);
+        using (var adapter = new DataAccessAdapter())
+        {
+            uow.Commit(adapter);
+        }
     }
 
     public void UpdateGraph(ProductLineEntity productLine)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+        uow.AddForSave(productLine);
+        using (var adapter = new DataAccessAdapter())
+        {
+            uow.Commit(adapter);
+        }
     }
 
     public virtual void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
@@ -1210,7 +1298,18 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 
     public void UpdateGraphWithDeletes(ProductLineEntity productLine, IList&lt;int&gt; productKeysToRemove)
     {
-        throw new AssertInconclusiveException(&quot;TODO&quot;);
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+
+        if (productKeysToRemove?.Count &gt; 0)
+            uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.In(productKeysToRemove)));
+        uow.AddForSave(productLine);
+        using (var adapter = new DataAccessAdapter())
+        {
+            uow.Commit(adapter);
+        }
     }
 }
 </code></pre>

@@ -21,7 +21,7 @@
     {
       "location": "SingleModelCrudAsync.htm",
       "breadcrumbs": "Home / Async Operations",
-      "keywords": "1 a add adds Ado ADO and another any appropriate are arrays As async Async attempt await be becomes between but But can cancel cancellable cancellation Chain changes CommandDefinition completing condition ConfigureAwait Core create CRUD cs Dapper database done Entity EntityFrameworkCore example exceptions explicitly false for For Framework full future general GetByKey GetByKeyAsync handled Here htm if If in including is ISingleModelCrudAsyncScenario it LLBLGen LLBLGenPro loading may Model must need NET NHibernate non not object of only open operation operations or Original Otherwise parameter parameters places Pro Prototype provided query race read reason Recipes record records RepoDb repository required rule safely scenario Scenario scenarios ServiceStack set Single SingleModelCrud SingleModelCrudAsync SingleModelCrudAsyncScenario SingleModelCrudScenario snippet support TEmployeeClassification that the The then There they think this This to token tokens Tortuga transactions try user users which will wish with With wrap write you your",
+      "keywords": "1 a add adds Ado ADO an and another any appropriate are arrays As async Async asynchronous attempt await be becomes between but But can cancel cancellable cancellation Chain changes CommandDefinition completing condition ConfigureAwait Core create CRUD cs Dapper Data database done Entity EntityFrameworkCore example exceptions explicitly exposes extension false for For Framework full future general GetByKey GetByKeyAsync handled Here htm if If import in including is ISingleModelCrudAsyncScenario it LINQ LLBLGen LLBLGenPro loading make may methods Model must namespace need needed NET NHibernate non not object of only open operation operations or Original Otherwise parameter parameters places Pro Prototype provided query race read reason Recipes record records RepoDb repository required rule safely scenario Scenario scenarios ServiceStack set Single SingleModelCrud SingleModelCrudAsync SingleModelCrudAsyncScenario SingleModelCrudScenario snippet support System TEmployeeClassification that the The then There they think this This to To token tokens Tortuga transactions try user users version which will wish with With wrap write you your",
       "title": "Async Operations"
     },
     {
@@ -41,6 +41,12 @@
       "breadcrumbs": "Home / Immutable CRUD",
       "keywords": "1 a action ADO after an An and are as be before Below between but by call can Chain changes class constructor Constructor conversion conversions cookbook Core Create CRUD cs Dapper data default Delete deleted demonstrate directly does doesn e either EmployeeClassification EmployeeClassificationEntity entities Entities entity Entity EntityFrameworkCore fetched focus for Framework g handling have how however IImmutableScenario immutable Immutable ImmutableScenario in indicate individual InferConstructor inserted instead interact Interfaces IReadOnlyEmployeeClassification is it link LLBLGen LLBLGenPro make manage marked memory models Models mutable natively needed NET NHibernate no No non not object objects Objects of on only operations Operations option or order other overcome pair perform populate Pro properties Prototype read Read ReadOnlyEmployeeClassification recipes Recipes RepoDb repository sample Scenario scenarios scope ServiceStack setting should Since snippet special specifications support supports than that the The these These this to To TODO ToEntity Tortuga TReadOnlyModel Update updated use used using with WithConstructor work working write You",
       "title": "Immutable CRUD"
+    },
+    {
+      "location": "MultipleCrud.htm",
+      "breadcrumbs": "Home / CRUD Operations on Multiple Objects",
+      "keywords": "1 100 a ADO and be Chain collection Core Create CRUD cs Dapper Delete demonstrate Entity Framework how If IMultipleCrudScenario it LLBLGen Multiple MultipleCrud MultipleCrudScenario NET NHibernate objects Objects of on operation operations Operations ORM perform performed Pro Prototype Read Recipes RepoDb Scenario scenarios ServiceStack should single snippet SQL statement supports TEmployeeSimple the These to TODO Tortuga Update with",
+      "title": "CRUD Operations on Multiple Objects"
     },
     {
       "location": "Joins.htm",
