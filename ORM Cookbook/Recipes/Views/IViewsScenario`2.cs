@@ -17,7 +17,7 @@ namespace Recipes.Views
         IList<TEmployeeDetail> FindByEmployeeClassificationKey(int employeeClassificationKey);
 
         /// <summary>
-        /// Gets an EmployeeDetail row by its name. Assume the name is not unique.
+        /// Gets a collection of EmployeeDetail rows by their name. Assume the name is not unique.
         /// </summary>
         IList<TEmployeeDetail> FindByLastName(string lastName);
 

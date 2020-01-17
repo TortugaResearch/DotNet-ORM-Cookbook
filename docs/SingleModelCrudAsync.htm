@@ -66,6 +66,8 @@
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -466,6 +468,7 @@
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To make an Entity Framework repository asynchronous, you need to import the <code>System.Data.Entity</code> namespace. This exposes the async version of the LINQ extension methods needed. </p>
 <p>For non-cancellable operation, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
 <p>For cancellable operations, you may need to explicitly create object arrays for the parameters. Otherwise it may think that the cancellation token is another query parameter.</p>
 <p>Original:</p>
