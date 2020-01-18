@@ -66,6 +66,7 @@
     <Folder Include="Production" />
     <Folder Include="Production\Views" />
     <Folder Include="Production\Tables" />
+    <Folder Include="HR\Programability" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Division.sql" />
@@ -91,5 +92,9 @@
     <Build Include="Production\Production.sql" />
     <Build Include="Production\Tables\Product.sql" />
     <Build Include="Production\Tables\ProductLine.sql" />
+    <Build Include="HR\Programability\CreateEmployeeClassification.sql" />
+    <Build Include="HR\Programability\GetEmployeeClassifications.sql" />
+    <Build Include="HR\Programability\CountEmployeesByClassification.sql" />
+    <None Include="Data\Employee.sql" />
   </ItemGroup>
 </Project>
