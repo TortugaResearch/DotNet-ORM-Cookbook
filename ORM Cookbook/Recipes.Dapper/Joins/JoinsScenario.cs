@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.Joins;
 using System;
@@ -8,13 +7,10 @@ using System.Linq;
 
 namespace Recipes.Dapper.Joins
 {
-    public class JoinsScenario : IJoinsScenario<EmployeeDetail, EmployeeSimple>
+    public class JoinsScenario : ScenarioBase, IJoinsScenario<EmployeeDetail, EmployeeSimple>
     {
-        readonly string m_ConnectionString;
-
-        public JoinsScenario(string connectionString)
+        public JoinsScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeSimple employee)
@@ -70,17 +66,6 @@ VALUES
 
             using (var con = OpenConnection())
                 return con.QuerySingleOrDefault<EmployeeClassification>(sql, new { employeeClassificationKey });
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

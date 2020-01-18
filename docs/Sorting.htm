@@ -31,6 +31,9 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
@@ -136,8 +139,6 @@
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">    public class SortingScenario : ScenarioBase, ISortingScenario&lt;EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
         public SortingScenario(string connectionString) : base(connectionString)
         { }
 
@@ -217,17 +218,6 @@ VALUES
                 return results;
             }
         }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
     }
 </code></pre>
 
@@ -269,13 +259,10 @@ VALUES
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class SortingScenario : ISortingScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class SortingScenario : ScenarioBase, ISortingScenario&lt;EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
-        public SortingScenario(string connectionString)
+        public SortingScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeSimple employee)
@@ -315,17 +302,6 @@ VALUES
 
             using (var con = OpenConnection())
                 return con.Query&lt;EmployeeSimple&gt;(sql).ToList();
-        }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 </code></pre>

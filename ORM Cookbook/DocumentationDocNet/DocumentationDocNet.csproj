@@ -50,6 +50,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Chain.md" />
+    <None Include="EFCore.md" />
+    <None Include="NHibernate.md" />
+    <None Include="ServiceStack.md" />
+    <None Include="RepoDb.md" />
+    <None Include="Dapper.md" />
+    <None Include="LLBLGenPro.md" />
+    <None Include="ADO.md" />
     <None Include="FAQ.md" />
     <None Include="Immutable.md" />
     <None Include="index.md" />
@@ -68,10 +76,7 @@
     <None Include="Views.md" />
     <None Include="docnet.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ORMs\" />
-    <Folder Include="Scenarios\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd "$(ProjectDir)"

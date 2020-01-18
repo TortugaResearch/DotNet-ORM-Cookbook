@@ -1,18 +1,14 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.PartialUpdate;
 using System;
 
 namespace Recipes.Dapper.PartialUpdate
 {
-    public class PartialUpdateScenario : IPartialUpdateScenario<EmployeeClassification>
+    public class PartialUpdateScenario : ScenarioBase, IPartialUpdateScenario<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public PartialUpdateScenario(string connectionString)
+        public PartialUpdateScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeClassification classification)
@@ -72,17 +68,6 @@ namespace Recipes.Dapper.PartialUpdate
 
             using (var con = OpenConnection())
                 con.Execute(sql, new { employeeClassificationKey, isExempt, isEmployee });
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

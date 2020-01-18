@@ -31,6 +31,9 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
@@ -240,8 +243,6 @@ FROM HR.Employee e
 <p>Likewise, a database view was used to join the Employee table with its lookup table(s).</p>
 <pre><code class="cs">    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
     {
-        readonly string m_ConnectionString;
-
         public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
         { }
 
@@ -417,17 +418,6 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
                 cmd.ExecuteNonQuery();
             }
         }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
     }
 </code></pre>
 
@@ -559,13 +549,10 @@ public partial class EmployeeComplex
 }
 </code></pre>
 
-<pre><code class="cs">    public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
     {
-        readonly string m_ConnectionString;
-
-        public ModelWithLookupComplexScenario(string connectionString)
+        public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeComplex employee)
@@ -672,17 +659,6 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
             using (var con = OpenConnection())
                 con.Execute(sql, employee);
-        }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 </code></pre>

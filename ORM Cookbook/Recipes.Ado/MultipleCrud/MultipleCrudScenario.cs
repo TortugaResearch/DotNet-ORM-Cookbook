@@ -8,14 +8,10 @@ using System.Text;
 
 namespace Recipes.Ado.MultipleCrud
 {
-    public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
+    public class MultipleCrudScenario : ScenarioBase, IMultipleCrudScenario<EmployeeSimple>
     {
-        readonly string m_ConnectionString;
-
-        public MultipleCrudScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public MultipleCrudScenario(string connectionString) : base(connectionString)
+        { }
 
         public void DeleteBatch(IList<EmployeeSimple> employees)
         {
@@ -263,17 +259,6 @@ WHERE EmployeeKey = @EmployeeKey_{i};");
                 }
                 trans.Commit();
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }
