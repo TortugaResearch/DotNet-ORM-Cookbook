@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.SingleModelCrud;
 using System;
@@ -8,13 +7,10 @@ using System.Linq;
 
 namespace Recipes.Dapper.SingleModelCrud
 {
-    public class SingleModelCrudScenario : ISingleModelCrudScenario<EmployeeClassification>
+    public class SingleModelCrudScenario : ScenarioBase, ISingleModelCrudScenario<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public SingleModelCrudScenario(string connectionString)
+        public SingleModelCrudScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeClassification classification)
@@ -88,17 +84,6 @@ namespace Recipes.Dapper.SingleModelCrud
 
             using (var con = OpenConnection())
                 con.Execute(sql, classification);
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.SingleModelCrudAsync;
 using System;
@@ -10,13 +9,10 @@ using System.Threading.Tasks;
 
 namespace Recipes.Dapper.SingleModelCrudAsync
 {
-    public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario<EmployeeClassification>
+    public class SingleModelCrudAsyncScenario : ScenarioBase, ISingleModelCrudAsyncScenario<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public SingleModelCrudAsyncScenario(string connectionString)
+        public SingleModelCrudAsyncScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public async Task<int> CreateAsync(EmployeeClassification classification)
@@ -92,17 +88,6 @@ namespace Recipes.Dapper.SingleModelCrudAsync
 
             using (var con = await OpenConnectionAsync().ConfigureAwait(false))
                 await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        async Task<SqlConnection> OpenConnectionAsync()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            await con.OpenAsync().ConfigureAwait(false);
-            return con;
         }
     }
 }

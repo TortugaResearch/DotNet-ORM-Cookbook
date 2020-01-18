@@ -7,14 +7,10 @@ using System.Linq;
 
 namespace Recipes.Ado.ModelWithChildren
 {
-    public class ModelWithChildrenScenario : IModelWithChildrenScenario<ProductLine, Product>
+    public class ModelWithChildrenScenario : ScenarioBase, IModelWithChildrenScenario<ProductLine, Product>
     {
-        readonly string m_ConnectionString;
-
-        public ModelWithChildrenScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ModelWithChildrenScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(ProductLine productLine)
         {
@@ -327,17 +323,6 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
                 cmd.Parameters.AddWithValue("@ProductLineName", productLine.ProductLineName);
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

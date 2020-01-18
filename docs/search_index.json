@@ -1,6 +1,54 @@
 {
   "docs": [
     {
+      "location": "ADO.htm",
+      "breadcrumbs": "Home / ORMs / ADO.NET",
+      "keywords": "a abstract access Ado ADO All allowing allows also and api are area as automatically be beyond blob Bug bugs capabilities classes com Common connection Connection connectionstrings connectivity consistent Core creating cs data Data database databases Databases DB Db2 DB2 Devart differently docs documentation Documentation done dotnet drivers en experience Firebird FirebirdClient FirebirdSql for For foundational Framework generic github greater have https IBM idatareader IDataReader idbcommand IDbCommand idbconnection IDbConnection implement implements important in includes incorporated Individual information interfaces into is issues itself just known labels libraries Libraries library License LICENSE licensed Licensing logged maintainers master may microsoft Microsoft MIT most Most MySQL MySqlConnector need needed NET No Npgsql nuget ODBC of Of offer offered often OleDB on OpenConnection OpenEdge or Oracle org own package packages PostgreSQL Primary Progress provider providers Recipes Reference reported Reporting repository requires respective runtime ScenarioBase Server set setup Setup should snippet special specific SQL SqlClient SQLite string strings Strings supported Supported system System than that the The their these This to try Tutorials TXT under us using via well which writing www you",
+      "title": "ADO.NET"
+    },
+    {
+      "location": "Chain.htm",
+      "breadcrumbs": "Home / ORMs / Chain",
+      "keywords": "a Access ADO also an and any around based be between blob Bug but cached can capabilities Chain classes com concept connection connections connectionString Core created Data database Database Databases DataSource docevaad Documentation files for Framework Full generates generation github handles htm https in internally interrogates intersection Introduction io is issues Issues it its Libraries License Licensing logged mapping Mapping master MDS Microsoft MIT MySql MySQL NET new Normally nuget object Odbc of offered offers often OleDb OleDB one only Only org Other packages per PostgreSql PostgreSQL Primary PrimaryDataSource provider Quick Rather reflection Reflection Reporting repository requires Result safe schema Server set Setup should so specific SQL SqlClient SQLite SqlServer SqlServerDataSource Start string support Support Supported supports System tables than that the Then thread Tortuga Tutorials txt under using Using which without writing www",
+      "title": "Chain"
+    },
+    {
+      "location": "Dapper.htm",
+      "breadcrumbs": "Home / ORMs / Dapper",
+      "keywords": "0 2 a additional ADO an and any apache Apache as be Bug com Dapper database Database Databases describes Documentation does earilest exposed extension for generation github handle htm http https IDbConnection in is issues Issues it It itself keeping libraries Libraries License LICENSE licenses Licensing logged mapper mapping methods Micro Net NET No not nuget object objects of offered offers often one org ORMs over packages parameters primary provide provider Provider purpose Quick Reporting repository required requires result same set sets setup Setup should simple specific Specific SQL StackExchange Start style Supported supports that the to Tutorials uess under version which with writing www",
+      "title": "Dapper"
+    },
+    {
+      "location": "EFCore.htm",
+      "breadcrumbs": "Home / ORMs / Entity Framework Core",
+      "keywords": "0 2 3 a access All Alternately and Apache are as assumes automatically Azure be between blob Bug can class classes cli com command compatible configuration connections contains core Core Cosmos created creating cross current data database Database Databases DB dbcontext DbContext DBContext describes differently docs Documentation dotnet ef EF efcore en entities entity Entity extensible first for Framework generate get github https in Individual internally is issues Issues itself Libraries License LICENSE licensed Licensing lightweight list logged manages map mapping MariaDB master matching may microsoft miscellaneous MySQL needed netcore not of offered one open Oracle performed platform popular PostgreSQL powershell Primary providers Providers Reporting repository required requires scaffold Scaffold schema See Server Setup should source specific SQL SQLite started subclass Supported supports tables tabs technology the The This to Tutorial Tutorials txt under us used version via which with x",
+      "title": "Entity Framework Core"
+    },
+    {
+      "location": "LLBLGenPro.htm",
+      "breadcrumbs": "Home / ORMs / LLBLGen Pro",
+      "keywords": "a and are Bug bugs databases Databases Documentation etc for information learning Libraries License Licensing Links List LLBLGen needed NuGet of ORM overview Overview packages Pro project Quick reported Reporting resource setting Setup supported Supported the to TODO TOOD tools Tutorials up Where Which",
+      "title": "LLBLGen Pro"
+    },
+    {
+      "location": "NHibernate.htm",
+      "breadcrumbs": "Home / ORMs / NHibernate",
+      "keywords": "a and are Bug bugs databases Databases Documentation etc for information learning Libraries License Licensing Links List needed NHibernate NuGet of ORM overview Overview packages project Quick reported Reporting resource setting Setup supported Supported the to TODO TOOD tools Tutorials up Where Which",
+      "title": "NHibernate"
+    },
+    {
+      "location": "RepoDb.htm",
+      "breadcrumbs": "Home / ORMs / RepoDb",
+      "keywords": "a and are Bug bugs databases Databases Documentation etc for information learning Libraries License Licensing Links List needed NuGet of ORM overview Overview packages project Quick RepoDb reported Reporting resource setting Setup supported Supported the to TODO TOOD tools Tutorials up Where Which",
+      "title": "RepoDb"
+    },
+    {
+      "location": "ServiceStack.htm",
+      "breadcrumbs": "Home / ORMs / ServiceStack",
+      "keywords": "a and are Bug bugs databases Databases Documentation etc for information learning Libraries License Licensing Links List needed NuGet of ORM overview Overview packages project Quick reported Reporting resource ServiceStack setting Setup supported Supported the to TODO TOOD tools Tutorials up Where Which",
+      "title": "ServiceStack"
+    },
+    {
       "location": "FAQ.htm",
       "breadcrumbs": "Home / FAQ",
       "keywords": "2nd a abide abstract access accomplished achieve add all All allowed an and Another any application Application Architecture are around as Asked assists associated based basic be both business by Can cases close concerns connection connections Connections consider Consumers context conventions cookbook Core create Creating currently custom data database databases DBContext design designing details developer development dictate different Different do doesn don early Edition EmployeeClassification Encapsulate entities example excessive exist expose favorite following for For Frequently fulfill function functionality fundamental general Generally generating goals Guide guidelines have headers hide hold how I if If in In inject intention interact interface interfaces internal IQueryable is ISession It knowledge late layer long maintenance managed managing mapping maximize may mean Microsoft my NET Never no not null objects of once open or order ORM ORMs other our part passed performance periods permitted phase planning possible project queries Questions reason record repositories requirement resources responsible returns scenario scenarios security Separating Server should so solutions something source sources speaking specific SQL structures such support t tasked techniques technologies test that the The them this This through to To TypedDataSets uses using valuable want wants way we What when Why will willing with within XML Yes you",

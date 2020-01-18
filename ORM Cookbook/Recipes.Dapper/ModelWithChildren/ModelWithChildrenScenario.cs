@@ -8,13 +8,10 @@ using System.Linq;
 
 namespace Recipes.Dapper.ModelWithChildren
 {
-    public class ModelWithChildrenScenario : IModelWithChildrenScenario<ProductLine, Product>
+    public class ModelWithChildrenScenario : ScenarioBase, IModelWithChildrenScenario<ProductLine, Product>
     {
-        readonly string m_ConnectionString;
-
-        public ModelWithChildrenScenario(string connectionString)
+        public ModelWithChildrenScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(ProductLine productLine)
@@ -259,17 +256,6 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             const string sql = "UPDATE Production.ProductLine SET ProductLineName = @ProductLineName WHERE ProductLineKey = @ProductLineKey;";
 
             con.Execute(sql, productLine);
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

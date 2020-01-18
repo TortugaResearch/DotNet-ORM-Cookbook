@@ -8,6 +8,16 @@
   "ConvertLocalLinks": "true",
   "Pages": {
     "__index": "index.md",
+    "ORMs": {
+      "ADO.NET": "ADO.md",
+      "Chain": "Chain.md",
+      "Dapper": "Dapper.md",
+      "Entity Framework Core": "EFCore.md",
+      "LLBLGen Pro": "LLBLGenPro.md",
+      "NHibernate": "NHibernate.md",
+      "RepoDb": "RepoDb.md",
+      "ServiceStack": "ServiceStack.md"
+    },
     "FAQ": "FAQ.md",
     "Single Model CRUD": "SingleModelCrud.md",
     "Model with Childern CRUD": "ModelWithChildren.md",

@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.Immutable;
 using System;
@@ -8,13 +7,10 @@ using System.Collections.Immutable;
 
 namespace Recipes.Dapper.Immutable
 {
-    public class ImmutableScenario : IImmutableScenario<ReadOnlyEmployeeClassification>
+    public class ImmutableScenario : ScenarioBase, IImmutableScenario<ReadOnlyEmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public ImmutableScenario(string connectionString)
+        public ImmutableScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(ReadOnlyEmployeeClassification classification)
@@ -88,17 +84,6 @@ namespace Recipes.Dapper.Immutable
 
             using (var con = OpenConnection())
                 con.Execute(sql, classification);
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }
