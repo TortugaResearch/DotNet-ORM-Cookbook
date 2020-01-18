@@ -33,6 +33,7 @@
     "Foreign Key to Lookup Table CRUD": {
       "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
       "Object-Based Foreign Key": "ModelWithLookupComplex.md"
-    }
+    },
+    "Basic Stored Procedures": "BasicStoredProc.md"
   }
 }

@@ -10,7 +10,7 @@ Note: While writing to views is supported by some databases, that capability is 
 
 ## Database Views
 
-@snippet text [..\OrmCookbookDB\HR\Views\EmployeeDetail.sql] 
+@snippet text [..\OrmCookbookDB\HR\Views\EmployeeDetail.sql] .
 
 ## ADO.NET
 
