@@ -362,7 +362,39 @@ VALUES
 </code></pre>
 
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+{
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(employee);
+        }
+    }
+
+    public IList&lt;Employee&gt; SortByLastName()
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.OrderBy(x =&gt; x.LastName).ToList();
+    }
+
+    public IList&lt;Employee&gt; SortByLastNameDescFirstName()
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.OrderByDescending(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+    }
+
+    public IList&lt;Employee&gt; SortByLastNameFirstName()
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+    }
+}
+</code></pre>
+
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class SortingScenario : ISortingScenario&lt;EmployeeEntity&gt;
 {

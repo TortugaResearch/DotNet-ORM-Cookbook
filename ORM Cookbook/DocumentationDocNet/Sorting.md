@@ -28,7 +28,7 @@ Columns to be sorted by are passed in as strings, but checked against the list o
 
 ## LINQ to DB
 
-TODO
+@snippet cs [..\Recipes.LinqToDB\Sorting\SortingScenario.cs] SortingScenario
 
 ## LLBLGen Pro 
 
