@@ -23,6 +23,7 @@
     "Model with Childern CRUD": "ModelWithChildren.md",
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",
+    "Upsert": "Upsert.md",
     "Partial Updates": "PartialUpdate.md",
     "Immutable CRUD": "Immutable.md",
     "CRUD Operations on Multiple Objects": "MultipleCrud.md",
