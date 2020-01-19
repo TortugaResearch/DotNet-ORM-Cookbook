@@ -4,7 +4,7 @@ These scenarios demonstrate how to call basic stored procedures that return a si
 
 Future scenarios will cover topics such as:
 
-* Multiple Result sets
+* Multiple Resultsets
 * Output parameter(s)
 * Return parameter
 

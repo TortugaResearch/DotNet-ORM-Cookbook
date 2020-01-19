@@ -109,6 +109,12 @@
       "title": "Reading from Views"
     },
     {
+      "location": "ScalarValue.htm",
+      "breadcrumbs": "Home / Reading a Salar Value from a Row",
+      "keywords": "a Ado ADO an Basic BasicStoredProc Chain column Core cs Dapper demonstrate discarded else Entity EntityFrameworkCore Everything example ExecuteScalar field first For Framework from how htm in In is IScalarValueScenario LLBLGen LLBLGenPro NET NHibernate of Pro procedure Procedures Prototype read reading Reading Recipes RepoDb resultset returns row Row Salar scalar ScalarValue ScalarValueScenario Scenario scenarios see ServiceStack simple single snippet Sorting SortingScenario stored Stored the These to TODO Tortuga value Value values",
+      "title": "Reading a Salar Value from a Row"
+    },
+    {
       "location": "Sorting.htm",
       "breadcrumbs": "Home / Basic Sorting",
       "keywords": "1 a A Ado ADO against are as at attacks basic Basic be but by Chain checked chosed columns Columns Core cs Dapper demonstrate dynamically Entity EntityFrameworkCore expressions for Framework handled how in injection is ISortingScenario list LLBLGen LLBLGenPro needed NET NHibernate Note object of or passed perform prevent Pro Prototype Recipes RepoDb reverse runtime Scenario scenarios separate ServiceStack snippet sorted SortExpression sorting Sorting SortingScenario sorts SQL strings TEmployee the These to Tortuga will",
@@ -135,7 +141,7 @@
     {
       "location": "BasicStoredProc.htm",
       "breadcrumbs": "Home / Basic Stored Procedures",
-      "keywords": "2 a additional Ado ADO any as basic Basic BasicStoredProc BasicStoredProcScenario be but call can Chain class collection configuration Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DbContext demonstrate entity Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications HasNoKey how HR IBasicStoredProcScenario if in interpreted is just like LLBLGen modelBuilder Multiple needed NET NHibernate of or OrmCookbookDB other Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb requirements Result results resultset return Return returned row rows s scalar Scenario scenarios ServiceStack sets should single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true two use value values will with",
+      "keywords": "2 a additional Ado ADO any as basic Basic BasicStoredProc BasicStoredProcScenario be but call can Chain class collection configuration Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DbContext demonstrate entity Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications HasNoKey how HR IBasicStoredProcScenario if in interpreted is just like LLBLGen modelBuilder Multiple needed NET NHibernate of or OrmCookbookDB other Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb requirements results resultset Resultsets return Return returned row rows s scalar Scenario scenarios ServiceStack should single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true two use value values will with",
       "title": "Basic Stored Procedures"
     }
   ]

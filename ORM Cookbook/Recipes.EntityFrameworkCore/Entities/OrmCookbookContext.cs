@@ -66,6 +66,12 @@ namespace Recipes.EntityFrameworkCore.Entities
                 entity.HasIndex(e => e.DivisionName)
                     .HasName("UX_Division_DivisionName")
                     .IsUnique();
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(sysutcdatetime())");
+
+                entity.Property(e => e.DivisionId).HasDefaultValueSql("(newsequentialid())");
+
+                entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(sysutcdatetime())");
             });
 
             modelBuilder.Entity<Employee>(entity =>

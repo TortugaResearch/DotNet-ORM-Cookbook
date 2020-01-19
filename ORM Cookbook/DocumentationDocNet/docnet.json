@@ -28,6 +28,7 @@
     "CRUD Operations on Multiple Objects": "MultipleCrud.md",
     "Projecting with a Join": "Joins.md",
     "Reading from Views": "Views.md",
+    "Reading a Salar Value from a Row": "ScalarValue.md",
     "Basic Sorting": "Sorting.md",
     "Populate DataTable": "PopulateDataTable.md",
     "Foreign Key to Lookup Table CRUD": {
