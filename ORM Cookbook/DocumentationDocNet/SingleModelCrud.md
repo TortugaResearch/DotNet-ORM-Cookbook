@@ -82,6 +82,10 @@ The design of Entity Framework Core requires extraneous database calls when perf
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrud\SingleModelCrudScenario2.cs] SingleModelCrudScenario2
 
+## LINQ to DB
+
+@snippet cs [..\Recipes.LinqToDB\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
+
 ## LLBLGen Pro
 LLBLGen Pro is a .NET ORM on the market since 2003 and has seen over 15 major releases since that date. The latest version is v5.6.1, released in October 2019. LLBLGen Pro is a commercial non-poco full ORM which also offers a full plain-SQL API so can be used as a micro ORM as well. 
 

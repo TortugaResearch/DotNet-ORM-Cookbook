@@ -28,6 +28,10 @@ In order to promote code reuse, object population has been moved into the model'
 
 @snippet cs [..\Recipes.EntityFrameworkCore\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario

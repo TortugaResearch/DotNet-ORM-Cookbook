@@ -43,6 +43,10 @@ These conversions are used in the repository before write operations and after r
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Immutable\ImmutableScenario.cs] ImmutableScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro 
 
 LLBLGen Pro supports 'action' specifications on entities, e.g. an entity can only be fetched, or fetched and updated, but e.g. not deleted. An entity that's marked as 'Read' can't be updated, deleted or inserted. The scope of the recipes in this cookbook however

@@ -30,6 +30,10 @@ EF Core native supports joins, but not implicit projections. Multiple objects ne
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Joins\JoinsScenario.cs] JoinsScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro 
 
 LLBLGen Pro native supports joins, but not implicit projections in the entity API. It does in the plain SQL API. 

@@ -26,6 +26,10 @@ Like ADO.NET, this uses the row counts returned from the `Execute` command.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\TryCrud\TryCrudScenario.cs] TryCrudScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\TryCrud\TryCrudScenario.cs] TryCrudScenario

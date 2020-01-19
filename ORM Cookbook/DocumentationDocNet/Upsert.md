@@ -29,6 +29,10 @@ EF Core doesn't directly support upsert, so often a read must proceed the update
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Upsert\UpsertScenario.cs] UpsertScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro 
 
 TODO

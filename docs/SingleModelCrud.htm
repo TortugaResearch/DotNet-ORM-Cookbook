@@ -48,6 +48,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
@@ -650,6 +652,83 @@ public partial class EmployeeClassification
         {
             context.Entry(classification).State = EntityState.Modified;
             context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt;
+{
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(classification);
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            db.EmployeeClassification
+                .Where(d =&gt; d.EmployeeClassificationKey == classification.EmployeeClassificationKey)
+                .Delete();
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            db.EmployeeClassification
+                .Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey)
+                .Delete();
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        using (var db = new OrmCookbook())
+        {
+            var query = from ec in db.EmployeeClassification
+                        where ec.EmployeeClassificationName == employeeClassificationName
+                        select ec;
+            return query.Single();
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.ToList();
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey).Single();
+        }
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            db.Update(classification);
         }
     }
 }

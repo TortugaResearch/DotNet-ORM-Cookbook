@@ -24,6 +24,10 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 @snippet cs [..\Recipes.EntityFrameworkCore\RowCount\RowCountScenario.cs] RowCountScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro 
 
 TODO

@@ -28,6 +28,10 @@ Keyset pagination is a technique where the previous result is used to determine 
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Pagination\PaginationScenario.cs] PaginationScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro 
 
 TODO
