@@ -5,7 +5,7 @@ using System.Linq;
 namespace Recipes.BasicStoredProc
 {
     /// <summary>
-    /// This scenario reads from a view.
+    /// This scenario reads from stored procedures
     /// </summary>
     [TestCategory("BasicStoredProc")]
     public abstract class BasicStoredProcTests<TEmployeeClassification, TEmployeeClassificationWithCount>

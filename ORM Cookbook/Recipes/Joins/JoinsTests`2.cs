@@ -5,7 +5,7 @@ using System.Linq;
 namespace Recipes.Joins
 {
     /// <summary>
-    /// This scenario reads from a view.
+    /// This scenario using a join defined on the client, but executed in the database.
     /// </summary>
     [TestCategory("Joins")]
     public abstract class JoinsTests<TEmployeeDetail, TEmployeeSimple> : TestBase

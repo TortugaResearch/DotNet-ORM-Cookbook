@@ -4,7 +4,7 @@ using System;
 namespace Recipes.ScalarValue
 {
     /// <summary>
-    /// This scenario reads from a view.
+    /// This scenario reads single values from a row.
     /// </summary>
     [TestCategory("ScalarValue")]
     public abstract class ScalarValueTests

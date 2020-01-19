@@ -6,7 +6,7 @@ using System.Linq;
 namespace Recipes.MultipleCrud
 {
     /// <summary>
-    /// This scenario reads from a view.
+    /// This scenario works with collections of objects.
     /// </summary>
     [TestCategory("MultipleCrud")]
     public abstract class MultipleCrudTests<TEmployeeSimple> : TestBase
