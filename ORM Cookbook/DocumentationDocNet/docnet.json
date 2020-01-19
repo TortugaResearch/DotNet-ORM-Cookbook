@@ -20,7 +20,7 @@
     },
     "FAQ": "FAQ.md",
     "Single Model CRUD": "SingleModelCrud.md",
-    "Model with Childern CRUD": "ModelWithChildren.md",
+    "Model with Children CRUD": "ModelWithChildren.md",
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",
     "Upsert": "Upsert.md",

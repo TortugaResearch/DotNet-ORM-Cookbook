@@ -62,9 +62,9 @@
     },
     {
       "location": "ModelWithChildren.htm",
-      "breadcrumbs": "Home / Model with Childern CRUD",
+      "breadcrumbs": "Home / Model with Children CRUD",
       "keywords": "1 2 a access active ADO agnostic all alone alt Alternately Alternative an and application are aren around as at available based be between block by By can cascade Cascade cascading Chain child Child class clean collection constraint control Core correctly Create CRUD cs Dapper data database DBContext default delete Delete DeleteBehavior deleted deletes demonstrates desired direct does due each easy empty ensure entities Entity EntityFrameworkCore EntityState even explicitly find for For foreign Framework functionality go have ignore IModelWithChildrenScenario implemented in includes insert Interfaces IProduct IProductLine is ISession isn it key layer lazy level list LLBLGen LLBLGenPro loading longer management method missing Model ModelWithChildren ModelWithChildrenScenario ModelWithChildrenScenarioAlt needed Nested NET NHibernate no not object objects of on OnDelete one operating operation operations Operations or order ORM orphan Otherwise parent partial pass performing predicate Pro property Prototype Read Recipes record records Records regular removal removed RepoDb repository requires rest rows scenario Scenario separate separately separation ServiceStack set setting setup snippet stand straightforward support supported table that the The this This to TODO Tortuga TProduct TProductLine tracker tracks transaction trigger two Unit up update Update using utilize utilizing variants way we when When whether which will with With work Work works you",
-      "title": "Model with Childern CRUD"
+      "title": "Model with Children CRUD"
     },
     {
       "location": "SingleModelCrudAsync.htm",
