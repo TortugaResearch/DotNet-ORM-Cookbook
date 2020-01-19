@@ -32,7 +32,7 @@ EF Core native supports joins, but not implicit projections. Multiple objects ne
 
 ## LINQ to DB
 
-TODO
+@snippet cs [..\Recipes.LinqToDB\Joins\JoinsScenario.cs] JoinsScenario
 
 ## LLBLGen Pro 
 
