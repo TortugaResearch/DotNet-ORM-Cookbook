@@ -75,6 +75,7 @@
     <None Include="Sorting.md" />
     <None Include="TryCrud.md" />
     <None Include="BasicStoredProc.md" />
+    <None Include="Upsert.md" />
     <None Include="Views.md" />
     <None Include="docnet.json" />
   </ItemGroup>
