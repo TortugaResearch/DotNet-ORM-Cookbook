@@ -1,8 +1,10 @@
-﻿# Reading a Salar Value from a Row
+﻿# Reading a Scalar Value from a Row
 
 These scenarios demonstrate how to read simple scalar values. For example, reading a single field from a row. 
 
 For an example of reading a scalar value from a stored procedure, see [Basic Stored Procedures](BasicStoredProc.htm).
+
+For an example of reading a row count, see [Row Counts](RowCount.htm).
 
 ## Scenario Prototype
 
