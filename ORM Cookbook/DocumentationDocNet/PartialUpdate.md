@@ -36,7 +36,9 @@ To perform a partial update, first fetch a record and then modify it.
 
 ## LINQ to DB
 
-TODO
+@snippet cs [..\Recipes.LinqToDB\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
+
+@snippet cs [..\Recipes.LinqToDB\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 ## LLBLGen Pro
 
