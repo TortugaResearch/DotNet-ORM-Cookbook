@@ -30,7 +30,9 @@
     "Projecting with a Join": "Joins.md",
     "Reading from Views": "Views.md",
     "Reading a Salar Value from a Row": "ScalarValue.md",
+    "Row Counts": "RowCount.md",
     "Basic Sorting": "Sorting.md",
+    "Paging Results": "Pagination.md",
     "Populate DataTable": "PopulateDataTable.md",
     "Foreign Key to Lookup Table CRUD": {
       "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
