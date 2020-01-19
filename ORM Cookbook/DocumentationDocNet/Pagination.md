@@ -30,7 +30,7 @@ Keyset pagination is a technique where the previous result is used to determine 
 
 ## LINQ to DB
 
-TODO
+@snippet cs [..\Recipes.LinqToDB\Pagination\PaginationScenario.cs] PaginationScenario
 
 ## LLBLGen Pro 
 
