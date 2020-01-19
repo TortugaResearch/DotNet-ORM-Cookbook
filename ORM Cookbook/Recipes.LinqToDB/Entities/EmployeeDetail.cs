@@ -2,6 +2,7 @@
 
 namespace Recipes.LinqToDB.Entities
 {
+    [Table("EmployeeDetail", Schema = "HR")]
     public partial class EmployeeDetail
     {
         [Column]

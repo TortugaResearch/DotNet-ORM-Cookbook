@@ -36,7 +36,7 @@ Starting with EF Core 3.0, views are treated like tables, but with two additiona
 
 ## LINQ to DB
 
-TODO
+@snippet cs [..\Recipes.LinqToDB\Views\ViewsScenario.cs] ViewsScenario
 
 ## LLBLGen Pro 
 
