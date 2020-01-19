@@ -71,6 +71,7 @@
     <None Include="readme.md" />
     <None Include="SingleModelCrud.md" />
     <None Include="SingleModelCrudAsync.md" />
+    <None Include="ScalarValue.md" />
     <None Include="Sorting.md" />
     <None Include="TryCrud.md" />
     <None Include="BasicStoredProc.md" />

@@ -25,7 +25,8 @@ INSERT INTO @Employee
 VALUES
 (1, 'John', NULL, 'Doe', NULL, NULL, NULL, 1),
 (2, 'Jane', NULL, 'Doe', NULL, NULL, NULL, 2),
-(3, 'Tom', NULL, 'Jones', NULL, NULL, NULL, 3);
+(3, 'Tom', NULL, 'Jones', NULL, NULL, NULL, 3),
+(4, 'Chuck', NULL, 'Jones', NULL, NULL, NULL, 4);
 
 
 
