@@ -35,6 +35,10 @@ For deletes, ensure the child record in DBContext is setup with `.OnDelete(Delet
 
 @snippet cs [..\Recipes.EntityFrameworkCore\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro
 
 With LLBLGen Pro we can utilize straightforward ORM functionality with this, utilizing the stand-alone, database agnostic Unit of Work

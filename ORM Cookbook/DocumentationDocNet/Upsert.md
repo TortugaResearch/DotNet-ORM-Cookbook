@@ -8,7 +8,6 @@ Where possible, this should be performed in a single statement.
 
 @snippet cs [..\Recipes\Upsert\IUpsertScenario`1.cs] IUpsertScenario{TDivision}
 
-
 ## ADO.NET
 
 This code demonstrates the MERGE syntax.
@@ -28,6 +27,10 @@ This code demonstrates the MERGE syntax.
 EF Core doesn't directly support upsert, so often a read must proceed the update.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Upsert\UpsertScenario.cs] UpsertScenario
+
+## LINQ to DB
+
+@snippet cs [..\Recipes.LinqToDB\Upsert\UpsertScenario.cs] UpsertScenario
 
 ## LLBLGen Pro 
 

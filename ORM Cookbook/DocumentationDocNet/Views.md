@@ -34,6 +34,10 @@ Starting with EF Core 3.0, views are treated like tables, but with two additiona
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Views\ViewsScenario.cs] ViewsScenario
 
+## LINQ to DB
+
+@snippet cs [..\Recipes.LinqToDB\Views\ViewsScenario.cs] ViewsScenario
+
 ## LLBLGen Pro 
 
 The views are mapped as regular entities and marked as 'readonly' in the designer. Alternatively we could have mapped them as Typed View

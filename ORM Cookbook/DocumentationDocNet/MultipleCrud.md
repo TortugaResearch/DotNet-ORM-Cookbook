@@ -20,26 +20,25 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 
 TODO
 
-
 ## Entity Framework Core
 
 TODO
 
+## LINQ to DB
+
+TODO
 
 ## LLBLGen Pro 
 
 TODO
 
-
 ## NHibernate
 
 TODO
 
-
 ## RepoDb
 
 TODO
-
 
 ## ServiceStack
 

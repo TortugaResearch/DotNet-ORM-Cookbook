@@ -22,7 +22,6 @@ Likewise, a database view was used to join the Employee table with its lookup ta
 
 @snippet cs [..\Recipes.Ado\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
-
 ## Chain
 
 Chain does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.
@@ -32,7 +31,6 @@ Read operations must occur against a database view in order to get the propertie
 @snippet cs [..\Recipes.Tortuga.Chain\Models\EmployeeComplex.cs] EmployeeComplex
 
 @snippet cs [..\Recipes.Tortuga.Chain\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
-
 
 ## Dapper
 
@@ -52,6 +50,10 @@ This provides a layer of safety, as otherwise clients could override data in the
 
 @snippet cs [..\Recipes.EntityFrameworkCore\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro
 
 As LLBLGen Pro supports change tracking in the entities it doesn't have to refetch an entity that's been updated. The repository code 
@@ -62,7 +64,6 @@ Entity classes are always derived from a known base class so types created by th
 only entity classes. 
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
-
 
 ## NHibernate
 

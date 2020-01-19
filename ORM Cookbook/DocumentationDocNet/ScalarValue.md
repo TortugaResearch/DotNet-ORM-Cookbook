@@ -28,6 +28,10 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 @snippet cs [..\Recipes.EntityFrameworkCore\ScalarValue\ScalarValueScenario.cs] ScalarValueScenario
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro 
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\Sorting\SortingScenario.cs] SortingScenario

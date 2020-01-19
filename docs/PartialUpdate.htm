@@ -58,6 +58,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
@@ -300,6 +302,50 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
             temp.IsEmployee = isEmployee;
             context.SaveChanges();
         }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var db = new OrmCookbook())
+    {
+        db.EmployeeClassification
+            .Where(ec =&gt; ec.EmployeeClassificationKey == updateMessage.EmployeeClassificationKey)
+            .Set(ec =&gt; ec.EmployeeClassificationName, updateMessage.EmployeeClassificationName)
+            .Update();
+    }
+}
+
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var db = new OrmCookbook())
+    {
+        db.EmployeeClassification
+            .Where(ec =&gt; ec.EmployeeClassificationKey == updateMessage.EmployeeClassificationKey)
+            .Set(ec =&gt; ec.IsExempt, updateMessage.IsExempt)
+            .Set(ec =&gt; ec.IsEmployee, updateMessage.IsEmployee)
+            .Update();
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    using (var db = new OrmCookbook())
+    {
+        db.EmployeeClassification
+            .Where(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey)
+            .Set(ec =&gt; ec.IsExempt, isExempt)
+            .Set(ec =&gt; ec.IsEmployee, isEmployee)
+            .Update();
     }
 }
 </code></pre>

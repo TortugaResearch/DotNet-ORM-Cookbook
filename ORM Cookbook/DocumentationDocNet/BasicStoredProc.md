@@ -46,6 +46,10 @@ The receiver class should be registered in the DbContext just like any other Ent
 
 TODO
 
+## LINQ to DB
+
+TODO
+
 ## NHibernate
 
 TODO

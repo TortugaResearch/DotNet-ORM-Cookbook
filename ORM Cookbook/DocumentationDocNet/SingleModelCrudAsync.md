@@ -57,6 +57,12 @@ Async:
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrudAsync\SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
 
+## LINQ to DB
+
+With LINQ to DB, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places.
+
+@snippet cs [..\Recipes.LinqToDB\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
+
 ## LLBLGen Pro
 
 With LLBLGen Pro, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 

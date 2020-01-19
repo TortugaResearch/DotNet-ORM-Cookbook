@@ -56,6 +56,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
@@ -603,6 +605,99 @@ OUTPUT Inserted.DivisionKey;&quot;;
                 actual.StartTime = division.StartTime;
                 actual.SuppliesBudget = division.SuppliesBudget;
                 context.SaveChanges();
+                return actual.DivisionKey;
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;Division&gt;
+{
+    public Division GetByKey(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).Single();
+    }
+
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        //update audit column
+        division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+
+        using (var db = new OrmCookbook())
+        {
+            //check to see if the row already exists
+            var actual = db.Division.Where(x =&gt; x.DivisionName == division.DivisionName).SingleOrDefault();
+            if (actual == null) //Insert
+            {
+                return db.InsertWithInt32Identity(division);
+            }
+            else //Update
+            {
+                //Set fields manually so we don't overwrite CreatedBy/CreatedDate
+                db.Division
+                    .Where(d =&gt; d.DivisionKey == actual.DivisionKey)
+                    .Set(d =&gt; d.DivisionId, division.DivisionId)
+                    .Set(d =&gt; d.DivisionName, division.DivisionName)
+                    .Set(d =&gt; d.FloorSpaceBudget, division.FloorSpaceBudget)
+                    .Set(d =&gt; d.FteBudget, division.FteBudget)
+                    .Set(d =&gt; d.LastReviewCycle, division.LastReviewCycle)
+                    .Set(d =&gt; d.MaxEmployees, division.MaxEmployees)
+                    .Set(d =&gt; d.ModifiedByEmployeeKey, division.ModifiedByEmployeeKey)
+                    .Set(d =&gt; d.ModifiedDate, division.ModifiedDate)
+                    .Set(d =&gt; d.SalaryBudget, division.SalaryBudget)
+                    .Set(d =&gt; d.StartTime, division.StartTime)
+                    .Set(d =&gt; d.SuppliesBudget, division.SuppliesBudget)
+                    .Update();
+
+                return actual.DivisionKey;
+            }
+        }
+    }
+
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        //update audit column
+        division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+
+        using (var db = new OrmCookbook())
+        {
+            //If DivisionKey is zero, we know this is a new row
+            if (division.DivisionKey == 0) //Insert
+            {
+                return db.InsertWithInt32Identity(division);
+            }
+            else //Update
+            {
+                //This wouldn't be necessary if we were replacing all columns.
+                var actual = db.Division.Where(x =&gt; x.DivisionKey == division.DivisionKey).Single();
+
+                //Set fields manually so we don't overwrite CreatedBy/CreatedDate
+                db.Division
+                    .Where(d =&gt; d.DivisionKey == actual.DivisionKey)
+                    .Set(d =&gt; d.DivisionId, division.DivisionId)
+                    .Set(d =&gt; d.DivisionName, division.DivisionName)
+                    .Set(d =&gt; d.FloorSpaceBudget, division.FloorSpaceBudget)
+                    .Set(d =&gt; d.FteBudget, division.FteBudget)
+                    .Set(d =&gt; d.LastReviewCycle, division.LastReviewCycle)
+                    .Set(d =&gt; d.MaxEmployees, division.MaxEmployees)
+                    .Set(d =&gt; d.ModifiedByEmployeeKey, division.ModifiedByEmployeeKey)
+                    .Set(d =&gt; d.ModifiedDate, division.ModifiedDate)
+                    .Set(d =&gt; d.SalaryBudget, division.SalaryBudget)
+                    .Set(d =&gt; d.StartTime, division.StartTime)
+                    .Set(d =&gt; d.SuppliesBudget, division.SuppliesBudget)
+                    .Update();
+
                 return actual.DivisionKey;
             }
         }
