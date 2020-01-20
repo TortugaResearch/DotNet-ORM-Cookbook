@@ -117,7 +117,7 @@
     {
       "location": "ScalarValue.htm",
       "breadcrumbs": "Home / Reading a Salar Value from a Row",
-      "keywords": "a Ado ADO an Basic BasicStoredProc Chain column Core count Counts cs Dapper DB demonstrate discarded else Entity EntityFrameworkCore Everything example ExecuteScalar field first For Framework from how htm in In is IScalarValueScenario LINQ LLBLGen LLBLGenPro NET NHibernate of Pro procedure Procedures Prototype read reading Reading Recipes RepoDb resultset returns row Row RowCount scalar Scalar ScalarValue ScalarValueScenario Scenario scenarios see ServiceStack simple single snippet Sorting SortingScenario stored Stored the These to TODO Tortuga value Value values",
+      "keywords": "a Ado ADO an Basic BasicStoredProc Chain column Core count Counts cs Dapper DB demonstrate discarded else Entity EntityFrameworkCore Everything example ExecuteScalar field first For Framework from how htm in In is IScalarValueScenario LINQ LinqToDB LLBLGen LLBLGenPro NET NHibernate of Pro procedure Procedures Prototype read reading Reading Recipes RepoDb resultset returns row Row RowCount scalar Scalar ScalarValue ScalarValueScenario Scenario scenarios see ServiceStack simple single snippet Sorting SortingScenario stored Stored the These to TODO Tortuga value Value values",
       "title": "Reading a Salar Value from a Row"
     },
     {
