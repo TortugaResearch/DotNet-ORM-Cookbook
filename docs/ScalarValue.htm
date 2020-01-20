@@ -445,7 +445,58 @@
 </code></pre>
 
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    public int? GetDivisionKey(string divisionName)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionName == divisionName).SingleOrDefault()?.DivisionKey;
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName!;
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName;
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.LastReviewCycle;
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.MaxEmployees;
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).Single().ModifiedDate;
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.SalaryBudget;
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.StartTime;
+    }
+}
+</code></pre>
+
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class SortingScenario : ISortingScenario&lt;EmployeeEntity&gt;
 {

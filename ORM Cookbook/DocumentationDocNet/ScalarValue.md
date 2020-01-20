@@ -30,7 +30,7 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 ## LINQ to DB
 
-TODO
+@snippet cs [..\Recipes.LinqToDB\ScalarValue\ScalarValueScenario.cs] ScalarValueScenario
 
 ## LLBLGen Pro 
 
