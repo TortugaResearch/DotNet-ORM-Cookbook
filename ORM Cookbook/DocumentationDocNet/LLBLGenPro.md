@@ -12,6 +12,11 @@ the occasions where you need to express your queries in SQL itself. Its performa
 
 All licensees also have access to ORM Profiler, a multi-ORM profiler and query analyzer for .NET data-access code.
 
+@alert info
+The code in this repository uses interfaces on the entities. These are added in the designer as additional interfaces, where the code
+generator merged them into the output. 
+@end
+
 ## Supported Databases
 
 LLBLGen Pro supports the following databases:

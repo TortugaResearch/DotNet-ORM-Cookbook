@@ -333,7 +333,41 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;EmployeeEntity&gt;
+{
+    public int EmployeeCount(string lastName)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.Count(e =&gt; e.LastName == lastName);
+        }
+    }
+
+
+    public int EmployeeCount()
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            // Use queryspec for a change... 
+            return adapter.FetchScalar&lt;int&gt;(new QueryFactory().Employee.Select(Functions.CountRow()));
+        }
+    }
+
+
+    public void InsertBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        using(var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                adapter.BatchSize = employees?.Count ?? 0;
+                adapter.SaveEntityCollection(toInsert);
+            }
+        }
+    }
+}
+</code></pre>
+
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
