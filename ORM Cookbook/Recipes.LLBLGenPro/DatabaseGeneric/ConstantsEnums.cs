@@ -21,6 +21,14 @@ namespace LLBLGenPro.OrmCookbook
 		/// <summary></summary>
 		AmountOfFields
 	}
+	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : CreateEmployeeClassificationResult.</summary>
+	public enum CreateEmployeeClassificationResultFieldIndex
+	{
+		///<summary>EmployeeClassificationKey</summary>
+		EmployeeClassificationKey,
+		/// <summary></summary>
+		AmountOfFields
+	}
 	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : DepartmentDetail.</summary>
 	public enum DepartmentDetailFieldIndex
 	{
@@ -103,6 +111,8 @@ namespace LLBLGenPro.OrmCookbook
 	{
 		///<summary>CountEmployeesByClassificationResult</summary>
 		CountEmployeesByClassificationResultTypedView,
+		///<summary>CreateEmployeeClassificationResult</summary>
+		CreateEmployeeClassificationResultTypedView,
 		///<summary>DepartmentDetail</summary>
 		DepartmentDetailTypedView,
 		///<summary>GetEmployeeClassificationsResult</summary>

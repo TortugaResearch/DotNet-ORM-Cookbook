@@ -53,11 +53,57 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		}
 
 
+		/// <summary>Gets the SP Call using query for fetching the CreateEmployeeClassificationResult TypedView.</summary>
+		/// <param name="employeeClassificationName">Input parameter of stored procedure</param>
+		/// <param name="isExempt">Input parameter of stored procedure</param>
+		/// <param name="isEmployee">Input parameter of stored procedure</param>
+		/// <returns>ready to use IRetrievalQuery instance for fetching the typedview</returns>
+		/// <remarks>Output parameters are not set after query is executed</remarks>
+		public static IRetrievalQuery GetQueryForCreateEmployeeClassificationResultTypedView(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			IRetrievalQuery query = GetCreateEmployeeClassificationCallAsQuery(employeeClassificationName, isExempt, isEmployee);
+			query.ResultsetNumber = 1;
+			return query;
+		}
+
+		/// <summary>Fetches instances of the the typed view row 'CreateEmployeeClassificationResultRow' class using a stored procedure call. </summary>
+		/// <typeparam name="T">The type of the typed view row</typeparam>
+		/// <param name="projectionOfTypedView">The projection of the typed view, created using the method QueryFactory.GetCreateEmployeeClassificationResultTypedViewProjection().</param>
+		/// <param name="employeeClassificationName">Input parameter of stored procedure</param>
+		/// <param name="isExempt">Input parameter of stored procedure</param>
+		/// <param name="isEmployee">Input parameter of stored procedure</param>
+		/// <returns>The results in a List</returns>
+		public static List<T> FetchCreateEmployeeClassificationResultTypedView<T>(SD.LLBLGen.Pro.QuerySpec.DynamicQuery<T> projectionOfTypedView, System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			using(var adapter = new DataAccessAdapter())
+			{
+				return FetchCreateEmployeeClassificationResultTypedView(adapter, projectionOfTypedView, employeeClassificationName, isExempt, isEmployee);
+			}
+		}
+
+		/// <summary>Fetches instances of the the typed view row 'CreateEmployeeClassificationResultRow' class using a stored procedure call. </summary>
+		/// <typeparam name="T">The type of the typed view row</typeparam>
+		/// <param name="adapter">The adapter.</param>
+		/// <param name="projectionOfTypedView">The projection of the typed view, created using the method QueryFactory.GetCreateEmployeeClassificationResultTypedViewProjection().</param>
+		/// <param name="employeeClassificationName">Input parameter of stored procedure</param>
+		/// <param name="isExempt">Input parameter of stored procedure</param>
+		/// <param name="isEmployee">Input parameter of stored procedure</param>
+		/// <returns>The results in a List</returns>
+		public static List<T> FetchCreateEmployeeClassificationResultTypedView<T>(IDataAccessAdapter adapter, SD.LLBLGen.Pro.QuerySpec.DynamicQuery<T> projectionOfTypedView, System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			StoredProcedureCall call = CreateCreateEmployeeClassificationCall(adapter, employeeClassificationName, isExempt, isEmployee);
+			IRetrievalQuery query = call.ToRetrievalQuery();
+			query.ResultsetNumber = 1;
+			var toReturn = adapter.FetchQueryFromSource(projectionOfTypedView, query);
+			return toReturn;
+		}
+
+
 		/// <summary>Gets the SP Call using query for fetching the GetEmployeeClassificationsResult TypedView.</summary>
 		/// <param name="employeeClassificationKey">Input parameter of stored procedure</param>
 		/// <returns>ready to use IRetrievalQuery instance for fetching the typedview</returns>
 		/// <remarks>Output parameters are not set after query is executed</remarks>
-		public static IRetrievalQuery GetQueryForGetEmployeeClassificationsResultTypedView(System.Int32 employeeClassificationKey)
+		public static IRetrievalQuery GetQueryForGetEmployeeClassificationsResultTypedView(Nullable<System.Int32> employeeClassificationKey)
 		{
 			IRetrievalQuery query = GetGetEmployeeClassificationsCallAsQuery(employeeClassificationKey);
 			query.ResultsetNumber = 1;
@@ -69,7 +115,7 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		/// <param name="projectionOfTypedView">The projection of the typed view, created using the method QueryFactory.GetGetEmployeeClassificationsResultTypedViewProjection().</param>
 		/// <param name="employeeClassificationKey">Input parameter of stored procedure</param>
 		/// <returns>The results in a List</returns>
-		public static List<T> FetchGetEmployeeClassificationsResultTypedView<T>(SD.LLBLGen.Pro.QuerySpec.DynamicQuery<T> projectionOfTypedView, System.Int32 employeeClassificationKey)
+		public static List<T> FetchGetEmployeeClassificationsResultTypedView<T>(SD.LLBLGen.Pro.QuerySpec.DynamicQuery<T> projectionOfTypedView, Nullable<System.Int32> employeeClassificationKey)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -83,7 +129,7 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		/// <param name="projectionOfTypedView">The projection of the typed view, created using the method QueryFactory.GetGetEmployeeClassificationsResultTypedViewProjection().</param>
 		/// <param name="employeeClassificationKey">Input parameter of stored procedure</param>
 		/// <returns>The results in a List</returns>
-		public static List<T> FetchGetEmployeeClassificationsResultTypedView<T>(IDataAccessAdapter adapter, SD.LLBLGen.Pro.QuerySpec.DynamicQuery<T> projectionOfTypedView, System.Int32 employeeClassificationKey)
+		public static List<T> FetchGetEmployeeClassificationsResultTypedView<T>(IDataAccessAdapter adapter, SD.LLBLGen.Pro.QuerySpec.DynamicQuery<T> projectionOfTypedView, Nullable<System.Int32> employeeClassificationKey)
 		{
 			StoredProcedureCall call = CreateGetEmployeeClassificationsCall(adapter, employeeClassificationKey);
 			IRetrievalQuery query = call.ToRetrievalQuery();
@@ -133,10 +179,62 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 			return CreateCountEmployeesByClassificationCall(dataAccessProvider).ToRetrievalQuery();
 		}
 
+		/// <summary>Calls stored procedure 'CreateEmployeeClassification'.<br/><br/></summary>
+		/// <param name="employeeClassificationName">Input parameter. </param>
+		/// <param name="isExempt">Input parameter. </param>
+		/// <param name="isEmployee">Input parameter. </param>
+		/// <returns>Filled DataTable with resultset(s) of stored procedure</returns>
+		public static DataTable CreateEmployeeClassification(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			using(var dataAccessProvider = new DataAccessAdapter())
+			{
+				return CreateEmployeeClassification(employeeClassificationName, isExempt, isEmployee, dataAccessProvider);
+			}
+		}
+
+		/// <summary>Calls stored procedure 'CreateEmployeeClassification'.<br/><br/></summary>
+		/// <param name="dataAccessProvider">The data access provider.</param>
+		/// <param name="employeeClassificationName">Input parameter. </param>
+		/// <param name="isExempt">Input parameter. </param>
+		/// <param name="isEmployee">Input parameter. </param>
+		/// <returns>Filled DataTable with resultset(s) of stored procedure</returns>
+		public static DataTable CreateEmployeeClassification(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee, IDataAccessCore dataAccessProvider)
+		{
+			using(StoredProcedureCall call = CreateCreateEmployeeClassificationCall(dataAccessProvider, employeeClassificationName, isExempt, isEmployee))
+			{
+				DataTable toReturn = call.FillDataTable();
+				return toReturn;
+			}
+		}
+
+		/// <summary>Creates an IRetrievalQuery object for a call to the procedure 'CreateEmployeeClassification'.</summary>
+		/// <param name="employeeClassificationName">Input parameter of stored procedure</param>
+		/// <param name="isExempt">Input parameter of stored procedure</param>
+		/// <param name="isEmployee">Input parameter of stored procedure</param>
+		/// <returns>IRetrievalQuery object which is ready to use for datafetching</returns>
+		public static IRetrievalQuery GetCreateEmployeeClassificationCallAsQuery(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			using(var dataAccessProvider = new DataAccessAdapter())
+			{
+				return GetCreateEmployeeClassificationCallAsQuery(employeeClassificationName, isExempt, isEmployee, dataAccessProvider);
+			}
+		}
+
+		/// <summary>Creates an IRetrievalQuery object for a call to the procedure 'CreateEmployeeClassification'.</summary>
+		/// <param name="employeeClassificationName">Input parameter of stored procedure</param>
+		/// <param name="isExempt">Input parameter of stored procedure</param>
+		/// <param name="isEmployee">Input parameter of stored procedure</param>
+		/// <param name="dataAccessProvider">The data access provider.</param>
+		/// <returns>IRetrievalQuery object which is ready to use for datafetching</returns>
+		public static IRetrievalQuery GetCreateEmployeeClassificationCallAsQuery(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee, IDataAccessCore dataAccessProvider)
+		{
+			return CreateCreateEmployeeClassificationCall(dataAccessProvider, employeeClassificationName, isExempt, isEmployee).ToRetrievalQuery();
+		}
+
 		/// <summary>Calls stored procedure 'GetEmployeeClassifications'.<br/><br/></summary>
 		/// <param name="employeeClassificationKey">Input parameter. </param>
 		/// <returns>Filled DataTable with resultset(s) of stored procedure</returns>
-		public static DataTable GetEmployeeClassifications(System.Int32 employeeClassificationKey)
+		public static DataTable GetEmployeeClassifications(Nullable<System.Int32> employeeClassificationKey)
 		{
 			using(var dataAccessProvider = new DataAccessAdapter())
 			{
@@ -148,7 +246,7 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		/// <param name="dataAccessProvider">The data access provider.</param>
 		/// <param name="employeeClassificationKey">Input parameter. </param>
 		/// <returns>Filled DataTable with resultset(s) of stored procedure</returns>
-		public static DataTable GetEmployeeClassifications(System.Int32 employeeClassificationKey, IDataAccessCore dataAccessProvider)
+		public static DataTable GetEmployeeClassifications(Nullable<System.Int32> employeeClassificationKey, IDataAccessCore dataAccessProvider)
 		{
 			using(StoredProcedureCall call = CreateGetEmployeeClassificationsCall(dataAccessProvider, employeeClassificationKey))
 			{
@@ -160,7 +258,7 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		/// <summary>Creates an IRetrievalQuery object for a call to the procedure 'GetEmployeeClassifications'.</summary>
 		/// <param name="employeeClassificationKey">Input parameter of stored procedure</param>
 		/// <returns>IRetrievalQuery object which is ready to use for datafetching</returns>
-		public static IRetrievalQuery GetGetEmployeeClassificationsCallAsQuery(System.Int32 employeeClassificationKey)
+		public static IRetrievalQuery GetGetEmployeeClassificationsCallAsQuery(Nullable<System.Int32> employeeClassificationKey)
 		{
 			using(var dataAccessProvider = new DataAccessAdapter())
 			{
@@ -172,7 +270,7 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		/// <param name="employeeClassificationKey">Input parameter of stored procedure</param>
 		/// <param name="dataAccessProvider">The data access provider.</param>
 		/// <returns>IRetrievalQuery object which is ready to use for datafetching</returns>
-		public static IRetrievalQuery GetGetEmployeeClassificationsCallAsQuery(System.Int32 employeeClassificationKey, IDataAccessCore dataAccessProvider)
+		public static IRetrievalQuery GetGetEmployeeClassificationsCallAsQuery(Nullable<System.Int32> employeeClassificationKey, IDataAccessCore dataAccessProvider)
 		{
 			return CreateGetEmployeeClassificationsCall(dataAccessProvider, employeeClassificationKey).ToRetrievalQuery();
 		}
@@ -185,11 +283,25 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 			return new StoredProcedureCall(dataAccessProvider, @"[ORMCookbook].[HR].[CountEmployeesByClassification]", "CountEmployeesByClassification");
 		}
 
+		/// <summary>Creates the call object for the call 'CreateEmployeeClassification' to stored procedure 'CreateEmployeeClassification'.</summary>
+		/// <param name="dataAccessProvider">The data access provider.</param>
+		/// <param name="employeeClassificationName">Input parameter</param>
+		/// <param name="isExempt">Input parameter</param>
+		/// <param name="isEmployee">Input parameter</param>
+		/// <returns>Ready to use StoredProcedureCall object</returns>
+		private static StoredProcedureCall CreateCreateEmployeeClassificationCall(IDataAccessCore dataAccessProvider, System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			return new StoredProcedureCall(dataAccessProvider, @"[ORMCookbook].[HR].[CreateEmployeeClassification]", "CreateEmployeeClassification")
+							.AddParameter("@EmployeeClassificationName", "VarChar", 30, ParameterDirection.Input, true, 0, 0, employeeClassificationName)
+							.AddParameter("@IsExempt", "Bit", 0, ParameterDirection.Input, true, 0, 0, isExempt)
+							.AddParameter("@IsEmployee", "Bit", 0, ParameterDirection.Input, true, 0, 0, isEmployee);
+		}
+
 		/// <summary>Creates the call object for the call 'GetEmployeeClassifications' to stored procedure 'GetEmployeeClassifications'.</summary>
 		/// <param name="dataAccessProvider">The data access provider.</param>
 		/// <param name="employeeClassificationKey">Input parameter</param>
 		/// <returns>Ready to use StoredProcedureCall object</returns>
-		private static StoredProcedureCall CreateGetEmployeeClassificationsCall(IDataAccessCore dataAccessProvider, System.Int32 employeeClassificationKey)
+		private static StoredProcedureCall CreateGetEmployeeClassificationsCall(IDataAccessCore dataAccessProvider, Nullable<System.Int32> employeeClassificationKey)
 		{
 			return new StoredProcedureCall(dataAccessProvider, @"[ORMCookbook].[HR].[GetEmployeeClassifications]", "GetEmployeeClassifications")
 							.AddParameter("@EmployeeClassificationKey", "Int", 0, ParameterDirection.Input, true, 10, 0, employeeClassificationKey);

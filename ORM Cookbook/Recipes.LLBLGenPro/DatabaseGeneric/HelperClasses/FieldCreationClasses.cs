@@ -127,6 +127,13 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		public static EntityField2 EmployeeClassificationName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(CountEmployeesByClassificationResultFieldIndex.EmployeeClassificationName); } }
 	}
 
+	/// <summary>Field Creation Class for typedview CreateEmployeeClassificationResultTypedView</summary>
+	public partial class CreateEmployeeClassificationResultFields
+	{
+		/// <summary>Creates a new CreateEmployeeClassificationResultTypedView.EmployeeClassificationKey field instance</summary>
+		public static EntityField2 EmployeeClassificationKey	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(CreateEmployeeClassificationResultFieldIndex.EmployeeClassificationKey); } }
+	}
+
 	/// <summary>Field Creation Class for typedview DepartmentDetailTypedView</summary>
 	public partial class DepartmentDetailFields
 	{

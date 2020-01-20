@@ -13,7 +13,7 @@ namespace LLBLGenPro.OrmCookbook.TypedViewClasses
 	/// <summary>Class which represents a row in the typed view 'GetEmployeeClassificationsResult'.</summary>
 	/// <remarks>This class is a result class for a query, which is produced with the method <see cref="LLBLGenPro.OrmCookbook.FactoryClasses.QueryFactory.GetGetEmployeeClassificationsResultTypedViewProjection"/>. </remarks>
 	[Serializable]
-	public partial class GetEmployeeClassificationsResultRow 
+	public partial class GetEmployeeClassificationsResultRow : Recipes.IEmployeeClassification
 	{
 		partial void OnCreated();
 		

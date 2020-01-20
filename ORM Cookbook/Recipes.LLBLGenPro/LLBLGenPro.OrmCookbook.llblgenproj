@@ -316,7 +316,17 @@
       <Fields>
         <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
         <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
-        <Field Name="EmployeeCount" Type="int" IsOptional="true" Precision="10" />
+        <Field Name="EmployeeCount" Type="int" Precision="10" />
+      </Fields>
+      <OutputSettingValues>
+        <Interfaces>
+          <Interface Name="Recipes.IEmployeeClassificationWithCount" />
+        </Interfaces>
+      </OutputSettingValues>
+    </TypedViewDefinition>
+    <TypedViewDefinition Name="CreateEmployeeClassificationResult" ObjectID="2a04a7d8-0fb4-4a95-9525-868fac37fc54">
+      <Fields>
+        <Field Name="EmployeeClassificationKey" Type="int" IsOptional="true" Precision="10" />
       </Fields>
     </TypedViewDefinition>
     <TypedViewDefinition Name="DepartmentDetail" ObjectID="72413255-845d-4d05-81ad-5a835eb02ee1">
@@ -334,6 +344,11 @@
         <Field Name="IsEmployee" Type="bool" />
         <Field Name="IsExempt" Type="bool" />
       </Fields>
+      <OutputSettingValues>
+        <Interfaces>
+          <Interface Name="Recipes.IEmployeeClassification" />
+        </Interfaces>
+      </OutputSettingValues>
     </TypedViewDefinition>
   </TypedViewDefinitions>
   <SPCallDefinitions>
@@ -347,7 +362,7 @@
     </SPCallDefinition>
     <SPCallDefinition Name="GetEmployeeClassifications" ObjectID="8c85103e-0da1-4772-9dad-d61a13badb8b">
       <Parameters>
-        <Parameter Name="EmployeeClassificationKey" Type="int" Precision="10" />
+        <Parameter Name="EmployeeClassificationKey" Type="int" IsOptional="true" Precision="10" />
       </Parameters>
     </SPCallDefinition>
   </SPCallDefinitions>
@@ -367,7 +382,7 @@
       <Catalogs>
         <Catalog Name="ORMCookbook">
           <Schemas>
-            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-20T09:34:50.477938Z">
+            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-20T12:06:18.7089967Z">
               <Tables>
                 <Table Name="Department">
                   <PkConstraintName Name="PK_Department" />
@@ -459,12 +474,19 @@
                     </Resultset>
                   </Resultsets>
                 </StoredProcedure>
-                <StoredProcedure Name="CreateEmployeeClassification">
+                <StoredProcedure Name="CreateEmployeeClassification" NumberOfResultsets="1">
                   <Parameters>
                     <Parameter Name="@EmployeeClassificationName" Direction="1" Ordinal="1" DbType="24" Length="30" />
                     <Parameter Name="@IsExempt" Direction="1" Ordinal="2" DbType="2" />
                     <Parameter Name="@IsEmployee" Direction="1" Ordinal="3" DbType="2" />
                   </Parameters>
+                  <Resultsets>
+                    <Resultset Name="Resultset1">
+                      <Fields>
+                        <Field Name="EmployeeClassificationKey" Ordinal="1" IsOptional="true" DbType="8" Precision="10" />
+                      </Fields>
+                    </Resultset>
+                  </Resultsets>
                 </StoredProcedure>
                 <StoredProcedure Name="GetEmployeeClassifications" NumberOfResultsets="1">
                   <Parameters>
@@ -483,7 +505,7 @@
                 </StoredProcedure>
               </StoredProcedures>
             </Schema>
-            <Schema Name="Production" SyncSource="2" LastSyncWithDatabase="2020-01-20T09:34:50.6098875Z">
+            <Schema Name="Production" SyncSource="2" LastSyncWithDatabase="2020-01-20T12:06:18.7366761Z">
               <Tables>
                 <Table Name="Product">
                   <PkConstraintName Name="PK_Product" />
@@ -604,6 +626,11 @@
             <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
             <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="EmployeeClassificationName" />
             <FieldMapping FieldName="EmployeeCount" TargetFieldName="EmployeeCount" />
+          </FieldMappings>
+        </TypedViewMapping>
+        <TypedViewMapping TypedViewName=":CreateEmployeeClassificationResult" TargetName="ORMCookbook:HR:CreateEmployeeClassification:Resultset1">
+          <FieldMappings>
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
           </FieldMappings>
         </TypedViewMapping>
         <TypedViewMapping TypedViewName=":DepartmentDetail" TargetName="ORMCookbook:HR:DepartmentDetail">

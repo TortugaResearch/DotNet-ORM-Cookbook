@@ -49,6 +49,7 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			InitProductEntityInfo();
 			InitProductLineEntityInfo();
 			InitCountEmployeesByClassificationResultTypedViewInfo();
+			InitCreateEmployeeClassificationResultTypedViewInfo();
 			InitDepartmentDetailTypedViewInfo();
 			InitGetEmployeeClassificationsResultTypedViewInfo();
 			this.BuildInternalStructures();
@@ -135,9 +136,16 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		private void InitCountEmployeesByClassificationResultTypedViewInfo()
 		{
 			this.AddFieldIndexEnumForElementName(typeof(CountEmployeesByClassificationResultFieldIndex), "CountEmployeesByClassificationResultTypedView");
-			this.AddElementFieldInfo("CountEmployeesByClassificationResultTypedView", "EmployeeCount", typeof(Nullable<System.Int32>), false, false, true, false, (int)CountEmployeesByClassificationResultFieldIndex.EmployeeCount, 0, 0, 10);
+			this.AddElementFieldInfo("CountEmployeesByClassificationResultTypedView", "EmployeeCount", typeof(System.Int32), false, false, true, false, (int)CountEmployeesByClassificationResultFieldIndex.EmployeeCount, 0, 0, 10);
 			this.AddElementFieldInfo("CountEmployeesByClassificationResultTypedView", "EmployeeClassificationKey", typeof(System.Int32), false, false, true, false, (int)CountEmployeesByClassificationResultFieldIndex.EmployeeClassificationKey, 0, 0, 10);
 			this.AddElementFieldInfo("CountEmployeesByClassificationResultTypedView", "EmployeeClassificationName", typeof(System.String), false, false, true, false, (int)CountEmployeesByClassificationResultFieldIndex.EmployeeClassificationName, 30, 0, 0);
+		}
+
+		/// <summary>Inits CreateEmployeeClassificationResultView's info objects</summary>
+		private void InitCreateEmployeeClassificationResultTypedViewInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(CreateEmployeeClassificationResultFieldIndex), "CreateEmployeeClassificationResultTypedView");
+			this.AddElementFieldInfo("CreateEmployeeClassificationResultTypedView", "EmployeeClassificationKey", typeof(Nullable<System.Int32>), false, false, true, false, (int)CreateEmployeeClassificationResultFieldIndex.EmployeeClassificationKey, 0, 0, 10);
 		}
 
 		/// <summary>Inits DepartmentDetailView's info objects</summary>
