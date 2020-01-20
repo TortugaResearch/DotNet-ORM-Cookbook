@@ -43,7 +43,9 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 			InitEmployeeDetailEntityMappings();
 			InitProductEntityMappings();
 			InitProductLineEntityMappings();
+			InitCountEmployeesByClassificationResultTypedViewMappings();
 			InitDepartmentDetailTypedViewMappings();
+			InitGetEmployeeClassificationsResultTypedViewMappings();
 		}
 
 		/// <summary>Inits DepartmentEntity's mappings</summary>
@@ -124,6 +126,15 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		}
 
 
+		/// <summary>Inits CountEmployeesByClassificationResultView's mappings</summary>
+		private void InitCountEmployeesByClassificationResultTypedViewMappings()
+		{
+			this.AddElementMapping("CountEmployeesByClassificationResultTypedView", @"ORMCookbook", @"HR", "Resultset1", 3);
+			this.AddElementFieldMapping("CountEmployeesByClassificationResultTypedView", "EmployeeCount", "EmployeeCount", false, "Int", 0, 10, 0, false, string.Empty, null, typeof(System.Int32), 0);
+			this.AddElementFieldMapping("CountEmployeesByClassificationResultTypedView", "EmployeeClassificationKey", "EmployeeClassificationKey", false, "Int", 0, 10, 0, false, string.Empty, null, typeof(System.Int32), 1);
+			this.AddElementFieldMapping("CountEmployeesByClassificationResultTypedView", "EmployeeClassificationName", "EmployeeClassificationName", false, "VarChar", 30, 0, 0, false, string.Empty, null, typeof(System.String), 2);
+		}
+
 		/// <summary>Inits DepartmentDetailView's mappings</summary>
 		private void InitDepartmentDetailTypedViewMappings()
 		{
@@ -132,6 +143,16 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 			this.AddElementFieldMapping("DepartmentDetailTypedView", "DepartmentName", "DepartmentName", false, "NVarChar", 30, 0, 0, false, string.Empty, null, typeof(System.String), 1);
 			this.AddElementFieldMapping("DepartmentDetailTypedView", "DivisionKey", "DivisionKey", false, "Int", 0, 10, 0, false, string.Empty, null, typeof(System.Int32), 2);
 			this.AddElementFieldMapping("DepartmentDetailTypedView", "DivisionName", "DivisionName", false, "NVarChar", 30, 0, 0, false, string.Empty, null, typeof(System.String), 3);
+		}
+
+		/// <summary>Inits GetEmployeeClassificationsResultView's mappings</summary>
+		private void InitGetEmployeeClassificationsResultTypedViewMappings()
+		{
+			this.AddElementMapping("GetEmployeeClassificationsResultTypedView", @"ORMCookbook", @"HR", "Resultset1", 4);
+			this.AddElementFieldMapping("GetEmployeeClassificationsResultTypedView", "EmployeeClassificationKey", "EmployeeClassificationKey", false, "Int", 0, 10, 0, false, string.Empty, null, typeof(System.Int32), 0);
+			this.AddElementFieldMapping("GetEmployeeClassificationsResultTypedView", "EmployeeClassificationName", "EmployeeClassificationName", false, "VarChar", 30, 0, 0, false, string.Empty, null, typeof(System.String), 1);
+			this.AddElementFieldMapping("GetEmployeeClassificationsResultTypedView", "IsExempt", "IsExempt", false, "Bit", 0, 0, 0, false, string.Empty, null, typeof(System.Boolean), 2);
+			this.AddElementFieldMapping("GetEmployeeClassificationsResultTypedView", "IsEmployee", "IsEmployee", false, "Bit", 0, 0, 0, false, string.Empty, null, typeof(System.Boolean), 3);
 		}
 	}
 }

@@ -14,7 +14,50 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 	/// <summary>Class which contains the static logic to execute action stored procedures in the database.</summary>
 	public static partial class ActionProcedures
 	{
+		/// <summary>Delegate definition for stored procedure 'CreateEmployeeClassification' to be used in combination of a UnitOfWork2 object.</summary>
+		public delegate int CreateEmployeeClassificationCallBack(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee, IDataAccessCore dataAccessProvider);
 
+		/// <summary>Calls stored procedure 'CreateEmployeeClassification'.<br/><br/></summary>
+		/// <param name="employeeClassificationName">Input parameter. </param>
+		/// <param name="isExempt">Input parameter. </param>
+		/// <param name="isEmployee">Input parameter. </param>
+		/// <returns>Number of rows affected, if the database / routine doesn't suppress rowcounting.</returns>
+		public static int CreateEmployeeClassification(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			using(var dataAccessProvider = new DataAccessAdapter())
+			{
+				return CreateEmployeeClassification(employeeClassificationName, isExempt, isEmployee, dataAccessProvider);
+			}
+		}
+
+		/// <summary>Calls stored procedure 'CreateEmployeeClassification'.<br/><br/></summary>
+		/// <param name="dataAccessProvider">The data access provider.</param>
+		/// <param name="employeeClassificationName">Input parameter. </param>
+		/// <param name="isExempt">Input parameter. </param>
+		/// <param name="isEmployee">Input parameter. </param>
+		/// <returns>Number of rows affected, if the database / routine doesn't suppress rowcounting.</returns>
+		public static int CreateEmployeeClassification(System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee, IDataAccessCore dataAccessProvider)
+		{
+			using(StoredProcedureCall call = CreateCreateEmployeeClassificationCall(dataAccessProvider, employeeClassificationName, isExempt, isEmployee))
+			{
+				int toReturn = call.Call();
+				return toReturn;
+			}
+		}
+
+		/// <summary>Creates the call object for the call 'CreateEmployeeClassification' to stored procedure 'CreateEmployeeClassification'.</summary>
+		/// <param name="dataAccessProvider">The data access provider.</param>
+		/// <param name="employeeClassificationName">Input parameter</param>
+		/// <param name="isExempt">Input parameter</param>
+		/// <param name="isEmployee">Input parameter</param>
+		/// <returns>Ready to use StoredProcedureCall object</returns>
+		private static StoredProcedureCall CreateCreateEmployeeClassificationCall(IDataAccessCore dataAccessProvider, System.String employeeClassificationName, System.Boolean isExempt, System.Boolean isEmployee)
+		{
+			return new StoredProcedureCall(dataAccessProvider, @"[ORMCookbook].[HR].[CreateEmployeeClassification]", "CreateEmployeeClassification")
+							.AddParameter("@EmployeeClassificationName", "VarChar", 30, ParameterDirection.Input, true, 0, 0, employeeClassificationName)
+							.AddParameter("@IsExempt", "Bit", 0, ParameterDirection.Input, true, 0, 0, isExempt)
+							.AddParameter("@IsEmployee", "Bit", 0, ParameterDirection.Input, true, 0, 0, isEmployee);
+		}
 
 
 	}

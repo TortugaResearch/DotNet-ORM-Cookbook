@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using LLBLGenPro.OrmCookbook.HelperClasses;
 using LLBLGenPro.OrmCookbook.FactoryClasses;
 using LLBLGenPro.OrmCookbook.RelationClasses;
-using Recipes;
+
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace LLBLGenPro.OrmCookbook.EntityClasses
@@ -22,7 +22,7 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	/// <summary>Entity class which represents the entity 'Employee'.<br/><br/></summary>
 	[Serializable]
-	public partial class EmployeeEntity : CommonEntityBase, IEmployeeSimple, IEmployeeComplex
+	public partial class EmployeeEntity : CommonEntityBase, Recipes.IEmployeeComplex, Recipes.IEmployeeSimple
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
@@ -207,7 +207,6 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			get { return _employeeClassification; }
 			set { SetSingleRelatedEntityNavigator(value, "EmployeeClassification"); }
 		}
-
 
 		// __LLBLGENPRO_USER_CODE_REGION_START CustomEntityCode
 		// __LLBLGENPRO_USER_CODE_REGION_END

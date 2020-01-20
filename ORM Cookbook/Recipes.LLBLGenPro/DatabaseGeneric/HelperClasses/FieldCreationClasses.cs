@@ -116,6 +116,17 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 	}
 	
 
+	/// <summary>Field Creation Class for typedview CountEmployeesByClassificationResultTypedView</summary>
+	public partial class CountEmployeesByClassificationResultFields
+	{
+		/// <summary>Creates a new CountEmployeesByClassificationResultTypedView.EmployeeCount field instance</summary>
+		public static EntityField2 EmployeeCount	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(CountEmployeesByClassificationResultFieldIndex.EmployeeCount); } }
+		/// <summary>Creates a new CountEmployeesByClassificationResultTypedView.EmployeeClassificationKey field instance</summary>
+		public static EntityField2 EmployeeClassificationKey	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(CountEmployeesByClassificationResultFieldIndex.EmployeeClassificationKey); } }
+		/// <summary>Creates a new CountEmployeesByClassificationResultTypedView.EmployeeClassificationName field instance</summary>
+		public static EntityField2 EmployeeClassificationName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(CountEmployeesByClassificationResultFieldIndex.EmployeeClassificationName); } }
+	}
+
 	/// <summary>Field Creation Class for typedview DepartmentDetailTypedView</summary>
 	public partial class DepartmentDetailFields
 	{
@@ -127,5 +138,18 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		public static EntityField2 DivisionKey	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentDetailFieldIndex.DivisionKey); } }
 		/// <summary>Creates a new DepartmentDetailTypedView.DivisionName field instance</summary>
 		public static EntityField2 DivisionName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentDetailFieldIndex.DivisionName); } }
+	}
+
+	/// <summary>Field Creation Class for typedview GetEmployeeClassificationsResultTypedView</summary>
+	public partial class GetEmployeeClassificationsResultFields
+	{
+		/// <summary>Creates a new GetEmployeeClassificationsResultTypedView.EmployeeClassificationKey field instance</summary>
+		public static EntityField2 EmployeeClassificationKey	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(GetEmployeeClassificationsResultFieldIndex.EmployeeClassificationKey); } }
+		/// <summary>Creates a new GetEmployeeClassificationsResultTypedView.EmployeeClassificationName field instance</summary>
+		public static EntityField2 EmployeeClassificationName	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(GetEmployeeClassificationsResultFieldIndex.EmployeeClassificationName); } }
+		/// <summary>Creates a new GetEmployeeClassificationsResultTypedView.IsExempt field instance</summary>
+		public static EntityField2 IsExempt	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(GetEmployeeClassificationsResultFieldIndex.IsExempt); } }
+		/// <summary>Creates a new GetEmployeeClassificationsResultTypedView.IsEmployee field instance</summary>
+		public static EntityField2 IsEmployee	{ get { return ModelInfoProviderSingleton.GetInstance().CreateField2(GetEmployeeClassificationsResultFieldIndex.IsEmployee); } }
 	}
 }
