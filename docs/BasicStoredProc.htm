@@ -83,9 +83,9 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
-<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
-
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
 
@@ -411,9 +411,50 @@ END;
 }
 </code></pre>
 
-<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To use stored procedures that return values, a class is needed to receive the results. This is true even if a scalar value is returned.</p>
+<pre><code class="cs">public class BasicStoredProcScenario : IBasicStoredProcScenario&lt;EmployeeClassification, EmployeeClassificationWithCount&gt;
+{
+    public IList&lt;EmployeeClassificationWithCount&gt; CountEmployeesByClassification()
+    {
+        using (var db = new OrmCookbook())
+            return db.QueryProc&lt;EmployeeClassificationWithCount&gt;(&quot;HR.CountEmployeesByClassification&quot;).ToList();
+    }
+
+    public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
+    {
+        if (employeeClassification == null)
+            throw new ArgumentNullException(nameof(employeeClassification), $&quot;{nameof(employeeClassification)} is null.&quot;);
+
+        //Notes:
+        //LINQ to DB cannot return scalar values from stored procedures. A holder class is needed to receive the results.
+        using (var db = new OrmCookbook())
+            return db.QueryProc&lt;EmployeeClassificationKeyHolder&gt;(&quot;HR.CreateEmployeeClassification&quot;,
+                  new DataParameter(&quot;@EmployeeClassificationName&quot;, employeeClassification.EmployeeClassificationName),
+                  new DataParameter(&quot;@IsExempt&quot;, employeeClassification.IsExempt),
+                  new DataParameter(&quot;@IsEmployee&quot;, employeeClassification.IsEmployee)
+                ).Single().EmployeeClassificationKey;
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetEmployeeClassifications()
+    {
+        using (var db = new OrmCookbook())
+            return db.QueryProc&lt;EmployeeClassification&gt;(&quot;HR.GetEmployeeClassifications&quot;).ToList();
+    }
+
+    public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.QueryProc&lt;EmployeeClassification&gt;(&quot;HR.GetEmployeeClassifications&quot;,
+                new DataParameter(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey)
+                ).SingleOrDefault();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>

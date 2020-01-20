@@ -42,11 +42,13 @@ The receiver class should be registered in the DbContext just like any other Ent
 
 @snippet cs [..\Recipes.EntityFrameworkCore\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
 
-## LLBLGen Pro 
-
-TODO
-
 ## LINQ to DB
+
+To use stored procedures that return values, a class is needed to receive the results. This is true even if a scalar value is returned.
+
+@snippet cs [..\Recipes.LinqToDB\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
+
+## LLBLGen Pro 
 
 TODO
 
