@@ -13,7 +13,6 @@ namespace Recipes.LinqToDB.BasicStoredProc
         {
             using (var db = new OrmCookbook())
                 return db.QueryProc<EmployeeClassificationWithCount>("HR.CountEmployeesByClassification").ToList();
-            //.EmployeeClassificationWithCount.FromSqlRaw("EXEC HR.CountEmployeesByClassification;").ToList();
         }
 
         public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
@@ -24,14 +23,11 @@ namespace Recipes.LinqToDB.BasicStoredProc
             //Notes:
             //LINQ to DB cannot return scalar values from stored procedures. A holder class is needed to receive the results.
             using (var db = new OrmCookbook())
-                return db.QueryProc<EmployeeClassificationKeyHolder>("HR.HR.CreateEmployeeClassification",
+                return db.QueryProc<EmployeeClassificationKeyHolder>("HR.CreateEmployeeClassification",
                       new DataParameter("@EmployeeClassificationName", employeeClassification.EmployeeClassificationName),
                       new DataParameter("@IsExempt", employeeClassification.IsExempt),
                       new DataParameter("@IsEmployee", employeeClassification.IsEmployee)
                     ).Single().EmployeeClassificationKey;
-
-            //Single isn't allowed for stored procedures. Thus ToList must be called first.
-            //Named parameters are not supported, so parameter order is important.
         }
 
         public IList<EmployeeClassification> GetEmployeeClassifications()
@@ -42,7 +38,6 @@ namespace Recipes.LinqToDB.BasicStoredProc
 
         public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
         {
-            //Note that SingleOrDefault isn't allowed for stored procedures. Thus ToList must be called first.
             using (var db = new OrmCookbook())
             {
                 return db.QueryProc<EmployeeClassification>("HR.GetEmployeeClassifications",
