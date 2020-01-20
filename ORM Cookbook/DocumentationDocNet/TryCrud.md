@@ -28,7 +28,7 @@ Like ADO.NET, this uses the row counts returned from the `Execute` command.
 
 ## LINQ to DB
 
-TODO
+@snippet cs [..\Recipes.LinqToDB\TryCrud\TryCrudScenario.cs] TryCrudScenario
 
 ## LLBLGen Pro
 
