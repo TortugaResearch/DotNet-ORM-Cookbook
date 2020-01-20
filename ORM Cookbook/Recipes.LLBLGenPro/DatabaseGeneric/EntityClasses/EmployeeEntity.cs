@@ -26,6 +26,8 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
+		private EntityCollection<DivisionEntity> _divisionsCreatedByEmployee;
+		private EntityCollection<DivisionEntity> _divisionsModifiedByEmployee;
 		private EmployeeClassificationEntity _employeeClassification;
 
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
@@ -38,6 +40,10 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 		{
 			/// <summary>Member name EmployeeClassification</summary>
 			public static readonly string EmployeeClassification = "EmployeeClassification";
+			/// <summary>Member name DivisionsCreatedByEmployee</summary>
+			public static readonly string DivisionsCreatedByEmployee = "DivisionsCreatedByEmployee";
+			/// <summary>Member name DivisionsModifiedByEmployee</summary>
+			public static readonly string DivisionsModifiedByEmployee = "DivisionsModifiedByEmployee";
 		}
 
 		/// <summary>Static meta-data storage for navigator related information</summary>
@@ -46,6 +52,8 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			public EmployeeEntityStaticMetaData()
 			{
 				SetEntityCoreInfo("EmployeeEntity", InheritanceHierarchyType.None, false, (int)LLBLGenPro.OrmCookbook.EntityType.EmployeeEntity, typeof(EmployeeEntity), typeof(EmployeeEntityFactory), false);
+				AddNavigatorMetaData<EmployeeEntity, EntityCollection<DivisionEntity>>("DivisionsCreatedByEmployee", a => a._divisionsCreatedByEmployee, (a, b) => a._divisionsCreatedByEmployee = b, a => a.DivisionsCreatedByEmployee, () => new EmployeeRelations().DivisionEntityUsingCreatedByEmployeeKey, typeof(DivisionEntity), (int)LLBLGenPro.OrmCookbook.EntityType.DivisionEntity);
+				AddNavigatorMetaData<EmployeeEntity, EntityCollection<DivisionEntity>>("DivisionsModifiedByEmployee", a => a._divisionsModifiedByEmployee, (a, b) => a._divisionsModifiedByEmployee = b, a => a.DivisionsModifiedByEmployee, () => new EmployeeRelations().DivisionEntityUsingModifiedByEmployeeKey, typeof(DivisionEntity), (int)LLBLGenPro.OrmCookbook.EntityType.DivisionEntity);
 				AddNavigatorMetaData<EmployeeEntity, EmployeeClassificationEntity>("EmployeeClassification", "Employees", (a, b) => a._employeeClassification = b, a => a._employeeClassification, (a, b) => a.EmployeeClassification = b, LLBLGenPro.OrmCookbook.RelationClasses.StaticEmployeeRelations.EmployeeClassificationEntityUsingEmployeeClassificationKeyStatic, ()=>new EmployeeRelations().EmployeeClassificationEntityUsingEmployeeClassificationKey, null, new int[] { (int)EmployeeFieldIndex.EmployeeClassificationKey }, null, true, (int)LLBLGenPro.OrmCookbook.EntityType.EmployeeClassificationEntity);
 			}
 		}
@@ -99,6 +107,14 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 		}
 
+		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entities of type 'Division' to this entity.</summary>
+		/// <returns></returns>
+		public virtual IRelationPredicateBucket GetRelationInfoDivisionsCreatedByEmployee() { return CreateRelationInfoForNavigator("DivisionsCreatedByEmployee"); }
+
+		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entities of type 'Division' to this entity.</summary>
+		/// <returns></returns>
+		public virtual IRelationPredicateBucket GetRelationInfoDivisionsModifiedByEmployee() { return CreateRelationInfoForNavigator("DivisionsModifiedByEmployee"); }
+
 		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'EmployeeClassification' to this entity.</summary>
 		/// <returns></returns>
 		public virtual IRelationPredicateBucket GetRelationInfoEmployeeClassification() { return CreateRelationInfoForNavigator("EmployeeClassification"); }
@@ -132,6 +148,14 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 
 		/// <summary>The relations object holding all relations of this entity with other entity classes.</summary>
 		public static EmployeeRelations Relations { get { return _relationsFactory; } }
+
+		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'Division' for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
+		public static IPrefetchPathElement2 PrefetchPathDivisionsCreatedByEmployee { get { return _staticMetaData.GetPrefetchPathElement("DivisionsCreatedByEmployee", CommonEntityBase.CreateEntityCollection<DivisionEntity>()); } }
+
+		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'Division' for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
+		public static IPrefetchPathElement2 PrefetchPathDivisionsModifiedByEmployee { get { return _staticMetaData.GetPrefetchPathElement("DivisionsModifiedByEmployee", CommonEntityBase.CreateEntityCollection<DivisionEntity>()); } }
 
 		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'EmployeeClassification' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
@@ -200,6 +224,14 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			set	{ SetValue((int)EmployeeFieldIndex.Title, value); }
 		}
 
+		/// <summary>Gets the EntityCollection with the related entities of type 'DivisionEntity' which are related to this entity via a relation of type '1:n'. If the EntityCollection hasn't been fetched yet, the collection returned will be empty.<br/><br/></summary>
+		[TypeContainedAttribute(typeof(DivisionEntity))]
+		public virtual EntityCollection<DivisionEntity> DivisionsCreatedByEmployee { get { return GetOrCreateEntityCollection<DivisionEntity, DivisionEntityFactory>("CreatedByEmployee", true, false, ref _divisionsCreatedByEmployee); } }
+
+		/// <summary>Gets the EntityCollection with the related entities of type 'DivisionEntity' which are related to this entity via a relation of type '1:n'. If the EntityCollection hasn't been fetched yet, the collection returned will be empty.<br/><br/></summary>
+		[TypeContainedAttribute(typeof(DivisionEntity))]
+		public virtual EntityCollection<DivisionEntity> DivisionsModifiedByEmployee { get { return GetOrCreateEntityCollection<DivisionEntity, DivisionEntityFactory>("ModifiedByEmployee", true, false, ref _divisionsModifiedByEmployee); } }
+
 		/// <summary>Gets / sets related entity of type 'EmployeeClassificationEntity' which has to be set using a fetch action earlier. If no related entity is set for this property, null is returned..<br/><br/></summary>
 		[Browsable(false)]
 		public virtual EmployeeClassificationEntity EmployeeClassification
@@ -244,6 +276,17 @@ namespace LLBLGenPro.OrmCookbook.RelationClasses
 	/// <summary>Implements the relations factory for the entity: Employee. </summary>
 	public partial class EmployeeRelations: RelationFactory
 	{
+		/// <summary>Returns a new IEntityRelation object, between EmployeeEntity and DivisionEntity over the 1:n relation they have, using the relation between the fields: Employee.EmployeeKey - Division.CreatedByEmployeeKey</summary>
+		public virtual IEntityRelation DivisionEntityUsingCreatedByEmployeeKey
+		{
+			get { return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToMany, "DivisionsCreatedByEmployee", true, new[] { EmployeeFields.EmployeeKey, DivisionFields.CreatedByEmployeeKey }); }
+		}
+
+		/// <summary>Returns a new IEntityRelation object, between EmployeeEntity and DivisionEntity over the 1:n relation they have, using the relation between the fields: Employee.EmployeeKey - Division.ModifiedByEmployeeKey</summary>
+		public virtual IEntityRelation DivisionEntityUsingModifiedByEmployeeKey
+		{
+			get { return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToMany, "DivisionsModifiedByEmployee", true, new[] { EmployeeFields.EmployeeKey, DivisionFields.ModifiedByEmployeeKey }); }
+		}
 
 		/// <summary>Returns a new IEntityRelation object, between EmployeeEntity and EmployeeClassificationEntity over the m:1 relation they have, using the relation between the fields: Employee.EmployeeClassificationKey - EmployeeClassification.EmployeeClassificationKey</summary>
 		public virtual IEntityRelation EmployeeClassificationEntityUsingEmployeeClassificationKey
@@ -256,6 +299,8 @@ namespace LLBLGenPro.OrmCookbook.RelationClasses
 	/// <summary>Static class which is used for providing relationship instances which are re-used internally for syncing</summary>
 	internal static class StaticEmployeeRelations
 	{
+		internal static readonly IEntityRelation DivisionEntityUsingCreatedByEmployeeKeyStatic = new EmployeeRelations().DivisionEntityUsingCreatedByEmployeeKey;
+		internal static readonly IEntityRelation DivisionEntityUsingModifiedByEmployeeKeyStatic = new EmployeeRelations().DivisionEntityUsingModifiedByEmployeeKey;
 		internal static readonly IEntityRelation EmployeeClassificationEntityUsingEmployeeClassificationKeyStatic = new EmployeeRelations().EmployeeClassificationEntityUsingEmployeeClassificationKey;
 
 		/// <summary>CTor</summary>

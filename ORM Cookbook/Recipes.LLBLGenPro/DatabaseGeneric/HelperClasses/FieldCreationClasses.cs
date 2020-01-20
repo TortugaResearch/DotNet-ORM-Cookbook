@@ -24,10 +24,34 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 	/// <summary>Field Creation Class for entity DivisionEntity</summary>
 	public partial class DivisionFields
 	{
+		/// <summary>Creates a new DivisionEntity.CreatedByEmployeeKey field instance</summary>
+		public static EntityField2 CreatedByEmployeeKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.CreatedByEmployeeKey); }}
+		/// <summary>Creates a new DivisionEntity.CreatedDate field instance</summary>
+		public static EntityField2 CreatedDate { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.CreatedDate); }}
+		/// <summary>Creates a new DivisionEntity.DivisionId field instance</summary>
+		public static EntityField2 DivisionId { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.DivisionId); }}
 		/// <summary>Creates a new DivisionEntity.DivisionKey field instance</summary>
 		public static EntityField2 DivisionKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.DivisionKey); }}
 		/// <summary>Creates a new DivisionEntity.DivisionName field instance</summary>
 		public static EntityField2 DivisionName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.DivisionName); }}
+		/// <summary>Creates a new DivisionEntity.FloorSpaceBudget field instance</summary>
+		public static EntityField2 FloorSpaceBudget { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.FloorSpaceBudget); }}
+		/// <summary>Creates a new DivisionEntity.FteBudget field instance</summary>
+		public static EntityField2 FteBudget { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.FteBudget); }}
+		/// <summary>Creates a new DivisionEntity.LastReviewCycle field instance</summary>
+		public static EntityField2 LastReviewCycle { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.LastReviewCycle); }}
+		/// <summary>Creates a new DivisionEntity.MaxEmployees field instance</summary>
+		public static EntityField2 MaxEmployees { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.MaxEmployees); }}
+		/// <summary>Creates a new DivisionEntity.ModifiedByEmployeeKey field instance</summary>
+		public static EntityField2 ModifiedByEmployeeKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.ModifiedByEmployeeKey); }}
+		/// <summary>Creates a new DivisionEntity.ModifiedDate field instance</summary>
+		public static EntityField2 ModifiedDate { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.ModifiedDate); }}
+		/// <summary>Creates a new DivisionEntity.SalaryBudget field instance</summary>
+		public static EntityField2 SalaryBudget { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.SalaryBudget); }}
+		/// <summary>Creates a new DivisionEntity.StartTime field instance</summary>
+		public static EntityField2 StartTime { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.StartTime); }}
+		/// <summary>Creates a new DivisionEntity.SuppliesBudget field instance</summary>
+		public static EntityField2 SuppliesBudget { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DivisionFieldIndex.SuppliesBudget); }}
 	}
 
 	/// <summary>Field Creation Class for entity EmployeeEntity</summary>

@@ -68,8 +68,20 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		private void InitDivisionEntityInfo()
 		{
 			this.AddFieldIndexEnumForElementName(typeof(DivisionFieldIndex), "DivisionEntity");
+			this.AddElementFieldInfo("DivisionEntity", "CreatedByEmployeeKey", typeof(System.Int32), false, true, false, false,  (int)DivisionFieldIndex.CreatedByEmployeeKey, 0, 0, 10);
+			this.AddElementFieldInfo("DivisionEntity", "CreatedDate", typeof(System.DateTime), false, false, false, false,  (int)DivisionFieldIndex.CreatedDate, 0, 0, 7);
+			this.AddElementFieldInfo("DivisionEntity", "DivisionId", typeof(System.Guid), false, false, false, false,  (int)DivisionFieldIndex.DivisionId, 0, 0, 0);
 			this.AddElementFieldInfo("DivisionEntity", "DivisionKey", typeof(System.Int32), true, false, true, false,  (int)DivisionFieldIndex.DivisionKey, 0, 0, 10);
 			this.AddElementFieldInfo("DivisionEntity", "DivisionName", typeof(System.String), false, false, false, false,  (int)DivisionFieldIndex.DivisionName, 30, 0, 0);
+			this.AddElementFieldInfo("DivisionEntity", "FloorSpaceBudget", typeof(Nullable<System.Single>), false, false, false, true,  (int)DivisionFieldIndex.FloorSpaceBudget, 0, 0, 24);
+			this.AddElementFieldInfo("DivisionEntity", "FteBudget", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)DivisionFieldIndex.FteBudget, 0, 1, 5);
+			this.AddElementFieldInfo("DivisionEntity", "LastReviewCycle", typeof(Nullable<System.DateTimeOffset>), false, false, false, true,  (int)DivisionFieldIndex.LastReviewCycle, 0, 0, 0);
+			this.AddElementFieldInfo("DivisionEntity", "MaxEmployees", typeof(Nullable<System.Int32>), false, false, false, true,  (int)DivisionFieldIndex.MaxEmployees, 0, 0, 10);
+			this.AddElementFieldInfo("DivisionEntity", "ModifiedByEmployeeKey", typeof(System.Int32), false, true, false, false,  (int)DivisionFieldIndex.ModifiedByEmployeeKey, 0, 0, 10);
+			this.AddElementFieldInfo("DivisionEntity", "ModifiedDate", typeof(System.DateTime), false, false, false, false,  (int)DivisionFieldIndex.ModifiedDate, 0, 0, 7);
+			this.AddElementFieldInfo("DivisionEntity", "SalaryBudget", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)DivisionFieldIndex.SalaryBudget, 0, 4, 14);
+			this.AddElementFieldInfo("DivisionEntity", "StartTime", typeof(Nullable<System.TimeSpan>), false, false, false, true,  (int)DivisionFieldIndex.StartTime, 0, 0, 0);
+			this.AddElementFieldInfo("DivisionEntity", "SuppliesBudget", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)DivisionFieldIndex.SuppliesBudget, 0, 4, 14);
 		}
 
 		/// <summary>Inits EmployeeEntity's info objects</summary>
