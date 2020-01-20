@@ -802,7 +802,119 @@
 </code></pre>
 
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassification&gt;
+{
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(classification);
+        }
+    }
+
+    public void DeleteByKeyOrException(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            var rowCount = db.EmployeeClassification.Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey).Delete();
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        }
+    }
+
+    public bool DeleteByKeyWithStatus(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return 1 == db.EmployeeClassification.Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey).Delete();
+        }
+    }
+
+    public void DeleteOrException(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            var rowCount = db.EmployeeClassification.Where(d =&gt; d.EmployeeClassificationKey == classification.EmployeeClassificationKey).Delete();
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
+    }
+
+    public bool DeleteWithStatus(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return 1 == db.EmployeeClassification.Where(d =&gt; d.EmployeeClassificationKey == classification.EmployeeClassificationKey).Delete();
+        }
+    }
+
+    public EmployeeClassification FindByNameOrException(string employeeClassificationName)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).Single();
+        }
+    }
+
+    public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+        }
+    }
+
+    public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey).Single();
+        }
+    }
+
+    public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey).SingleOrDefault();
+        }
+    }
+
+    public void UpdateOrException(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            var rowCount = db.Update(classification);
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
+    }
+
+    public bool UpdateWithStatus(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return 1 == db.Update(classification);
+        }
+    }
+}
+</code></pre>
+
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class TryCrudScenario : ITryCrudScenario&lt;EmployeeClassificationEntity&gt;
 {

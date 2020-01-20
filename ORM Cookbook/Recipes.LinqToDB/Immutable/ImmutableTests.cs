@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.EntityFrameworkCore.Models;
 using Recipes.Immutable;
+using Recipes.LinqToDB.Models;
 using System;
 
-namespace Recipes.EntityFrameworkCore.Immutable
+namespace Recipes.LinqToDB.Immutable
 {
     [TestClass]
     public class ImmutableTests : ImmutableTests<ReadOnlyEmployeeClassification>
@@ -15,7 +15,7 @@ namespace Recipes.EntityFrameworkCore.Immutable
 
         protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableScenario(Setup.DBContextFactory);
+            return new ImmutableScenario();
         }
 
         protected override ReadOnlyEmployeeClassification UpdateWithValues(ReadOnlyEmployeeClassification original, string name, bool isExempt, bool isEmployee)

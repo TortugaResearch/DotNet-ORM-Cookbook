@@ -1,7 +1,7 @@
-﻿using Recipes.EntityFrameworkCore.Entities;
+﻿using Recipes.LinqToDB.Entities;
 using System;
 
-namespace Recipes.EntityFrameworkCore.Models
+namespace Recipes.LinqToDB.Models
 {
     public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
     {
@@ -11,13 +11,11 @@ namespace Recipes.EntityFrameworkCore.Models
                 throw new ArgumentNullException(nameof(entity), $"{nameof(entity)} is null.");
             if (entity.EmployeeClassificationName == null)
                 throw new ArgumentNullException(nameof(entity), $"{nameof(entity.EmployeeClassificationName)} is null.");
-            if (entity.IsEmployee == null)
-                throw new ArgumentNullException(nameof(entity), $"{nameof(entity.IsEmployee)} is null.");
 
             EmployeeClassificationKey = entity.EmployeeClassificationKey;
             EmployeeClassificationName = entity.EmployeeClassificationName;
             IsExempt = entity.IsExempt;
-            IsEmployee = entity.IsEmployee.Value;
+            IsEmployee = entity.IsEmployee;
         }
 
         public ReadOnlyEmployeeClassification(int employeeClassificationKey, string employeeClassificationName, bool isExempt, bool isEmployee)
