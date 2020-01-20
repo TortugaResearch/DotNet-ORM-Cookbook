@@ -619,7 +619,69 @@ ORDER BY e.FirstName,
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;EmployeeEntity&gt;
+{
+    public void InsertBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        using(var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                adapter.BatchSize = employees?.Count ?? 0;
+                adapter.SaveEntityCollection(toInsert);
+            }
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            // we pass in page+1, as the tests start paging at page 0, but in LLBLGen Pro, a page number 0
+            // means paging isn't used.
+            return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName)
+                                            .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                            .TakePage(page + 1, pageSize).ToList();
+        }
+    }
+
+
+    [SuppressMessage(&quot;Globalization&quot;, &quot;CA1307&quot;)]
+    public IList&lt;EmployeeEntity&gt; PaginateWithSkipPast(string lastName, EmployeeEntity? skipPast, int take)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            if(skipPast == null)
+            {
+                return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName)
+                                                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                                .Take(take).ToList();
+            }
+
+            return new LinqMetaData(adapter).Employee
+                                            .Where(e =&gt; (e.LastName == lastName) &amp;&amp; (
+                                                            (string.Compare(e.FirstName, skipPast.FirstName) &gt; 0)
+                                                            || (e.FirstName == skipPast.FirstName &amp;&amp; e.EmployeeKey &gt; skipPast.EmployeeKey))
+                                                  )
+                                            .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                            .Take(take).ToList();
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName)
+                                            .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                            .Skip(skip).Take(take).ToList();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
