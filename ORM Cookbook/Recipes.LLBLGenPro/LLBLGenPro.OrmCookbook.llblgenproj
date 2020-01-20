@@ -200,6 +200,11 @@
             <Field Name="DivisionName" />
           </UniqueConstraint>
         </UniqueConstraints>
+        <OutputSettingValues>
+          <Interfaces>
+            <Interface Name="Recipes.IDivision" />
+          </Interfaces>
+        </OutputSettingValues>
       </EntityDefinition>
       <EntityDefinition Name="Employee" ObjectID="ef153284-8238-407a-9bc1-28ddceb82ae7">
         <Fields>

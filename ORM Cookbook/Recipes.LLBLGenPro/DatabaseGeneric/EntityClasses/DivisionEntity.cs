@@ -22,7 +22,7 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	/// <summary>Entity class which represents the entity 'Division'.<br/><br/></summary>
 	[Serializable]
-	public partial class DivisionEntity : CommonEntityBase
+	public partial class DivisionEntity : CommonEntityBase, Recipes.IDivision
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{

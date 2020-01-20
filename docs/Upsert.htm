@@ -512,7 +512,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>EF Core doesn't directly support upsert, so often a read must proceed the update.</p>
+<p>EF Core doesn't directly support an atomic upsert, so often a read must proceed the update.</p>
 <pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;Division&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
@@ -706,7 +706,101 @@ OUTPUT Inserted.DivisionKey;&quot;;
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>LLBLGen Pro doesn't support an atomic upsert, so a read must proceed the update.</p>
+<pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;DivisionEntity&gt;
+{
+    public DivisionEntity GetByKey(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.FirstOrDefault(d =&gt; d.DivisionKey == divisionKey);
+        }
+    }
+
+
+    public int UpsertByName(DivisionEntity division)
+    {
+        if(division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        // LLBLGen Pro doesn't support an atomic upsert statement. Instead we'll simply fetch
+        // the entity with the name specified. If it's there, we'll get a filled entity instance
+        // which we'll update with the new values (and only the values we then change will be updated
+        // in the database), or it'll be a new one, which we'll set to new values and it'll be 
+        // inserted. 
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            var toSave = adapter.FetchNewEntity&lt;DivisionEntity&gt;(
+                                    new RelationPredicateBucket(DivisionFields.DivisionName.Equal(division.DivisionName)));
+
+            // now we'll just set fields and persist it again. If the above fetch returned an existing entity
+            // it'll be updated, otherwise it'll be inserted.
+            // If the above fetch returned an existing entity, only the fields which changed are updated
+            // in the update query.
+            toSave.CreatedDate = DateTime.UtcNow;
+            toSave.ModifiedDate = DateTime.UtcNow;
+            toSave.CreatedByEmployeeKey = division.CreatedByEmployeeKey;
+            toSave.ModifiedByEmployeeKey = division.ModifiedByEmployeeKey;
+            toSave.DivisionId = division.DivisionId;
+            toSave.DivisionName = division.DivisionName;
+            toSave.FloorSpaceBudget = division.FloorSpaceBudget;
+            toSave.FteBudget = division.FteBudget;
+            toSave.LastReviewCycle = division.LastReviewCycle;
+            toSave.MaxEmployees = division.MaxEmployees;
+            toSave.ModifiedByEmployeeKey = division.ModifiedByEmployeeKey;
+            toSave.ModifiedDate = division.ModifiedDate;
+            toSave.SalaryBudget = division.SalaryBudget;
+            toSave.StartTime = division.StartTime;
+            toSave.SuppliesBudget = division.SuppliesBudget;
+            adapter.SaveEntity(toSave);
+            return toSave.DivisionKey;
+        }
+    }
+
+
+    public int UpsertByPrimaryKey(DivisionEntity division)
+    {
+        if(division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        // LLBLGen Pro doesn't support an atomic upsert statement. Instead we'll simply fetch
+        // the entity with the name specified. If it's there, we'll get a filled entity instance
+        // which we'll update with the new values (and only the values we then change will be updated
+        // in the database), or it'll be a new one, which we'll set to new values and it'll be 
+        // inserted. 
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            var toSave = adapter.FetchNewEntity&lt;DivisionEntity&gt;(
+                                    new RelationPredicateBucket(DivisionFields.DivisionKey.Equal(division.DivisionKey)));
+
+            // now we'll just set fields and persist it again. If the above fetch returned an existing entity
+            // it'll be updated, otherwise it'll be inserted.
+            // If the above fetch returned an existing entity, only the fields which changed are updated
+            // in the update query.
+            toSave.CreatedDate = DateTime.UtcNow;
+            toSave.ModifiedDate = DateTime.UtcNow;
+            toSave.CreatedByEmployeeKey = division.CreatedByEmployeeKey;
+            toSave.ModifiedByEmployeeKey = division.ModifiedByEmployeeKey;
+            toSave.DivisionId = division.DivisionId;
+            toSave.DivisionName = division.DivisionName;
+            toSave.FloorSpaceBudget = division.FloorSpaceBudget;
+            toSave.FteBudget = division.FteBudget;
+            toSave.LastReviewCycle = division.LastReviewCycle;
+            toSave.MaxEmployees = division.MaxEmployees;
+            toSave.ModifiedByEmployeeKey = division.ModifiedByEmployeeKey;
+            toSave.ModifiedDate = division.ModifiedDate;
+            toSave.SalaryBudget = division.SalaryBudget;
+            toSave.StartTime = division.StartTime;
+            toSave.SuppliesBudget = division.SuppliesBudget;
+            adapter.SaveEntity(toSave);
+            return toSave.DivisionKey;
+        }
+    }
+}
+</code></pre>
+
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
