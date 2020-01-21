@@ -9,6 +9,26 @@ using System;
 
 namespace LLBLGenPro.OrmCookbook
 {
+	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : CountEmployeesByClassificationResult.</summary>
+	public enum CountEmployeesByClassificationResultFieldIndex
+	{
+		///<summary>EmployeeCount</summary>
+		EmployeeCount,
+		///<summary>EmployeeClassificationKey</summary>
+		EmployeeClassificationKey,
+		///<summary>EmployeeClassificationName</summary>
+		EmployeeClassificationName,
+		/// <summary></summary>
+		AmountOfFields
+	}
+	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : CreateEmployeeClassificationResult.</summary>
+	public enum CreateEmployeeClassificationResultFieldIndex
+	{
+		///<summary>EmployeeClassificationKey</summary>
+		EmployeeClassificationKey,
+		/// <summary></summary>
+		AmountOfFields
+	}
 	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : DepartmentDetail.</summary>
 	public enum DepartmentDetailFieldIndex
 	{
@@ -20,6 +40,20 @@ namespace LLBLGenPro.OrmCookbook
 		DivisionKey,
 		///<summary>DivisionName</summary>
 		DivisionName,
+		/// <summary></summary>
+		AmountOfFields
+	}
+	/// <summary>Index enum to fast-access Typed View EntityFields in the IEntityFields collection for the typed view : GetEmployeeClassificationsResult.</summary>
+	public enum GetEmployeeClassificationsResultFieldIndex
+	{
+		///<summary>EmployeeClassificationKey</summary>
+		EmployeeClassificationKey,
+		///<summary>EmployeeClassificationName</summary>
+		EmployeeClassificationName,
+		///<summary>IsExempt</summary>
+		IsExempt,
+		///<summary>IsEmployee</summary>
+		IsEmployee,
 		/// <summary></summary>
 		AmountOfFields
 	}
@@ -75,8 +109,14 @@ namespace LLBLGenPro.OrmCookbook
 	/// <summary>Enum definition for all the typed view types defined in this namespace. Used by the entityfields factory.</summary>
 	public enum TypedViewType
 	{
+		///<summary>CountEmployeesByClassificationResult</summary>
+		CountEmployeesByClassificationResultTypedView,
+		///<summary>CreateEmployeeClassificationResult</summary>
+		CreateEmployeeClassificationResultTypedView,
 		///<summary>DepartmentDetail</summary>
-		DepartmentDetailTypedView
+		DepartmentDetailTypedView,
+		///<summary>GetEmployeeClassificationsResult</summary>
+		GetEmployeeClassificationsResultTypedView
 	}
 
 

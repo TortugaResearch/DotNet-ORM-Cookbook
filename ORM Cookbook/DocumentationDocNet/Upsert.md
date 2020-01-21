@@ -24,7 +24,7 @@ This code demonstrates the MERGE syntax.
 
 ## Entity Framework Core
 
-EF Core doesn't directly support upsert, so often a read must proceed the update.
+EF Core doesn't directly support an atomic upsert, so often a read must proceed the update.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Upsert\UpsertScenario.cs] UpsertScenario
 
@@ -34,7 +34,9 @@ EF Core doesn't directly support upsert, so often a read must proceed the update
 
 ## LLBLGen Pro 
 
-TODO
+LLBLGen Pro doesn't support an atomic upsert, so a read must proceed the update.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\Upsert\UpsertScenario.cs] UpsertScenario
 
 ## NHibernate
 

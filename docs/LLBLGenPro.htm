@@ -131,19 +131,71 @@
                 <div role="main">
                     <div class="section">
 <h1 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>TOOD: Overview </p>
-<h2 id="supported-databases">Supported Databases<a class="headerlink" href="#supported-databases" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Which databases are supported?</p>
+<p>LLBLGen Pro is a commercial, full ORM and entity modeling solution. Its first version was released in 2003. 
+It comes with a visual designer and its own ORM framework, the LLBLGen Pro Runtime Framework. The designer supports, besides 
+their own framework, Entity Framework/Entity Framework Core, Linq to Sql and NHibernate, and offers a rich set of features to 
+use both model-first and database-first development (or a mix of both). Besides your entity model, you can also define multiple 
+derived models on top of the entity model which can e.g. be used as DTOs</p>
+<p>The runtime framework offers modern features like .NET Core (through .netstandard 2.0) support, multiple query systems like Linq and its own 
+fluent API, disconnected Unit of work, batching, resultset caching, projections, eager loading and much more. It also offers a plain SQL API for
+the occasions where you need to express your queries in SQL itself. Its performance is among the top of the field, often outperforming micro ORMs.</p>
+<p>All licensees also have access to ORM Profiler, a multi-ORM profiler and query analyzer for .NET data-access code.</p>
+<div class="alert alert-info"><span class="alert-title"><i class="fa fa-info-circle"></i> Info</span><p>The code in this repository uses interfaces on the entities. These are added in the designer as additional interfaces, where the code
+generator merged them into the output. </p>
+</div><h2 id="supported-databases">Supported Databases<a class="headerlink" href="#supported-databases" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LLBLGen Pro supports the following databases:</p>
+<ul>
+<li>SQL Server 2000 or higher / Express / CE Desktop / SQL Azure</li>
+<li>Oracle 9i or higher</li>
+<li>PostgreSQL v7.4 or higher</li>
+<li>IBM DB2 7.x or higher</li>
+<li>MySQL 4.x or higher (and compatible MariaDB variants)</li>
+<li>Google Cloud Spanner</li>
+<li>Firebird 1.5.x or higher</li>
+<li>MS Access 2000 or higher</li>
+</ul>
+<p>Additionally it supports through its <a href="https://www.llblgen.com/Documentation/5.6/Designer/Functionality%20Reference/AvailableDerivedModelFrameworks.htm#document-database" target="_blank">Derived Model</a> feature the following Document DBs:</p>
+<ul>
+<li>RavenDB</li>
+<li>MongoDB</li>
+<li>Microsoft Cosmos DB</li>
+</ul>
 <h2 id="libraries">Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: List of NuGet packages, tools, etc. needed</p>
+<p>LLBLGen Pro comes with everything you need in one installer. Additionally, you can pull the runtime framework's assemblies as packages
+from NuGet:</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.ORMSupportClasses/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.ORMSupportClasses/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.ORMSupportClasses.Web/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.ORMSupportClasses.Web/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.Access/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.Access/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.DB2/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.DB2/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.Firebird/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.Firebird/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.MySql/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.MySql/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.OracleMS/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.OracleMS/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.OracleODPNET/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.OracleODPNET/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.PostgreSql/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.PostgreSql/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.Spanner/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.Spanner/</a></li>
+<li><a href="https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.SqlServer/" target="_blank">https://www.nuget.org/packages/SD.LLBLGen.Pro.DQE.SqlServer/</a></li>
+</ul>
 <h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Quick overview for setting up the ORM for a project</p>
+<p>To get started, please see the <a href="https://www.llblgen.com/Pages/Videos.aspx" target="_blank">Quickstart videos</a>.</p>
+<p>In text form:</p>
+<ul>
+<li><a href="https://www.llblgen.com/Documentation/5.6/LLBLGen%20Pro%20RTF/getting_started.htm" target="_blank">LLBLGen Pro Runtime Framework</a></li>
+<li><a href="https://www.llblgen.com/Documentation/5.6/Entity%20Framework/Quickstartguides.htm" target="_blank">Entity Framework / Core</a></li>
+<li><a href="https://www.llblgen.com/Documentation/5.6/Linq%20to%20Sql/Quickstartguides.htm" target="_blank">Linq to SQL</a></li>
+<li><a href="https://www.llblgen.com/Documentation/5.6/NHibernate/Quickstartguides.htm" target="_blank">NHibernate</a></li>
+</ul>
 <h2 id="documentation-and-tutorials">Documentation and Tutorials<a class="headerlink" href="#documentation-and-tutorials" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Links to learning resource</p>
+<p>The complete LLBLGen Pro documentation is vast and has several different parts. They're all available on the 
+<a href="https://www.llblgen.com/Pages/documentation.aspx" target="_blank">main documentation site</a>. Every install also comes with this 
+documentation installed locally.</p>
 <h2 id="bug-reporting">Bug Reporting<a class="headerlink" href="#bug-reporting" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Where are bugs reported to?</p>
+<p>Support is done via <a href="https://www.llblgen.com/tinyforum" target="_blank">the support forums</a> where the support team and development team 
+answer questions and pick up bug reports. Bug fixes are usually released within a day or two as hotfix builds for licensees.</p>
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: License information</p>
+<p>LLBLGen Pro is a commercial system using a subscription model with a perpetual license, which means the license is valid forever: 
+it won't expire if your subscription expires. Generated code and the runtime framework are royalty free and don't require a license to be used.
+See <a href="https://www.llblgen.com/Pages/buy.aspx" target="_blank">the website</a> for more details and the EULA.</p>
 
                     </div>
                 </div>

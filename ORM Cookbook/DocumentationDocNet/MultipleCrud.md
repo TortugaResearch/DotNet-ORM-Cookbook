@@ -30,7 +30,7 @@ TODO
 
 ## LLBLGen Pro 
 
-TODO
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## NHibernate
 

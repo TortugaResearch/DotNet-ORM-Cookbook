@@ -30,7 +30,7 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 ## LLBLGen Pro 
 
-TODO
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\RowCount\RowCountScenario.cs] RowCountScenario
 
 ## NHibernate
 

@@ -34,7 +34,7 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 ## LLBLGen Pro 
 
-@snippet cs [..\Recipes.LLBLGenPro\Recipes\Sorting\SortingScenario.cs] SortingScenario
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ScalarValue\ScalarValueScenario.cs] ScalarValueScenario
 
 ## NHibernate
 
