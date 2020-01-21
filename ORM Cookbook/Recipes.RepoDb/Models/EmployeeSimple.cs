@@ -1,6 +1,6 @@
 ﻿using RepoDb.Attributes;
 
-namespace Recipes.RepoDb.Entities
+namespace Recipes.RepoDb.Models
 {
     [Map("[HR].[Employee]")]
     public class EmployeeSimple : IEmployeeSimple

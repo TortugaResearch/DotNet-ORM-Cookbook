@@ -1,4 +1,4 @@
-﻿using Recipes.RepoDb.Entities;
+﻿using Recipes.RepoDb.Models;
 using Recipes.Sorting;
 using RepoDb;
 using RepoDb.Extensions;
