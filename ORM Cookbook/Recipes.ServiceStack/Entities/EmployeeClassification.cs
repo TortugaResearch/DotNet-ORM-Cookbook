@@ -10,15 +10,15 @@ namespace Recipes.ServiceStack.Entities
         [Alias("EmployeeClassificationKey")]
         public int Id { get; set; }
 
+        [Required, StringLength(30)]
+        public string? EmployeeClassificationName { get; set; }
+
         public bool IsExempt { get; set; }
 
         public bool IsEmployee { get; set; }
 
         [Reference]
         public virtual List<Employee> Employees { get; } = new List<Employee>();
-
-        [Required, StringLength(30)]
-        public string? EmployeeClassificationName { get; set; }
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
