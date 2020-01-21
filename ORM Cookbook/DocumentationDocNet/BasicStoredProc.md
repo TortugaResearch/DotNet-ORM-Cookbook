@@ -60,7 +60,7 @@ TODO
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
 
 ## ServiceStack
 

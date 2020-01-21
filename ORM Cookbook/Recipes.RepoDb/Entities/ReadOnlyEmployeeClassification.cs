@@ -28,7 +28,6 @@ namespace Recipes.RepoDb.Entities
             IsEmployee = isEmployee;
         }
 
-        [Primary]
         public int EmployeeClassificationKey { get; }
 
         public string EmployeeClassificationName { get; }

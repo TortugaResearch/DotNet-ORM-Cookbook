@@ -11,7 +11,6 @@ namespace Recipes.RepoDb.Entities
 
         public int EmployeeClassificationKey { get; set; }
 
-        [Primary]
         public int EmployeeKey { get; set; }
 
         public string? FirstName { get; set; }
