@@ -947,7 +947,6 @@ public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
         IsEmployee = isEmployee;
     }
 
-    [Primary]
     public int EmployeeClassificationKey { get; }
 
     public string EmployeeClassificationName { get; }
@@ -975,7 +974,6 @@ public class EmployeeClassification : IEmployeeClassification
         IsEmployee = classification.IsEmployee;
     }
 
-    [Primary]
     public int EmployeeClassificationKey { get; set; }
 
     public string? EmployeeClassificationName { get; set; }

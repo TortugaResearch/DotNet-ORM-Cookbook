@@ -589,7 +589,64 @@
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ScalarValueScenario : DbRepository&lt;SqlConnection&gt;, IScalarValueScenario
+{
+    public ScalarValueScenario(string connectionString)
+        : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        var division = Query&lt;Division&gt;(
+            e =&gt; e.DivisionName == divisionName).FirstOrDefault();
+        return division?.DivisionKey;
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        var division = Query&lt;Division&gt;(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
+        return division?.DivisionName != null ? 
+            division.DivisionName : string.Empty;
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        var division = Query&lt;Division&gt;(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
+        return division?.DivisionName;
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        var division = Query&lt;Division&gt;(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
+        return division?.LastReviewCycle;
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        var division = Query&lt;Division&gt;(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
+        return division?.MaxEmployees;
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        var division = Query&lt;Division&gt;(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
+        return division.ModifiedDate;
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        var division = Query&lt;Division&gt;(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
+        return division.SalaryBudget;
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        var division = Query&lt;Division&gt;(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
+        return division.StartTime;
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 
