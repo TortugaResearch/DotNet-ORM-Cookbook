@@ -68,7 +68,7 @@ For partial deletes, ensure that you are using `cascade="all-delete-orphan"`. Ot
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
 ## ServiceStack
 
