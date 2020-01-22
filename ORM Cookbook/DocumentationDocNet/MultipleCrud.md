@@ -38,7 +38,7 @@ TODO
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## ServiceStack
 
