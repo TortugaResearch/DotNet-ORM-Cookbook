@@ -1,4 +1,4 @@
-﻿using Recipes.RepoDb.Entities;
+﻿using Recipes.RepoDb.Models;
 using Recipes.TryCrud;
 using RepoDb;
 using System;

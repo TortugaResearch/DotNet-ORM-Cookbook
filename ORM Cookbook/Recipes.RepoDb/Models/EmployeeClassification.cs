@@ -1,7 +1,7 @@
 ﻿using RepoDb.Attributes;
 using System;
 
-namespace Recipes.RepoDb.Entities
+namespace Recipes.RepoDb.Models
 {
     [Map("[HR].[EmployeeClassification]")]
     public class EmployeeClassification : IEmployeeClassification
@@ -21,7 +21,6 @@ namespace Recipes.RepoDb.Entities
             IsEmployee = classification.IsEmployee;
         }
 
-        [Primary]
         public int EmployeeClassificationKey { get; set; }
 
         public string? EmployeeClassificationName { get; set; }

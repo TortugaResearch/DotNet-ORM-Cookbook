@@ -87,11 +87,11 @@ RepoDb does not directly support immutable objects. You have to manage the conve
 
 Below is a sample snippet for *immutable* class.
 
-@snippet cs [..\Recipes.RepoDb\Entities\ReadOnlyEmployeeClassification.cs] ReadOnlyEmployeeClassification
+@snippet cs [..\Recipes.RepoDb\Models\ReadOnlyEmployeeClassification.cs] ReadOnlyEmployeeClassification
 
 Below is a sample snippet for *mutable* class.
 
-@snippet cs [..\Recipes.RepoDb\Entities\EmployeeClassification.cs] EmployeeClassification
+@snippet cs [..\Recipes.RepoDb\Models\EmployeeClassification.cs] EmployeeClassification
 
 Below is the *immutable repository*.
 

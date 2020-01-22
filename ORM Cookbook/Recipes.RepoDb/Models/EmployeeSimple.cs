@@ -1,6 +1,6 @@
 ﻿using RepoDb.Attributes;
 
-namespace Recipes.RepoDb.Entities
+namespace Recipes.RepoDb.Models
 {
     [Map("[HR].[Employee]")]
     public class EmployeeSimple : IEmployeeSimple
@@ -9,7 +9,6 @@ namespace Recipes.RepoDb.Entities
 
         public int EmployeeClassificationKey { get; set; }
 
-        [Primary]
         public int EmployeeKey { get; set; }
 
         public string? FirstName { get; set; }

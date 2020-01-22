@@ -1,5 +1,5 @@
 ﻿using Recipes.Immutable;
-using Recipes.RepoDb.Entities;
+using Recipes.RepoDb.Models;
 using RepoDb;
 using System;
 using System.Collections.Generic;

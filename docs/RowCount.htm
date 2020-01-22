@@ -371,7 +371,32 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class RowCountScenario : DbRepository&lt;SqlConnection&gt;,
+    IRowCountScenario&lt;EmployeeSimple&gt;
+{
+    public RowCountScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int EmployeeCount(string lastName)
+    {
+        return (int)Count&lt;EmployeeSimple&gt;(e =&gt; e.LastName == lastName);
+    }
+
+    public int EmployeeCount()
+    {
+        return (int)CountAll&lt;EmployeeSimple&gt;();
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 

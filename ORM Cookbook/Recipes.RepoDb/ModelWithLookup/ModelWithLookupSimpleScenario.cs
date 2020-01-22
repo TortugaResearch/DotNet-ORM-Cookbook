@@ -1,5 +1,5 @@
 ﻿using Recipes.ModelWithLookup;
-using Recipes.RepoDb.Entities;
+using Recipes.RepoDb.Models;
 using RepoDb;
 using RepoDb.Extensions;
 using System;

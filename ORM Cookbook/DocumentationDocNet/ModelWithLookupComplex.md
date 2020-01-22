@@ -77,7 +77,7 @@ RepoDb does not support representing FK's as child objects for create/update ope
 
 Read operations must occur against a database view in order to get the properties from the child object. The `Decompose` attribute indicates that the child should be populated from the same view.
 
-@snippet cs [..\Recipes.RepoDb\Entities\EmployeeComplex.cs] EmployeeComplex
+@snippet cs [..\Recipes.RepoDb\Models\EmployeeComplex.cs] EmployeeComplex
 
 @snippet cs [..\Recipes.RepoDb\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 

@@ -672,7 +672,82 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class MultipleCrudScenario : DbRepository&lt;SqlConnection&gt;,
+    IMultipleCrudScenario&lt;EmployeeSimple&gt;
+{
+    public MultipleCrudScenario(string connectionString)
+        : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        var keys = employees.Select(e =&gt; e.EmployeeKey).AsList();
+        Delete&lt;EmployeeSimple&gt;(e =&gt; keys.Contains(e.EmployeeKey));
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        Delete&lt;EmployeeSimple&gt;(e =&gt; employeeKeys.Contains(e.EmployeeKey));
+    }
+
+    public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+    {
+        return Query&lt;EmployeeSimple&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+
+        return employees.Select(e =&gt; e.EmployeeKey).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; InsertBatchReturnRows(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        // TODO: Can you review this? What is the intention of this 'WithRefresh()'?
+        InsertAll(employees);
+    }
+
+    public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        UpdateAll(employees);
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 

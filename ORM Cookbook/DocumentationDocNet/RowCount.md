@@ -38,7 +38,7 @@ TODO
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\RowCount\RowCountScenario.cs] RowCountScenario
 
 ## ServiceStack
 
