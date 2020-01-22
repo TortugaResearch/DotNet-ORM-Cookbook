@@ -23,8 +23,20 @@ namespace Recipes.RepoDb.ModelWithChildren
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
             var key = Insert<ProductLine, int>(productLine);
+            productLine.ApplyKeys();
             InsertAll(productLine.Products);
             return key;
+        }
+
+        private void ExecuteDelete(int productLineKey)
+        {
+            var sql = @"DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
+                DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey;";
+
+            using (var con = CreateConnection(true))
+            {
+                con.ExecuteNonQuery(sql, new { productLineKey });
+            }
         }
 
         public void Delete(ProductLine productLine)
@@ -32,17 +44,19 @@ namespace Recipes.RepoDb.ModelWithChildren
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-            base.Delete(productLine);
+            //base.Delete(productLine);
+            ExecuteDelete(productLine.ProductLineKey);
         }
 
         public void DeleteByKey(int productLineKey)
         {
-            base.Delete<ProductLine>(productLineKey);
+            //base.Delete<ProductLine>(productLineKey);
+            ExecuteDelete(productLineKey);
         }
 
         private void FetchProducts(IEnumerable<ProductLine> productLines)
         {
-            var keys = productLines.Select(e => e.ProductLineKey);
+            var keys = productLines.Select(e => e.ProductLineKey).AsList();
             Query<Product>(e => keys.Contains(e.ProductLineKey))
                 .AsList()
                 .ForEach(p =>
@@ -108,10 +122,17 @@ namespace Recipes.RepoDb.ModelWithChildren
 
             productLine.ApplyKeys();
 
-            var childKeys = productLine.Products.Select(e => e.ProductLineKey);
-            Delete<Product>(e => childKeys.Contains(e.ProductLineKey));
+            var products = Query<Product>(p => p.ProductLineKey == productLine.ProductLineKey);
+            var originalProductKeys = products
+                .Select(p => p.ProductKey);
+            var currentProductKeys = productLine
+                .Products
+                .Select(e => e.ProductKey);
+            var productKeysToRemove = originalProductKeys
+                .Except(currentProductKeys)
+                .AsList();
 
-            Update(productLine);
+            UpdateGraphWithDeletes(productLine, productKeysToRemove);
         }
 
         public void UpdateGraphWithDeletes(ProductLine productLine, IList<int> productKeysToRemove)
@@ -121,10 +142,13 @@ namespace Recipes.RepoDb.ModelWithChildren
 
             productLine.ApplyKeys();
 
-            var childKeys = productLine.Products.Select(e => e.ProductLineKey);
-            Delete<Product>(e => childKeys.Contains(e.ProductLineKey));
-
             Update(productLine);
+
+            if (productKeysToRemove?.Any() == true)
+                Delete<Product>(e => productKeysToRemove.Contains(e.ProductKey));
+
+            if (productLine.Products?.Any() == true)
+                MergeAll<Product>(productLine.Products);
         }
     }
 }
