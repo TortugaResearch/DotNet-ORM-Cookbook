@@ -8,7 +8,7 @@ using RepoDb;
 using ORepoDb = RepoDb;
 using RepoDb.Extensions;
 
-namespace Recipes.Ado.MultipleCrud
+namespace Recipes.RepoDb.MultipleCrud
 {
     public class MultipleCrudScenario : DbRepository<SqlConnection>,
         IMultipleCrudScenario<EmployeeSimple>

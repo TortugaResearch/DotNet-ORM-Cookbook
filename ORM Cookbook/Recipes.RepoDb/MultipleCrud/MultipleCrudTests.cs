@@ -3,7 +3,7 @@ using Recipes.RepoDb;
 using Recipes.RepoDb.Models;
 using Recipes.MultipleCrud;
 
-namespace Recipes.Ado.MultipleCrud
+namespace Recipes.RepoDb.MultipleCrud
 {
     [TestClass]
     public class MultipleCrudTests : MultipleCrudTests<EmployeeSimple>
