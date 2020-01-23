@@ -1,7 +1,7 @@
 ﻿using Recipes.RepoDb.Models;
 using Recipes.ScalarValue;
 using RepoDb;
-using ORepoDb = RepoDb;
+using RDB = RepoDb;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Recipes.RepoDb.ScalarValue
     public class ScalarValueScenario : DbRepository<SqlConnection>, IScalarValueScenario
     {
         public ScalarValueScenario(string connectionString)
-            : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int? GetDivisionKey(string divisionName)

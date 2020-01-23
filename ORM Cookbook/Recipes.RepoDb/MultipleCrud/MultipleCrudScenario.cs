@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
 using RepoDb;
-using ORepoDb = RepoDb;
+using RDB = RepoDb;
 using RepoDb.Extensions;
 
 namespace Recipes.RepoDb.MultipleCrud
@@ -14,7 +14,7 @@ namespace Recipes.RepoDb.MultipleCrud
         IMultipleCrudScenario<EmployeeSimple>
     {
         public MultipleCrudScenario(string connectionString)
-            : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public void DeleteBatch(IList<EmployeeSimple> employees)

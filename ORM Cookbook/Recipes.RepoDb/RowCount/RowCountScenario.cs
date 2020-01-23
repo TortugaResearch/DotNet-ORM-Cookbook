@@ -1,6 +1,7 @@
 ﻿using Recipes.RepoDb.Models;
 using Recipes.RowCount;
 using RepoDb;
+using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,7 +11,8 @@ namespace Recipes.RepoDb.RowCount
     public class RowCountScenario : DbRepository<SqlConnection>,
         IRowCountScenario<EmployeeSimple>
     {
-        public RowCountScenario(string connectionString) : base(connectionString)
+        public RowCountScenario(string connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int EmployeeCount(string lastName)

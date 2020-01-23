@@ -2,6 +2,7 @@
 using Recipes.SingleModelCrud;
 using RepoDb;
 using RepoDb.Extensions;
+using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ namespace Recipes.RepoDb.SingleModelCrud
         ISingleModelCrudScenario<EmployeeClassification>
     {
         public SingleModelCrudScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int Create(EmployeeClassification classification)

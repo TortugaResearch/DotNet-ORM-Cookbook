@@ -1,6 +1,7 @@
 ﻿using Recipes.Immutable;
 using Recipes.RepoDb.Models;
 using RepoDb;
+using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -13,7 +14,7 @@ namespace Recipes.RepoDb.Immutable
         IImmutableScenario<ReadOnlyEmployeeClassification>
     {
         public ImmutableScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int Create(ReadOnlyEmployeeClassification classification)

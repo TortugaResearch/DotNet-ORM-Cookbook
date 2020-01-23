@@ -1,6 +1,7 @@
 ﻿using Recipes.PartialUpdate;
 using Recipes.RepoDb.Models;
 using RepoDb;
+using RDB = RepoDb;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Recipes.RepoDb.PartialUpdate
         IPartialUpdateScenario<EmployeeClassification>
     {
         public PartialUpdateScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int Create(EmployeeClassification classification)

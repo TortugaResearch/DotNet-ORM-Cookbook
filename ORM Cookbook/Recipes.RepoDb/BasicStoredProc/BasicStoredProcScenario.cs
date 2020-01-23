@@ -2,6 +2,7 @@
 using Recipes.RepoDb.Models;
 using RepoDb;
 using RepoDb.Extensions;
+using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,7 +15,7 @@ namespace Recipes.RepoDb.BasicStoredProc
         IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount>
     {
         public BasicStoredProcScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public IList<EmployeeClassificationWithCount> CountEmployeesByClassification()
