@@ -44,7 +44,7 @@ TODO
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\Upsert\UpsertScenario.cs] UpsertScenario
 
 ## ServiceStack
 
