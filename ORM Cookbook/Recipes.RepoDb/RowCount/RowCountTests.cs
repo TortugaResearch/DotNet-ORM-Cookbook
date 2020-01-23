@@ -4,7 +4,7 @@ using Recipes.RepoDb.Models;
 using Recipes.RepoDb.RowCount;
 using Recipes.RowCount;
 
-namespace Recipes.Ado.RowCount
+namespace Recipes.RepoDb.RowCount
 {
     [TestClass]
     public class RowCountTests : RowCountTests<EmployeeSimple>
