@@ -42,7 +42,7 @@ TODO
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\Pagination\PaginationScenario.cs] PaginationScenario
 
 ## ServiceStack
 
