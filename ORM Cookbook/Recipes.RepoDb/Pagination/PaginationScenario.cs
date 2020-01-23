@@ -10,7 +10,7 @@ using RepoDb.Extensions;
 
 namespace Recipes.RepoDb.Pagination
 {
-    public class PaginationScenario : DbRepository<SqlConnection>,
+    public class PaginationScenario : BaseRepository<EmployeeSimple, SqlConnection>,
         IPaginationScenario<EmployeeSimple>
     {
         public PaginationScenario(string connectionString)
@@ -33,7 +33,7 @@ namespace Recipes.RepoDb.Pagination
                 EmployeeKey = Order.Ascending
             });
 
-            return BatchQuery<EmployeeSimple>(page,
+            return BatchQuery(page,
                 pageSize,
                 orderBy,
                 e => e.LastName == lastName).AsList();
@@ -60,14 +60,14 @@ namespace Recipes.RepoDb.Pagination
                 var group = new QueryGroup(lastNameField,
                     new QueryGroup(firstNameField.AsEnumerable(),
                         firstNameAndEmployeeKeyFields.AsEnumerable(), Conjunction.Or));
-                return BatchQuery<EmployeeSimple>(page,
+                return BatchQuery(page,
                     take,
                     orderBy,
                     group).AsList();
             }
             else
             {
-                return BatchQuery<EmployeeSimple>(page,
+                return BatchQuery(page,
                     take,
                     orderBy,
                     e => e.LastName == lastName).AsList();
@@ -83,7 +83,7 @@ namespace Recipes.RepoDb.Pagination
             });
             var page = skip / take;
 
-            return BatchQuery<EmployeeSimple>(page,
+            return BatchQuery(page,
                 take,
                 orderBy,
                 e => e.LastName == lastName).AsList();

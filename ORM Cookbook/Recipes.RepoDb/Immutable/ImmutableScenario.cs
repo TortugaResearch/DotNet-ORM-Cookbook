@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Recipes.RepoDb.Immutable
 {
-    public class ImmutableScenario : DbRepository<SqlConnection>,
+    public class ImmutableScenario : BaseRepository<EmployeeClassification, SqlConnection>,
         IImmutableScenario<ReadOnlyEmployeeClassification>
     {
         public ImmutableScenario(string connectionString)
@@ -22,7 +22,7 @@ namespace Recipes.RepoDb.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            return Insert<EmployeeClassification, int>(new EmployeeClassification(classification));
+            return Insert<int>(new EmployeeClassification(classification));
         }
 
         public void Delete(ReadOnlyEmployeeClassification classification)
@@ -35,26 +35,26 @@ namespace Recipes.RepoDb.Immutable
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            Delete<EmployeeClassification>(employeeClassificationKey);
+            Delete(employeeClassificationKey);
         }
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
         {
-            return Query<EmployeeClassification>(e => e.EmployeeClassificationName == employeeClassificationName)
+            return Query(e => e.EmployeeClassificationName == employeeClassificationName)
                 .FirstOrDefault()?
                 .ToImmutable();
         }
 
         public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
         {
-            return QueryAll<EmployeeClassification>()
+            return QueryAll()
                 .Select(e => e.ToImmutable())
                 .ToImmutableList();
         }
 
         public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return Query<EmployeeClassification>(employeeClassificationKey)
+            return Query(employeeClassificationKey)
                 .FirstOrDefault()?
                 .ToImmutable();
         }
@@ -64,7 +64,7 @@ namespace Recipes.RepoDb.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            base.Update<EmployeeClassification>(new EmployeeClassification(classification));
+            base.Update(new EmployeeClassification(classification));
         }
     }
 }

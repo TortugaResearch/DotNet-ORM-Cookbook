@@ -8,7 +8,8 @@ using System.Linq;
 
 namespace Recipes.RepoDb.ScalarValue
 {
-    public class ScalarValueScenario : DbRepository<SqlConnection>, IScalarValueScenario
+    public class ScalarValueScenario : BaseRepository<Division, SqlConnection>,
+        IScalarValueScenario
     {
         public ScalarValueScenario(string connectionString)
             : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
@@ -16,51 +17,51 @@ namespace Recipes.RepoDb.ScalarValue
 
         public int? GetDivisionKey(string divisionName)
         {
-            var division = Query<Division>(
+            var division = Query(
                 e => e.DivisionName == divisionName).FirstOrDefault();
             return division?.DivisionKey;
         }
 
         public string GetDivisionName(int divisionKey)
         {
-            var division = Query<Division>(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division?.DivisionName != null ? 
+            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
+            return division?.DivisionName != null ?
                 division.DivisionName : string.Empty;
         }
 
         public string? GetDivisionNameOrNull(int divisionKey)
         {
-            var division = Query<Division>(e => e.DivisionKey == divisionKey).FirstOrDefault();
+            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
             return division?.DivisionName;
         }
 
         public DateTimeOffset? GetLastReviewCycle(int divisionKey)
         {
-            var division = Query<Division>(e => e.DivisionKey == divisionKey).FirstOrDefault();
+            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
             return division?.LastReviewCycle;
         }
 
         public int? GetMaxEmployees(int divisionKey)
         {
-            var division = Query<Division>(e => e.DivisionKey == divisionKey).FirstOrDefault();
+            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
             return division?.MaxEmployees;
         }
 
         public DateTime GetModifiedDate(int divisionKey)
         {
-            var division = Query<Division>(e => e.DivisionKey == divisionKey).FirstOrDefault();
+            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
             return division.ModifiedDate;
         }
 
         public decimal? GetSalaryBudget(int divisionKey)
         {
-            var division = Query<Division>(e => e.DivisionKey == divisionKey).FirstOrDefault();
+            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
             return division.SalaryBudget;
         }
 
         public TimeSpan? GetStartTime(int divisionKey)
         {
-            var division = Query<Division>(e => e.DivisionKey == divisionKey).FirstOrDefault();
+            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
             return division.StartTime;
         }
     }
