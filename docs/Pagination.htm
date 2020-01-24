@@ -685,7 +685,87 @@ ORDER BY e.FirstName,
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class PaginationScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
+    IPaginationScenario&lt;EmployeeSimple&gt;
+{
+    public PaginationScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        var orderBy = OrderField.Parse(new
+        {
+            FirstName = Order.Ascending,
+            EmployeeKey = Order.Ascending
+        });
+
+        return BatchQuery(page,
+            pageSize,
+            orderBy,
+            e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+    {
+        var orderBy = OrderField.Parse(new
+        {
+            FirstName = Order.Ascending,
+            EmployeeKey = Order.Ascending
+        });
+        var page = 0;
+
+        if (skipPast != null)
+        {
+            var lastNameField = new QueryField(&quot;LastName&quot;, lastName);
+            var firstNameField = new QueryField(&quot;FirstName&quot;, Operation.GreaterThan, skipPast.FirstName);
+            var firstNameAndEmployeeKeyFields = new QueryGroup(new[]
+            {
+                new QueryField(&quot;FirstName&quot;, skipPast.FirstName),
+                new QueryField(&quot;EmployeeKey&quot;, Operation.GreaterThan, skipPast.EmployeeKey)
+            });
+            var group = new QueryGroup(lastNameField,
+                new QueryGroup(firstNameField.AsEnumerable(),
+                    firstNameAndEmployeeKeyFields.AsEnumerable(), Conjunction.Or));
+            return BatchQuery(page,
+                take,
+                orderBy,
+                group).AsList();
+        }
+        else
+        {
+            return BatchQuery(page,
+                take,
+                orderBy,
+                e =&gt; e.LastName == lastName).AsList();
+        }
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        var orderBy = OrderField.Parse(new
+        {
+            FirstName = Order.Ascending,
+            EmployeeKey = Order.Ascending
+        });
+        var page = skip / take;
+
+        return BatchQuery(page,
+            take,
+            orderBy,
+            e =&gt; e.LastName == lastName).AsList();
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 

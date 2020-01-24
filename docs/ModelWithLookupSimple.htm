@@ -788,7 +788,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
 {
     public ModelWithLookupSimpleScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int Create(EmployeeSimple employee)

@@ -2,6 +2,7 @@
 using Recipes.RepoDb.Models;
 using RepoDb;
 using RepoDb.Extensions;
+using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ namespace Recipes.RepoDb.ModelWithLookup
         IModelWithLookupSimpleScenario<EmployeeSimple>
     {
         public ModelWithLookupSimpleScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int Create(EmployeeSimple employee)

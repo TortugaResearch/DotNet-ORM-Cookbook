@@ -1472,7 +1472,7 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
     IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     public ModelWithChildrenScenario(string connectionString)
-        : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int Create(ProductLine productLine)

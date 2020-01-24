@@ -505,7 +505,7 @@ END;
     IBasicStoredProcScenario&lt;EmployeeClassification, EmployeeClassificationWithCount&gt;
 {
     public BasicStoredProcScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public IList&lt;EmployeeClassificationWithCount&gt; CountEmployeesByClassification()

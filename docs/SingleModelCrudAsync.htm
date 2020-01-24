@@ -828,7 +828,7 @@
     ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     public SingleModelCrudAsyncScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)

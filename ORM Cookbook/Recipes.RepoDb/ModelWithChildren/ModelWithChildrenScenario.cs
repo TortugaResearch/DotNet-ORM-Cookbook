@@ -1,7 +1,7 @@
 ﻿using Recipes.ModelWithChildren;
 using Recipes.RepoDb.Models;
 using RepoDb;
-using ORepoDb = RepoDb;
+using RDB = RepoDb;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Recipes.RepoDb.ModelWithChildren
         IModelWithChildrenScenario<ProductLine, Product>
     {
         public ModelWithChildrenScenario(string connectionString)
-            : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int Create(ProductLine productLine)

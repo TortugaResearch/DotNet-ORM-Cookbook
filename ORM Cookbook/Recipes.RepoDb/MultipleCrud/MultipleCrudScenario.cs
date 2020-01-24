@@ -5,16 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
 using RepoDb;
-using ORepoDb = RepoDb;
+using RDB = RepoDb;
 using RepoDb.Extensions;
 
 namespace Recipes.RepoDb.MultipleCrud
 {
-    public class MultipleCrudScenario : DbRepository<SqlConnection>,
+    public class MultipleCrudScenario : BaseRepository<EmployeeSimple, SqlConnection>,
         IMultipleCrudScenario<EmployeeSimple>
     {
         public MultipleCrudScenario(string connectionString)
-            : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public void DeleteBatch(IList<EmployeeSimple> employees)
@@ -23,7 +23,7 @@ namespace Recipes.RepoDb.MultipleCrud
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
             var keys = employees.Select(e => e.EmployeeKey).AsList();
-            Delete<EmployeeSimple>(e => keys.Contains(e.EmployeeKey));
+            Delete(e => keys.Contains(e.EmployeeKey));
         }
 
         public void DeleteBatchByKey(IList<int> employeeKeys)
@@ -31,12 +31,12 @@ namespace Recipes.RepoDb.MultipleCrud
             if (employeeKeys == null || employeeKeys.Count == 0)
                 throw new ArgumentException($"{nameof(employeeKeys)} is null or empty.", nameof(employeeKeys));
 
-            Delete<EmployeeSimple>(e => employeeKeys.Contains(e.EmployeeKey));
+            Delete(e => employeeKeys.Contains(e.EmployeeKey));
         }
 
         public IList<EmployeeSimple> FindByLastName(string lastName)
         {
-            return Query<EmployeeSimple>(e => e.LastName == lastName).AsList();
+            return Query(e => e.LastName == lastName).AsList();
         }
 
         public void InsertBatch(IList<EmployeeSimple> employees)

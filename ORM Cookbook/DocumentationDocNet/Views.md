@@ -55,7 +55,7 @@ In NHibernate, views require a unique ID column. They must also be configured as
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\Views\ViewsScenario.cs] ViewsScenario
 
 ## ServiceStack
 
