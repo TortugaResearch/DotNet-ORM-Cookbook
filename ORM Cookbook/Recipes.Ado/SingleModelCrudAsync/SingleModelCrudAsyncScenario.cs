@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace Recipes.Ado.SingleModelCrudAsync
 {
-    public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario<EmployeeClassification>
+    public class SingleModelCrudAsyncScenario : ScenarioBase, ISingleModelCrudAsyncScenario<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public SingleModelCrudAsyncScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public SingleModelCrudAsyncScenario(string connectionString) : base(connectionString)
+        { }
 
         public async Task<int> CreateAsync(EmployeeClassification classification)
         {
@@ -147,17 +143,6 @@ namespace Recipes.Ado.SingleModelCrudAsync
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
                 await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        async Task<SqlConnection> OpenConnectionAsync()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            await con.OpenAsync().ConfigureAwait(false);
-            return con;
         }
     }
 }

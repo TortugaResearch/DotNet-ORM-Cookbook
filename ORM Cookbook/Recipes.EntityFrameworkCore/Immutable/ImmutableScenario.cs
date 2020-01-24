@@ -1,4 +1,5 @@
 ﻿using Recipes.EntityFrameworkCore.Entities;
+using Recipes.EntityFrameworkCore.Models;
 using Recipes.Immutable;
 using System;
 using System.Collections.Generic;

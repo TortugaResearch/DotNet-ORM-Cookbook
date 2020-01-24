@@ -6,14 +6,10 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.Sorting
 {
-    public class SortingScenario : ISortingScenario<EmployeeSimple>
+    public class SortingScenario : ScenarioBase, ISortingScenario<EmployeeSimple>
     {
-        readonly string m_ConnectionString;
-
-        public SortingScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public SortingScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeSimple employee)
         {
@@ -90,17 +86,6 @@ VALUES
 
                 return results;
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

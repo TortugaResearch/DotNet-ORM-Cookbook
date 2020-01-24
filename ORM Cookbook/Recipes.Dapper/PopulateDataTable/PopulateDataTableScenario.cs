@@ -1,17 +1,13 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.PopulateDataTable;
 using System.Data;
 
 namespace Recipes.Dapper.PopulateDataTable
 {
-    public class PopulateDataTableScenario : IPopulateDataTableScenario
+    public class PopulateDataTableScenario : ScenarioBase, IPopulateDataTableScenario
     {
-        readonly string m_ConnectionString;
-
-        public PopulateDataTableScenario(string connectionString)
+        public PopulateDataTableScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public DataTable FindByFlags(bool isExempt, bool isEmployee)
@@ -38,17 +34,6 @@ namespace Recipes.Dapper.PopulateDataTable
                 result.Load(reader);
 
             return result;
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

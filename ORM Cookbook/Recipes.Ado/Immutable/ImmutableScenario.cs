@@ -7,14 +7,10 @@ using System.Collections.Immutable;
 
 namespace Recipes.Ado.Immutable
 {
-    public class ImmutableScenario : IImmutableScenario<ReadOnlyEmployeeClassification>
+    public class ImmutableScenario : ScenarioBase, IImmutableScenario<ReadOnlyEmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public ImmutableScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ImmutableScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(ReadOnlyEmployeeClassification classification)
         {
@@ -154,17 +150,6 @@ namespace Recipes.Ado.Immutable
                 cmd.Parameters.AddWithValue("@IsEmployee", classification.IsEmployee);
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

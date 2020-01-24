@@ -31,11 +31,14 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
 </li>
 <li class="tocentry current"><a class="current" href="SingleModelCrudAsync.htm">Async Operations</a>
 <ul class="currentrelative">
@@ -48,6 +51,8 @@
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
 
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
@@ -62,20 +67,32 @@
 </ul>
 <li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
 </li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
 </li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
 <li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
 <span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -127,14 +144,10 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With ADO.NET, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ScenarioBase, ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
-    readonly string m_ConnectionString;
-
-    public SingleModelCrudAsyncScenario(string connectionString)
-    {
-        m_ConnectionString = connectionString;
-    }
+    public SingleModelCrudAsyncScenario(string connectionString) : base(connectionString)
+    { }
 
     public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
     {
@@ -267,17 +280,6 @@
             await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
     }
-
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    async Task&lt;SqlConnection&gt; OpenConnectionAsync()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        await con.OpenAsync().ConfigureAwait(false);
-        return con;
-    }
 }
 </code></pre>
 
@@ -368,13 +370,10 @@
 </code></pre>
 
 <p>Here is the full repository.</p>
-<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ScenarioBase, ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
-    readonly string m_ConnectionString;
-
-    public SingleModelCrudAsyncScenario(string connectionString)
+    public SingleModelCrudAsyncScenario(string connectionString) : base(connectionString)
     {
-        m_ConnectionString = connectionString;
     }
 
     public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
@@ -451,21 +450,11 @@
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
     }
-
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    async Task&lt;SqlConnection&gt; OpenConnectionAsync()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        await con.OpenAsync().ConfigureAwait(false);
-        return con;
-    }
 }
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To make an Entity Framework repository asynchronous, you need to import the <code>System.Data.Entity</code> namespace. This exposes the async version of the LINQ extension methods needed. </p>
 <p>For non-cancellable operation, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
 <p>For cancellable operations, you may need to explicitly create object arrays for the parameters. Otherwise it may think that the cancellation token is another query parameter.</p>
 <p>Original:</p>
@@ -576,6 +565,84 @@
                 temp.EmployeeClassificationName = classification.EmployeeClassificationName;
                 await context.SaveChangesAsync().ConfigureAwait(false);
             }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>With LINQ to DB, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places.</p>
+<pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt;
+{
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(classification);
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            db.EmployeeClassification
+                .Where(d =&gt; d.EmployeeClassificationKey == classification.EmployeeClassificationKey)
+                .Delete();
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            db.EmployeeClassification
+                .Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey)
+                .Delete();
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        using (var db = new OrmCookbook())
+        {
+            var query = from ec in db.EmployeeClassification
+                        where ec.EmployeeClassificationName == employeeClassificationName
+                        select ec;
+            return query.Single();
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.ToList();
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey).Single();
+        }
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            db.Update(classification);
         }
     }
 }
@@ -761,7 +828,7 @@
     ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     public SingleModelCrudAsyncScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)

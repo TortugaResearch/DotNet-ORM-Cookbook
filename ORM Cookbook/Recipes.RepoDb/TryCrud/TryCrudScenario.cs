@@ -1,6 +1,7 @@
-﻿using Recipes.RepoDb.Entities;
+﻿using Recipes.RepoDb.Models;
 using Recipes.TryCrud;
 using RepoDb;
+using RDB = RepoDb;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,7 +13,7 @@ namespace Recipes.RepoDb.TryCrud
         ITryCrudScenario<EmployeeClassification>
     {
         public TryCrudScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int Create(EmployeeClassification classification)

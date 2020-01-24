@@ -31,23 +31,34 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
 </li>
 <li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
 </li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
 </li>
 <li class="tocentry current"><a class="current" href="Sorting.htm">Basic Sorting</a>
 <ul class="currentrelative">
@@ -61,6 +72,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
@@ -72,10 +85,14 @@
 
 
 </ul>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+</li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
 <span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -132,14 +149,10 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class SortingScenario : ISortingScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class SortingScenario : ScenarioBase, ISortingScenario&lt;EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
-        public SortingScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public SortingScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeSimple employee)
         {
@@ -217,17 +230,6 @@ VALUES
                 return results;
             }
         }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
     }
 </code></pre>
 
@@ -269,13 +271,10 @@ VALUES
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class SortingScenario : ISortingScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class SortingScenario : ScenarioBase, ISortingScenario&lt;EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
-        public SortingScenario(string connectionString)
+        public SortingScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeSimple employee)
@@ -315,17 +314,6 @@ VALUES
 
             using (var con = OpenConnection())
                 return con.Query&lt;EmployeeSimple&gt;(sql).ToList();
-        }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 </code></pre>
@@ -369,6 +357,40 @@ VALUES
     {
         using (var context = CreateDbContext())
             return context.Employee.OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+{
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(employee);
+        }
+    }
+
+    public IList&lt;Employee&gt; SortByLastName()
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.OrderBy(x =&gt; x.LastName).ToList();
+    }
+
+    public IList&lt;Employee&gt; SortByLastNameDescFirstName()
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.OrderByDescending(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+    }
+
+    public IList&lt;Employee&gt; SortByLastNameFirstName()
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
     }
 }
 </code></pre>
@@ -479,7 +501,7 @@ VALUES
     ISortingScenario&lt;EmployeeSimple&gt;
 {
     public SortingScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int Create(EmployeeSimple employee)

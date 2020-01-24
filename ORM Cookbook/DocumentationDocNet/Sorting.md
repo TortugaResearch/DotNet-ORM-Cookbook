@@ -26,6 +26,10 @@ Columns to be sorted by are passed in as strings, but checked against the list o
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Sorting\SortingScenario.cs] SortingScenario
 
+## LINQ to DB
+
+@snippet cs [..\Recipes.LinqToDB\Sorting\SortingScenario.cs] SortingScenario
+
 ## LLBLGen Pro 
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\Sorting\SortingScenario.cs] SortingScenario

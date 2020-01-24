@@ -5,14 +5,10 @@ using System;
 
 namespace Recipes.Ado.PartialUpdate
 {
-    public class PartialUpdateScenario : IPartialUpdateScenario<EmployeeClassification>
+    public class PartialUpdateScenario : ScenarioBase, IPartialUpdateScenario<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public PartialUpdateScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public PartialUpdateScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeClassification classification)
         {
@@ -110,17 +106,6 @@ namespace Recipes.Ado.PartialUpdate
                 cmd.Parameters.AddWithValue("@IsEmployee", isEmployee);
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

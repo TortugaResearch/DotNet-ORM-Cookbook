@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Paging Results - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry current"><a class="current" href="Pagination.htm">Paging Results</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Pagination.htm">Paging Results</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="paging-results">Paging Results<a class="headerlink" href="#paging-results" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to page resutls. Three styles of pagination are shown:</p>
+<ul>
+<li>Page and Page Size</li>
+<li>Skip and Take</li>
+<li>Keyset Pagination (i.e. Skip-Past)</li>
+</ul>
+<p>Keyset pagination is a technique where the previous result is used to determine where to starting point for the next set of results. If an index is available, this can be significantly faster than using an offset. For more information see <a href="https://use-the-index-luke.com/no-offset" target="_blank">We need tool support for keyset pagination</a>.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IPaginationScenario&lt;TEmployeeSimple&gt;
+   where TEmployeeSimple : class, IEmployeeSimple, new()
+{
+    /// &lt;summary&gt;
+    /// Insert a collection of Employee rows.
+    /// &lt;/summary&gt;
+    void InsertBatch(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Finds employees with a given name, paging the results.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;lastName&quot;&gt;The last name.&lt;/param&gt;
+    /// &lt;param name=&quot;pageSize&quot;&gt;Size of the page.&lt;/param&gt;
+    /// &lt;param name=&quot;page&quot;&gt;The page, numbered from zero.&lt;/param&gt;
+    /// &lt;remarks&gt;Sort by FirstName, EmployeeKey&lt;/remarks&gt;
+    IList&lt;TEmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize);
+
+    /// &lt;summary&gt;
+    /// Finds employees with a given name, paging the results.
+    /// This version uses &quot;keyset pagination&quot;. See https://use-the-index-luke.com/no-offset for details
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;lastName&quot;&gt;The last name.&lt;/param&gt;
+    /// &lt;param name=&quot;skipPast&quot;&gt;The last record in the previous set.&lt;/param&gt;
+    /// &lt;param name=&quot;take&quot;&gt;The number of rows to take.&lt;/param&gt;
+    /// &lt;remarks&gt;Sort by FirstName, EmployeeKey&lt;/remarks&gt;
+    IList&lt;TEmployeeSimple&gt; PaginateWithSkipPast(string lastName, TEmployeeSimple? skipPast, int take);
+
+    /// &lt;summary&gt;
+    /// Finds employees with a given name, paging the results.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;lastName&quot;&gt;The last name.&lt;/param&gt;
+    /// &lt;param name=&quot;skip&quot;&gt;The number of rows to skip.&lt;/param&gt;
+    /// &lt;param name=&quot;take&quot;&gt;The number of rows to take.&lt;/param&gt;
+    /// &lt;remarks&gt;Sort by FirstName, EmployeeKey&lt;/remarks&gt;
+    IList&lt;TEmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">    public class PaginationScenario : ScenarioBase, IPaginationScenario&lt;EmployeeSimple&gt;
+    {
+        public PaginationScenario(string connectionString) : base(connectionString)
+        { }
+
+        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+VALUES &quot;);
+
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql.ToString(), con))
+            {
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
+                }
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+        {
+            const string sql = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE e.LastName = @LastName
+ORDER BY e.FirstName,
+         e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            var skip = page * pageSize;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+                cmd.Parameters.AddWithValue(&quot;@Skip&quot;, skip);
+                cmd.Parameters.AddWithValue(&quot;@Take&quot;, pageSize);
+
+                var results = new List&lt;EmployeeSimple&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeSimple(reader));
+
+                return results;
+            }
+        }
+
+        public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+        {
+            const string sqlA = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE (e.LastName = @LastName)
+ORDER BY e.FirstName,
+         e.EmployeeKey
+OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            const string sqlB = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE (e.LastName = @LastName)
+      AND
+      (
+          (e.FirstName &gt; @FirstName)
+          OR
+          (
+              e.FirstName = @FirstName
+              AND e.EmployeeKey &gt; @EmployeeKey
+          )
+      )
+ORDER BY e.FirstName,
+         e.EmployeeKey
+OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            var sql = (skipPast == null) ? sqlA : sqlB;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+                cmd.Parameters.AddWithValue(&quot;@Take&quot;, take);
+                if (skipPast != null)
+                {
+                    cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, skipPast.FirstName);
+                    cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, skipPast.EmployeeKey);
+                }
+
+                var results = new List&lt;EmployeeSimple&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeSimple(reader));
+
+                return results;
+            }
+        }
+
+        public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+        {
+            const string sql = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE e.LastName = @LastName
+ORDER BY e.FirstName,
+         e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+                cmd.Parameters.AddWithValue(&quot;@Skip&quot;, skip);
+                cmd.Parameters.AddWithValue(&quot;@Take&quot;, take);
+
+                var results = new List&lt;EmployeeSimple&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeSimple(reader));
+
+                return results;
+            }
+        }
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;EmployeeSimple&gt;
+{
+    const string EmployeeTableName = &quot;HR.Employee&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public PaginationScenario(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        m_DataSource.InsertBatch((IReadOnlyList&lt;EmployeeSimple&gt;)employees).Execute();
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        return m_DataSource.From(EmployeeTableName, new { lastName })
+            .WithSorting(&quot;FirstName&quot;, &quot;EmployeeKey&quot;)
+            .WithLimits(page * pageSize, pageSize)
+            .ToCollection&lt;EmployeeSimple&gt;().Execute();
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+    {
+        var link = (skipPast == null) ?
+            m_DataSource.From(EmployeeTableName, new { lastName }) :
+            m_DataSource.From(EmployeeTableName, &quot;LastName = @LastName AND ((FirstName &gt; @FirstName) OR (FirstName = @FirstName AND EmployeeKey &gt; @EmployeeKey))&quot;,
+            new { lastName, skipPast.FirstName, skipPast.EmployeeKey });
+
+        return link
+            .WithSorting(&quot;FirstName&quot;, &quot;EmployeeKey&quot;)
+            .WithLimits(take)
+            .ToCollection&lt;EmployeeSimple&gt;().Execute();
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        return m_DataSource.From(EmployeeTableName, new { lastName })
+            .WithSorting(&quot;FirstName&quot;, &quot;EmployeeKey&quot;)
+            .WithLimits(skip, take)
+            .ToCollection&lt;EmployeeSimple&gt;().Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">    public class PaginationScenario : ScenarioBase, IPaginationScenario&lt;EmployeeSimple&gt;
+    {
+        public PaginationScenario(string connectionString) : base(connectionString)
+        { }
+
+        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            const string sql = @&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey)&quot;;
+            using (var con = OpenConnection())
+                con.Execute(sql, employees);
+        }
+
+        public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+        {
+            const string sql = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE e.LastName = @LastName
+ORDER BY e.FirstName,
+         e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName, Skip = page * pageSize, Take = pageSize }).ToList();
+        }
+
+        public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+        {
+            const string sqlA = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE (e.LastName = @LastName)
+ORDER BY e.FirstName,
+         e.EmployeeKey
+OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            const string sqlB = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE (e.LastName = @LastName)
+      AND
+      (
+          (e.FirstName &gt; @FirstName)
+          OR
+          (
+              e.FirstName = @FirstName
+              AND e.EmployeeKey &gt; @EmployeeKey
+          )
+      )
+ORDER BY e.FirstName,
+         e.EmployeeKey
+OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            string sql;
+            object param;
+            if (skipPast == null)
+            {
+                sql = sqlA;
+                param = new { lastName, take };
+            }
+            else
+            {
+                sql = sqlB;
+                param = new { lastName, take, skipPast.FirstName, skipPast.EmployeeKey };
+            }
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeSimple&gt;(sql, param).ToList();
+        }
+
+        public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+        {
+            const string sql = @&quot;SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey
+FROM HR.Employee e
+WHERE e.LastName = @LastName
+ORDER BY e.FirstName,
+         e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName, skip, take }).ToList();
+        }
+    }
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public PaginationScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Employee.AddRange(employees);
+            context.SaveChanges();
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                .Skip(page * pageSize).Take(pageSize).ToList();
+    }
+
+    [SuppressMessage(&quot;Globalization&quot;, &quot;CA1307&quot;)]
+    public IList&lt;Employee&gt; PaginateWithSkipPast(string lastName, Employee? skipPast, int take)
+    {
+        using (var context = CreateDbContext())
+        {
+            if (skipPast == null)
+            {
+                return context.Employee.Where(e =&gt; e.LastName == lastName)
+                    .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                    .Take(take).ToList();
+            }
+            else
+            {
+                return context.Employee
+                    .Where(e =&gt; (e.LastName == lastName) &amp;&amp; (
+                        (string.Compare(e.FirstName, skipPast.FirstName) &gt; 0)
+                            || (e.FirstName == skipPast.FirstName &amp;&amp; e.EmployeeKey &gt; skipPast.EmployeeKey))
+                        )
+                    .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                    .Take(take).ToList();
+            }
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                .Skip(skip).Take(take).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;Employee&gt;
+{
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var db = new OrmCookbook())
+        {
+            foreach (var employee in employees)
+                db.Insert(employee);
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                .Skip(page * pageSize).Take(pageSize).ToList();
+    }
+
+    [SuppressMessage(&quot;Globalization&quot;, &quot;CA1307&quot;)]
+    public IList&lt;Employee&gt; PaginateWithSkipPast(string lastName, Employee? skipPast, int take)
+    {
+        using (var db = new OrmCookbook())
+        {
+            if (skipPast == null)
+            {
+                return db.Employee.Where(e =&gt; e.LastName == lastName)
+                    .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                    .Take(take).ToList();
+            }
+            else
+            {
+                return db.Employee
+                    .Where(e =&gt; (e.LastName == lastName) &amp;&amp; (
+                        (string.Compare(e.FirstName, skipPast.FirstName) &gt; 0)
+                            || (e.FirstName == skipPast.FirstName &amp;&amp; e.EmployeeKey &gt; skipPast.EmployeeKey))
+                        )
+                    .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                    .Take(take).ToList();
+            }
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        using (var db = new OrmCookbook())
+            return db.Employee.Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                .Skip(skip).Take(take).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;EmployeeEntity&gt;
+{
+    public void InsertBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        using(var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                adapter.BatchSize = employees?.Count ?? 0;
+                adapter.SaveEntityCollection(toInsert);
+            }
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            // we pass in page+1, as the tests start paging at page 0, but in LLBLGen Pro, a page number 0
+            // means paging isn't used.
+            return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName)
+                                            .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                            .TakePage(page + 1, pageSize).ToList();
+        }
+    }
+
+
+    [SuppressMessage(&quot;Globalization&quot;, &quot;CA1307&quot;)]
+    public IList&lt;EmployeeEntity&gt; PaginateWithSkipPast(string lastName, EmployeeEntity? skipPast, int take)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            if(skipPast == null)
+            {
+                return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName)
+                                                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                                .Take(take).ToList();
+            }
+
+            return new LinqMetaData(adapter).Employee
+                                            .Where(e =&gt; (e.LastName == lastName) &amp;&amp; (
+                                                            (string.Compare(e.FirstName, skipPast.FirstName) &gt; 0)
+                                                            || (e.FirstName == skipPast.FirstName &amp;&amp; e.EmployeeKey &gt; skipPast.EmployeeKey))
+                                                  )
+                                            .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                            .Take(take).ToList();
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName)
+                                            .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                                            .Skip(skip).Take(take).ToList();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class PaginationScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
+    IPaginationScenario&lt;EmployeeSimple&gt;
+{
+    public PaginationScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        var orderBy = OrderField.Parse(new
+        {
+            FirstName = Order.Ascending,
+            EmployeeKey = Order.Ascending
+        });
+
+        return BatchQuery(page,
+            pageSize,
+            orderBy,
+            e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+    {
+        var orderBy = OrderField.Parse(new
+        {
+            FirstName = Order.Ascending,
+            EmployeeKey = Order.Ascending
+        });
+        var page = 0;
+
+        if (skipPast != null)
+        {
+            var lastNameField = new QueryField(&quot;LastName&quot;, lastName);
+            var firstNameField = new QueryField(&quot;FirstName&quot;, Operation.GreaterThan, skipPast.FirstName);
+            var firstNameAndEmployeeKeyFields = new QueryGroup(new[]
+            {
+                new QueryField(&quot;FirstName&quot;, skipPast.FirstName),
+                new QueryField(&quot;EmployeeKey&quot;, Operation.GreaterThan, skipPast.EmployeeKey)
+            });
+            var group = new QueryGroup(lastNameField,
+                new QueryGroup(firstNameField.AsEnumerable(),
+                    firstNameAndEmployeeKeyFields.AsEnumerable(), Conjunction.Or));
+            return BatchQuery(page,
+                take,
+                orderBy,
+                group).AsList();
+        }
+        else
+        {
+            return BatchQuery(page,
+                take,
+                orderBy,
+                e =&gt; e.LastName == lastName).AsList();
+        }
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        var orderBy = OrderField.Parse(new
+        {
+            FirstName = Order.Ascending,
+            EmployeeKey = Order.Ascending
+        });
+        var page = skip / take;
+
+        return BatchQuery(page,
+            take,
+            orderBy,
+            e =&gt; e.LastName == lastName).AsList();
+    }
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

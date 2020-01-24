@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.Sorting;
 using System;
@@ -8,13 +7,10 @@ using System.Linq;
 
 namespace Recipes.Dapper.Sorting
 {
-    public class SortingScenario : ISortingScenario<EmployeeSimple>
+    public class SortingScenario : ScenarioBase, ISortingScenario<EmployeeSimple>
     {
-        readonly string m_ConnectionString;
-
-        public SortingScenario(string connectionString)
+        public SortingScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeSimple employee)
@@ -54,17 +50,6 @@ VALUES
 
             using (var con = OpenConnection())
                 return con.Query<EmployeeSimple>(sql).ToList();
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

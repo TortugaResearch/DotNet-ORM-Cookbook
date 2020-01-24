@@ -46,6 +46,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes", "Recipes\Recipes.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Interfaces", "Recipes.Interfaces\Recipes.Interfaces.csproj", "{F4FCD753-4D82-4505-B3E9-B3D74BAFAA5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.LinqToDB", "Recipes.LinqToDB\Recipes.LinqToDB.csproj", "{B2F2466C-3FD8-4A0A-826C-7FB0E8DEFF64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,10 @@ Global
 		{F4FCD753-4D82-4505-B3E9-B3D74BAFAA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4FCD753-4D82-4505-B3E9-B3D74BAFAA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4FCD753-4D82-4505-B3E9-B3D74BAFAA5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2F2466C-3FD8-4A0A-826C-7FB0E8DEFF64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2F2466C-3FD8-4A0A-826C-7FB0E8DEFF64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2F2466C-3FD8-4A0A-826C-7FB0E8DEFF64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2F2466C-3FD8-4A0A-826C-7FB0E8DEFF64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

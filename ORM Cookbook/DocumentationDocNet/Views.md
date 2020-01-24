@@ -10,7 +10,7 @@ Note: While writing to views is supported by some databases, that capability is 
 
 ## Database Views
 
-@snippet text [..\OrmCookbookDB\HR\Views\EmployeeDetail.sql] 
+@snippet text [..\OrmCookbookDB\HR\Views\EmployeeDetail.sql] .
 
 ## ADO.NET
 
@@ -34,6 +34,10 @@ Starting with EF Core 3.0, views are treated like tables, but with two additiona
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Views\ViewsScenario.cs] ViewsScenario
 
+## LINQ to DB
+
+@snippet cs [..\Recipes.LinqToDB\Views\ViewsScenario.cs] ViewsScenario
+
 ## LLBLGen Pro 
 
 The views are mapped as regular entities and marked as 'readonly' in the designer. Alternatively we could have mapped them as Typed View
@@ -51,7 +55,7 @@ In NHibernate, views require a unique ID column. They must also be configured as
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\Views\ViewsScenario.cs] ViewsScenario
 
 ## ServiceStack
 

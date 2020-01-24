@@ -8,20 +8,36 @@
   "ConvertLocalLinks": "true",
   "Pages": {
     "__index": "index.md",
+    "ORMs": {
+      "ADO.NET": "ADO.md",
+      "Chain": "Chain.md",
+      "Dapper": "Dapper.md",
+      "Entity Framework Core": "EFCore.md",
+      "LLBLGen Pro": "LLBLGenPro.md",
+      "NHibernate": "NHibernate.md",
+      "RepoDb": "RepoDb.md",
+      "ServiceStack": "ServiceStack.md"
+    },
     "FAQ": "FAQ.md",
     "Single Model CRUD": "SingleModelCrud.md",
-    "Model with Childern CRUD": "ModelWithChildren.md",
+    "Model with Children CRUD": "ModelWithChildren.md",
     "Async Operations": "SingleModelCrudAsync.md",
     "TryGet/Update/Delete Operations": "TryCrud.md",
+    "Upsert": "Upsert.md",
     "Partial Updates": "PartialUpdate.md",
     "Immutable CRUD": "Immutable.md",
+    "CRUD Operations on Multiple Objects": "MultipleCrud.md",
     "Projecting with a Join": "Joins.md",
     "Reading from Views": "Views.md",
+    "Reading a Salar Value from a Row": "ScalarValue.md",
+    "Row Counts": "RowCount.md",
     "Basic Sorting": "Sorting.md",
+    "Paging Results": "Pagination.md",
     "Populate DataTable": "PopulateDataTable.md",
     "Foreign Key to Lookup Table CRUD": {
       "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
       "Object-Based Foreign Key": "ModelWithLookupComplex.md"
-    }
+    },
+    "Basic Stored Procedures": "BasicStoredProc.md"
   }
 }

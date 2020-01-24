@@ -6,14 +6,10 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.ModelWithLookup
 {
-    public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario<EmployeeComplex>
+    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario<EmployeeComplex>
     {
-        readonly string m_ConnectionString;
-
-        public ModelWithLookupComplexScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeComplex employee)
         {
@@ -186,17 +182,6 @@ WHERE EmployeeKey = @EmployeeKey;";
 
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

@@ -40,6 +40,8 @@ Here is the full repository.
 
 ## Entity Framework Core
 
+To make an Entity Framework repository asynchronous, you need to import the `System.Data.Entity` namespace. This exposes the async version of the LINQ extension methods needed. 
+
 For non-cancellable operation, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
 
 For cancellable operations, you may need to explicitly create object arrays for the parameters. Otherwise it may think that the cancellation token is another query parameter.
@@ -54,6 +56,12 @@ Async:
 
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrudAsync\SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
+
+## LINQ to DB
+
+With LINQ to DB, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places.
+
+@snippet cs [..\Recipes.LinqToDB\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
 
 ## LLBLGen Pro
 

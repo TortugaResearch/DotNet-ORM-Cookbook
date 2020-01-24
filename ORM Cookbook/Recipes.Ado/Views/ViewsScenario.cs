@@ -6,14 +6,10 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.Views
 {
-    public class ViewsScenario : IViewsScenario<EmployeeDetail, EmployeeSimple>
+    public class ViewsScenario : ScenarioBase, IViewsScenario<EmployeeDetail, EmployeeSimple>
     {
-        readonly string m_ConnectionString;
-
-        public ViewsScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ViewsScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeSimple employee)
         {
@@ -132,17 +128,6 @@ VALUES
                         return null;
                 }
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

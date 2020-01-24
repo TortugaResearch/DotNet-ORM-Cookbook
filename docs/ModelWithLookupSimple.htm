@@ -31,25 +31,38 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
 </li>
 <li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
 </li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
 </li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
 <li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
@@ -68,6 +81,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
@@ -83,6 +98,8 @@
 </li>
 
 </ul>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -184,6 +201,32 @@
 
     public EmployeeSimple(IDataReader reader)
     {
+        Refresh(reader);
+    }
+
+    public string? CellPhone { get; set; }
+
+    public int EmployeeClassificationKey { get; set; }
+
+    public int EmployeeKey { get; set; }
+
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
+
+    public string? MiddleName { get; set; }
+
+    public string? OfficePhone { get; set; }
+
+    public string? Title { get; set; }
+
+    /// &lt;summary&gt;
+    /// Refreshes the object, replacing all fields with values from the IDataReader.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;reader&quot;&gt;The reader.&lt;/param&gt;
+    /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;reader&lt;/exception&gt;
+    public void Refresh(IDataReader reader)
+    {
         if (reader == null)
             throw new ArgumentNullException(nameof(reader), $&quot;{nameof(reader)} is null.&quot;);
 
@@ -200,26 +243,13 @@
             CellPhone = reader.GetString(reader.GetOrdinal(&quot;CellPhone&quot;));
         EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;));
     }
-
-    public string? CellPhone { get; set; }
-    public int EmployeeClassificationKey { get; set; }
-    public int EmployeeKey { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? MiddleName { get; set; }
-    public string? OfficePhone { get; set; }
-    public string? Title { get; set; }
 }
 </code></pre>
 
-<pre><code class="cs">    public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class ModelWithLookupSimpleScenario : ScenarioBase, IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
-        public ModelWithLookupSimpleScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ModelWithLookupSimpleScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeSimple employee)
         {
@@ -389,17 +419,6 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
                 cmd.ExecuteNonQuery();
             }
         }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
     }
 </code></pre>
 
@@ -467,13 +486,10 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class ModelWithLookupSimpleScenario : ScenarioBase, IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
-        public ModelWithLookupSimpleScenario(string connectionString)
+        public ModelWithLookupSimpleScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeSimple employee)
@@ -565,17 +581,6 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
             using (var con = OpenConnection())
                 con.Execute(sql, employee);
-        }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 </code></pre>
@@ -672,6 +677,8 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 }
 </code></pre>
 
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeEntity&gt;
 {
@@ -781,7 +788,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
 {
     public ModelWithLookupSimpleScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int Create(EmployeeSimple employee)

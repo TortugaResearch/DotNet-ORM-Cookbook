@@ -1,7 +1,7 @@
 ﻿using Recipes.EntityFrameworkCore.Entities;
 using System;
 
-namespace Recipes.EntityFrameworkCore.Immutable
+namespace Recipes.EntityFrameworkCore.Models
 {
     public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
     {

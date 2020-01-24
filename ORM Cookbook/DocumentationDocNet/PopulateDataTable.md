@@ -36,6 +36,10 @@ You can generalize this using a reflection library.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\PopulateDataTable\PopulateDataTableScenario2.cs] PopulateDataTableScenario2
 
+## LINQ to DB
+
+TODO
+
 ## LLBLGen Pro
 
 LLBLGen Pro natively supports `DataTable`.

@@ -34,6 +34,12 @@ To perform a partial update, first fetch a record and then modify it.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
+## LINQ to DB
+
+@snippet cs [..\Recipes.LinqToDB\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
+
+@snippet cs [..\Recipes.LinqToDB\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
+
 ## LLBLGen Pro
 
 To perform a partial update, you can decide to first fetch a record and then modify it, or to update directly without fetching 

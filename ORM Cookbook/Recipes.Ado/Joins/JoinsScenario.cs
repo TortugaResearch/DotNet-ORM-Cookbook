@@ -6,14 +6,10 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.Joins
 {
-    public class JoinsScenario : IJoinsScenario<EmployeeDetail, EmployeeSimple>
+    public class JoinsScenario : ScenarioBase, IJoinsScenario<EmployeeDetail, EmployeeSimple>
     {
-        readonly string m_ConnectionString;
-
-        public JoinsScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public JoinsScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeSimple employee)
         {
@@ -132,17 +128,6 @@ VALUES
                         return null;
                 }
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

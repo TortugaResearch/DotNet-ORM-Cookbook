@@ -82,6 +82,10 @@ The design of Entity Framework Core requires extraneous database calls when perf
 
 @snippet cs [..\Recipes.EntityFrameworkCore\SingleModelCrud\SingleModelCrudScenario2.cs] SingleModelCrudScenario2
 
+## LINQ to DB
+
+@snippet cs [..\Recipes.LinqToDB\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
+
 ## LLBLGen Pro
 LLBLGen Pro is a .NET ORM on the market since 2003 and has seen over 15 major releases since that date. The latest version is v5.6.1, released in October 2019. LLBLGen Pro is a commercial non-poco full ORM which also offers a full plain-SQL API so can be used as a micro ORM as well. 
 
@@ -119,7 +123,7 @@ RepoDb is a hybrid-ORM that supports both *raw-SQLs* and *fluent* calls. When ca
 
 However, by using a *fluent* calls in the repositories (as recommended), it often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
 
-@snippet cs [../Recipes.RepoDb\Entities\EmployeeClassification.cs] EmployeeClassification
+@snippet cs [../Recipes.RepoDb\Models\EmployeeClassification.cs] EmployeeClassification
 
 The repository resembles Dapper, but with far less SQL.
 

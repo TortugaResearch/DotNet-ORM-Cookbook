@@ -6,14 +6,10 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.SingleModelCrud
 {
-    public class SingleModelCrudScenario : ISingleModelCrudScenario<EmployeeClassification>
+    public class SingleModelCrudScenario : ScenarioBase, ISingleModelCrudScenario<EmployeeClassification>
     {
-        readonly string m_ConnectionString;
-
-        public SingleModelCrudScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public SingleModelCrudScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeClassification classification)
         {
@@ -145,17 +141,6 @@ namespace Recipes.Ado.SingleModelCrud
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }

@@ -116,6 +116,22 @@
         <AdhocTemplateSets />
       </LastUsedPreferences>
     </OutputType>
+    <OutputType Value="1">
+      <LastUsedPreferences>
+        <DestinationRootFolder Value="c:\temp" />
+        <FrameworkName Value="DDL SQL" />
+        <LanguageName Value="SQL" />
+        <PlatformName Value="RDBMS" />
+        <PresetName Value="SD.Presets.DDLSQL.CreateScript" />
+        <RootNamespace Value="" />
+        <TemplateGroup Value="Create DDL SQL" />
+        <TemplateBindings>
+          <Binding Name="SD.TemplateBindings.SqlServerSpecific.DDLSQL" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.DDLSQL" />
+        </TemplateBindings>
+        <AdhocTemplateSets />
+      </LastUsedPreferences>
+    </OutputType>
   </CodeGenerationCyclePreferences>
   <OutputSettingValues>
     <SettingValues>
@@ -164,14 +180,31 @@
       </EntityDefinition>
       <EntityDefinition Name="Division" ObjectID="4bd49434-34f6-4040-9db4-cf9f5c0ddcd6">
         <Fields>
+          <Field Name="CreatedByEmployeeKey" Type="int" Precision="10" IsAutoCreated="true" />
+          <Field Name="CreatedDate" Type="datetime" Precision="7" />
+          <Field Name="DivisionId" Type="guid" />
           <Field Name="DivisionKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
           <Field Name="DivisionName" Type="string" MaxLength="30" />
+          <Field Name="FloorSpaceBudget" Type="single" IsOptional="true" Precision="24" />
+          <Field Name="FteBudget" Type="decimal" IsOptional="true" Precision="5" Scale="1" />
+          <Field Name="LastReviewCycle" Type="datetimeoffset" IsOptional="true" />
+          <Field Name="MaxEmployees" Type="int" IsOptional="true" Precision="10" />
+          <Field Name="ModifiedByEmployeeKey" Type="int" Precision="10" IsAutoCreated="true" />
+          <Field Name="ModifiedDate" Type="datetime" Precision="7" />
+          <Field Name="SalaryBudget" Type="decimal" IsOptional="true" Precision="14" Scale="4" />
+          <Field Name="StartTime" Type="timespan" IsOptional="true" />
+          <Field Name="SuppliesBudget" Type="decimal" IsOptional="true" Precision="14" Scale="4" />
         </Fields>
         <UniqueConstraints>
           <UniqueConstraint Name="UxDivisionDivisionName">
             <Field Name="DivisionName" />
           </UniqueConstraint>
         </UniqueConstraints>
+        <OutputSettingValues>
+          <Interfaces>
+            <Interface Name="Recipes.IDivision" />
+          </Interfaces>
+        </OutputSettingValues>
       </EntityDefinition>
       <EntityDefinition Name="Employee" ObjectID="ef153284-8238-407a-9bc1-28ddceb82ae7">
         <Fields>
@@ -186,11 +219,8 @@
         </Fields>
         <OutputSettingValues>
           <Interfaces>
-            <Interface Name="Recipes.ModelWithLookup.IEmployeeSimple" />
-            <Interface Name="Recipes.ModelWithLookup.IEmployeeComplex" />
-            <Interface Name="Recipes.Views.IEmployeeSimple" />
-            <Interface Name="Recipes.Sorting.IEmployeeSimple" />
-            <Interface Name="Recipes.Joins.IEmployeeSimple" />
+            <Interface Name="Recipes.IEmployeeComplex" />
+            <Interface Name="Recipes.IEmployeeSimple" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -208,13 +238,7 @@
         </UniqueConstraints>
         <OutputSettingValues>
           <Interfaces>
-            <Interface Name="Recipes.ModelWithLookup.IEmployeeClassification" />
-            <Interface Name="Recipes.PartialUpdate.IEmployeeClassification" />
-            <Interface Name="Recipes.SingleModelCrud.IEmployeeClassification" />
-            <Interface Name="Recipes.SingleModelCrudAsync.IEmployeeClassification" />
-            <Interface Name="Recipes.TryCrud.IEmployeeClassification" />
-            <Interface Name="Recipes.Views.IEmployeeClassification" />
-            <Interface Name="Recipes.Joins.IEmployeeClassification" />
+            <Interface Name="Recipes.IEmployeeClassification" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -234,8 +258,7 @@
         </Fields>
         <OutputSettingValues>
           <Interfaces>
-            <Interface Name="Recipes.Views.IEmployeeDetail" />
-            <Interface Name="Recipes.Joins.IEmployeeDetail" />
+            <Interface Name="Recipes.IEmployeeDetail" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -249,7 +272,7 @@
         </Fields>
         <OutputSettingValues>
           <Interfaces>
-            <Interface Name="Recipes.ModelWithChildren.IProduct" />
+            <Interface Name="Recipes.IProduct" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -265,7 +288,7 @@
         </UniqueConstraints>
         <OutputSettingValues>
           <Interfaces>
-            <Interface Name="Recipes.ModelWithChildren.IProductLine&lt;ProductEntity&gt;" />
+            <Interface Name="Recipes.IProductLine&lt;ProductEntity&gt;" />
           </Interfaces>
         </OutputSettingValues>
       </EntityDefinition>
@@ -274,6 +297,16 @@
       <NormalRelationship Name="Department.Division-Division.Departments" Start=":Department" End=":Division" StartNavigator="Division" EndNavigator="Departments" Type="4">
         <FieldRelationships>
           <FieldFieldRelationship FkField="DivisionKey" PkField="DivisionKey" />
+        </FieldRelationships>
+      </NormalRelationship>
+      <NormalRelationship Name="Division.CreatedByEmployee-Employee.DivisionsCreatedByEmployee" Start=":Division" End=":Employee" StartNavigator="CreatedByEmployee" EndNavigator="DivisionsCreatedByEmployee" Type="4">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="CreatedByEmployeeKey" PkField="EmployeeKey" />
+        </FieldRelationships>
+      </NormalRelationship>
+      <NormalRelationship Name="Division.ModifiedByEmployee-Employee.DivisionsModifiedByEmployee" Start=":Division" End=":Employee" StartNavigator="ModifiedByEmployee" EndNavigator="DivisionsModifiedByEmployee" Type="4">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="ModifiedByEmployeeKey" PkField="EmployeeKey" />
         </FieldRelationships>
       </NormalRelationship>
       <NormalRelationship Name="Employee.EmployeeClassification-EmployeeClassification.Employees" Start=":Employee" End=":EmployeeClassification" StartNavigator="EmployeeClassification" EndNavigator="Employees" Type="4">
@@ -316,12 +349,29 @@
           <SettingValue Name="8:OutputType" Value="PocoWithLinqQuery" Type="18" />
         </SettingValues>
         <Interfaces>
-          <Interface Name="Recipes.Joins.IEmployeeDetail" />
+          <Interface Name="Recipes.IEmployeeDetail" />
         </Interfaces>
       </OutputSettingValues>
     </TypedListDefinition>
   </TypedListDefinitions>
   <TypedViewDefinitions>
+    <TypedViewDefinition Name="CountEmployeesByClassificationResult" ObjectID="e82886c2-86ed-43a6-b80b-717d86b1c759">
+      <Fields>
+        <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
+        <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
+        <Field Name="EmployeeCount" Type="int" Precision="10" />
+      </Fields>
+      <OutputSettingValues>
+        <Interfaces>
+          <Interface Name="Recipes.IEmployeeClassificationWithCount" />
+        </Interfaces>
+      </OutputSettingValues>
+    </TypedViewDefinition>
+    <TypedViewDefinition Name="CreateEmployeeClassificationResult" ObjectID="2a04a7d8-0fb4-4a95-9525-868fac37fc54">
+      <Fields>
+        <Field Name="EmployeeClassificationKey" Type="int" IsOptional="true" Precision="10" />
+      </Fields>
+    </TypedViewDefinition>
     <TypedViewDefinition Name="DepartmentDetail" ObjectID="72413255-845d-4d05-81ad-5a835eb02ee1">
       <Fields>
         <Field Name="DepartmentKey" Type="int" Precision="10" />
@@ -330,7 +380,35 @@
         <Field Name="DivisionName" Type="string" IsOptional="true" MaxLength="30" />
       </Fields>
     </TypedViewDefinition>
+    <TypedViewDefinition Name="GetEmployeeClassificationsResult" ObjectID="9ba997b5-afc1-4dcb-8472-6ed4a0d34a56">
+      <Fields>
+        <Field Name="EmployeeClassificationKey" Type="int" Precision="10" />
+        <Field Name="EmployeeClassificationName" Type="string" MaxLength="30" />
+        <Field Name="IsEmployee" Type="bool" />
+        <Field Name="IsExempt" Type="bool" />
+      </Fields>
+      <OutputSettingValues>
+        <Interfaces>
+          <Interface Name="Recipes.IEmployeeClassification" />
+        </Interfaces>
+      </OutputSettingValues>
+    </TypedViewDefinition>
   </TypedViewDefinitions>
+  <SPCallDefinitions>
+    <SPCallDefinition Name="CountEmployeesByClassification" ObjectID="d8e3c966-ae52-4bd6-bd18-d1b41906d03e" />
+    <SPCallDefinition Name="CreateEmployeeClassification" ObjectID="8edf7d4d-aee0-4a1c-874d-c4b976b30eb6">
+      <Parameters>
+        <Parameter Name="EmployeeClassificationName" Type="string" MaxLength="30" />
+        <Parameter Name="IsEmployee" Type="bool" />
+        <Parameter Name="IsExempt" Type="bool" />
+      </Parameters>
+    </SPCallDefinition>
+    <SPCallDefinition Name="GetEmployeeClassifications" ObjectID="8c85103e-0da1-4772-9dad-d61a13badb8b">
+      <Parameters>
+        <Parameter Name="EmployeeClassificationKey" Type="int" IsOptional="true" Precision="10" />
+      </Parameters>
+    </SPCallDefinition>
+  </SPCallDefinitions>
   <TargetDatabases>
     <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="2">
       <ConnectionElements>
@@ -347,7 +425,7 @@
       <Catalogs>
         <Catalog Name="ORMCookbook">
           <Schemas>
-            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-14T11:12:49.5463621Z">
+            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-20T12:41:40.4548504Z">
               <Tables>
                 <Table Name="Department">
                   <PkConstraintName Name="PK_Department" />
@@ -366,7 +444,19 @@
                   <PkConstraintName Name="PK_Division" />
                   <Fields>
                     <Field Name="DivisionKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
-                    <Field Name="DivisionName" Ordinal="2" DbType="12" Length="30" />
+                    <Field Name="DivisionId" Ordinal="2" HasDefaultValue="true" DefaultValue="newsequentialid()" DbType="25" />
+                    <Field Name="DivisionName" Ordinal="3" DbType="12" Length="30" />
+                    <Field Name="CreatedDate" Ordinal="4" HasDefaultValue="true" DefaultValue="sysutcdatetime()" DbType="29" Precision="7" />
+                    <Field Name="ModifiedDate" Ordinal="5" HasDefaultValue="true" DefaultValue="sysutcdatetime()" DbType="29" Precision="7" />
+                    <Field Name="CreatedByEmployeeKey" Ordinal="6" DbType="8" Precision="10" />
+                    <Field Name="ModifiedByEmployeeKey" Ordinal="7" DbType="8" Precision="10" />
+                    <Field Name="SalaryBudget" Ordinal="8" IsOptional="true" DbType="5" Precision="14" Scale="4" />
+                    <Field Name="FteBudget" Ordinal="9" IsOptional="true" DbType="13" Precision="5" Scale="1" />
+                    <Field Name="SuppliesBudget" Ordinal="10" IsOptional="true" DbType="5" Precision="14" Scale="4" />
+                    <Field Name="FloorSpaceBudget" Ordinal="11" IsOptional="true" DbType="14" Precision="24" />
+                    <Field Name="MaxEmployees" Ordinal="12" IsOptional="true" DbType="8" Precision="10" />
+                    <Field Name="LastReviewCycle" Ordinal="13" IsOptional="true" DbType="30" />
+                    <Field Name="StartTime" Ordinal="14" IsOptional="true" DbType="31" />
                   </Fields>
                   <UniqueConstraints>
                     <UniqueConstraint Name="UX_Division_DivisionName">
@@ -427,8 +517,50 @@
                   </Fields>
                 </View>
               </Views>
+              <StoredProcedures>
+                <StoredProcedure Name="CountEmployeesByClassification" NumberOfResultsets="1">
+                  <Resultsets>
+                    <Resultset Name="Resultset1">
+                      <Fields>
+                        <Field Name="EmployeeCount" Ordinal="1" IsOptional="true" DbType="8" Precision="10" />
+                        <Field Name="EmployeeClassificationKey" Ordinal="2" DbType="8" Precision="10" />
+                        <Field Name="EmployeeClassificationName" Ordinal="3" DbType="24" Length="30" />
+                      </Fields>
+                    </Resultset>
+                  </Resultsets>
+                </StoredProcedure>
+                <StoredProcedure Name="CreateEmployeeClassification" NumberOfResultsets="1">
+                  <Parameters>
+                    <Parameter Name="@EmployeeClassificationName" Direction="1" Ordinal="1" DbType="24" Length="30" />
+                    <Parameter Name="@IsExempt" Direction="1" Ordinal="2" DbType="2" />
+                    <Parameter Name="@IsEmployee" Direction="1" Ordinal="3" DbType="2" />
+                  </Parameters>
+                  <Resultsets>
+                    <Resultset Name="Resultset1">
+                      <Fields>
+                        <Field Name="EmployeeClassificationKey" Ordinal="1" IsOptional="true" DbType="8" Precision="10" />
+                      </Fields>
+                    </Resultset>
+                  </Resultsets>
+                </StoredProcedure>
+                <StoredProcedure Name="GetEmployeeClassifications" NumberOfResultsets="1">
+                  <Parameters>
+                    <Parameter Name="@EmployeeClassificationKey" Direction="1" Ordinal="1" DbType="8" Precision="10" />
+                  </Parameters>
+                  <Resultsets>
+                    <Resultset Name="Resultset1">
+                      <Fields>
+                        <Field Name="EmployeeClassificationKey" Ordinal="1" DbType="8" Precision="10" />
+                        <Field Name="EmployeeClassificationName" Ordinal="2" DbType="24" Length="30" />
+                        <Field Name="IsExempt" Ordinal="3" DbType="2" />
+                        <Field Name="IsEmployee" Ordinal="4" DbType="2" />
+                      </Fields>
+                    </Resultset>
+                  </Resultsets>
+                </StoredProcedure>
+              </StoredProcedures>
             </Schema>
-            <Schema Name="Production" SyncSource="2" LastSyncWithDatabase="2020-01-14T11:12:49.6597875Z">
+            <Schema Name="Production" SyncSource="2" LastSyncWithDatabase="2020-01-20T12:41:40.4803899Z">
               <Tables>
                 <Table Name="Product">
                   <PkConstraintName Name="PK_Product" />
@@ -461,6 +593,16 @@
                 <FieldPair PkField="HR:Division:DivisionKey" FkField="HR:Department:DivisionKey" />
               </FieldPairs>
             </ForeignKeyConstraint>
+            <ForeignKeyConstraint Name="HR:Division:FK_Division_CreatedByEmployeeKey">
+              <FieldPairs>
+                <FieldPair PkField="HR:Employee:EmployeeKey" FkField="HR:Division:CreatedByEmployeeKey" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
+            <ForeignKeyConstraint Name="HR:Division:FK_Division_ModifiedByEmployeeKey">
+              <FieldPairs>
+                <FieldPair PkField="HR:Employee:EmployeeKey" FkField="HR:Division:ModifiedByEmployeeKey" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
             <ForeignKeyConstraint Name="HR:Employee:FK_Employee_EmployeeClassificationKey">
               <FieldPairs>
                 <FieldPair PkField="HR:EmployeeClassification:EmployeeClassificationKey" FkField="HR:Employee:EmployeeClassificationKey" />
@@ -488,8 +630,20 @@
         </EntityMapping>
         <EntityMapping EntityName=":Division" TargetName="ORMCookbook:HR:Division">
           <FieldMappings>
+            <FieldMapping FieldName="CreatedByEmployeeKey" TargetFieldName="CreatedByEmployeeKey" />
+            <FieldMapping FieldName="CreatedDate" TargetFieldName="CreatedDate" />
+            <FieldMapping FieldName="DivisionId" TargetFieldName="DivisionId" />
             <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" SequenceToUse="SCOPE_IDENTITY()" />
             <FieldMapping FieldName="DivisionName" TargetFieldName="DivisionName" />
+            <FieldMapping FieldName="FloorSpaceBudget" TargetFieldName="FloorSpaceBudget" />
+            <FieldMapping FieldName="FteBudget" TargetFieldName="FteBudget" />
+            <FieldMapping FieldName="LastReviewCycle" TargetFieldName="LastReviewCycle" />
+            <FieldMapping FieldName="MaxEmployees" TargetFieldName="MaxEmployees" />
+            <FieldMapping FieldName="ModifiedByEmployeeKey" TargetFieldName="ModifiedByEmployeeKey" />
+            <FieldMapping FieldName="ModifiedDate" TargetFieldName="ModifiedDate" />
+            <FieldMapping FieldName="SalaryBudget" TargetFieldName="SalaryBudget" />
+            <FieldMapping FieldName="StartTime" TargetFieldName="StartTime" />
+            <FieldMapping FieldName="SuppliesBudget" TargetFieldName="SuppliesBudget" />
           </FieldMappings>
         </EntityMapping>
         <EntityMapping EntityName=":Employee" TargetName="ORMCookbook:HR:Employee">
@@ -544,6 +698,18 @@
         </EntityMapping>
       </EntityMappings>
       <TypedViewMappings>
+        <TypedViewMapping TypedViewName=":CountEmployeesByClassificationResult" TargetName="ORMCookbook:HR:CountEmployeesByClassification:Resultset1">
+          <FieldMappings>
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
+            <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="EmployeeClassificationName" />
+            <FieldMapping FieldName="EmployeeCount" TargetFieldName="EmployeeCount" />
+          </FieldMappings>
+        </TypedViewMapping>
+        <TypedViewMapping TypedViewName=":CreateEmployeeClassificationResult" TargetName="ORMCookbook:HR:CreateEmployeeClassification:Resultset1">
+          <FieldMappings>
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
+          </FieldMappings>
+        </TypedViewMapping>
         <TypedViewMapping TypedViewName=":DepartmentDetail" TargetName="ORMCookbook:HR:DepartmentDetail">
           <FieldMappings>
             <FieldMapping FieldName="DepartmentKey" TargetFieldName="DepartmentKey" />
@@ -552,8 +718,32 @@
             <FieldMapping FieldName="DivisionName" TargetFieldName="DivisionName" />
           </FieldMappings>
         </TypedViewMapping>
+        <TypedViewMapping TypedViewName=":GetEmployeeClassificationsResult" TargetName="ORMCookbook:HR:GetEmployeeClassifications:Resultset1">
+          <FieldMappings>
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="EmployeeClassificationKey" />
+            <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="EmployeeClassificationName" />
+            <FieldMapping FieldName="IsEmployee" TargetFieldName="IsEmployee" />
+            <FieldMapping FieldName="IsExempt" TargetFieldName="IsExempt" />
+          </FieldMappings>
+        </TypedViewMapping>
       </TypedViewMappings>
-      <SPCallMappings />
+      <SPCallMappings>
+        <SPCallMapping SPCallName=":CountEmployeesByClassification" TargetName="ORMCookbook:HR:CountEmployeesByClassification">
+          <FieldMappings />
+        </SPCallMapping>
+        <SPCallMapping SPCallName=":CreateEmployeeClassification" TargetName="ORMCookbook:HR:CreateEmployeeClassification">
+          <FieldMappings>
+            <FieldMapping FieldName="EmployeeClassificationName" TargetFieldName="@EmployeeClassificationName" />
+            <FieldMapping FieldName="IsEmployee" TargetFieldName="@IsEmployee" />
+            <FieldMapping FieldName="IsExempt" TargetFieldName="@IsExempt" />
+          </FieldMappings>
+        </SPCallMapping>
+        <SPCallMapping SPCallName=":GetEmployeeClassifications" TargetName="ORMCookbook:HR:GetEmployeeClassifications">
+          <FieldMappings>
+            <FieldMapping FieldName="EmployeeClassificationKey" TargetFieldName="@EmployeeClassificationKey" />
+          </FieldMappings>
+        </SPCallMapping>
+      </SPCallMappings>
       <TvfCallMappings />
       <TypeConversionDefinitions />
     </MappingStore>

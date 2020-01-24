@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Recipes.EntityFrameworkCore.Models;
 using Recipes.Immutable;
 using System;
 

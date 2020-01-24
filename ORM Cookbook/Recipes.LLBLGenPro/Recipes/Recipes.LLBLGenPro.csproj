@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Recipes.Interfaces\Recipes.Interfaces.csproj" />
     <ProjectReference Include="..\..\Recipes\Recipes.csproj" />
+    <ProjectReference Include="..\..\Recipes.Interfaces\Recipes.Interfaces.csproj" />
     <ProjectReference Include="..\DatabaseGeneric\LLBLGenPro.OrmCookbook.csproj" />
     <ProjectReference Include="..\DatabaseSpecific\LLBLGenPro.OrmCookbookDBSpecific.csproj" />
   </ItemGroup>

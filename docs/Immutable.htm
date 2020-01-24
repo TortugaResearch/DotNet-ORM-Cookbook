@@ -31,15 +31,20 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
 </li>
 <li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
 </li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
@@ -55,6 +60,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
@@ -66,16 +73,26 @@
 
 
 </ul>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
 </li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
 <li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
 <span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -155,14 +172,10 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Since ADO doesn't directly interact with models, no changes are needed for immutable objects other than to call a constructor instead of setting individual properties.</p>
-<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : ScenarioBase, IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
-    readonly string m_ConnectionString;
-
-    public ImmutableScenario(string connectionString)
-    {
-        m_ConnectionString = connectionString;
-    }
+    public ImmutableScenario(string connectionString) : base(connectionString)
+    { }
 
     public int Create(ReadOnlyEmployeeClassification classification)
     {
@@ -303,17 +316,6 @@
             cmd.ExecuteNonQuery();
         }
     }
-
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    SqlConnection OpenConnection()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        con.Open();
-        return con;
-    }
 }
 </code></pre>
 
@@ -374,13 +376,10 @@
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Dapper natively supports working with immutable objects, no conversions are needed.</p>
 <p>No special handling is needed to call a non-default constructor.</p>
-<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : ScenarioBase, IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
-    readonly string m_ConnectionString;
-
-    public ImmutableScenario(string connectionString)
+    public ImmutableScenario(string connectionString) : base(connectionString)
     {
-        m_ConnectionString = connectionString;
     }
 
     public int Create(ReadOnlyEmployeeClassification classification)
@@ -454,17 +453,6 @@
 
         using (var con = OpenConnection())
             con.Execute(sql, classification);
-    }
-
-    /// &lt;summary&gt;
-    /// Opens a database connection.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-    SqlConnection OpenConnection()
-    {
-        var con = new SqlConnection(m_ConnectionString);
-        con.Open();
-        return con;
     }
 }
 </code></pre>
@@ -600,6 +588,113 @@
                 temp.IsExempt = classification.IsExempt;
                 context.SaveChanges();
             }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LINQ to DB does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
+<pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassification entity)
+{
+    if (entity == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity)} is null.&quot;);
+    if (entity.EmployeeClassificationName == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.EmployeeClassificationName)} is null.&quot;);
+
+    EmployeeClassificationKey = entity.EmployeeClassificationKey;
+    EmployeeClassificationName = entity.EmployeeClassificationName;
+    IsExempt = entity.IsExempt;
+    IsEmployee = entity.IsEmployee;
+}
+</code></pre>
+
+<pre><code class="cs">public EmployeeClassification ToEntity()
+{
+    return new EmployeeClassification()
+    {
+        EmployeeClassificationKey = EmployeeClassificationKey,
+        EmployeeClassificationName = EmployeeClassificationName,
+        IsExempt = IsExempt,
+        IsEmployee = IsEmployee
+    };
+}
+</code></pre>
+
+<p>These conversions are used in the repository before write operations and after read operations.</p>
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+{
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(classification.ToEntity());
+        }
+    }
+
+    public virtual void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            db.EmployeeClassification
+                .Where(d =&gt; d.EmployeeClassificationKey == classification.EmployeeClassificationKey)
+                .Delete();
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            db.EmployeeClassification
+                .Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey)
+                .Delete();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var db = new OrmCookbook())
+        {
+            var query = from ec in db.EmployeeClassification
+                        where ec.EmployeeClassificationName == employeeClassificationName
+                        select ec;
+            return query.Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+        {
+            return db.EmployeeClassification.Where(d =&gt; d.EmployeeClassificationKey == employeeClassificationKey)
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).Single();
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            db.Update(classification.ToEntity());
         }
     }
 }
@@ -852,7 +947,6 @@ public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
         IsEmployee = isEmployee;
     }
 
-    [Primary]
     public int EmployeeClassificationKey { get; }
 
     public string EmployeeClassificationName { get; }
@@ -880,7 +974,6 @@ public class EmployeeClassification : IEmployeeClassification
         IsEmployee = classification.IsEmployee;
     }
 
-    [Primary]
     public int EmployeeClassificationKey { get; set; }
 
     public string? EmployeeClassificationName { get; set; }
@@ -897,11 +990,11 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <p>Below is the <em>immutable repository</em>.</p>
-<pre><code class="cs">public class ImmutableScenario : DbRepository&lt;SqlConnection&gt;,
+<pre><code class="cs">public class ImmutableScenario : BaseRepository&lt;EmployeeClassification, SqlConnection&gt;,
     IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     public ImmutableScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int Create(ReadOnlyEmployeeClassification classification)
@@ -909,7 +1002,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        return Insert&lt;EmployeeClassification, int&gt;(new EmployeeClassification(classification));
+        return Insert&lt;int&gt;(new EmployeeClassification(classification));
     }
 
     public void Delete(ReadOnlyEmployeeClassification classification)
@@ -922,26 +1015,26 @@ public class EmployeeClassification : IEmployeeClassification
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        Delete&lt;EmployeeClassification&gt;(employeeClassificationKey);
+        Delete(employeeClassificationKey);
     }
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
-        return Query&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
+        return Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
             .FirstOrDefault()?
             .ToImmutable();
     }
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
-        return QueryAll&lt;EmployeeClassification&gt;()
+        return QueryAll()
             .Select(e =&gt; e.ToImmutable())
             .ToImmutableList();
     }
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return Query&lt;EmployeeClassification&gt;(employeeClassificationKey)
+        return Query(employeeClassificationKey)
             .FirstOrDefault()?
             .ToImmutable();
     }
@@ -951,7 +1044,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        base.Update&lt;EmployeeClassification&gt;(new EmployeeClassification(classification));
+        base.Update(new EmployeeClassification(classification));
     }
 }
 </code></pre>

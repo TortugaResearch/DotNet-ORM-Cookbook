@@ -31,19 +31,26 @@
 <li class="tocentry"><a href="index.htm">Home</a>
 </li>
 
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
 </li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Childern CRUD</a>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
 </li>
 <li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
 </li>
 <li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
 </li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
@@ -61,6 +68,8 @@
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
 <li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
@@ -72,12 +81,20 @@
 
 
 </ul>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
 <li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
 <li class="tocentry">
 <span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -123,7 +140,7 @@
     IList&lt;TEmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey);
 
     /// &lt;summary&gt;
-    /// Gets an EmployeeDetail row by its name. Assume the name is not unique.
+    /// Gets a collection of EmployeeDetail rows by their name. Assume the name is not unique.
     /// &lt;/summary&gt;
     IList&lt;TEmployeeDetail&gt; FindByLastName(string lastName);
 
@@ -165,14 +182,10 @@ FROM HR.Employee e
         ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey;
 
 </pre><h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+<pre><code class="cs">    public class ViewsScenario : ScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
-        public ViewsScenario(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        public ViewsScenario(string connectionString) : base(connectionString)
+        { }
 
         public int Create(EmployeeSimple employee)
         {
@@ -292,17 +305,6 @@ VALUES
                 }
             }
         }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
-        }
     }
 </code></pre>
 
@@ -354,13 +356,10 @@ VALUES
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+<pre><code class="cs">    public class ViewsScenario : ScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
     {
-        readonly string m_ConnectionString;
-
-        public ViewsScenario(string connectionString)
+        public ViewsScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeSimple employee)
@@ -416,17 +415,6 @@ VALUES
 
             using (var con = OpenConnection())
                 return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
-        }
-
-        /// &lt;summary&gt;
-        /// Opens a database connection.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;Caller must dispose the connection.&lt;/remarks&gt;
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 </code></pre>
@@ -487,6 +475,52 @@ VALUES
     {
         using (var context = CreateDbContext())
             return context.EmployeeClassification.Find(employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(employee);
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeDetail.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeDetail.ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeDetail.Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeClassification.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).SingleOrDefault();
     }
 }
 </code></pre>
@@ -649,7 +683,48 @@ POCOs however these aren't able to participate in entity relationships.</p>
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ViewsScenario : DbRepository&lt;SqlConnection&gt;,
+    IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public ViewsScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return Insert&lt;EmployeeSimple, int&gt;(employee);
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        return Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeClassificationKey == employeeClassificationKey).AsList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        return Query&lt;EmployeeDetail&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        return QueryAll&lt;EmployeeDetail&gt;().AsList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        return Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeKey == employeeKey).FirstOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt;
 {

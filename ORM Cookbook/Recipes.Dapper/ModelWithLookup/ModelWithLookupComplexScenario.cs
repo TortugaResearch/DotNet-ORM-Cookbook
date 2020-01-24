@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.ModelWithLookup;
 using System;
@@ -8,13 +7,10 @@ using System.Linq;
 
 namespace Recipes.Dapper.ModelWithLookup
 {
-    public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario<EmployeeComplex>
+    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario<EmployeeComplex>
     {
-        readonly string m_ConnectionString;
-
-        public ModelWithLookupComplexScenario(string connectionString)
+        public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
         {
-            m_ConnectionString = connectionString;
         }
 
         public int Create(EmployeeComplex employee)
@@ -121,17 +117,6 @@ WHERE EmployeeKey = @EmployeeKey;";
 
             using (var con = OpenConnection())
                 con.Execute(sql, employee);
-        }
-
-        /// <summary>
-        /// Opens a database connection.
-        /// </summary>
-        /// <remarks>Caller must dispose the connection.</remarks>
-        SqlConnection OpenConnection()
-        {
-            var con = new SqlConnection(m_ConnectionString);
-            con.Open();
-            return con;
         }
     }
 }
