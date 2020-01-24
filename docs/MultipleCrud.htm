@@ -672,11 +672,11 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class MultipleCrudScenario : DbRepository&lt;SqlConnection&gt;,
+<pre><code class="cs">public class MultipleCrudScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
     IMultipleCrudScenario&lt;EmployeeSimple&gt;
 {
     public MultipleCrudScenario(string connectionString)
-        : base(connectionString, ORepoDb.Enumerations.ConnectionPersistency.Instance)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
@@ -685,7 +685,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
         var keys = employees.Select(e =&gt; e.EmployeeKey).AsList();
-        Delete&lt;EmployeeSimple&gt;(e =&gt; keys.Contains(e.EmployeeKey));
+        Delete(e =&gt; keys.Contains(e.EmployeeKey));
     }
 
     public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
@@ -693,12 +693,12 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employeeKeys == null || employeeKeys.Count == 0)
             throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
 
-        Delete&lt;EmployeeSimple&gt;(e =&gt; employeeKeys.Contains(e.EmployeeKey));
+        Delete(e =&gt; employeeKeys.Contains(e.EmployeeKey));
     }
 
     public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
     {
-        return Query&lt;EmployeeSimple&gt;(e =&gt; e.LastName == lastName).AsList();
+        return Query(e =&gt; e.LastName == lastName).AsList();
     }
 
     public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)

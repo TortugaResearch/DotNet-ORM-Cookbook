@@ -371,20 +371,21 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class RowCountScenario : DbRepository&lt;SqlConnection&gt;,
+<pre><code class="cs">public class RowCountScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
     IRowCountScenario&lt;EmployeeSimple&gt;
 {
-    public RowCountScenario(string connectionString) : base(connectionString)
+    public RowCountScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int EmployeeCount(string lastName)
     {
-        return (int)Count&lt;EmployeeSimple&gt;(e =&gt; e.LastName == lastName);
+        return (int)Count(e =&gt; e.LastName == lastName);
     }
 
     public int EmployeeCount()
     {
-        return (int)CountAll&lt;EmployeeSimple&gt;();
+        return (int)CountAll();
     }
 
     public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)

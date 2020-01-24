@@ -956,7 +956,7 @@ public partial class EmployeeComplex : IEmployeeComplex
     IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
 {
     public ModelWithLookupComplexScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int Create(EmployeeComplex employee)
