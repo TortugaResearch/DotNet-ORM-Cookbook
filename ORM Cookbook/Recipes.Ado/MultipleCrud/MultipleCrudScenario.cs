@@ -75,6 +75,7 @@ VALUES ");
             }
             sql.AppendLine(";");
 
+            //No transaction is needed because a single SQL statement is used.
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql.ToString(), con))
             {
@@ -110,6 +111,7 @@ VALUES ");
             }
             sql.AppendLine(";");
 
+            //No transaction is needed because a single SQL statement is used.
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql.ToString(), con))
             {
@@ -149,6 +151,7 @@ VALUES ");
             }
             sql.AppendLine(";");
 
+            //No transaction is needed because a single SQL statement is used.
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql.ToString(), con))
             {
@@ -187,6 +190,7 @@ OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.L
 VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i});");
             }
 
+            //A transaction is needed because this example uses multiple SQL statements.
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction())
             {
@@ -224,8 +228,6 @@ VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone
 
             var sql = new StringBuilder();
 
-            //In order to ensure the right objects are refreshed, each object is inserted separately.
-            //If we returned them all at the same time, they might not come back in the same order.
             for (var i = 0; i < employees.Count; i++)
             {
                 sql.AppendLine($@"UPDATE HR.Employee
@@ -239,6 +241,7 @@ SET FirstName = @FirstName_{i},
 WHERE EmployeeKey = @EmployeeKey_{i};");
             }
 
+            //A transaction is needed because this example uses multiple SQL statements.
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction())
             {
