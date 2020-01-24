@@ -111,9 +111,11 @@ namespace Recipes.NHibernate.ModelWithChildren
             productLine.ApplyKeys();
 
             using (var session = m_SessionFactory.OpenSession())
+            using (var trans = session.BeginTransaction())
             {
                 session.Update(productLine);
                 session.Flush();
+                trans.Commit();
             }
         }
 
@@ -123,9 +125,11 @@ namespace Recipes.NHibernate.ModelWithChildren
                 throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
 
             using (var session = m_SessionFactory.OpenSession())
+            using (var trans = session.BeginTransaction())
             {
                 session.Merge(product);
                 session.Flush();
+                trans.Commit();
             }
         }
 

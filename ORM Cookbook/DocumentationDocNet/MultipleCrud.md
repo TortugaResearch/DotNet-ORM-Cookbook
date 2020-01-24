@@ -18,7 +18,7 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 
 ## Dapper
 
-TODO
+@snippet cs [..\Recipes.Dapper\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## Entity Framework Core
 
