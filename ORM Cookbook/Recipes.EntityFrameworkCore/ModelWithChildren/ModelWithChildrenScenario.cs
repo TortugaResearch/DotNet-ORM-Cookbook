@@ -21,6 +21,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
+            //A transaction is automatically created when `SaveChanges()` is called.
             using (var context = CreateDbContext())
             {
                 context.ProductLine.Add(productLine);
@@ -108,6 +109,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
 
         public void UpdateGraph(ProductLine productLine)
         {
+            //A transaction is automatically created when `SaveChanges()` is called.
             using (var context = CreateDbContext())
             {
                 context.Entry(productLine).State = EntityState.Modified;
@@ -127,7 +129,9 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
+            //An explicit transaction is needed reading the rows to delete happens outside of the `SaveChanges` call.
             using (var context = CreateDbContext())
+            using (var transaction = context.Database.BeginTransaction())
             {
                 var validKeys = productLine.Product.Select(x => x.ProductKey).ToList();
 
@@ -145,11 +149,14 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
                     else
                         context.Entry(item).State = EntityState.Modified;
                 context.SaveChanges();
+
+                transaction.Commit();
             }
         }
 
         public void UpdateGraphWithDeletes(ProductLine productLine, IList<int> productKeysToRemove)
         {
+            //A transaction is automatically created when `SaveChanges()` is called.
             using (var context = CreateDbContext())
             {
                 context.Entry(productLine).State = EntityState.Modified;

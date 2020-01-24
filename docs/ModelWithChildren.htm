@@ -996,6 +996,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
+        //A transaction is automatically created when `SaveChanges()` is called.
         using (var context = CreateDbContext())
         {
             context.ProductLine.Add(productLine);
@@ -1083,6 +1084,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
     public void UpdateGraph(ProductLine productLine)
     {
+        //A transaction is automatically created when `SaveChanges()` is called.
         using (var context = CreateDbContext())
         {
             context.Entry(productLine).State = EntityState.Modified;
@@ -1102,7 +1104,9 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
+        //An explicit transaction is needed reading the rows to delete happens outside of the `SaveChanges` call.
         using (var context = CreateDbContext())
+        using (var transaction = context.Database.BeginTransaction())
         {
             var validKeys = productLine.Product.Select(x =&gt; x.ProductKey).ToList();
 
@@ -1120,11 +1124,14 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
                 else
                     context.Entry(item).State = EntityState.Modified;
             context.SaveChanges();
+
+            transaction.Commit();
         }
     }
 
     public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
     {
+        //A transaction is automatically created when `SaveChanges()` is called.
         using (var context = CreateDbContext())
         {
             context.Entry(productLine).State = EntityState.Modified;
@@ -1449,9 +1456,11 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
         productLine.ApplyKeys();
 
         using (var session = m_SessionFactory.OpenSession())
+        using (var trans = session.BeginTransaction())
         {
             session.Update(productLine);
             session.Flush();
+            trans.Commit();
         }
     }
 
@@ -1461,9 +1470,11 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
             throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
 
         using (var session = m_SessionFactory.OpenSession())
+        using (var trans = session.BeginTransaction())
         {
             session.Merge(product);
             session.Flush();
+            trans.Commit();
         }
     }
 
