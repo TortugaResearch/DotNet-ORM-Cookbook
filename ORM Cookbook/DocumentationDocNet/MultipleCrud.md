@@ -22,7 +22,7 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 
 ## Entity Framework Core
 
-TODO
+@snippet cs [..\Recipes.EntityFrameworkCore\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## LINQ to DB
 
