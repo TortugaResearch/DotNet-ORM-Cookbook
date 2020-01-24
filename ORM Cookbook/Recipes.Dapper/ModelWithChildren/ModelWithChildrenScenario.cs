@@ -22,12 +22,15 @@ namespace Recipes.Dapper.ModelWithChildren
             const string sql = "INSERT INTO Production.ProductLine ( ProductLineName ) OUTPUT Inserted.ProductLineKey VALUES (@ProductLineName);";
 
             using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
             {
-                productLine.ProductLineKey = (int)con.ExecuteScalar(sql, productLine);
+                productLine.ProductLineKey = (int)con.ExecuteScalar(sql, productLine, transaction: trans);
                 productLine.ApplyKeys();
 
                 foreach (var item in productLine.Products)
-                    InsertProduct(con, item);
+                    InsertProduct(con, trans, item);
+
+                trans.Commit();
             }
             return productLine.ProductLineKey;
         }
@@ -131,7 +134,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
             using (var con = OpenConnection())
-                UpdateProductLine(con, productLine);
+                UpdateProductLine(con, null, productLine);
         }
 
         public void Update(Product product)
@@ -140,7 +143,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
                 throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
 
             using (var con = OpenConnection())
-                UpdateProduct(con, product);
+                UpdateProduct(con, null, product);
         }
 
         public void UpdateGraph(ProductLine productLine)
@@ -151,15 +154,17 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             productLine.ApplyKeys();
 
             using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
             {
-                UpdateProductLine(con, productLine);
+                UpdateProductLine(con, trans, productLine);
                 foreach (var item in productLine.Products)
                 {
                     if (item.ProductKey == 0)
-                        InsertProduct(con, item);
+                        InsertProduct(con, trans, item);
                     else
-                        UpdateProduct(con, item);
+                        UpdateProduct(con, trans, item);
                 }
+                trans.Commit();
             }
         }
 
@@ -171,24 +176,27 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             productLine.ApplyKeys();
 
             using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
             {
                 //Find products to remove
-                var originalProductKeys = GetProductKeys(con, productLine.ProductLineKey);
+                var originalProductKeys = GetProductKeys(con, trans, productLine.ProductLineKey);
                 foreach (var item in productLine.Products)
                     originalProductKeys.Remove(item.ProductKey);
 
-                UpdateProductLine(con, productLine);
+                UpdateProductLine(con, trans, productLine);
                 foreach (var item in productLine.Products)
                 {
                     if (item.ProductKey == 0)
-                        InsertProduct(con, item);
+                        InsertProduct(con, trans, item);
                     else
-                        UpdateProduct(con, item);
+                        UpdateProduct(con, trans, item);
                 }
 
                 //Remove products
                 foreach (var key in originalProductKeys)
-                    DeleteProduct(con, key);
+                    DeleteProduct(con, trans, key);
+
+                trans.Commit();
             }
         }
 
@@ -200,62 +208,59 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             productLine.ApplyKeys();
 
             using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
             {
-                UpdateProductLine(con, productLine);
+                UpdateProductLine(con, trans, productLine);
 
                 foreach (var item in productLine.Products)
                 {
                     if (item.ProductKey == 0)
-                        InsertProduct(con, item);
+                        InsertProduct(con, trans, item);
                     else
-                        UpdateProduct(con, item);
+                        UpdateProduct(con, trans, item);
                 }
 
                 if (productKeysToRemove != null)
                     foreach (var key in productKeysToRemove)
-                        DeleteProduct(con, key);
+                        DeleteProduct(con, trans, key);
+
+                trans.Commit();
             }
         }
 
-        static void DeleteProduct(SqlConnection con, int productKey)
+        static void DeleteProduct(SqlConnection con, SqlTransaction trans, int productKey)
         {
             const string sql = "DELETE Production.Product WHERE ProductKey = @ProductKey;";
 
-            con.Execute(sql, new { productKey });
+            con.Execute(sql, new { productKey }, transaction: trans);
         }
 
-        static HashSet<int> GetProductKeys(SqlConnection con, int productLineKey)
+        static HashSet<int> GetProductKeys(SqlConnection con, SqlTransaction trans, int productLineKey)
         {
             const string sql = "SELECT p.ProductKey FROM Production.Product p WHERE p.ProductLineKey = @ProductLineKey";
 
-            var results = new HashSet<int>();
-
-            using (var reader = con.ExecuteReader(sql, new { productLineKey }))
-                while (reader.Read())
-                    results.Add(reader.GetInt32(0));
-
-            return results;
+            return con.Query<int>(sql, new { productLineKey }, transaction: trans).ToHashSet();
         }
 
-        static void InsertProduct(SqlConnection con, Product product)
+        static void InsertProduct(SqlConnection con, SqlTransaction trans, Product product)
         {
             const string sql = "INSERT INTO Production.Product ( ProductName, ProductLineKey, ShippingWeight, ProductWeight ) OUTPUT Inserted.ProductKey VALUES ( @ProductName, @ProductLineKey, @ShippingWeight, @ProductWeight )";
 
-            product.ProductKey = con.ExecuteScalar<int>(sql, product);
+            product.ProductKey = con.ExecuteScalar<int>(sql, product, transaction: trans);
         }
 
-        static void UpdateProduct(SqlConnection con, Product product)
+        static void UpdateProduct(SqlConnection con, SqlTransaction? trans, Product product)
         {
             const string sql = "UPDATE Production.Product SET ProductName = @ProductName, ProductLineKey = @ProductLineKey, ShippingWeight = @ShippingWeight, ProductWeight = @ProductWeight WHERE ProductKey = @ProductKey;";
 
-            con.Execute(sql, product);
+            con.Execute(sql, product, transaction: trans);
         }
 
-        static void UpdateProductLine(SqlConnection con, ProductLine productLine)
+        static void UpdateProductLine(SqlConnection con, SqlTransaction? trans, ProductLine productLine)
         {
             const string sql = "UPDATE Production.ProductLine SET ProductLineName = @ProductLineName WHERE ProductLineKey = @ProductLineKey;";
 
-            con.Execute(sql, productLine);
+            con.Execute(sql, productLine, transaction: trans);
         }
     }
 }
