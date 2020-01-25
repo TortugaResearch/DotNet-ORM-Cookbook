@@ -161,6 +161,12 @@
       "breadcrumbs": "Home / Basic Stored Procedures",
       "keywords": "2 a additional Ado ADO any as basic Basic BasicStoredProc BasicStoredProcScenario be but call can Chain class collection configuration Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DB DbContext demonstrate entity Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications HasNoKey how HR IBasicStoredProcScenario if in interpreted is just like LINQ LinqToDB LLBLGen LLBLGenPro modelBuilder Multiple needed NET NHibernate of or OrmCookbookDB other Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb requirements results resultset Resultsets return Return returned row rows s scalar Scenario scenarios ServiceStack should single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true two use value values will with",
       "title": "Basic Stored Procedures"
+    },
+    {
+      "location": "Transactions.htm",
+      "breadcrumbs": "Home / Working with Transactions",
+      "keywords": "1 a Ado ADO after against all an and are associated automatically be BeginTransaction behavior call calling can capabilities Chain commands commit connection Core create cs Dapper database DataSource DB defined demonstrate disposed EF Entity EntityFrameworkCore explcitly explicitly extension Framework get holds how in is isolation ITransactionsScenario level LINQ LinqToDB LLBLGen LLBLGenPro method Microsoft must need NET NHibernate normal object of open operations or original override Pro Prototype provided Recipes RelationalDatabaseFacadeExtensions RepoDb rollback SaveChanges Scenario scenarios ServiceStack setting snippet TEmployeeClassification the then there These this thus to To TODO Tortuga transaction TransactionalDataSource Transactions TransactionsScenario Unlike use when When While will with Working you",
+      "title": "Working with Transactions"
     }
   ]
 }
