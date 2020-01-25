@@ -17,24 +17,24 @@ namespace Recipes.RowCount
         [TestMethod]
         public void EmployeeCount()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
-            var count = repostory.EmployeeCount();
+            repository.InsertBatch(originals);
+            var count = repository.EmployeeCount();
             Assert.AreNotEqual(0, count);
         }
 
         [TestMethod]
         public void EmployeeCountFiltered()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
-            var count = repostory.EmployeeCount(batchKey);
+            repository.InsertBatch(originals);
+            var count = repository.EmployeeCount(batchKey);
             Assert.AreEqual(25, count);
         }
 

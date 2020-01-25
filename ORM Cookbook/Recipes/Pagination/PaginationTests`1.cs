@@ -18,11 +18,11 @@ namespace Recipes.Pagination
         [TestMethod]
         public void PaginateWithPageSize_Overrun()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
+            repository.InsertBatch(originals);
 
             var count = 0;
             var page = 0;
@@ -31,7 +31,7 @@ namespace Recipes.Pagination
 
             do
             {
-                lastSet = repostory.PaginateWithPageSize(batchKey, page, pageSize);
+                lastSet = repository.PaginateWithPageSize(batchKey, page, pageSize);
                 count += lastSet.Count;
                 page += 1;
             } while (lastSet.Count > 0);
@@ -43,11 +43,11 @@ namespace Recipes.Pagination
         [TestMethod]
         public void PaginateWithPageSize_RowCount()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
+            repository.InsertBatch(originals);
 
             var expectedCount = 25; //pretend you asked the database for this number
             var count = 0;
@@ -57,7 +57,7 @@ namespace Recipes.Pagination
 
             do
             {
-                lastSet = repostory.PaginateWithPageSize(batchKey, page, pageSize);
+                lastSet = repository.PaginateWithPageSize(batchKey, page, pageSize);
                 count += lastSet.Count;
                 page += 1;
             } while (count < expectedCount);
@@ -69,11 +69,11 @@ namespace Recipes.Pagination
         [TestMethod]
         public void PaginateWithSkipPast_Overrun()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
+            repository.InsertBatch(originals);
 
             var count = 0;
             var page = 0;
@@ -83,7 +83,7 @@ namespace Recipes.Pagination
             do
             {
                 var skipPast = lastSet?.Last();
-                lastSet = repostory.PaginateWithSkipPast(batchKey, skipPast, take);
+                lastSet = repository.PaginateWithSkipPast(batchKey, skipPast, take);
                 count += lastSet.Count;
                 page += 1;
             } while (lastSet.Count > 0);
@@ -95,11 +95,11 @@ namespace Recipes.Pagination
         [TestMethod]
         public void PaginateWithSkipPast_RowCount()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
+            repository.InsertBatch(originals);
 
             var expectedCount = 25; //pretend you asked the database for this number
             var count = 0;
@@ -110,7 +110,7 @@ namespace Recipes.Pagination
             do
             {
                 var skipPast = lastSet?.Last();
-                lastSet = repostory.PaginateWithSkipPast(batchKey, skipPast, take);
+                lastSet = repository.PaginateWithSkipPast(batchKey, skipPast, take);
                 count += lastSet.Count;
                 page += 1;
             } while (count < expectedCount);
@@ -122,11 +122,11 @@ namespace Recipes.Pagination
         [TestMethod]
         public void PaginateWithSkipTake_Overrun()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
+            repository.InsertBatch(originals);
 
             var count = 0;
             var page = 0;
@@ -135,7 +135,7 @@ namespace Recipes.Pagination
 
             do
             {
-                lastSet = repostory.PaginateWithSkipTake(batchKey, page * pageSize, pageSize);
+                lastSet = repository.PaginateWithSkipTake(batchKey, page * pageSize, pageSize);
                 count += lastSet.Count;
                 page += 1;
             } while (lastSet.Count > 0);
@@ -147,11 +147,11 @@ namespace Recipes.Pagination
         [TestMethod]
         public void PaginateWithSkipTake_RowCount()
         {
-            var repostory = GetScenario();
+            var repository = GetScenario();
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertBatch(originals);
+            repository.InsertBatch(originals);
 
             var expectedCount = 25; //pretend you asked the database for this number
             var count = 0;
@@ -161,7 +161,7 @@ namespace Recipes.Pagination
 
             do
             {
-                lastSet = repostory.PaginateWithSkipTake(batchKey, page * pageSize, pageSize);
+                lastSet = repository.PaginateWithSkipTake(batchKey, page * pageSize, pageSize);
                 count += lastSet.Count;
                 page += 1;
             } while (count < expectedCount);
