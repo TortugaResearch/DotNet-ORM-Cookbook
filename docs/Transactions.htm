@@ -465,7 +465,7 @@
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>While the transaction is open, all operations are automatically associated with the transaction.</p>
+<p>The <code>DataAccessAdapter</code> manages the transaction itself.</p>
 <pre><code class="cs">public class TransactionsScenario : ITransactionsScenario&lt;EmployeeClassificationEntity&gt;
 {
     public int Create(EmployeeClassificationEntity classification, bool shouldRollBack)
