@@ -5,7 +5,7 @@ namespace Recipes
     public interface IProductLine<TProduct>
         where TProduct : IProduct
     {
-        public int ProductLineKey { get; set; }
+        int ProductLineKey { get; set; }
 
         string? ProductLineName { get; set; }
 

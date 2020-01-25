@@ -42,10 +42,31 @@ namespace LLBLGenPro.OrmCookbook.FactoryClasses
 		/// <inheritdoc/>
 		protected override IElementCreatorCore CreateElementCreator() { return new ElementCreator(); }
  
+		/// <summary>Gets the projection to project the resultset of stored procedure HR.CountEmployeesByClassification to the typed view CountEmployeesByClassificationResult</summary>
+		/// <returns>Projection in the form of a Dynamic Query which projects to <see cref="LLBLGenPro.OrmCookbook.TypedViewClasses.CountEmployeesByClassificationResultRow"/> instances </returns>
+		public DynamicQuery<LLBLGenPro.OrmCookbook.TypedViewClasses.CountEmployeesByClassificationResultRow> GetCountEmployeesByClassificationResultTypedViewProjection()
+		{
+			return this.Create().Select(ProjectionLambdaCreator.Create<LLBLGenPro.OrmCookbook.TypedViewClasses.CountEmployeesByClassificationResultRow>(ModelInfoProviderSingleton.GetInstance().GetTypedViewFields("CountEmployeesByClassificationResultTypedView"), true));
+		}
+
+		/// <summary>Gets the projection to project the resultset of stored procedure HR.CreateEmployeeClassification to the typed view CreateEmployeeClassificationResult</summary>
+		/// <returns>Projection in the form of a Dynamic Query which projects to <see cref="LLBLGenPro.OrmCookbook.TypedViewClasses.CreateEmployeeClassificationResultRow"/> instances </returns>
+		public DynamicQuery<LLBLGenPro.OrmCookbook.TypedViewClasses.CreateEmployeeClassificationResultRow> GetCreateEmployeeClassificationResultTypedViewProjection()
+		{
+			return this.Create().Select(ProjectionLambdaCreator.Create<LLBLGenPro.OrmCookbook.TypedViewClasses.CreateEmployeeClassificationResultRow>(ModelInfoProviderSingleton.GetInstance().GetTypedViewFields("CreateEmployeeClassificationResultTypedView"), true));
+		}
+
 		/// <summary>Creates and returns the query to fetch the typed view DepartmentDetail</summary>
 		public DynamicQuery<LLBLGenPro.OrmCookbook.TypedViewClasses.DepartmentDetailRow> DepartmentDetail
 		{
 			get { return this.Create().Select<LLBLGenPro.OrmCookbook.TypedViewClasses.DepartmentDetailRow, LLBLGenPro.OrmCookbook.HelperClasses.DepartmentDetailFields>(); }
+		}
+
+		/// <summary>Gets the projection to project the resultset of stored procedure HR.GetEmployeeClassifications to the typed view GetEmployeeClassificationsResult</summary>
+		/// <returns>Projection in the form of a Dynamic Query which projects to <see cref="LLBLGenPro.OrmCookbook.TypedViewClasses.GetEmployeeClassificationsResultRow"/> instances </returns>
+		public DynamicQuery<LLBLGenPro.OrmCookbook.TypedViewClasses.GetEmployeeClassificationsResultRow> GetGetEmployeeClassificationsResultTypedViewProjection()
+		{
+			return this.Create().Select(ProjectionLambdaCreator.Create<LLBLGenPro.OrmCookbook.TypedViewClasses.GetEmployeeClassificationsResultRow>(ModelInfoProviderSingleton.GetInstance().GetTypedViewFields("GetEmployeeClassificationsResultTypedView"), true));
 		}
 
 	}

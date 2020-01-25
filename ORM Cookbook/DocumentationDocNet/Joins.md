@@ -56,7 +56,9 @@ NHibernate native supports joins, but not projections. Multiple objects need to 
 
 ## RepoDb
 
-TODO
+RepoDb does not support joins by default, you have to right raw-SQLs to achieve this.
+
+@snippet cs [..\Recipes.RepoDb\Joins\JoinsScenario.cs] JoinsScenario
 
 ## ServiceStack
 

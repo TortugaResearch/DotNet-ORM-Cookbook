@@ -103,6 +103,8 @@
 </li>
 <li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -927,7 +929,6 @@ public partial class EmployeeComplex : IEmployeeComplex
 
     public int EmployeeClassificationKey { get; set; }
 
-    [Primary]
     public int EmployeeKey { get; set; }
 
     public string? FirstName { get; set; }
@@ -957,7 +958,7 @@ public partial class EmployeeComplex : IEmployeeComplex
     IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
 {
     public ModelWithLookupComplexScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public int Create(EmployeeComplex employee)

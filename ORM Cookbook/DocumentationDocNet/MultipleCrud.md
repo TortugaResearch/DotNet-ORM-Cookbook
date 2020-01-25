@@ -18,11 +18,11 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 
 ## Dapper
 
-TODO
+@snippet cs [..\Recipes.Dapper\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## Entity Framework Core
 
-TODO
+@snippet cs [..\Recipes.EntityFrameworkCore\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## LINQ to DB
 
@@ -30,15 +30,15 @@ TODO
 
 ## LLBLGen Pro 
 
-TODO
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## NHibernate
 
-TODO
+@snippet cs [..\Recipes.NHibernate\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## ServiceStack
 

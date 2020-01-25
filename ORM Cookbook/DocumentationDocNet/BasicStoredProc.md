@@ -50,7 +50,9 @@ To use stored procedures that return values, a class is needed to receive the re
 
 ## LLBLGen Pro 
 
-TODO
+To use stored procedures that return a resultset, a class is needed to receive the results.
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
 
 ## NHibernate
 
@@ -58,7 +60,7 @@ TODO
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
 
 ## ServiceStack
 

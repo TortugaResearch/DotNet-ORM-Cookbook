@@ -48,7 +48,10 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			InitEmployeeDetailEntityInfo();
 			InitProductEntityInfo();
 			InitProductLineEntityInfo();
+			InitCountEmployeesByClassificationResultTypedViewInfo();
+			InitCreateEmployeeClassificationResultTypedViewInfo();
 			InitDepartmentDetailTypedViewInfo();
+			InitGetEmployeeClassificationsResultTypedViewInfo();
 			this.BuildInternalStructures();
 		}
 
@@ -65,8 +68,20 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		private void InitDivisionEntityInfo()
 		{
 			this.AddFieldIndexEnumForElementName(typeof(DivisionFieldIndex), "DivisionEntity");
+			this.AddElementFieldInfo("DivisionEntity", "CreatedByEmployeeKey", typeof(System.Int32), false, true, false, false,  (int)DivisionFieldIndex.CreatedByEmployeeKey, 0, 0, 10);
+			this.AddElementFieldInfo("DivisionEntity", "CreatedDate", typeof(System.DateTime), false, false, false, false,  (int)DivisionFieldIndex.CreatedDate, 0, 0, 7);
+			this.AddElementFieldInfo("DivisionEntity", "DivisionId", typeof(System.Guid), false, false, false, false,  (int)DivisionFieldIndex.DivisionId, 0, 0, 0);
 			this.AddElementFieldInfo("DivisionEntity", "DivisionKey", typeof(System.Int32), true, false, true, false,  (int)DivisionFieldIndex.DivisionKey, 0, 0, 10);
 			this.AddElementFieldInfo("DivisionEntity", "DivisionName", typeof(System.String), false, false, false, false,  (int)DivisionFieldIndex.DivisionName, 30, 0, 0);
+			this.AddElementFieldInfo("DivisionEntity", "FloorSpaceBudget", typeof(Nullable<System.Single>), false, false, false, true,  (int)DivisionFieldIndex.FloorSpaceBudget, 0, 0, 24);
+			this.AddElementFieldInfo("DivisionEntity", "FteBudget", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)DivisionFieldIndex.FteBudget, 0, 1, 5);
+			this.AddElementFieldInfo("DivisionEntity", "LastReviewCycle", typeof(Nullable<System.DateTimeOffset>), false, false, false, true,  (int)DivisionFieldIndex.LastReviewCycle, 0, 0, 0);
+			this.AddElementFieldInfo("DivisionEntity", "MaxEmployees", typeof(Nullable<System.Int32>), false, false, false, true,  (int)DivisionFieldIndex.MaxEmployees, 0, 0, 10);
+			this.AddElementFieldInfo("DivisionEntity", "ModifiedByEmployeeKey", typeof(System.Int32), false, true, false, false,  (int)DivisionFieldIndex.ModifiedByEmployeeKey, 0, 0, 10);
+			this.AddElementFieldInfo("DivisionEntity", "ModifiedDate", typeof(System.DateTime), false, false, false, false,  (int)DivisionFieldIndex.ModifiedDate, 0, 0, 7);
+			this.AddElementFieldInfo("DivisionEntity", "SalaryBudget", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)DivisionFieldIndex.SalaryBudget, 0, 4, 14);
+			this.AddElementFieldInfo("DivisionEntity", "StartTime", typeof(Nullable<System.TimeSpan>), false, false, false, true,  (int)DivisionFieldIndex.StartTime, 0, 0, 0);
+			this.AddElementFieldInfo("DivisionEntity", "SuppliesBudget", typeof(Nullable<System.Decimal>), false, false, false, true,  (int)DivisionFieldIndex.SuppliesBudget, 0, 4, 14);
 		}
 
 		/// <summary>Inits EmployeeEntity's info objects</summary>
@@ -129,6 +144,22 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			this.AddElementFieldInfo("ProductLineEntity", "ProductLineName", typeof(System.String), false, false, false, false,  (int)ProductLineFieldIndex.ProductLineName, 50, 0, 0);
 		}
 
+		/// <summary>Inits CountEmployeesByClassificationResultView's info objects</summary>
+		private void InitCountEmployeesByClassificationResultTypedViewInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(CountEmployeesByClassificationResultFieldIndex), "CountEmployeesByClassificationResultTypedView");
+			this.AddElementFieldInfo("CountEmployeesByClassificationResultTypedView", "EmployeeCount", typeof(System.Int32), false, false, true, false, (int)CountEmployeesByClassificationResultFieldIndex.EmployeeCount, 0, 0, 10);
+			this.AddElementFieldInfo("CountEmployeesByClassificationResultTypedView", "EmployeeClassificationKey", typeof(System.Int32), false, false, true, false, (int)CountEmployeesByClassificationResultFieldIndex.EmployeeClassificationKey, 0, 0, 10);
+			this.AddElementFieldInfo("CountEmployeesByClassificationResultTypedView", "EmployeeClassificationName", typeof(System.String), false, false, true, false, (int)CountEmployeesByClassificationResultFieldIndex.EmployeeClassificationName, 30, 0, 0);
+		}
+
+		/// <summary>Inits CreateEmployeeClassificationResultView's info objects</summary>
+		private void InitCreateEmployeeClassificationResultTypedViewInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(CreateEmployeeClassificationResultFieldIndex), "CreateEmployeeClassificationResultTypedView");
+			this.AddElementFieldInfo("CreateEmployeeClassificationResultTypedView", "EmployeeClassificationKey", typeof(Nullable<System.Int32>), false, false, true, false, (int)CreateEmployeeClassificationResultFieldIndex.EmployeeClassificationKey, 0, 0, 10);
+		}
+
 		/// <summary>Inits DepartmentDetailView's info objects</summary>
 		private void InitDepartmentDetailTypedViewInfo()
 		{
@@ -137,6 +168,16 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 			this.AddElementFieldInfo("DepartmentDetailTypedView", "DepartmentName", typeof(System.String), false, false, true, false, (int)DepartmentDetailFieldIndex.DepartmentName, 30, 0, 0);
 			this.AddElementFieldInfo("DepartmentDetailTypedView", "DivisionKey", typeof(System.Int32), false, false, true, false, (int)DepartmentDetailFieldIndex.DivisionKey, 0, 0, 10);
 			this.AddElementFieldInfo("DepartmentDetailTypedView", "DivisionName", typeof(System.String), false, false, true, false, (int)DepartmentDetailFieldIndex.DivisionName, 30, 0, 0);
+		}
+
+		/// <summary>Inits GetEmployeeClassificationsResultView's info objects</summary>
+		private void InitGetEmployeeClassificationsResultTypedViewInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(GetEmployeeClassificationsResultFieldIndex), "GetEmployeeClassificationsResultTypedView");
+			this.AddElementFieldInfo("GetEmployeeClassificationsResultTypedView", "EmployeeClassificationKey", typeof(System.Int32), false, false, true, false, (int)GetEmployeeClassificationsResultFieldIndex.EmployeeClassificationKey, 0, 0, 10);
+			this.AddElementFieldInfo("GetEmployeeClassificationsResultTypedView", "EmployeeClassificationName", typeof(System.String), false, false, true, false, (int)GetEmployeeClassificationsResultFieldIndex.EmployeeClassificationName, 30, 0, 0);
+			this.AddElementFieldInfo("GetEmployeeClassificationsResultTypedView", "IsExempt", typeof(System.Boolean), false, false, true, false, (int)GetEmployeeClassificationsResultFieldIndex.IsExempt, 0, 0, 0);
+			this.AddElementFieldInfo("GetEmployeeClassificationsResultTypedView", "IsEmployee", typeof(System.Boolean), false, false, true, false, (int)GetEmployeeClassificationsResultFieldIndex.IsEmployee, 0, 0, 0);
 		}
 	}
 }

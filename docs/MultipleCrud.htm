@@ -94,6 +94,8 @@
 </li>
 <li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -237,6 +239,7 @@ VALUES &quot;);
             }
             sql.AppendLine(&quot;;&quot;);
 
+            //No transaction is needed because a single SQL statement is used.
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql.ToString(), con))
             {
@@ -272,6 +275,7 @@ VALUES &quot;);
             }
             sql.AppendLine(&quot;;&quot;);
 
+            //No transaction is needed because a single SQL statement is used.
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql.ToString(), con))
             {
@@ -311,6 +315,7 @@ VALUES &quot;);
             }
             sql.AppendLine(&quot;;&quot;);
 
+            //No transaction is needed because a single SQL statement is used.
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql.ToString(), con))
             {
@@ -349,6 +354,7 @@ OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.L
 VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i});&quot;);
             }
 
+            //A transaction is needed because this example uses multiple SQL statements.
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction())
             {
@@ -386,8 +392,6 @@ VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone
 
             var sql = new StringBuilder();
 
-            //In order to ensure the right objects are refreshed, each object is inserted separately.
-            //If we returned them all at the same time, they might not come back in the same order.
             for (var i = 0; i &lt; employees.Count; i++)
             {
                 sql.AppendLine($@&quot;UPDATE HR.Employee
@@ -401,6 +405,7 @@ SET FirstName = @FirstName_{i},
 WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
             }
 
+            //A transaction is needed because this example uses multiple SQL statements.
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction())
             {
@@ -515,17 +520,673 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">    public class MultipleCrudScenario : ScenarioBase, IMultipleCrudScenario&lt;EmployeeSimple&gt;
+    {
+        public MultipleCrudScenario(string connectionString) : base(connectionString)
+        { }
+
+        public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var keyList = string.Join(&quot;, &quot;, employees.Select(x =&gt; x.EmployeeKey));
+            var sql = $&quot;DELETE FROM HR.Employee WHERE EmployeeKey IN ({keyList});&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql);
+        }
+
+        public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+        {
+            if (employeeKeys == null || employeeKeys.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+            var keyList = string.Join(&quot;, &quot;, employeeKeys);
+            var sql = $&quot;DELETE FROM HR.Employee WHERE EmployeeKey IN ({keyList});&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql);
+        }
+
+        public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.EmployeeDetail e WHERE e.LastName = @LastName&quot;;
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
+        }
+
+        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+VALUES &quot;);
+            var parameters = new Dictionary&lt;string, object?&gt;();
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+
+                parameters[$&quot;@FirstName_{i}&quot;] = employees[i].FirstName;
+                parameters[$&quot;@MiddleName_{i}&quot;] = employees[i].MiddleName;
+                parameters[$&quot;@LastName_{i}&quot;] = employees[i].LastName;
+                parameters[$&quot;@Title_{i}&quot;] = employees[i].Title;
+                parameters[$&quot;@OfficePhone_{i}&quot;] = employees[i].OfficePhone;
+                parameters[$&quot;@CellPhone_{i}&quot;] = employees[i].CellPhone;
+                parameters[$&quot;@EmployeeClassificationKey_{i}&quot;] = employees[i].EmployeeClassificationKey;
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            //No transaction is needed because a single SQL statement is used.
+            using (var con = OpenConnection())
+                con.Execute(sql.ToString(), parameters);
+        }
+
+        public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES &quot;);
+
+            var parameters = new Dictionary&lt;string, object?&gt;();
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+
+                parameters[$&quot;@FirstName_{i}&quot;] = employees[i].FirstName;
+                parameters[$&quot;@MiddleName_{i}&quot;] = employees[i].MiddleName;
+                parameters[$&quot;@LastName_{i}&quot;] = employees[i].LastName;
+                parameters[$&quot;@Title_{i}&quot;] = employees[i].Title;
+                parameters[$&quot;@OfficePhone_{i}&quot;] = employees[i].OfficePhone;
+                parameters[$&quot;@CellPhone_{i}&quot;] = employees[i].CellPhone;
+                parameters[$&quot;@EmployeeClassificationKey_{i}&quot;] = employees[i].EmployeeClassificationKey;
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            //No transaction is needed because a single SQL statement is used.
+            using (var con = OpenConnection())
+                return con.Query&lt;int&gt;(sql.ToString(), parameters).ToList();
+        }
+
+        public IList&lt;EmployeeSimple&gt; InsertBatchReturnRows(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.LastName, Inserted.Title, Inserted.OfficePhone, Inserted.CellPhone, Inserted.EmployeeClassificationKey
+VALUES &quot;);
+
+            var parameters = new Dictionary&lt;string, object?&gt;();
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                if (i != 0)
+                    sql.AppendLine(&quot;,&quot;);
+                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+
+                parameters[$&quot;@FirstName_{i}&quot;] = employees[i].FirstName;
+                parameters[$&quot;@MiddleName_{i}&quot;] = employees[i].MiddleName;
+                parameters[$&quot;@LastName_{i}&quot;] = employees[i].LastName;
+                parameters[$&quot;@Title_{i}&quot;] = employees[i].Title;
+                parameters[$&quot;@OfficePhone_{i}&quot;] = employees[i].OfficePhone;
+                parameters[$&quot;@CellPhone_{i}&quot;] = employees[i].CellPhone;
+                parameters[$&quot;@EmployeeClassificationKey_{i}&quot;] = employees[i].EmployeeClassificationKey;
+            }
+            sql.AppendLine(&quot;;&quot;);
+
+            //No transaction is needed because a single SQL statement is used.
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeSimple&gt;(sql.ToString(), parameters).ToList();
+        }
+
+        public void InsertBatchWithRefresh(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder();
+
+            //In order to ensure the right objects are refreshed, each object is inserted separately.
+            //If we returned them all at the same time, they might not come back in the same order.
+            var parameters = new Dictionary&lt;string, object?&gt;();
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                sql.AppendLine($@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey, Inserted.FirstName, Inserted.MiddleName, Inserted.LastName, Inserted.Title, Inserted.OfficePhone, Inserted.CellPhone, Inserted.EmployeeClassificationKey
+VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i});&quot;);
+
+                parameters[$&quot;@FirstName_{i}&quot;] = employees[i].FirstName;
+                parameters[$&quot;@MiddleName_{i}&quot;] = employees[i].MiddleName;
+                parameters[$&quot;@LastName_{i}&quot;] = employees[i].LastName;
+                parameters[$&quot;@Title_{i}&quot;] = employees[i].Title;
+                parameters[$&quot;@OfficePhone_{i}&quot;] = employees[i].OfficePhone;
+                parameters[$&quot;@CellPhone_{i}&quot;] = employees[i].CellPhone;
+                parameters[$&quot;@EmployeeClassificationKey_{i}&quot;] = employees[i].EmployeeClassificationKey;
+            }
+
+            //A transaction is needed because this example uses multiple SQL statements.
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                var results = con.QueryMultiple(sql.ToString(), parameters, transaction: trans);
+
+                for (var i = 0; i &lt; employees.Count; i++)
+                {
+                    var temp = results.ReadSingle&lt;EmployeeSimple&gt;(); //each row is coming back as a separate result set
+                    employees[i].Refresh(temp);
+                }
+            }
+        }
+
+        public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            var sql = new StringBuilder();
+
+            var parameters = new Dictionary&lt;string, object?&gt;();
+            for (var i = 0; i &lt; employees.Count; i++)
+            {
+                sql.AppendLine($@&quot;UPDATE HR.Employee
+SET FirstName = @FirstName_{i},
+    MiddleName = @MiddleName_{i},
+    LastName = @LastName_{i},
+    Title = @Title_{i},
+    OfficePhone = @OfficePhone_{i},
+    CellPhone = @CellPhone_{i},
+    EmployeeClassificationKey = @EmployeeClassificationKey_{i}
+WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
+
+                parameters[$&quot;@EmployeeKey_{i}&quot;] = employees[i].EmployeeKey;
+                parameters[$&quot;@FirstName_{i}&quot;] = employees[i].FirstName;
+                parameters[$&quot;@MiddleName_{i}&quot;] = employees[i].MiddleName;
+                parameters[$&quot;@LastName_{i}&quot;] = employees[i].LastName;
+                parameters[$&quot;@Title_{i}&quot;] = employees[i].Title;
+                parameters[$&quot;@OfficePhone_{i}&quot;] = employees[i].OfficePhone;
+                parameters[$&quot;@CellPhone_{i}&quot;] = employees[i].CellPhone;
+                parameters[$&quot;@EmployeeClassificationKey_{i}&quot;] = employees[i].EmployeeClassificationKey;
+            }
+
+            //A transaction is needed because this example uses multiple SQL statements.
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                con.Execute(sql.ToString(), parameters, transaction: trans);
+                trans.Commit();
+            }
+        }
+    }
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public MultipleCrudScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public void DeleteBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Entry(employee).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var key in employeeKeys)
+                context.Entry(new Employee() { EmployeeKey = key }).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(ec =&gt; ec.LastName == lastName).ToList();
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+
+        return employees.Select(x =&gt; x.EmployeeKey).ToList();
+    }
+
+    public IList&lt;Employee&gt; InsertBatchReturnRows(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+    }
+
+    public void UpdateBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Entry(employee).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;EmployeeEntity&gt;
+{
+    public void DeleteBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            // Delete the entities directly using an IN (key1, key2...) predicate. 
+            adapter.DeleteEntitiesDirectly(typeof(EmployeeEntity),
+                                           new RelationPredicateBucket(EmployeeFields.EmployeeKey
+                                                                                     .In(employees.Select(e =&gt; e.EmployeeKey).ToList())));
+        }
+    }
+
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if(employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+        
+        using(var adapter = new DataAccessAdapter())
+        {
+            // Delete the entities directly using an IN (key1, key2...) predicate. 
+            adapter.DeleteEntitiesDirectly(typeof(EmployeeEntity),
+                                           new RelationPredicateBucket(EmployeeFields.EmployeeKey.In(employeeKeys)));
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; FindByLastName(string lastName)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName).ToList();
+        }
+    }
+
+
+    public void InsertBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        // The collection is disposed as it assigns event handlers to the entities it contains. Keeping the
+        // entities around would keep the collection in memory.
+        using(var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                // use batching for inserts. We'll use 100 for a batch size here. 
+                // This will send at most 100 inserts at one time to the database
+                // in a single DbCommand
+                adapter.BatchSize = 100;
+                adapter.SaveEntityCollection(toInsert);
+            }
+        }
+    }
+
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeEntity&gt; employees)
+    {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using(var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                // use batching for inserts. We'll use 100 for a batch size here. 
+                // This will send at most 100 inserts at one time to the database
+                // in a single DbCommand
+                adapter.BatchSize = 100;
+                adapter.SaveEntityCollection(toInsert);
+            }
+
+            return toInsert.Select(e =&gt; e.EmployeeKey).ToList();
+        }
+    }
+
+
+    public IList&lt;EmployeeEntity&gt; InsertBatchReturnRows(IList&lt;EmployeeEntity&gt; employees)
+    {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        // Use a unit of work here. We could have created a new EntityCollection here but as well
+        var uow = new UnitOfWork2();
+        foreach(var e in employees)
+        {
+            uow.AddForSave(e);
+        }
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            // use batching for inserts. We'll use 100 for a batch size here. 
+            // This will send at most 100 inserts at one time to the database
+            // in a single DbCommand
+            adapter.BatchSize = 100;
+            uow.Commit(adapter);
+        }
+
+        // LLBLGen Pro will update entities in-place after an insert, so we can return what we received. 
+        return employees;
+    }
+
+
+    public void InsertBatchWithRefresh(IList&lt;EmployeeEntity&gt; employees)
+    {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using(var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                // use batching for inserts. We'll use 100 for a batch size here. 
+                // This will send at most 100 inserts at one time to the database
+                // in a single DbCommand. LLBLGen Pro will update the entity saved
+                // with the new PK.
+                adapter.BatchSize = 100;
+                adapter.SaveEntityCollection(toInsert);
+            }
+        }
+    }
+
+
+    public void UpdateBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using(var toUpdate = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                // use batching for updates. We'll use 100 for a batch size here. 
+                // This will send at most 100 updates at one time to the database
+                // in a single DbCommand
+                adapter.BatchSize = 100;
+                adapter.SaveEntityCollection(toUpdate);
+            }
+        }
+    }
+}
+</code></pre>
+
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;Employee&gt;
+{
+    readonly ISessionFactory m_SessionFactory;
+
+    public MultipleCrudScenario(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
+    public void DeleteBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Delete(employee);
+            session.Flush();
+        }
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var key in employeeKeys)
+                session.Delete(new Employee() { EmployeeKey = key });
+
+            session.Flush();
+        }
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var session = m_SessionFactory.OpenSession())
+            return session.Query&lt;Employee&gt;().Where(ec =&gt; ec.LastName == lastName).ToList();
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Save(employee);
+            session.Flush();
+        }
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Save(employee);
+            session.Flush();
+        }
+
+        return employees.Select(x =&gt; x.EmployeeKey).ToList();
+    }
+
+    public IList&lt;Employee&gt; InsertBatchReturnRows(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Save(employee);
+            session.Flush();
+        }
+
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Save(employee);
+            session.Flush();
+        }
+    }
+
+    public void UpdateBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Update(employee);
+            session.Flush();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class MultipleCrudScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
+    IMultipleCrudScenario&lt;EmployeeSimple&gt;
+{
+    public MultipleCrudScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        var keys = employees.Select(e =&gt; e.EmployeeKey).AsList();
+        Delete(e =&gt; keys.Contains(e.EmployeeKey));
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        Delete(e =&gt; employeeKeys.Contains(e.EmployeeKey));
+    }
+
+    public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+    {
+        return Query(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+
+        return employees.Select(e =&gt; e.EmployeeKey).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; InsertBatchReturnRows(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        // TODO: Can you review this? What is the intention of this 'WithRefresh()'?
+        InsertAll(employees);
+    }
+
+    public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        UpdateAll(employees);
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 

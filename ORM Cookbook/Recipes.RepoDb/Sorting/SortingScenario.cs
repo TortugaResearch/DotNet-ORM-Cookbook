@@ -1,7 +1,8 @@
-﻿using Recipes.RepoDb.Entities;
+﻿using Recipes.RepoDb.Models;
 using Recipes.Sorting;
 using RepoDb;
 using RepoDb.Extensions;
+using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ namespace Recipes.RepoDb.Sorting
         ISortingScenario<EmployeeSimple>
     {
         public SortingScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public int Create(EmployeeSimple employee)

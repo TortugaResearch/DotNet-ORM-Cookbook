@@ -1,7 +1,8 @@
-﻿using Recipes.RepoDb.Entities;
+﻿using Recipes.RepoDb.Models;
 using Recipes.SingleModelCrudAsync;
 using RepoDb;
 using RepoDb.Extensions;
+using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -15,7 +16,7 @@ namespace Recipes.RepoDb.SingleModelCrudAsync
         ISingleModelCrudAsyncScenario<EmployeeClassification>
     {
         public SingleModelCrudAsyncScenario(string connectionString)
-            : base(connectionString)
+            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
         public async Task<int> CreateAsync(EmployeeClassification classification)

@@ -1,7 +1,7 @@
 ﻿using RepoDb.Attributes;
 using System;
 
-namespace Recipes.RepoDb.Entities
+namespace Recipes.RepoDb.Models
 {
     [Map("[HR].[EmployeeClassification]")]
     public class ReadOnlyEmployeeClassification : IReadOnlyEmployeeClassification
@@ -28,7 +28,6 @@ namespace Recipes.RepoDb.Entities
             IsEmployee = isEmployee;
         }
 
-        [Primary]
         public int EmployeeClassificationKey { get; }
 
         public string EmployeeClassificationName { get; }

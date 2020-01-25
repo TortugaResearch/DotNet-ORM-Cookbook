@@ -94,6 +94,8 @@
 </li>
 <li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -1019,7 +1021,57 @@ has been created which is the same projection as the one in the queries in the n
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>RepoDb does not support joins by default, you have to right raw-SQLs to achieve this.</p>
+<pre><code class="cs">public class JoinsScenario : DbRepository&lt;SqlConnection&gt;,
+    IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public JoinsScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return Insert&lt;EmployeeSimple, int&gt;(employee);
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        return ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).AsList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
+
+        return ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { lastName }).AsList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        return QueryAll&lt;EmployeeDetail&gt;().AsList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
+
+        return ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { employeeKey }).FirstOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        return ExecuteQuery&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).FirstOrDefault();
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 

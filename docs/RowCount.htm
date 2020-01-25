@@ -94,6 +94,8 @@
 </li>
 <li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -333,11 +335,106 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;EmployeeEntity&gt;
+{
+    public int EmployeeCount(string lastName)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.Count(e =&gt; e.LastName == lastName);
+        }
+    }
+
+
+    public int EmployeeCount()
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            // Use queryspec for a change... 
+            return adapter.FetchScalar&lt;int&gt;(new QueryFactory().Employee.Select(Functions.CountRow()));
+        }
+    }
+
+
+    public void InsertBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        using(var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using(var adapter = new DataAccessAdapter())
+            {
+                adapter.BatchSize = employees?.Count ?? 0;
+                adapter.SaveEntityCollection(toInsert);
+            }
+        }
+    }
+}
+</code></pre>
+
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;Employee&gt;
+{
+    readonly ISessionFactory m_SessionFactory;
+
+    public RowCountScenario(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
+    public int EmployeeCount(string lastName)
+    {
+        using (var session = m_SessionFactory.OpenSession())
+            return session.Query&lt;Employee&gt;().Where(e =&gt; e.LastName == lastName).Count();
+    }
+
+    public int EmployeeCount()
+    {
+        using (var session = m_SessionFactory.OpenSession())
+            return session.Query&lt;Employee&gt;().Count();
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Save(employee);
+            session.Flush();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class RowCountScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
+    IRowCountScenario&lt;EmployeeSimple&gt;
+{
+    public RowCountScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int EmployeeCount(string lastName)
+    {
+        return (int)Count(e =&gt; e.LastName == lastName);
+    }
+
+    public int EmployeeCount()
+    {
+        return (int)CountAll();
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 

@@ -96,6 +96,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -455,11 +457,88 @@ END;
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>To use stored procedures that return a resultset, a class is needed to receive the results.</p>
+<pre><code class="cs">public class BasicStoredProcScenario : IBasicStoredProcScenario&lt;GetEmployeeClassificationsResultRow, CountEmployeesByClassificationResultRow&gt;
+{
+    public IList&lt;CountEmployeesByClassificationResultRow&gt; CountEmployeesByClassification()
+    {
+        // Use the generated calls to the procedure and pass in a generated projection to a poco to project the resultset
+        // to a set of poco instances. The Fetch... method creates a new adapter instance. We could also pass one in.
+        return RetrievalProcedures.FetchCountEmployeesByClassificationResultTypedView(
+                                        new QueryFactory().GetCountEmployeesByClassificationResultTypedViewProjection());
+    }
+
+
+    public int CreateEmployeeClassification(GetEmployeeClassificationsResultRow employeeClassification)
+    {
+        if(employeeClassification == null)
+            throw new ArgumentNullException(nameof(employeeClassification), $&quot;{nameof(employeeClassification)} is null.&quot;);
+
+        // The stored procedure in question returns the created PK value as a resultset and not as an output parameter. 
+        // We therefore have to call the procedure as if it's returning a resultset. 
+        var result = RetrievalProcedures.FetchCreateEmployeeClassificationResultTypedView(
+                                                  new QueryFactory().GetCreateEmployeeClassificationResultTypedViewProjection(),
+                                                  employeeClassification.EmployeeClassificationName, employeeClassification.IsExempt,
+                                                  employeeClassification.IsEmployee)
+                                        .FirstOrDefault();
+        return result?.EmployeeClassificationKey ?? 0;
+    }
+
+
+    public IList&lt;GetEmployeeClassificationsResultRow&gt; GetEmployeeClassifications()
+    {
+        return RetrievalProcedures.FetchGetEmployeeClassificationsResultTypedView(
+                                                new QueryFactory().GetGetEmployeeClassificationsResultTypedViewProjection(), null);
+    }
+
+
+    public GetEmployeeClassificationsResultRow? GetEmployeeClassifications(int employeeClassificationKey)
+    {
+        return RetrievalProcedures.FetchGetEmployeeClassificationsResultTypedView(
+                                                new QueryFactory().GetGetEmployeeClassificationsResultTypedViewProjection(), employeeClassificationKey).FirstOrDefault();
+    }
+}
+</code></pre>
+
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class BasicStoredProcScenario : DbRepository&lt;SqlConnection&gt;,
+    IBasicStoredProcScenario&lt;EmployeeClassification, EmployeeClassificationWithCount&gt;
+{
+    public BasicStoredProcScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public IList&lt;EmployeeClassificationWithCount&gt; CountEmployeesByClassification()
+    {
+        return ExecuteQuery&lt;EmployeeClassificationWithCount&gt;(&quot;[HR].[CountEmployeesByClassification]&quot;,
+            commandType: CommandType.StoredProcedure).AsList();
+    }
+
+    public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
+    {
+        if (employeeClassification == null)
+            throw new ArgumentNullException(nameof(employeeClassification), $&quot;{nameof(employeeClassification)} is null.&quot;);
+
+        return Insert&lt;EmployeeClassification, int&gt;(employeeClassification);
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetEmployeeClassifications()
+    {
+        return ExecuteQuery&lt;EmployeeClassification&gt;(&quot;[HR].[GetEmployeeClassifications]&quot;,
+            commandType: CommandType.StoredProcedure).AsList();
+    }
+
+    public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
+    {
+        return ExecuteQuery&lt;EmployeeClassification&gt;(&quot;[HR].[GetEmployeeClassifications]&quot;,
+            new { EmployeeClassificationKey = employeeClassificationKey },
+            commandType: CommandType.StoredProcedure).FirstOrDefault();
+    }
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 

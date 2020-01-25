@@ -94,6 +94,8 @@
 </li>
 <li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
 </li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -775,8 +777,7 @@
     {
         using (var session = m_SessionFactory.OpenSession())
         {
-            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
-            await session.DeleteAsync(temp).ConfigureAwait(false);
+            await session.DeleteAsync(new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey }).ConfigureAwait(false);
             await session.FlushAsync().ConfigureAwait(false);
         }
     }
@@ -828,7 +829,7 @@
     ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
     public SingleModelCrudAsyncScenario(string connectionString)
-        : base(connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
     public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)

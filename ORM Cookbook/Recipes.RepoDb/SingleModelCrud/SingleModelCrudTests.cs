@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Entities;
+using Recipes.RepoDb.Models;
 using Recipes.SingleModelCrud;
 
 namespace Recipes.RepoDb.SingleModelCrud
