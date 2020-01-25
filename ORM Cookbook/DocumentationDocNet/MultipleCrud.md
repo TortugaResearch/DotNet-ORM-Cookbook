@@ -34,7 +34,7 @@ TODO
 
 ## NHibernate
 
-TODO
+@snippet cs [..\Recipes.NHibernate\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
 ## RepoDb
 

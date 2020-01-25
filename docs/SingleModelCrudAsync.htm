@@ -777,8 +777,7 @@
     {
         using (var session = m_SessionFactory.OpenSession())
         {
-            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
-            await session.DeleteAsync(temp).ConfigureAwait(false);
+            await session.DeleteAsync(new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey }).ConfigureAwait(false);
             await session.FlushAsync().ConfigureAwait(false);
         }
     }
