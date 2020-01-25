@@ -30,6 +30,7 @@
     "Projecting with a Join": "Joins.md",
     "Reading from Views": "Views.md",
     "Reading a Salar Value from a Row": "ScalarValue.md",
+    "Reading a Single Column from a Table": "SingleColumn.md",
     "Row Counts": "RowCount.md",
     "Basic Sorting": "Sorting.md",
     "Paging Results": "Pagination.md",

@@ -55,6 +55,7 @@
     <None Include="NHibernate.md" />
     <None Include="Pagination.md" />
     <None Include="RowCount.md" />
+    <None Include="SingleColumn.md" />
     <None Include="ServiceStack.md" />
     <None Include="RepoDb.md" />
     <None Include="Dapper.md" />
