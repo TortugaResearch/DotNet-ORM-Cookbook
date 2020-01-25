@@ -38,6 +38,7 @@
       "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
       "Object-Based Foreign Key": "ModelWithLookupComplex.md"
     },
-    "Basic Stored Procedures": "BasicStoredProc.md"
+    "Basic Stored Procedures": "BasicStoredProc.md",
+    "Working with Transactions": "Transactions.md"
   }
 }
