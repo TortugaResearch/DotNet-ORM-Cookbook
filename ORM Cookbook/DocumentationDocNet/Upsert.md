@@ -40,7 +40,9 @@ LLBLGen Pro doesn't support an atomic upsert, so a read must proceed the update.
 
 ## NHibernate
 
-TODO
+NHibernate doesn't directly support an atomic upsert, so often a read must proceed the update.
+
+@snippet cs [..\Recipes.NHibernate\Upsert\UpsertScenario.cs] UpsertScenario
 
 ## RepoDb
 
