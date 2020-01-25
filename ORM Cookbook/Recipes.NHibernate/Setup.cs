@@ -1,7 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
 using NHibernate.Cfg;
+using System;
 using System.Diagnostics.CodeAnalysis;
+
+using NHibernateCfg = NHibernate.Cfg;
 
 namespace Recipes.NHibernate
 {
@@ -36,8 +40,14 @@ namespace Recipes.NHibernate
 
         private static void ConfigureSessionFactory()
         {
+            var jsonConfiguration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
+            var sqlServerConnectionString = jsonConfiguration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
+
             var configuration = new Configuration();
             configuration.Configure();
+
+            configuration.SetProperty(NHibernateCfg.Environment.ConnectionString, sqlServerConnectionString);
+
             configuration.AddAssembly(typeof(Setup).Assembly);
             SessionFactory = configuration.BuildSessionFactory();
 

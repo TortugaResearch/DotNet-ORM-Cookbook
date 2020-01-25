@@ -869,8 +869,14 @@ public partial class EmployeeClassification
 <p>A <code>SessionFactory</code> is needed to stitch the various configuration files together. </p>
 <pre><code class="cs">private static void ConfigureSessionFactory()
 {
+    var jsonConfiguration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(&quot;appsettings.json&quot;).Build();
+    var sqlServerConnectionString = jsonConfiguration.GetSection(&quot;ConnectionStrings&quot;)[&quot;SqlServerTestDatabase&quot;];
+
     var configuration = new Configuration();
     configuration.Configure();
+
+    configuration.SetProperty(NHibernateCfg.Environment.ConnectionString, sqlServerConnectionString);
+
     configuration.AddAssembly(typeof(Setup).Assembly);
     SessionFactory = configuration.BuildSessionFactory();
 
@@ -921,8 +927,7 @@ public partial class EmployeeClassification
     {
         using (var session = m_SessionFactory.OpenSession())
         {
-            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
-            session.Delete(temp);
+            session.Delete(new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey });
             session.Flush();
         }
     }

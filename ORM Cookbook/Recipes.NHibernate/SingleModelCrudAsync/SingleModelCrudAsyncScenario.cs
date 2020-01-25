@@ -47,8 +47,7 @@ namespace Recipes.NHibernate.SingleModelCrudAsync
         {
             using (var session = m_SessionFactory.OpenSession())
             {
-                var temp = session.Get<EmployeeClassification>(employeeClassificationKey);
-                await session.DeleteAsync(temp).ConfigureAwait(false);
+                await session.DeleteAsync(new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey }).ConfigureAwait(false);
                 await session.FlushAsync().ConfigureAwait(false);
             }
         }

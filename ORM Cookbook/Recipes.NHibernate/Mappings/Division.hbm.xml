@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Recipes.NHibernate"
+                   namespace="Recipes.NHibernate.Entities">
+
+  <!-- more mapping info here -->
+
+  <class name="Division" table="Division" schema="HR">
+
+    <id name="DivisionKey">
+      <generator class="native" />
+    </id>
+
+    <property name="CreatedByEmployeeKey" />
+    <property name="CreatedDate" />
+    <property name="DivisionId" />
+    <property name="DivisionName" />
+    <property name="FloorSpaceBudget" />
+    <property name="FteBudget" />
+    <property name="LastReviewCycle" />
+    <property name="MaxEmployees" />
+    <property name="ModifiedByEmployeeKey" />
+    <property name="ModifiedDate" />
+    <property name="SalaryBudget" />
+    <property name="StartTime" type="TimeAsTimeSpan" />
+    <property name="SuppliesBudget" />
+  </class>
+</hibernate-mapping>

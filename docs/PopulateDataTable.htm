@@ -474,8 +474,7 @@ public class DataTableResultTransformer : IResultTransformer
     {
         using (var session = m_SessionFactory.OpenSession())
         {
-            var temp = session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
-            session.Delete(temp);
+            session.Delete(new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey });
             session.Flush();
         }
     }
