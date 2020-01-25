@@ -252,3 +252,4 @@ paket-files/
 *.sln.iml
 /ORM Cookbook/OrmCookbook/OrmCookbook.jfm
 *.jfm
+/ORM Cookbook/.cr/personal
