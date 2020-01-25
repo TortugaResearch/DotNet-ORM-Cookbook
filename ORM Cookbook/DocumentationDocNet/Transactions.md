@@ -42,7 +42,7 @@ While the transaction is open, all operations are automatically associated with 
 
 ## LLBLGen Pro 
 
-While the transaction is open, all operations are automatically associated with the transaction.
+The `DataAccessAdapter` manages the transaction itself.
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\Transactions\TransactionsScenario.cs] TransactionsScenario
 
