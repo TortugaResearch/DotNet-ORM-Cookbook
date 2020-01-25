@@ -2,7 +2,7 @@
 
 These scenarios demonstrate how to perform basic sorts. 
 
-Note: Sorting by dynamically chosed columns or by expressions will be handled in a separate scenarios.
+Note: [Sorting by dynamically chosen columns](DynamicSorting) or by expressions will be handled in a separate scenarios.
 
 ## Scenario Prototype
 

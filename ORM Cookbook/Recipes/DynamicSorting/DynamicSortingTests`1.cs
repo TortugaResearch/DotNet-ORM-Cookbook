@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Recipes.DynamicSorting
 {
@@ -13,6 +14,30 @@ namespace Recipes.DynamicSorting
     where TEmployeeSimple : class, IEmployeeSimple, new()
     {
         const int RowCount = 10;
+
+        [TestMethod]
+        [DataRow("ProductName")]
+        [DataRow("; --")]
+        [DataRow("FirstName]; --")]
+        public void SortByNonExistantColumn(string columnName)
+        {
+            var repository = GetScenario();
+
+            //Ensure some records exist
+            var batchKey = Guid.NewGuid().ToString();
+            var originals = BuildEmployees(RowCount, batchKey);
+            repository.InsertBatch(originals);
+
+            try
+            {
+                var results = repository.SortBy(batchKey, columnName, false);
+                Assert.Fail("An exception was expected for the non-existant sort column.");
+            }
+            catch (Exception ex)
+            {
+                Debug.Write("Exception details: " + ex.ToString());
+            }
+        }
 
         [TestMethod]
         public void SortByFirstName()
