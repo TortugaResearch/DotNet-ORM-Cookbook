@@ -33,8 +33,7 @@ namespace Recipes.NHibernate.TryCrud
         {
             using (var session = m_SessionFactory.OpenSession())
             {
-                var temp = session.Get<EmployeeClassification>(employeeClassificationKey);
-                session.Delete(temp);
+                session.Delete(new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey });
                 session.Flush();
             }
         }
