@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Batch Inserts with Large Collections - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry current"><a class="current" href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+</li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="LargeBatch.htm">Batch Inserts with Large Collections</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="batch-inserts-with-large-collections">Batch Inserts with Large Collections<a class="headerlink" href="#batch-inserts-with-large-collections" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>This scenario demonstrate how to perform insert operations on collections of 1,000 to 10,000 objects. Some ORMs require special handling for collections of this size. </p>
+<p>For other batch operations, see <a href="LargeBatch.htm">CRUD Operations on Multiple Objects</a>.</p>
+<p>For better performance, consider using a <a href="BulkInsert.htm">Bulk Insert</a> instead. </p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface ILargeBatchScenario&lt;TEmployeeSimple&gt;
+   where TEmployeeSimple : class, IEmployeeSimple, new()
+{
+    /// &lt;summary&gt;
+    /// Gets a collection of Employee rows by their name. Assume the name is not unique.
+    /// &lt;/summary&gt;
+    int CountByLastName(string lastName);
+
+    /// &lt;summary&gt;
+    /// Insert a large collection of Employee rows.
+    /// &lt;/summary&gt;
+    void InsertLargeBatch(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Insert a large collection of Employee rows.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employees&quot;&gt;The employees.&lt;/param&gt;
+    /// &lt;param name=&quot;batchSize&quot;&gt;Size of the batch.&lt;/param&gt;
+    void InsertLargeBatch(IList&lt;TEmployeeSimple&gt; employees, int batchSize);
+
+    /// &lt;summary&gt;
+    /// Gets the maximum size of a batch.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Return Int32.MaxValue if not limited.&lt;/remarks&gt;
+    int MaximumBatchSize { get; }
+}
+</code></pre>
+
+<p>For ORMs that require breaking up the size of the batch, this function is provided.</p>
+<pre><code class="cs">public static IEnumerable&lt;List&lt;T&gt;&gt; BatchAsLists&lt;T&gt;(this IEnumerable&lt;T&gt; source, int batchSize)
+{
+    if (source == null)
+        throw new ArgumentNullException(nameof(source), $&quot;{nameof(source)} is null.&quot;);
+    if (batchSize &lt;= 0)
+        throw new ArgumentOutOfRangeException(nameof(batchSize), batchSize, $&quot;{batchSize} must be greater than 0&quot;);
+
+    return BatchAsListsCore();
+
+    IEnumerable&lt;List&lt;T&gt;&gt; BatchAsListsCore()
+    {
+        int count = 0;
+        using (var iter = source.GetEnumerator())
+        {
+            while (iter.MoveNext())
+            {
+                var chunk = new List&lt;T&gt;(batchSize);
+                count = 1;
+                chunk.Add(iter.Current);
+                for (int i = 1; i &lt; batchSize &amp;&amp; iter.MoveNext(); i++)
+                {
+                    chunk.Add(iter.Current);
+                    count++;
+                }
+                yield return chunk;
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately <code>2100/number of columns</code>.</p>
+<pre><code class="cs">    public class LargeBatchScenario : ScenarioBase, ILargeBatchScenario&lt;EmployeeSimple&gt;
+    {
+        public LargeBatchScenario(string connectionString) : base(connectionString)
+        { }
+
+        public int CountByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT Count(*) FROM HR.EmployeeDetail e WHERE e.LastName = @LastName&quot;;
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        public int MaximumBatchSize =&gt; 2100 / 7;
+
+        public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            InsertLargeBatch(employees, 250);
+        }
+
+        public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                foreach (var batch in employees.BatchAsLists(batchSize))
+                {
+                    var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+VALUES &quot;);
+
+                    for (var i = 0; i &lt; batch.Count; i++)
+                    {
+                        if (i != 0)
+                            sql.AppendLine(&quot;,&quot;);
+                        sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+                    }
+                    sql.AppendLine(&quot;;&quot;);
+
+                    using (var cmd = new SqlCommand(sql.ToString(), con, trans))
+                    {
+                        for (var i = 0; i &lt; batch.Count; i++)
+                        {
+                            cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, batch[i].FirstName);
+                            cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)batch[i].MiddleName ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, batch[i].LastName);
+                            cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)batch[i].Title ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)batch[i].OfficePhone ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)batch[i].CellPhone ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, batch[i].EmployeeClassificationKey);
+                        }
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                trans.Commit();
+            }
+        }
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The <code>InsertMultipleBatch</code> command overcomes the database's limit on parameter counts, but doesn't offer as many features as <code>InsertBatch</code>. </p>
+<p>The <code>InsertMultipleBatch</code> command is not atomic and should be used in a transaction.</p>
+<pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;EmployeeSimple&gt;
+{
+    const string EmployeeTableName = &quot;HR.Employee&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public LargeBatchScenario(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int CountByLastName(string lastName)
+    {
+        return (int)m_DataSource.From(EmployeeTableName, new { lastName }).AsCount().Execute();
+    }
+
+    public int MaximumBatchSize =&gt; 2100 / 7;
+
+    public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var trans = m_DataSource.BeginTransaction())
+        {
+            trans.InsertMultipleBatch((IReadOnlyList&lt;EmployeeSimple&gt;)employees).Execute();
+            trans.Commit();
+        }
+    }
+
+    public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
+    {
+        using (var trans = m_DataSource.BeginTransaction())
+        {
+            //This is essentially what InsertMultipleBatch does
+            foreach (var batch in employees.BatchAsLists(batchSize))
+                trans.InsertBatch((IReadOnlyList&lt;EmployeeSimple&gt;)batch).Execute();
+
+            trans.Commit();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately <code>2100/number of columns</code>.</p>
+<pre><code class="cs">    public class LargeBatchScenario : ScenarioBase, ILargeBatchScenario&lt;EmployeeSimple&gt;
+    {
+        public LargeBatchScenario(string connectionString) : base(connectionString)
+        { }
+
+        public int CountByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT Count(*) FROM HR.EmployeeDetail e WHERE e.LastName = @LastName&quot;;
+
+            using (var con = OpenConnection())
+                return con.ExecuteScalar&lt;int&gt;(sql, new { lastName });
+        }
+
+        public int MaximumBatchSize =&gt; 2100 / 7;
+
+        public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
+        {
+            InsertLargeBatch(employees, 250);
+        }
+
+        public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
+        {
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+            using (var con = OpenConnection())
+            using (var trans = con.BeginTransaction())
+            {
+                foreach (var batch in employees.BatchAsLists(batchSize))
+                {
+                    var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+VALUES &quot;);
+                    var parameters = new Dictionary&lt;string, object?&gt;();
+                    for (var i = 0; i &lt; batch.Count; i++)
+                    {
+                        if (i != 0)
+                            sql.AppendLine(&quot;,&quot;);
+                        sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+
+                        parameters[$&quot;@FirstName_{i}&quot;] = batch[i].FirstName;
+                        parameters[$&quot;@MiddleName_{i}&quot;] = batch[i].MiddleName;
+                        parameters[$&quot;@LastName_{i}&quot;] = batch[i].LastName;
+                        parameters[$&quot;@Title_{i}&quot;] = batch[i].Title;
+                        parameters[$&quot;@OfficePhone_{i}&quot;] = batch[i].OfficePhone;
+                        parameters[$&quot;@CellPhone_{i}&quot;] = batch[i].CellPhone;
+                        parameters[$&quot;@EmployeeClassificationKey_{i}&quot;] = batch[i].EmployeeClassificationKey;
+                    }
+                    sql.AppendLine(&quot;;&quot;);
+
+                    con.Execute(sql.ToString(), parameters, transaction: trans);
+                }
+                trans.Commit();
+            }
+        }
+    }
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework can suffer severe performance degration as the number of objects it tracks increases. To mitigate this effect, a new <code>DBContext</code> after every batch is necessary. Start with a batch size of 100 and adjust as needed.</p>
+<pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public LargeBatchScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int MaximumBatchSize =&gt; int.MaxValue;
+
+    public int CountByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(ec =&gt; ec.LastName == lastName).Count();
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        //Performance can be significantly degraded as the size of the batch increases
+        InsertLargeBatch(employees, 50);
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees, int batchSize)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        foreach (var batch in employees.BatchAsLists(batchSize))
+        {
+            using (var context = CreateDbContext())
+            {
+                foreach (var employee in batch)
+                    context.Employee.Add(employee);
+                context.SaveChanges();
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>No changes are needed. </p>
+<pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public LargeBatchScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int MaximumBatchSize =&gt; int.MaxValue;
+
+    public int CountByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(ec =&gt; ec.LastName == lastName).Count();
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees, int batchSize)
+    {
+        foreach (var batch in employees.BatchAsLists(batchSize))
+        {
+            using (var context = CreateDbContext())
+            {
+                foreach (var employee in batch)
+                    context.Employee.Add(employee);
+                context.SaveChanges();
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LinqToDB only supports batch inserts from a collection of objects. </p>
+<p>Note the use of <code>BulkCopyType.MultipleRows</code>.</p>
+<pre><code class="cs">public void BulkInsert(IList&lt;Employee&gt; employees)
+{
+    var options = new BulkCopyOptions() { BulkCopyType = BulkCopyType.ProviderSpecific };
+    using (var db = new OrmCookbook())
+        db.BulkCopy(options, employees);
+}
+
+public void BulkInsert(DataTable employees)
+{
+    Assert.Inconclusive(&quot;Bulk insert using a DataTable is not supported.&quot;);
+}
+</code></pre>
+
+<p>For more information see <a href="https://linq2db.github.io/articles/sql/Bulk-Copy.html" target="_blank">Bulk Copy (Bulk Insert)</a></p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>No changes are needed. </p>
+<pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;EmployeeEntity&gt;
+{
+    public int CountByLastName(string lastName)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee.Where(e =&gt; e.LastName == lastName).Count();
+        }
+    }
+
+    public int MaximumBatchSize =&gt; 2100 / 7;
+
+    public void InsertLargeBatch(IList&lt;EmployeeEntity&gt; employees)
+    {
+        InsertLargeBatch(employees, 100);
+    }
+
+    public void InsertLargeBatch(IList&lt;EmployeeEntity&gt; employees, int batchSize)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        // The collection is disposed as it assigns event handlers to the entities it contains. Keeping the
+        // entities around would keep the collection in memory.
+        using (var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
+        {
+            using (var adapter = new DataAccessAdapter())
+            {
+                adapter.BatchSize = batchSize;
+                adapter.SaveEntityCollection(toInsert);
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>No changes are needed. </p>
+<pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;Employee&gt;
+{
+    readonly ISessionFactory m_SessionFactory;
+
+    public LargeBatchScenario(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
+    public int MaximumBatchSize =&gt; int.MaxValue;
+
+    public int CountByLastName(string lastName)
+    {
+        using (var session = m_SessionFactory.OpenSession())
+            return session.Query&lt;Employee&gt;().Where(ec =&gt; ec.LastName == lastName).Count();
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            foreach (var employee in employees)
+                session.Save(employee);
+            session.Flush();
+        }
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees, int batchSize)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        foreach (var batch in employees.BatchAsLists(batchSize))
+        {
+            using (var session = m_SessionFactory.OpenSession())
+            {
+                foreach (var employee in batch)
+                    session.Save(employee);
+                session.Flush();
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>No changes are needed. </p>
+<pre><code class="cs">public class LargeBatchScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;, ILargeBatchScenario&lt;EmployeeSimple&gt;
+{
+    public LargeBatchScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int CountByLastName(string lastName)
+    {
+        return Query(e =&gt; e.LastName == lastName).Count();
+    }
+
+    public int MaximumBatchSize =&gt; 2100 / 7;
+
+    public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees);
+    }
+
+    public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        InsertAll(employees, batchSize: batchSize);
+    }
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

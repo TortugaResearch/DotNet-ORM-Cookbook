@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -65,6 +69,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -382,6 +388,66 @@
         var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
         using (var con = OpenConnection())
             return con.ExecuteScalar&lt;TimeSpan?&gt;(sql, new { divisionKey });
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ScalarValueScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionName == divisionName).SingleOrDefault()?.DivisionKey;
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName!;
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName;
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.LastReviewCycle;
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.MaxEmployees;
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Single().ModifiedDate;
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.SalaryBudget;
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.StartTime;
     }
 }
 </code></pre>

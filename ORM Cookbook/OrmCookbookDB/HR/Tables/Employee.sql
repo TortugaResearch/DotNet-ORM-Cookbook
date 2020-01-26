@@ -15,4 +15,4 @@
 
 GO
 
-
+CREATE INDEX IX_Employee_LastName ON HR.Employee (LastName);

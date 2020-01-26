@@ -37,7 +37,7 @@ namespace Recipes.MultipleCrud
         IList<TEmployeeSimple> InsertBatchReturnRows(IList<TEmployeeSimple> employees);
 
         /// <summary>
-        /// Insert a collection of Employee rows and update the original rows with the new keys.
+        /// Insert a collection of Employee rows and update the original objects with the new keys.
         /// </summary>
         void InsertBatchWithRefresh(IList<TEmployeeSimple> employees);
 

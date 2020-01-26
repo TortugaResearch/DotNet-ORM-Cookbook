@@ -50,6 +50,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
@@ -74,6 +76,10 @@
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
@@ -451,6 +457,125 @@
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To make an Entity Framework repository asynchronous, you need to import the <code>System.Data.Entity</code> namespace. This exposes the async version of the LINQ extension methods needed. </p>
+<p>For non-cancellable operation, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
+<p>For cancellable operations, you may need to explicitly create object arrays for the parameters. Otherwise it may think that the cancellation token is another query parameter.</p>
+<p>Original:</p>
+<pre><code class="cs">public EmployeeClassification GetByKey(int employeeClassificationKey)
+{
+    using (var context = CreateDbContext())
+    {
+        return context.EmployeeClassification.Find(employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<p>Async:</p>
+<pre><code class="cs">public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+{
+    using (var context = CreateDbContext())
+    {
+        //Note the cancellation token is before the parameters
+        return await context.EmployeeClassification.FindAsync(cancellationToken, employeeClassificationKey).ConfigureAwait(false);
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public SingleModelCrudAsyncScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.EmployeeClassification.Add(classification);
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey).ConfigureAwait(false);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+        }
+    }
+
+    public async Task DeleteByKeyAsync(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            var temp = await context.EmployeeClassification.FindAsync(employeeClassificationKey).ConfigureAwait(false);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+        }
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+    {
+        using (var context = CreateDbContext())
+        {
+            return await context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        using (var context = CreateDbContext())
+        {
+            return await context.EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+    {
+        using (var context = CreateDbContext())
+        {
+            //Note the cancellation token is before the parameters
+            return await context.EmployeeClassification.FindAsync(cancellationToken, employeeClassificationKey).ConfigureAwait(false);
+        }
+    }
+
+    public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey).ConfigureAwait(false);
+            if (temp != null)
+            {
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+        }
     }
 }
 </code></pre>
