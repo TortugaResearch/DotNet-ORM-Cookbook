@@ -38,6 +38,27 @@ Here is the full repository.
 
 @snippet cs [../Recipes.Dapper/SingleModelCrudAsync/SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
 
+
+## Entity Framework 6
+
+To make an Entity Framework repository asynchronous, you need to import the `System.Data.Entity` namespace. This exposes the async version of the LINQ extension methods needed. 
+
+For non-cancellable operation, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+For cancellable operations, you may need to explicitly create object arrays for the parameters. Otherwise it may think that the cancellation token is another query parameter.
+
+Original:
+
+@snippet cs [..\Recipes.EntityFramework\SingleModelCrud\SingleModelCrudScenario.cs] GetByKey
+
+Async:
+
+@snippet cs [..\Recipes.EntityFramework\SingleModelCrudAsync\SingleModelCrudAsyncScenario.cs] GetByKeyAsync
+
+
+@snippet cs [..\Recipes.EntityFramework\SingleModelCrudAsync\SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
+
+
 ## Entity Framework Core
 
 To make an Entity Framework repository asynchronous, you need to import the `System.Data.Entity` namespace. This exposes the async version of the LINQ extension methods needed. 

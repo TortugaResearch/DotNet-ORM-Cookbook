@@ -24,6 +24,10 @@ Keyset pagination is a technique where the previous result is used to determine 
 
 @snippet cs [..\Recipes.Dapper\Pagination\PaginationScenario.cs] PaginationScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\Pagination\PaginationScenario.cs] PaginationScenario
+
 ## Entity Framework Core
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Pagination\PaginationScenario.cs] PaginationScenario
@@ -38,7 +42,7 @@ Keyset pagination is a technique where the previous result is used to determine 
 
 ## NHibernate
 
-TODO
+@snippet cs [..\Recipes.NHibernate\Pagination\PaginationScenario.cs] PaginationScenario
 
 ## RepoDb
 
@@ -46,4 +50,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Pagination\PaginationScenario.cs] PaginationScenario

@@ -31,6 +31,20 @@ No special handling is needed to call a non-default constructor.
 
 @snippet cs [..\Recipes.Dapper\Immutable\ImmutableScenario.cs] ImmutableScenario
 
+## Entity Framework 6
+
+Entity Framework does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.
+
+Objects need to be materialized client-side before being mapped to the immutable type.
+
+@snippet cs [..\Recipes.EntityFramework\Models\ReadOnlyEmployeeClassification.cs] <Constructor>(EmployeeClassification)
+
+@snippet cs [..\Recipes.EntityFramework\Models\ReadOnlyEmployeeClassification.cs] ToEntity
+
+These conversions are used in the repository before write operations and after read operations.
+
+@snippet cs [..\Recipes.EntityFramework\Immutable\ImmutableScenario.cs] ImmutableScenario
+
 ## Entity Framework Core
 
 Entity Framework Core does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.
@@ -99,4 +113,4 @@ Below is the *immutable repository*.
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Immutable\ImmutableScenario.cs] ImmutableScenario

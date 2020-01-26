@@ -14,3 +14,6 @@ dotnet_diagnostic.CA1031.severity = none
 
 # CA1033: Interface methods should be callable by child types
 dotnet_diagnostic.CA1033.severity = none
+
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = none
