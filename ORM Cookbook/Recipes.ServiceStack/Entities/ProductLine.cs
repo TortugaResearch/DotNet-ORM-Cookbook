@@ -8,8 +8,6 @@ namespace Recipes.ServiceStack.Entities
     [Alias("ProductLine"), Schema("Production")]
     public partial class ProductLine
     {
-        private List<Product> _products = new List<Product>();
-        
         [PrimaryKey, AutoIncrement, Alias("ProductLineKey")]
         public int Id { get; set; }
 
@@ -19,11 +17,7 @@ namespace Recipes.ServiceStack.Entities
         [Reference]
         [SuppressMessage("Usage", "CA2227:Collection properties should be read only",
             Justification = "Required by ServiceStack")]
-        public List<Product> Products
-        {
-            get => _products;
-            set => _products = value;
-        }
+        public List<Product> Products { get; set; } = new List<Product>();
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
@@ -37,6 +31,6 @@ namespace Recipes.ServiceStack.Entities
         }
         
         [Ignore]
-        ICollection<Product> IProductLine<Product>.Products => _products;
+        ICollection<Product> IProductLine<Product>.Products => Products;
     }
 }

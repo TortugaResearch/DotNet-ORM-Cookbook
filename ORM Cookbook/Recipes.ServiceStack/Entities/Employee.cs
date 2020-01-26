@@ -31,29 +31,34 @@ namespace Recipes.ServiceStack.Entities
         [StringLength(15)]
         public string? CellPhone { get; set; }
 
-        [References(typeof(EmployeeClassification))]
-        [Alias("EmployeeClassificationKey")]
-        public int? EmployeeClassificationId { get; set; }
+        [References(typeof(EmployeeClassification)), Alias("EmployeeClassificationKey")]
+        public int EmployeeClassificationId { get; set; }
 
         [Reference]
-        public virtual EmployeeClassification? EmployeeClassification { get; set; }
+        public EmployeeClassification? EmployeeClassification { get; set; }
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
-    public partial class Employee : IEmployeeSimple
+    partial class Employee : IEmployeeSimple
     {
         [Ignore]
-        public int EmployeeKey { get => Id; set => Id = value; }
+        int IEmployeeSimple.EmployeeKey { get => Id; set => Id = value; }
         [Ignore]
-        int IEmployeeSimple.EmployeeClassificationKey { get => EmployeeClassificationId ?? 0; set => EmployeeClassificationId = value; }
+        int IEmployeeSimple.EmployeeClassificationKey { get => EmployeeClassificationId; set => EmployeeClassificationId = value; }
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
     partial class Employee : IEmployeeComplex
     {
-        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification { 
+        [Ignore]
+        int IEmployeeComplex.EmployeeKey { get => Id; set => Id = value; }
+
+        [Ignore]
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        {
             get => EmployeeClassification;
-            set => EmployeeClassification = value?.ConvertTo<EmployeeClassification>();
+            set => EmployeeClassification =
+                value == null ? null : new EmployeeClassification().PopulateWithNonDefaultValues(value);
         }
     }
 }
