@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reading a Single Column from a Table - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry current"><a class="current" href="SingleColumn.htm">Reading a Single Column from a Table</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+</li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="SingleColumn.htm">Reading a Single Column from a Table</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="reading-a-single-column-from-a-table">Reading a Single Column from a Table<a class="headerlink" href="#reading-a-single-column-from-a-table" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to read a single column from a table. </p>
+<p>For an example of reading a scalar value, see <a href="SingleColumn.htm">Reading a Scalar Value from a Row</a></p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface ISingleColumnScenario
+{
+    List&lt;int&gt; GetDivisionKeys(int maxDivisionKey);
+
+    List&lt;string&gt; GetDivisionNames(int maxDivisionKey);
+
+    List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey);
+
+    List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey);
+
+    List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey);
+
+    List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey);
+
+    List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In ADO.NET, <code>ExecuteScalar</code> returns the first column of the first row in the resultset. Everything else is discarded.</p>
+<pre><code class="cs">public class SingleColumnScenario : ScenarioBase, ISingleColumnScenario
+{
+    public SingleColumnScenario(string connectionString) : base(connectionString)
+    { }
+
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT DivisionKey FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@MaxDivisionKey&quot;, maxDivisionKey);
+
+            var results = new List&lt;int&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(reader.GetInt32(0));
+
+            return results;
+        }
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@MaxDivisionKey&quot;, maxDivisionKey);
+
+            var results = new List&lt;string&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(reader.GetString(0));
+
+            return results;
+        }
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT LastReviewCycle FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@MaxDivisionKey&quot;, maxDivisionKey);
+
+            var results = new List&lt;DateTimeOffset?&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    if (reader.IsDBNull(0))
+                        results.Add(null);
+                    else
+                        results.Add(reader.GetDateTimeOffset(0));
+
+            return results;
+        }
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT MaxEmployee FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@MaxDivisionKey&quot;, maxDivisionKey);
+
+            var results = new List&lt;int?&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    if (reader.IsDBNull(0))
+                        results.Add(null);
+                    else
+                        results.Add(reader.GetInt32(0));
+
+            return results;
+        }
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT ModifiedDate FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@MaxDivisionKey&quot;, maxDivisionKey);
+
+            var results = new List&lt;DateTime&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(reader.GetDateTime(0));
+
+            return results;
+        }
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT SalaryBudget FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@MaxDivisionKey&quot;, maxDivisionKey);
+
+            var results = new List&lt;decimal?&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    if (reader.IsDBNull(0))
+                        results.Add(null);
+                    else
+                        results.Add(reader.GetDecimal(0));
+
+            return results;
+        }
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@MaxDivisionKey&quot;, maxDivisionKey);
+
+            var results = new List&lt;TimeSpan?&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    if (reader.IsDBNull(0))
+                        results.Add(null);
+                    else
+                        results.Add(reader.GetTimeSpan(0));
+
+            return results;
+        }
+    }
+}
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : ScenarioBase, ISingleColumnScenario
+{
+    public SingleColumnScenario(string connectionString) : base(connectionString)
+    { }
+
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT DivisionKey FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.Query&lt;int&gt;(sql, new { maxDivisionKey }).ToList();
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.Query&lt;string&gt;(sql, new { maxDivisionKey }).ToList();
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT LastReviewCycle FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.Query&lt;DateTimeOffset?&gt;(sql, new { maxDivisionKey }).ToList();
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT MaxEmployee FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.Query&lt;int?&gt;(sql, new { maxDivisionKey }).ToList();
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT ModifiedDate FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.Query&lt;DateTime&gt;(sql, new { maxDivisionKey }).ToList();
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT SalaryBudget FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.Query&lt;decimal?&gt;(sql, new { maxDivisionKey }).ToList();
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.Query&lt;TimeSpan?&gt;(sql, new { maxDivisionKey }).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : ISingleColumnScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public SingleColumnScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionKey).ToList();
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionName!).ToList();
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.LastReviewCycle).ToList();
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.MaxEmployees).ToList();
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.ModifiedDate).ToList();
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.SalaryBudget).ToList();
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.StartTime).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : ISingleColumnScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public SingleColumnScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionKey).ToList();
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionName!).ToList();
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.LastReviewCycle).ToList();
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.MaxEmployees).ToList();
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.ModifiedDate).ToList();
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.SalaryBudget).ToList();
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.StartTime).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : ISingleColumnScenario
+{
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionKey).ToList();
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionName!).ToList();
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.LastReviewCycle).ToList();
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.MaxEmployees).ToList();
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.ModifiedDate).ToList();
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.SalaryBudget).ToList();
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.StartTime).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : ISingleColumnScenario
+{
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            // As the field in the projection isn't nullable, LLBLGen Pro will normally return the default value
+            // for when the field is null. Here, however this gives a problem, so we have to
+            // cast the field to int? to make FirstOrDefault return a nullable type.
+            // A workaround could have been to project to the type first and use that as a check, however that's
+            // less efficient.
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                                            .Select(d =&gt; d.DivisionKey).ToList();
+        }
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                                            .Select(d =&gt; d.DivisionName).ToList();
+        }
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                                            .Select(d =&gt; d.LastReviewCycle).ToList();
+        }
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                                            .Select(d =&gt; d.ModifiedDate).ToList();
+        }
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                                            .Select(d =&gt; d.SalaryBudget).ToList();
+        }
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                                            .Select(d =&gt; d.StartTime).ToList();
+        }
+    }
+
+    List&lt;int?&gt; ISingleColumnScenario.GetMaxEmployees(int maxDivisionKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                                            .Select(d =&gt; d.MaxEmployees).ToList();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : BaseRepository&lt;Division, SqlConnection&gt;,
+    ISingleColumnScenario
+{
+    public SingleColumnScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        return Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.DivisionKey).ToList();
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        return Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.DivisionName!).ToList();
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        return Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.LastReviewCycle).ToList();
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
+    {
+        return Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.MaxEmployees).ToList();
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        return Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.ModifiedDate).ToList();
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        return Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.SalaryBudget).ToList();
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        return Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.StartTime).ToList();
+    }
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : ISingleColumnScenario
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public SingleColumnScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
+    {
+        throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+}
+</code></pre>
+
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>
