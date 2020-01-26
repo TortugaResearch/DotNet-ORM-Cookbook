@@ -1196,7 +1196,99 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public ImmutableScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return (int)db.Insert(new EmployeeClassification().PopulateWith(classification), true);
+        }
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var deleted = db.Delete&lt;EmployeeClassification&gt;(r =&gt; r.Id == classification.Id);
+            if (deleted != 1)
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var deleted = db.Delete&lt;EmployeeClassification&gt;(r =&gt; r.Id == employeeClassificationKey);
+            if (deleted != 1)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var temp = db.Single&lt;EmployeeClassification&gt;(r =&gt;
+                r.EmployeeClassificationName == employeeClassificationName);
+            return temp == null ? null : new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.Select&lt;EmployeeClassification&gt;()
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x))
+                .ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var temp = db.Single&lt;EmployeeClassification&gt;(r =&gt;
+                r.Id == employeeClassificationKey);
+            if (temp == null)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Update&lt;EmployeeClassification&gt;(new
+            {
+                classification.IsEmployee,
+                classification.IsExempt,
+                classification.EmployeeClassificationName
+            }, r =&gt; r.Id == classification.Id);
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

@@ -679,7 +679,48 @@ public class DataTableResultTransformer : IResultTransformer
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class PopulateDataTableScenario : IPopulateDataTableScenario
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    
+    public PopulateDataTableScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        var dt = new DataTable();
+        dt.Columns.AddRange( ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
+            new DataColumn(k.FieldName, k.FieldType)).ToArray());
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var sql = db.From&lt;EmployeeClassification&gt;().Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee);
+            foreach (var row in db.SelectLazy(sql))
+                dt.Rows.Add(row.Id, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+
+        return dt;
+    }
+
+    public DataTable GetAll()
+    {
+        var dt = new DataTable();
+        dt.Columns.AddRange( ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
+            new DataColumn(k.FieldName, k.FieldType)).ToArray());
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            foreach (var row in db.SelectLazy(db.From&lt;EmployeeClassification&gt;()))
+                dt.Rows.Add(row.Id, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+
+        return dt;
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

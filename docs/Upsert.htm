@@ -1041,7 +1041,64 @@ OUTPUT Inserted.DivisionKey;&quot;;
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;Division&gt;
+{
+    private IDbConnectionFactory _dbConnectionFactory;
+
+    public UpsertScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        this._dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public Division GetByKey(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.SingleById&lt;Division&gt;(divisionKey);
+        }
+    }
+
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        if (division.CreatedDate == default(DateTime))
+            division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var existing = db.Single&lt;Division&gt;(c =&gt; c.DivisionName == division.DivisionName);
+            if (existing != null)
+            {
+                division.PopulateWith(existing.PopulateWithNonDefaultValues(division));
+            }
+            db.Save(division);
+        }
+        
+        return division.Id;
+    }
+
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        if (division.CreatedDate == default(DateTime))
+            division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Save(division);
+        }
+
+        return division.Id;
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

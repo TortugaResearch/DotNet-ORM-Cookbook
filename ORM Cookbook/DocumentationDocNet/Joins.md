@@ -68,4 +68,4 @@ RepoDb does not support joins by default, you have to right raw-SQLs to achieve 
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Joins\JoinsScenario.cs] JoinsScenario

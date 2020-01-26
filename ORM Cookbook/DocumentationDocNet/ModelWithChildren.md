@@ -76,4 +76,4 @@ For partial deletes, ensure that you are using `cascade="all-delete-orphan"`. Ot
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario

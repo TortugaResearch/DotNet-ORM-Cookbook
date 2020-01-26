@@ -66,4 +66,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Transactions\TransactionsScenario.cs] TransactionsScenario

@@ -647,7 +647,65 @@
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">internal class TransactionsScenario : ITransactionsScenario&lt;EmployeeClassification&gt;
+{
+    private IDbConnectionFactory _dbConnectionFactory;
+
+    public TransactionsScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        this._dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(EmployeeClassification classification, bool shouldRollBack)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using(var tx = db.OpenTransaction())
+            {
+                var result = (int) db.Insert(classification, true);
+
+                if (shouldRollBack)
+                    tx.Rollback();
+                else
+                    tx.Commit();
+
+                return result;
+            }
+        }
+    }
+
+    public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using(var tx = db.OpenTransaction(isolationLevel))
+            {
+                var result = (int) db.Insert(classification, true);
+
+                if (shouldRollBack)
+                    tx.Rollback();
+                else
+                    tx.Commit();
+
+                return result;
+            }
+        }
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

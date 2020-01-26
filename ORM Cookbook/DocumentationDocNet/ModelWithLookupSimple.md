@@ -50,4 +50,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario

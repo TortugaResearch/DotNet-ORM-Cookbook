@@ -87,4 +87,4 @@ Read operations must occur against a database view in order to get the propertie
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario

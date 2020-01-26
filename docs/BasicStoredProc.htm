@@ -548,7 +548,64 @@ END;
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class BasicStoredProcScenario : IBasicStoredProcScenario&lt;EmployeeClassification, EmployeeClassificationWithCount&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public BasicStoredProcScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public IList&lt;EmployeeClassificationWithCount&gt; CountEmployeesByClassification()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.CountEmployeesByClassification&quot;))
+            {
+                return cmd.ConvertToList&lt;EmployeeClassificationWithCount&gt;();
+            }
+        }
+    }
+
+    public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
+    {
+        if (employeeClassification == null)
+            throw new ArgumentNullException(nameof(employeeClassification), $&quot;{nameof(employeeClassification)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.CreateEmployeeClassification&quot;, new { employeeClassification.EmployeeClassificationName, employeeClassification.IsEmployee, employeeClassification.IsExempt }))
+            {
+                return (int) cmd.Scalar();
+            }
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetEmployeeClassifications()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.GetEmployeeClassifications&quot;))
+            {
+                return cmd.ConvertToList&lt;EmployeeClassification&gt;();
+            }
+        }
+    }
+
+    public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.GetEmployeeClassifications&quot;, new { EmployeeClassificationKey = employeeClassificationKey }))
+            {
+                return cmd.ConvertTo&lt;EmployeeClassification&gt;();
+            }
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>
