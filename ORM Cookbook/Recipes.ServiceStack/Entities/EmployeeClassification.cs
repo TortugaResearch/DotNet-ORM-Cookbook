@@ -22,7 +22,7 @@ namespace Recipes.ServiceStack.Entities
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class EmployeeClassification : IEmployeeClassification
+    partial class EmployeeClassification : IEmployeeClassification, IReadOnlyEmployeeClassification
     {
         int IEmployeeClassification.EmployeeClassificationKey { get => Id; set => Id = value; }
         int IReadOnlyEmployeeClassification.EmployeeClassificationKey { get => Id; }

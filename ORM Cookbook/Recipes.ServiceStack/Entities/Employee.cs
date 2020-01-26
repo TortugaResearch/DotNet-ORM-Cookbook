@@ -1,4 +1,5 @@
-﻿using ServiceStack.DataAnnotations;
+﻿using ServiceStack;
+using ServiceStack.DataAnnotations;
 
 namespace Recipes.ServiceStack.Entities
 {
@@ -39,11 +40,20 @@ namespace Recipes.ServiceStack.Entities
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class Employee : IEmployeeSimple
+    public partial class Employee : IEmployeeSimple
     {
         [Ignore]
-        int IEmployeeSimple.EmployeeKey { get => Id; set => Id = value; }
+        public int EmployeeKey { get => Id; set => Id = value; }
         [Ignore]
         int IEmployeeSimple.EmployeeClassificationKey { get => EmployeeClassificationId ?? 0; set => EmployeeClassificationId = value; }
+    }
+
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class Employee : IEmployeeComplex
+    {
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification { 
+            get => EmployeeClassification;
+            set => EmployeeClassification = value?.ConvertTo<EmployeeClassification>();
+        }
     }
 }
