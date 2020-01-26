@@ -56,6 +56,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
@@ -74,6 +76,10 @@
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
@@ -248,6 +254,63 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 
     using (var con = OpenConnection())
         con.Execute(sql, new { employeeClassificationKey, isExempt, isEmployee });
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To perform a partial update, first fetch a record and then modify it.</p>
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var context = CreateDbContext())
+    {
+        //Get a fresh copy of the row from the database
+        var temp = context.EmployeeClassification.Find(updateMessage.EmployeeClassificationKey);
+        if (temp != null)
+        {
+            //Copy the changed fields
+            temp.EmployeeClassificationName = updateMessage.EmployeeClassificationName;
+            context.SaveChanges();
+        }
+    }
+}
+
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
+{
+    if (updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    using (var context = CreateDbContext())
+    {
+        //Get a fresh copy of the row from the database
+        var temp = context.EmployeeClassification.Find(updateMessage.EmployeeClassificationKey);
+        if (temp != null)
+        {
+            //Copy the changed fields
+            temp.IsExempt = updateMessage.IsExempt;
+            temp.IsEmployee = updateMessage.IsEmployee;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+{
+    using (var context = CreateDbContext())
+    {
+        //Get a fresh copy of the row from the database
+        var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+        if (temp != null)
+        {
+            //Copy the changed fields
+            temp.IsExempt = isExempt;
+            temp.IsEmployee = isEmployee;
+            context.SaveChanges();
+        }
+    }
 }
 </code></pre>
 

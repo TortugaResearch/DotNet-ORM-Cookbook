@@ -26,6 +26,16 @@ Chain natively supports `DataTable`.
 
 @snippet cs [..\Recipes.Dapper\PopulateDataTable\PopulateDataTableScenario.cs] PopulateDataTableScenario
 
+## Entity Framework 6
+
+EF Core does not support `DataTable`. 
+
+@snippet cs [..\Recipes.EntityFramework\PopulateDataTable\PopulateDataTableScenario.cs] PopulateDataTableScenario
+
+You can generalize this using a reflection library.
+
+@snippet cs [..\Recipes.EntityFramework\PopulateDataTable\PopulateDataTableScenario2.cs] PopulateDataTableScenario2
+
 ## Entity Framework Core
 
 EF Core does not support `DataTable`. 

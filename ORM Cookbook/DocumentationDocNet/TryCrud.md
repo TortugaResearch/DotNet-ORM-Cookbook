@@ -22,6 +22,10 @@ Like ADO.NET, this uses the row counts returned from the `Execute` command.
 
 @snippet cs [..\Recipes.Dapper\TryCrud\TryCrudScenario.cs] TryCrudScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\TryCrud\TryCrudScenario.cs] TryCrudScenario
+
 ## Entity Framework Core
 
 @snippet cs [..\Recipes.EntityFrameworkCore\TryCrud\TryCrudScenario.cs] TryCrudScenario
