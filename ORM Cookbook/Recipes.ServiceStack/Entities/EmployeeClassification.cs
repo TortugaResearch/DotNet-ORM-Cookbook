@@ -18,17 +18,7 @@ namespace Recipes.ServiceStack.Entities
         public bool IsEmployee { get; set; }
 
         [Reference]
-        [SuppressMessage("Usage", "CA2227:Collection properties should be read only",
-            Justification = "Required by ServiceStack")]
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Required by ServiceStack")]
         public List<Employee> Employees { get; set; } = new List<Employee>();
-    }
-
-    //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class EmployeeClassification : IEmployeeClassification, IReadOnlyEmployeeClassification
-    {
-        [Ignore]
-        int IEmployeeClassification.EmployeeClassificationKey { get => Id; set => Id = value; }
-        [Ignore]
-        int IReadOnlyEmployeeClassification.EmployeeClassificationKey { get => Id; }
     }
 }
