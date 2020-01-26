@@ -1,24 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using ServiceStack.DataAnnotations;
 
 namespace Recipes.ServiceStack.Entities
 {
-    [Schema("Production")]
+    [Alias("ProductLine"), Schema("Production")]
     public partial class ProductLine
     {
-        [PrimaryKey]
-        public int ProductLineKey { get; set; }
+        private List<Product> _products = new List<Product>();
+        
+        [PrimaryKey, AutoIncrement, Alias("ProductLineKey")]
+        public int Id { get; set; }
 
         [StringLength(50)]
         public string? ProductLineName { get; set; }
 
         [Reference]
-        public ICollection<Product> Products { get; } = new List<Product>();
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only",
+            Justification = "Required by ServiceStack")]
+        public List<Product> Products
+        {
+            get => _products;
+            set => _products = value;
+        }
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
     partial class ProductLine : IProductLine<Product>
     {
+        [Ignore]
+        int IProductLine<Product>.ProductLineKey
+        {
+            get => Id;
+            set => Id = value;
+        }
+        
+        [Ignore]
+        ICollection<Product> IProductLine<Product>.Products => _products;
     }
 }

@@ -8,10 +8,12 @@ using ServiceStack.OrmLite;
 
 namespace Recipes.ServiceStack.MultipleCrud
 {
-    public class MultipleCrudScenario : ScenarioBase, IMultipleCrudScenario<Employee>
+    public class MultipleCrudScenario : IMultipleCrudScenario<Employee>
     {
-        public MultipleCrudScenario(IDbConnectionFactory dbConnectionFactory): base(dbConnectionFactory)
+        private readonly IDbConnectionFactory _dbConnectionFactory;
+        public MultipleCrudScenario(IDbConnectionFactory dbConnectionFactory)
         {
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         public void DeleteBatch(IList<Employee> employees)
@@ -19,7 +21,7 @@ namespace Recipes.ServiceStack.MultipleCrud
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            using (var db = OpenConnection())
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 db.DeleteAll(employees);
         }
 
@@ -28,19 +30,19 @@ namespace Recipes.ServiceStack.MultipleCrud
             if (employeeKeys == null || employeeKeys.Count == 0)
                 throw new ArgumentException($"{nameof(employeeKeys)} is null or empty.", nameof(employeeKeys));
             
-            using (var db = OpenConnection())
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 db.DeleteByIds<Employee>(employeeKeys);
         }
 
         public IList<Employee> FindByLastName(string lastName)
         {
-            using (var db = OpenConnection())
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 return db.Select<Employee>(e => e.LastName == lastName);
         }
 
         public void InsertBatch(IList<Employee> employees)
         {
-            using (var db = OpenConnection())
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 db.InsertAll(employees);
         }
 
@@ -48,8 +50,8 @@ namespace Recipes.ServiceStack.MultipleCrud
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
-
-            using (var db = OpenConnection())
+            
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 db.SaveAll(employees);
 
             return employees.Select(e => e.Id).ToList();
@@ -59,8 +61,8 @@ namespace Recipes.ServiceStack.MultipleCrud
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
-
-            using (var db = OpenConnection())
+            
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 db.SaveAll(employees);
 
             return employees;
@@ -71,7 +73,7 @@ namespace Recipes.ServiceStack.MultipleCrud
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
             
-            using (var db = OpenConnection())
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 db.SaveAll(employees);
         }
 
@@ -80,7 +82,7 @@ namespace Recipes.ServiceStack.MultipleCrud
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
             
-            using (var db = OpenConnection())
+            using (var db = _dbConnectionFactory.OpenDbConnection())
                 db.UpdateAll(employees);
         }
     }

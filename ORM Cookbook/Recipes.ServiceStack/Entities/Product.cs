@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using ServiceStack.DataAnnotations;
+﻿using ServiceStack.DataAnnotations;
 
 namespace Recipes.ServiceStack.Entities
 {
-    [Schema("Production")]
+    [Alias("Product"), Schema("Production")]
     public partial class Product
     {
-        [PrimaryKey]
-        public int ProductKey { get; set; }
+        [PrimaryKey, AutoIncrement, Alias("ProductKey")]
+        public int Id { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -20,12 +19,18 @@ namespace Recipes.ServiceStack.Entities
 
         public decimal? ProductWeight { get; set; }
 
-        [Reference, Alias("ProductLineKeyNavigation")]
+        [Reference]
         public ProductLine? ProductLine { get; set; }
     }
 
     //Used for linking the entity to the test framework. Not part of the recipe.
     partial class Product : IProduct
     {
+        [Ignore]
+        int IProduct.ProductKey
+        {
+            get => Id;
+            set => Id = value;
+        }
     }
 }
