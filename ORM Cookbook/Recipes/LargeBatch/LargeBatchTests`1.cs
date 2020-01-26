@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Recipes.LargeBatch
 {
@@ -11,6 +12,31 @@ namespace Recipes.LargeBatch
     public abstract class LargeBatchTests<TEmployeeSimple> : TestBase
        where TEmployeeSimple : class, IEmployeeSimple, new()
     {
+        [TestMethod]
+        [DataRow(50)]
+        [DataRow(100)]
+        [DataRow(250)]
+        [DataRow(500)]
+        [DataRow(1000)]
+        public void InsertBatch_1000_Varying(int batchSize)
+        {
+            const int RowCount = 1000;
+
+            var repostory = GetScenario();
+            if (batchSize > repostory.MaximumBatchSize)
+                Assert.Inconclusive($"BatchSize of {batchSize} is not supported by this ORM with this table.");
+
+            var batchKey = Guid.NewGuid().ToString();
+            var originals = BuildEmployees(RowCount, batchKey);
+            var sw = Stopwatch.StartNew();
+            repostory.InsertLargeBatch(originals, batchSize);
+            sw.Stop();
+            Debug.WriteLine("Run time " + sw.Elapsed.TotalSeconds.ToString("0.00") + " sec.");
+
+            var actual = repostory.CountByLastName(batchKey);
+            Assert.AreEqual(RowCount, actual, "Incorrect number of rows created");
+        }
+
         [TestMethod]
         public void InsertBatch_1000()
         {
@@ -33,20 +59,7 @@ namespace Recipes.LargeBatch
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            repostory.InsertLargeBatch(originals);
 
-            var actual = repostory.CountByLastName(batchKey);
-            Assert.AreEqual(RowCount, actual, "Incorrect number of rows created");
-        }
-
-        [TestMethod]
-        public void InsertBatch_100_000()
-        {
-            const int RowCount = 100_000;
-            var repostory = GetScenario();
-
-            var batchKey = Guid.NewGuid().ToString();
-            var originals = BuildEmployees(RowCount, batchKey);
             repostory.InsertLargeBatch(originals);
 
             var actual = repostory.CountByLastName(batchKey);
@@ -55,7 +68,7 @@ namespace Recipes.LargeBatch
 
         protected abstract ILargeBatchScenario<TEmployeeSimple> GetScenario();
 
-        static IList<TEmployeeSimple> BuildEmployees(int count, string batchKey)
+        static protected IList<TEmployeeSimple> BuildEmployees(int count, string batchKey)
         {
             var result = new List<TEmployeeSimple>();
             for (var i = 0; i < count; i++)

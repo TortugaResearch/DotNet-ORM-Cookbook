@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Entity Framework 6 - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="ORMs.htm">ORMs</a></span></li>
+<li class="tocentry"><a href="ADO.htm">ADO.NET</a>
+</li>
+<li class="tocentry"><a href="Chain.htm">Chain</a>
+</li>
+<li class="tocentry"><a href="Dapper.htm">Dapper</a>
+</li>
+<li class="tocentry current"><a class="current" href="EF6.htm">Entity Framework 6</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#supported-databases">Supported Databases</a></li>
+
+<li class="tocentry"><a href="#libraries">Libraries</a></li>
+
+<li class="tocentry"><a href="#setup">Setup</a></li>
+
+<li class="tocentry"><a href="#documentation-and-tutorials">Documentation and Tutorials</a></li>
+
+<li class="tocentry"><a href="#bug-reporting">Bug Reporting</a></li>
+
+<li class="tocentry"><a href="#licensing">Licensing</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="EFCore.htm">Entity Framework Core</a>
+</li>
+<li class="tocentry"><a href="LLBLGenPro.htm">LLBLGen Pro</a>
+</li>
+<li class="tocentry"><a href="NHibernate.htm">NHibernate</a>
+</li>
+<li class="tocentry"><a href="RepoDb.htm">RepoDb</a>
+</li>
+<li class="tocentry"><a href="ServiceStack.htm">ServiceStack</a>
+</li>
+
+</ul>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+</li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="ORMs.htm">ORMs</a></li> / <li><a href="EF6.htm">Entity Framework 6</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>TOOD: Overview </p>
+<h2 id="supported-databases">Supported Databases<a class="headerlink" href="#supported-databases" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO: Which databases are supported?</p>
+<h2 id="libraries">Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO: List of NuGet packages, tools, etc. needed</p>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO: Quick overview for setting up the ORM for a project</p>
+<h2 id="documentation-and-tutorials">Documentation and Tutorials<a class="headerlink" href="#documentation-and-tutorials" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO: Links to learning resource</p>
+<h2 id="bug-reporting">Bug Reporting<a class="headerlink" href="#bug-reporting" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO: Where are bugs reported to?</p>
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO: License information</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

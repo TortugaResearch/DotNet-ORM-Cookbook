@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Recipes.BulkInsert
@@ -22,7 +21,7 @@ namespace Recipes.BulkInsert
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            var dt = CreateDataTable(originals);
+            var dt = Utilities.CopyToDataTable(originals);
             repostory.BulkInsert(dt);
 
             var actual = repostory.CountByLastName(batchKey);
@@ -38,7 +37,7 @@ namespace Recipes.BulkInsert
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            var dt = CreateDataTable(originals);
+            var dt = Utilities.CopyToDataTable(originals);
             repostory.BulkInsert(dt);
 
             var actual = repostory.CountByLastName(batchKey);
@@ -54,7 +53,7 @@ namespace Recipes.BulkInsert
 
             var batchKey = Guid.NewGuid().ToString();
             var originals = BuildEmployees(RowCount, batchKey);
-            var dt = CreateDataTable(originals);
+            var dt = Utilities.CopyToDataTable(originals);
             repostory.BulkInsert(dt);
 
             var actual = repostory.CountByLastName(batchKey);
@@ -118,34 +117,6 @@ namespace Recipes.BulkInsert
                     EmployeeClassificationKey = (i % 7) + 1
                 });
             }
-            return result;
-        }
-
-        static DataTable CreateDataTable(IList<TEmployeeSimple> employees)
-        {
-            var result = new DataTable();
-            result.Columns.Add("CellPhone", typeof(string));
-            result.Columns.Add("EmployeeClassificationKey", typeof(int));
-            result.Columns.Add("FirstName", typeof(string));
-            result.Columns.Add("MiddleName", typeof(string));
-            result.Columns.Add("LastName", typeof(string));
-            result.Columns.Add("OfficePhone", typeof(string));
-            result.Columns.Add("Title", typeof(string));
-
-            foreach (var employee in employees)
-            {
-                var row = result.NewRow();
-                row["CellPhone"] = employee.CellPhone;
-                row["EmployeeClassificationKey"] = employee.EmployeeClassificationKey;
-                row["FirstName"] = employee.FirstName;
-                row["MiddleName"] = employee.MiddleName;
-                row["LastName"] = employee.LastName;
-                row["OfficePhone"] = employee.OfficePhone;
-                row["Title"] = employee.Title;
-
-                result.Rows.Add(row);
-            }
-
             return result;
         }
     }

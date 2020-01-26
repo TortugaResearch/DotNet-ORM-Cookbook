@@ -12,6 +12,7 @@
       "ADO.NET": "ADO.md",
       "Chain": "Chain.md",
       "Dapper": "Dapper.md",
+      "Entity Framework 6": "EF6.md",
       "Entity Framework Core": "EFCore.md",
       "LLBLGen Pro": "LLBLGenPro.md",
       "NHibernate": "NHibernate.md",

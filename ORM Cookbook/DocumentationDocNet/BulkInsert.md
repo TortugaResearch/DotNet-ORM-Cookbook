@@ -8,11 +8,15 @@ Smaller collections should be handled with a batch insert. This is described in 
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes\LargeBatch\ILargeBatchScenario`1.cs] ILargeBatchScenario{TEmployeeSimple}
+@snippet cs [..\Recipes\BulkInsert\IBulkInsertScenario`1.cs] IBulkInsertScenario{TEmployeeSimple}
+
+For ORMs that do not support bulk inserts from objects, this mapping function is provided.
+
+@snippet cs [..\Recipes\BulkInsert\Utilities.cs] CopyToDataTable
 
 ## ADO.NET
 
-TODO
+@snippet cs [..\Recipes.ADO\BulkInsert\BulkInsertScenario.cs] BulkInsertScenario
 
 ## Chain
 
@@ -20,13 +24,19 @@ TODO
 
 ## Dapper
 
-TODO
+Dapper does not have support for bulk inserts.
+
+## Entity Framework 6
+
+Entity Framework does not have support for bulk inserts.
 
 ## Entity Framework Core
 
-TODO
+Entity Framework Core does not have support for bulk inserts.
 
 ## LINQ to DB
+
+For more information see [Bulk Copy (Bulk Insert)](https://linq2db.github.io/articles/sql/Bulk-Copy.html)
 
 TODO
 
@@ -36,7 +46,7 @@ TODO
 
 ## NHibernate
 
-TODO
+NHibernate does not have support for bulk inserts.
 
 ## RepoDb
 
@@ -44,4 +54,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+ServiceStack does not have support for bulk inserts.
