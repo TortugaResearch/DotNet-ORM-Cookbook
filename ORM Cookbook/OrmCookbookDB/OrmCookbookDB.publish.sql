@@ -360,6 +360,7 @@ CREATE TABLE [HR].[EmployeeClassification] (
     [EmployeeClassificationName] VARCHAR (30) NOT NULL,
     [IsExempt]                   BIT          NOT NULL,
     [IsEmployee]                 BIT          NOT NULL,
+    [IncludeInHolidayParty]      BIT          NULL,
     CONSTRAINT [PK_EmployeeClassification] PRIMARY KEY CLUSTERED ([EmployeeClassificationKey] ASC),
     CONSTRAINT [UX_EmployeeClassification_EmployeeClassificationName] UNIQUE NONCLUSTERED ([EmployeeClassificationName] ASC)
 );
@@ -463,6 +464,15 @@ PRINT N'Creating [HR].[D_EmployeeClassification_IsEmployee]...';
 GO
 ALTER TABLE [HR].[EmployeeClassification]
     ADD CONSTRAINT [D_EmployeeClassification_IsEmployee] DEFAULT (1) FOR [IsEmployee];
+
+
+GO
+PRINT N'Creating [HR].[D_EmployeeClassification_IncludeInHolidayParty]...';
+
+
+GO
+ALTER TABLE [HR].[EmployeeClassification]
+    ADD CONSTRAINT [D_EmployeeClassification_IncludeInHolidayParty] DEFAULT (1) FOR [IncludeInHolidayParty];
 
 
 GO
@@ -624,6 +634,14 @@ BEGIN
 
     RETURN 0;
 END;
+GO
+PRINT N'Creating [HR].[EmployeeClassification].[IncludeInHolidayParty].[MS_Description]...';
+
+
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'An unusual case where there is a default for a nullable column.', @level0type = N'SCHEMA', @level0name = N'HR', @level1type = N'TABLE', @level1name = N'EmployeeClassification', @level2type = N'COLUMN', @level2name = N'IncludeInHolidayParty';
+
+
 GO
 /*
 Post-Deployment Script Template							
