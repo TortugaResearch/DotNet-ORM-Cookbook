@@ -76,4 +76,6 @@ No changes are needed.
 
 ## ServiceStack
 
-TODO
+No changes are needed. 
+
+@snippet cs [..\Recipes.ServiceStack\LargeBatch\LargeBatchScenario.cs] LargeBatchScenario
