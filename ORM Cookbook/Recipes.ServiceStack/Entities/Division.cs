@@ -6,11 +6,11 @@ namespace Recipes.ServiceStack.Entities
 {
     [Alias("Division")]
     [Schema("HR")]
-    public class Division
+    public partial class Division : IDivision
     {
         [PrimaryKey, AutoIncrement] [Alias("DivisionKey")] 
         public int Id { get; set; }
-
+        public Guid DivisionId { get; set; }
         [Required] [StringLength(30)] 
         public string? DivisionName { get; set; }
 
@@ -28,5 +28,12 @@ namespace Recipes.ServiceStack.Entities
 
         [Reference] 
         public virtual List<Department> Departments { get; } = new List<Department>();
+    }
+
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class Division : IDivision
+    {
+        [Ignore]
+        int IDivision.DivisionKey { get => Id; set => Id = value; }
     }
 }
