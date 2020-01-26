@@ -20,6 +20,10 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 
 @snippet cs [..\Recipes.Dapper\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
+
 ## Entity Framework Core
 
 @snippet cs [..\Recipes.EntityFrameworkCore\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
@@ -42,4 +46,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario

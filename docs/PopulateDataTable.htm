@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -73,6 +77,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -236,6 +242,125 @@
             result.Load(reader);
 
         return result;
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>EF Core does not support <code>DataTable</code>. </p>
+<pre><code class="cs">public class PopulateDataTableScenario : IPopulateDataTableScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public PopulateDataTableScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        var dt = new DataTable();
+        dt.Columns.Add(&quot;EmployeeClassificationKey&quot;, typeof(int));
+        dt.Columns.Add(&quot;EmployeeClassificationName&quot;, typeof(string));
+        dt.Columns.Add(&quot;IsExempt&quot;, typeof(bool));
+        dt.Columns.Add(&quot;IsEmployee&quot;, typeof(bool));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var row in context.EmployeeClassification.Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee))
+                dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+        return dt;
+    }
+
+    public DataTable GetAll()
+    {
+        var dt = new DataTable();
+        dt.Columns.Add(&quot;EmployeeClassificationKey&quot;, typeof(int));
+        dt.Columns.Add(&quot;EmployeeClassificationName&quot;, typeof(string));
+        dt.Columns.Add(&quot;IsExempt&quot;, typeof(bool));
+        dt.Columns.Add(&quot;IsEmployee&quot;, typeof(bool));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var row in context.EmployeeClassification)
+                dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+        return dt;
+    }
+}
+</code></pre>
+
+<p>You can generalize this using a reflection library.</p>
+<pre><code class="cs">public class PopulateDataTableScenario2 : IPopulateDataTableScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public PopulateDataTableScenario2(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        var propertyList = MetadataCache.GetMetadata&lt;EmployeeClassification&gt;().Properties.Where(p =&gt; p.CanRead).ToList();
+
+        var dt = BuildGenericDataTable(propertyList);
+
+        using (var context = CreateDbContext())
+        {
+            var buffer = new object[propertyList.Count];
+            foreach (var row in context.EmployeeClassification.Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee))
+            {
+                for (var i = 0; i &lt; propertyList.Count; i++)
+                    buffer[i] = propertyList[i].InvokeGet(row) ?? DBNull.Value;
+
+                dt.Rows.Add(buffer);
+            }
+        }
+        return dt;
+    }
+
+    public DataTable GetAll()
+    {
+        var propertyList = MetadataCache.GetMetadata&lt;EmployeeClassification&gt;().Properties.Where(p =&gt; p.CanRead).ToList();
+
+        var dt = BuildGenericDataTable(propertyList);
+
+        using (var context = CreateDbContext())
+        {
+            var buffer = new object[propertyList.Count];
+            foreach (var row in context.EmployeeClassification)
+            {
+                for (var i = 0; i &lt; propertyList.Count; i++)
+                    buffer[i] = propertyList[i].InvokeGet(row) ?? DBNull.Value;
+
+                dt.Rows.Add(buffer);
+            }
+        }
+        return dt;
+    }
+
+    static DataTable BuildGenericDataTable(List&lt;PropertyMetadata&gt; propertyList)
+    {
+        var dt = new DataTable();
+        foreach (var property in propertyList)
+        {
+            var propertyType = MetadataCache.GetMetadata(property.PropertyType);
+            if (propertyType.IsNullable &amp;&amp; propertyType.TypeInfo.IsValueType) //Special handling for Nullable&lt;T&gt;
+            {
+                var underlyingType = propertyType.TypeInfo.GenericTypeArguments[0];
+                var col = dt.Columns.Add(property.Name, underlyingType);
+                col.AllowDBNull = true;
+            }
+            else
+            {
+                var col = dt.Columns.Add(property.Name, property.PropertyType);
+                col.AllowDBNull = property.IsReferenceNullable ?? propertyType.IsNullable;
+            }
+        }
+
+        return dt;
     }
 }
 </code></pre>
@@ -554,7 +679,48 @@ public class DataTableResultTransformer : IResultTransformer
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class PopulateDataTableScenario : IPopulateDataTableScenario
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    
+    public PopulateDataTableScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        var dt = new DataTable();
+        dt.Columns.AddRange( ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
+            new DataColumn(k.FieldName, k.FieldType)).ToArray());
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var sql = db.From&lt;EmployeeClassification&gt;().Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee);
+            foreach (var row in db.SelectLazy(sql))
+                dt.Rows.Add(row.Id, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+
+        return dt;
+    }
+
+    public DataTable GetAll()
+    {
+        var dt = new DataTable();
+        dt.Columns.AddRange( ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
+            new DataColumn(k.FieldName, k.FieldType)).ToArray());
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            foreach (var row in db.SelectLazy(db.From&lt;EmployeeClassification&gt;()))
+                dt.Rows.Add(row.Id, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+
+        return dt;
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

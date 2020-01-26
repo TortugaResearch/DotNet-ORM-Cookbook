@@ -46,6 +46,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
@@ -74,6 +76,10 @@
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
@@ -482,6 +488,152 @@ public class EmployeeClassification : IEmployeeClassification
 
         using (var con = OpenConnection())
             con.Execute(sql, classification);
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public SingleModelCrudScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public virtual void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.ToList();
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+        }
+    }
+
+    public virtual void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.SaveChanges();
+            }
+        }
+    }
+}
+</code></pre>
+
+<div class="alert alert-info"><span class="alert-title"><i class="fa fa-info-circle"></i> Info</span><p>The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.</p>
+</div><h3 id="entity-framework-6---improved">Entity Framework 6 - Improved<a class="headerlink" href="#entity-framework-6---improved" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>The design of Entity Framework 6 requires extraneous database calls when performing an update or delete operation. This revised version eliminates the extra calls.</p>
+<pre><code class="cs">public class SingleModelCrudScenario2 : SingleModelCrudScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public SingleModelCrudScenario2(Func&lt;OrmCookbookContext&gt; dBContextFactory) : base(dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public override void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(classification).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public override void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
+            context.Entry(temp).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public override void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(classification).State = EntityState.Modified;
+            context.SaveChanges();
+        }
     }
 }
 </code></pre>
@@ -1064,27 +1216,19 @@ public class EmployeeClassification : IEmployeeClassification
 <pre><code class="cs">[Alias(&quot;EmployeeClassification&quot;), Schema(&quot;HR&quot;)]
 public partial class EmployeeClassification
 {
-    [PrimaryKey, AutoIncrement]
-    [Alias(&quot;EmployeeClassificationKey&quot;)]
+    [PrimaryKey, AutoIncrement, Alias(&quot;EmployeeClassificationKey&quot;)]
     public int Id { get; set; }
+
+    [Required, StringLength(30)]
+    public string? EmployeeClassificationName { get; set; }
 
     public bool IsExempt { get; set; }
 
     public bool IsEmployee { get; set; }
 
     [Reference]
-    public virtual List&lt;Employee&gt; Employees { get; } = new List&lt;Employee&gt;();
-
-    [Required, StringLength(30)]
-    public string? EmployeeClassificationName { get; set; }
-}
-
-    //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class EmployeeClassification : IEmployeeClassification
-    {
-        int IEmployeeClassification.EmployeeClassificationKey { get =&gt; Id; set =&gt; Id = value; }
-        int IReadOnlyEmployeeClassification.EmployeeClassificationKey { get =&gt; Id; }
-    }
+    [SuppressMessage(&quot;Usage&quot;, &quot;CA2227:Collection properties should be read only&quot;, Justification = &quot;Required by ServiceStack&quot;)]
+    public List&lt;Employee&gt; Employees { get; set; } = new List&lt;Employee&gt;();
 }
 </code></pre>
 

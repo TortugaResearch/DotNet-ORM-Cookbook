@@ -1,12 +1,13 @@
-﻿using Recipes.RepoDb.Models;
-using Recipes.MultipleCrud;
+﻿using Recipes.MultipleCrud;
+using Recipes.RepoDb.Models;
+using RepoDb;
+using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data.SqlClient;
-using RepoDb;
+using System.Linq;
+
 using RDB = RepoDb;
-using RepoDb.Extensions;
 
 namespace Recipes.RepoDb.MultipleCrud
 {
@@ -72,7 +73,6 @@ namespace Recipes.RepoDb.MultipleCrud
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            // TODO: Can you review this? What is the intention of this 'WithRefresh()'?
             InsertAll(employees);
         }
 

@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -80,6 +84,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -357,6 +363,8 @@ END;
 }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>To use stored procedures that return values, a class is needed to receive the results. This is true even if a scalar value is returned.</p>
 <p>The receiver class should be registered in the DbContext just like any other Entity, but with two additional requirements in the <code>modelBuilder</code> configuration:</p>
@@ -540,7 +548,64 @@ END;
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class BasicStoredProcScenario : IBasicStoredProcScenario&lt;EmployeeClassification, EmployeeClassificationWithCount&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public BasicStoredProcScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public IList&lt;EmployeeClassificationWithCount&gt; CountEmployeesByClassification()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.CountEmployeesByClassification&quot;))
+            {
+                return cmd.ConvertToList&lt;EmployeeClassificationWithCount&gt;();
+            }
+        }
+    }
+
+    public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
+    {
+        if (employeeClassification == null)
+            throw new ArgumentNullException(nameof(employeeClassification), $&quot;{nameof(employeeClassification)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.CreateEmployeeClassification&quot;, new { employeeClassification.EmployeeClassificationName, employeeClassification.IsEmployee, employeeClassification.IsExempt }))
+            {
+                return (int) cmd.Scalar();
+            }
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetEmployeeClassifications()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.GetEmployeeClassifications&quot;))
+            {
+                return cmd.ConvertToList&lt;EmployeeClassification&gt;();
+            }
+        }
+    }
+
+    public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using (var cmd = db.SqlProc(&quot;HR.GetEmployeeClassifications&quot;, new { EmployeeClassificationKey = employeeClassificationKey }))
+            {
+                return cmd.ConvertTo&lt;EmployeeClassification&gt;();
+            }
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

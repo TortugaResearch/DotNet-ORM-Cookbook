@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -82,6 +86,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -677,6 +683,8 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Child objects outside of the DBContext (e.g. from a REST call) need to be mapped to an object created by the DBContext.</p>
 <p>This provides a layer of safety, as otherwise clients could override data in the lookup table.</p>
@@ -1022,7 +1030,83 @@ public partial class EmployeeComplex : IEmployeeComplex
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;Employee&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    public ModelWithLookupComplexScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+        
+        employee.EmployeeClassificationId = employee.EmployeeClassification.Id;
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Save(employee);
+        }
+
+        return employee.Id;
+    }
+
+    public void Delete(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Delete(employee);
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.DeleteById&lt;Employee&gt;(employeeKey);
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.LoadSelect&lt;Employee&gt;(e =&gt; e.LastName == lastName);
+    }
+
+    public IList&lt;Employee&gt; GetAll()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.LoadSelect&lt;Employee&gt;();
+    }
+
+    public Employee? GetByKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.LoadSingleById&lt;Employee&gt;(employeeKey);
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+
+    public void Update(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        if (employee.EmployeeClassification != null)
+            employee.EmployeeClassificationId = employee.EmployeeClassification.Id;
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Update(employee);
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

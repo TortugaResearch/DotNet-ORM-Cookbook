@@ -22,6 +22,10 @@ Columns to be sorted by are passed in as strings, but checked against the list o
 
 @snippet cs [..\Recipes.Dapper\Sorting\SortingScenario.cs] SortingScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\Sorting\SortingScenario.cs] SortingScenario
+
 ## Entity Framework Core
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Sorting\SortingScenario.cs] SortingScenario

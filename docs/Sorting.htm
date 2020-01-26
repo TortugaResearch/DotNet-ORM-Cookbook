@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -69,6 +73,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -318,6 +324,49 @@ VALUES
                 return con.Query&lt;EmployeeSimple&gt;(sql).ToList();
         }
     }
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public SortingScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Employee.Add(employee);
+            context.SaveChanges();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;Employee&gt; SortByLastName()
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.OrderBy(x =&gt; x.LastName).ToList();
+    }
+
+    public IList&lt;Employee&gt; SortByLastNameDescFirstName()
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.OrderByDescending(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+    }
+
+    public IList&lt;Employee&gt; SortByLastNameFirstName()
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.OrderBy(x =&gt; x.LastName).ThenBy(x =&gt; x.FirstName).ToList();
+    }
+}
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

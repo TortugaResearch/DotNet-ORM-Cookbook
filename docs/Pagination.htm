@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -71,6 +75,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -502,6 +508,67 @@ ORDER BY e.FirstName,
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public PaginationScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Employee.AddRange(employees);
+            context.SaveChanges();
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                .Skip(page * pageSize).Take(pageSize).ToList();
+    }
+
+    [SuppressMessage(&quot;Globalization&quot;, &quot;CA1307&quot;)]
+    public IList&lt;Employee&gt; PaginateWithSkipPast(string lastName, Employee? skipPast, int take)
+    {
+        using (var context = CreateDbContext())
+        {
+            if (skipPast == null)
+            {
+                return context.Employee.Where(e =&gt; e.LastName == lastName)
+                    .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                    .Take(take).ToList();
+            }
+            else
+            {
+                return context.Employee
+                    .Where(e =&gt; (e.LastName == lastName) &amp;&amp; (
+                        (string.Compare(e.FirstName, skipPast.FirstName) &gt; 0)
+                            || (e.FirstName == skipPast.FirstName &amp;&amp; e.EmployeeKey &gt; skipPast.EmployeeKey))
+                        )
+                    .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                    .Take(take).ToList();
+            }
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
+                .Skip(skip).Take(take).ToList();
+    }
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;Employee&gt;
 {
@@ -832,7 +899,84 @@ ORDER BY e.FirstName,
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;Employee&gt;
+{
+    private IDbConnectionFactory _dbConnectionFactory;
+
+    public PaginationScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        this._dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.InsertAll(employees);
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var q = db.From&lt;Employee&gt;()
+                .Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.Id)
+                .Skip(page * pageSize).Take(pageSize);
+            return db.Select&lt;Employee&gt;(q);
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithSkipPast(string lastName, Employee? skipPast, int take)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            if (skipPast == null)
+            {
+                return db.Select&lt;Employee&gt;(db.From&lt;Employee&gt;()
+                    .Where(e =&gt; e.LastName == lastName)
+                    .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.Id)
+                    .Take(take));
+            }
+
+            return db.Select&lt;Employee&gt;(db.From&lt;Employee&gt;(new TableOptions { Alias = &quot;e&quot; })
+                .Where(@&quot;
+                        (e.LastName = @LastName)
+                        AND
+                        (
+                            (e.FirstName &gt; @FirstName)
+                            OR
+                            (
+                                e.FirstName = @FirstName
+                                AND e.EmployeeKey &gt; @Id
+                            )
+                        )&quot;
+                )
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.Id)
+                .Take(take), new
+            {
+                skipPast.LastName,
+                skipPast.FirstName,
+                skipPast.Id
+            });
+        }
+    }
+
+    public IList&lt;Employee&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var q = db.From&lt;Employee&gt;()
+                .Where(e =&gt; e.LastName == lastName)
+                .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.Id)
+                .Skip(skip).Take(take);
+            return db.Select&lt;Employee&gt;(q);
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

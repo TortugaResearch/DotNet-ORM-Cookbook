@@ -26,6 +26,14 @@ While there is an open transaction against a connection, all commands must be ex
 
 @snippet cs [..\Recipes.Dapper\Transactions\TransactionsScenario.cs] TransactionsScenario
 
+## Entity Framework 6
+
+Entity Framework will automatically create and commit a transaction when you call `SaveChanges()`. To override this behavior, you can explicitly create a transaction. 
+
+When setting the isolation level, you need to use an extension method defined in `Microsoft.EntityFramework.RelationalDatabaseFacadeExtensions`.
+
+@snippet cs [..\Recipes.EntityFramework\Transactions\TransactionsScenario.cs] TransactionsScenario
+
 ## Entity Framework Core
 
 EF Core will automatically create and commit a transaction when you call `SaveChanges()`. To override this behavior, you can explicitly create a transaction. 
@@ -58,4 +66,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Transactions\TransactionsScenario.cs] TransactionsScenario

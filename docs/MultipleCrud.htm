@@ -60,6 +60,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
@@ -75,6 +77,10 @@
 
 
 </ul>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -160,7 +166,7 @@
     IList&lt;TEmployeeSimple&gt; InsertBatchReturnRows(IList&lt;TEmployeeSimple&gt; employees);
 
     /// &lt;summary&gt;
-    /// Insert a collection of Employee rows and update the original rows with the new keys.
+    /// Insert a collection of Employee rows and update the original objects with the new keys.
     /// &lt;/summary&gt;
     void InsertBatchWithRefresh(IList&lt;TEmployeeSimple&gt; employees);
 
@@ -732,6 +738,119 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public MultipleCrudScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public void DeleteBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Entry(employee).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var key in employeeKeys)
+                context.Entry(new Employee() { EmployeeKey = key }).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(ec =&gt; ec.LastName == lastName).ToList();
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+
+        return employees.Select(x =&gt; x.EmployeeKey).ToList();
+    }
+
+    public IList&lt;Employee&gt; InsertBatchReturnRows(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Employee.Add(employee);
+            context.SaveChanges();
+        }
+    }
+
+    public void UpdateBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var context = CreateDbContext())
+        {
+            foreach (var employee in employees)
+                context.Entry(employee).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;Employee&gt;
 {
@@ -1173,7 +1292,6 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        // TODO: Can you review this? What is the intention of this 'WithRefresh()'?
         InsertAll(employees);
     }
 
@@ -1188,7 +1306,86 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;Employee&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    public MultipleCrudScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public void DeleteBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.DeleteAll(employees);
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.DeleteByIds&lt;Employee&gt;(employeeKeys);
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Select&lt;Employee&gt;(e =&gt; e.LastName == lastName);
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.InsertAll(employees);
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.SaveAll(employees);
+
+        return employees.Select(e =&gt; e.Id).ToList();
+    }
+
+    public IList&lt;Employee&gt; InsertBatchReturnRows(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.SaveAll(employees);
+
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.SaveAll(employees);
+    }
+
+    public void UpdateBatch(IList&lt;Employee&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.UpdateAll(employees);
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

@@ -25,6 +25,10 @@ Note: While writing to views is supported by some databases, that capability is 
 
 @snippet cs [..\Recipes.Dapper\Views\ViewsScenario.cs] ViewsScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\Views\ViewsScenario.cs] ViewsScenario
+
 ## Entity Framework Core
 
 Starting with EF Core 3.0, views are treated like tables, but with two additional requirements in the `modelBuilder` configuration:
