@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Recipes.ServiceStack.Entities;
 using Recipes.Upsert;
 using ServiceStack;
@@ -9,7 +7,7 @@ using ServiceStack.OrmLite;
 
 namespace Recipes.ServiceStack.Upsert
 {
-    class UpsertScenario : IUpsertScenario<Division>
+    public class UpsertScenario : IUpsertScenario<Division>
     {
         private IDbConnectionFactory _dbConnectionFactory;
 
@@ -28,6 +26,9 @@ namespace Recipes.ServiceStack.Upsert
 
         public int UpsertByName(Division division)
         {
+            if (division == null)
+                throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
+
             if (division.CreatedDate == default(DateTime))
                 division.CreatedDate = DateTime.UtcNow;
             division.ModifiedDate = DateTime.UtcNow;
@@ -47,6 +48,9 @@ namespace Recipes.ServiceStack.Upsert
 
         public int UpsertByPrimaryKey(Division division)
         {
+            if (division == null)
+                throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
+
             if (division.CreatedDate == default(DateTime))
                 division.CreatedDate = DateTime.UtcNow;
             division.ModifiedDate = DateTime.UtcNow;
