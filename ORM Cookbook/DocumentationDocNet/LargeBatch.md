@@ -1,6 +1,8 @@
 ﻿# Batch Inserts with Large Collections
 
-This scenario demonstrate how to perform insert operations on collections of 1,000 to 100,000 objects. Some ORMs require special handling for collections of this size. Others use the same pattern seen in [CRUD Operations on Multiple Objects](LargeBatch.htm).
+This scenario demonstrate how to perform insert operations on collections of 1,000 to 10,000 objects. Some ORMs require special handling for collections of this size. 
+
+For other batch operations, see [CRUD Operations on Multiple Objects](LargeBatch.htm).
 
 For better performance, consider using a [Bulk Insert](BulkInsert.htm) instead. 
 
@@ -14,7 +16,7 @@ For ORMs that require breaking up the size of the batch, this function is provid
 
 ## ADO.NET
 
-Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately `2000/number of columns`.
+Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately `2100/number of columns`.
 
 @snippet cs [..\Recipes.ADO\LargeBatch\LargeBatchScenario.cs] LargeBatchScenario
 
@@ -28,7 +30,7 @@ The `InsertMultipleBatch` command is not atomic and should be used in a transact
 
 ## Dapper
 
-Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately `2000/number of columns`.
+Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately `2100/number of columns`.
 
 @snippet cs [..\Recipes.Dapper\LargeBatch\LargeBatchScenario.cs] LargeBatchScenario
 
@@ -46,7 +48,13 @@ No changes are needed.
 
 ## LINQ to DB
 
-TODO
+LinqToDB only supports batch inserts from a collection of objects. 
+
+Note the use of `BulkCopyType.MultipleRows`.
+
+@snippet cs [..\Recipes.LinqToDB\BulkInsert\BulkInsertScenario.cs] BulkInsert
+
+For more information see [Bulk Copy (Bulk Insert)](https://linq2db.github.io/articles/sql/Bulk-Copy.html)
 
 ## LLBLGen Pro 
 

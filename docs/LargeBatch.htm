@@ -128,7 +128,8 @@
                 <div role="main">
                     <div class="section">
 <h1 id="batch-inserts-with-large-collections">Batch Inserts with Large Collections<a class="headerlink" href="#batch-inserts-with-large-collections" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This scenario demonstrate how to perform insert operations on collections of 1,000 to 100,000 objects. Some ORMs require special handling for collections of this size. Others use the same pattern seen in <a href="LargeBatch.htm">CRUD Operations on Multiple Objects</a>.</p>
+<p>This scenario demonstrate how to perform insert operations on collections of 1,000 to 10,000 objects. Some ORMs require special handling for collections of this size. </p>
+<p>For other batch operations, see <a href="LargeBatch.htm">CRUD Operations on Multiple Objects</a>.</p>
 <p>For better performance, consider using a <a href="BulkInsert.htm">Bulk Insert</a> instead. </p>
 <h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public interface ILargeBatchScenario&lt;TEmployeeSimple&gt;
@@ -192,7 +193,7 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately <code>2000/number of columns</code>.</p>
+<p>Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately <code>2100/number of columns</code>.</p>
 <pre><code class="cs">    public class LargeBatchScenario : ScenarioBase, ILargeBatchScenario&lt;EmployeeSimple&gt;
     {
         public LargeBatchScenario(string connectionString) : base(connectionString)
@@ -306,7 +307,7 @@ VALUES &quot;);
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately <code>2000/number of columns</code>.</p>
+<p>Large collections need to be broken up into batches. For SQL Server, the maximum batch size is approximately <code>2100/number of columns</code>.</p>
 <pre><code class="cs">    public class LargeBatchScenario : ScenarioBase, ILargeBatchScenario&lt;EmployeeSimple&gt;
     {
         public LargeBatchScenario(string connectionString) : base(connectionString)
@@ -459,7 +460,22 @@ VALUES &quot;);
 </code></pre>
 
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>LinqToDB only supports batch inserts from a collection of objects. </p>
+<p>Note the use of <code>BulkCopyType.MultipleRows</code>.</p>
+<pre><code class="cs">public void BulkInsert(IList&lt;Employee&gt; employees)
+{
+    var options = new BulkCopyOptions() { BulkCopyType = BulkCopyType.ProviderSpecific };
+    using (var db = new OrmCookbook())
+        db.BulkCopy(options, employees);
+}
+
+public void BulkInsert(DataTable employees)
+{
+    Assert.Inconclusive(&quot;Bulk insert using a DataTable is not supported.&quot;);
+}
+</code></pre>
+
+<p>For more information see <a href="https://linq2db.github.io/articles/sql/Bulk-Copy.html" target="_blank">Bulk Copy (Bulk Insert)</a></p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>No changes are needed. </p>
 <pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;EmployeeEntity&gt;

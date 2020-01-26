@@ -16,11 +16,13 @@ For ORMs that do not support bulk inserts from objects, this mapping function is
 
 ## ADO.NET
 
-@snippet cs [..\Recipes.ADO\BulkInsert\BulkInsertScenario.cs] BulkInsertScenario
+ADO only supports bulk inserts from a DataTable.
+
+@snippet cs [..\Recipes.ADO\BulkInsert\BulkInsertScenario.cs] BulkInsert
 
 ## Chain
 
-TODO
+@snippet cs [..\Recipes.Tortuga.Chain\BulkInsert\BulkInsertScenario.cs] BulkInsert
 
 ## Dapper
 
@@ -36,9 +38,13 @@ Entity Framework Core does not have support for bulk inserts.
 
 ## LINQ to DB
 
-For more information see [Bulk Copy (Bulk Insert)](https://linq2db.github.io/articles/sql/Bulk-Copy.html)
+LinqToDB only supports bulk inserts from a collection of objects.
 
-TODO
+Note the use of `BulkCopyType.ProviderSpecific`.
+
+@snippet cs [..\Recipes.LinqToDB\BulkInsert\BulkInsertScenario.cs] BulkInsert
+
+For more information see [Bulk Copy (Bulk Insert)](https://linq2db.github.io/articles/sql/Bulk-Copy.html)
 
 ## LLBLGen Pro 
 

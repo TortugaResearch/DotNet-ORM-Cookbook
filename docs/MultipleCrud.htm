@@ -166,7 +166,7 @@
     IList&lt;TEmployeeSimple&gt; InsertBatchReturnRows(IList&lt;TEmployeeSimple&gt; employees);
 
     /// &lt;summary&gt;
-    /// Insert a collection of Employee rows and update the original rows with the new keys.
+    /// Insert a collection of Employee rows and update the original objects with the new keys.
     /// &lt;/summary&gt;
     void InsertBatchWithRefresh(IList&lt;TEmployeeSimple&gt; employees);
 
@@ -1292,7 +1292,6 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        // TODO: Can you review this? What is the intention of this 'WithRefresh()'?
         InsertAll(employees);
     }
 
