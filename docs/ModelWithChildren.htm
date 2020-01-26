@@ -48,6 +48,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
@@ -74,6 +76,10 @@
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
@@ -980,6 +986,8 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>When performing an update, ensure that the <code>EntityState</code> is correctly set for each child record based on whether it is an insert or update.</p>
 <p>For partial deletes, you have to explicitly find and delete the child rows that are no longer needed.</p>
@@ -1642,7 +1650,139 @@ have to set up the deletes as cascading on the foreign key constraint. </p>
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    public ModelWithChildrenScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Save(productLine, true);
+
+        return productLine.Id;
+    }
+
+    public void Delete(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Delete&lt;Product&gt;(r =&gt; r.ProductLineId == productLine.Id);
+            db.Delete(productLine);
+        }
+    }
+
+    public void DeleteByKey(int productLineKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Delete&lt;Product&gt;(r =&gt; r.ProductLineId == productLineKey);
+            db.DeleteById&lt;ProductLine&gt;(productLineKey);
+        }
+    }
+
+    public IList&lt;ProductLine&gt; FindByName(string productLineName, bool includeProducts)
+    {
+        if (string.IsNullOrWhiteSpace(productLineName))
+            throw new ArgumentNullException(nameof(productLineName), $&quot;{nameof(productLineName)} is null or empty.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return includeProducts
+                ? db.LoadSelect&lt;ProductLine&gt;(e =&gt; e.ProductLineName == productLineName)
+                : db.Select&lt;ProductLine&gt;(e =&gt; e.ProductLineName == productLineName);
+        }
+    }
+
+    public IList&lt;ProductLine&gt; GetAll(bool includeProducts)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return includeProducts
+                ? db.LoadSelect&lt;ProductLine&gt;()
+                : db.Select&lt;ProductLine&gt;();
+        }
+    }
+
+    public ProductLine? GetByKey(int productLineKey, bool includeProducts)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var products = includeProducts
+                ? db.LoadSingleById&lt;ProductLine&gt;(productLineKey)
+                : db.SingleById&lt;ProductLine&gt;(productLineKey);
+            return products;
+        }
+    }
+
+    public void Update(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Update(productLine);
+    }
+
+    public void UpdateGraph(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Save(productLine, true);
+    }
+
+    public void UpdateGraphWithChildDeletes(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Save(productLine, true);
+
+            var productIdsToKeep = productLine.Products.Select(p =&gt; p.Id).ToList();
+
+            db.Delete&lt;Product&gt;(p =&gt;
+                p.ProductLineId == productLine.Id &amp;&amp; !Sql.In(p.Id, productIdsToKeep));
+        }
+    }
+
+    public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Save(productLine, true);
+
+            db.Delete&lt;Product&gt;(p =&gt;
+                p.ProductLineId == productLine.Id &amp;&amp; Sql.In(p.Id, productKeysToRemove));
+        }
+    }
+
+    public void Update(Product product)
+    {
+        if (product == null)
+            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Update(product);
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -80,6 +84,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -359,6 +365,65 @@
 }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework will automatically create and commit a transaction when you call <code>SaveChanges()</code>. To override this behavior, you can explicitly create a transaction. </p>
+<p>When setting the isolation level, you need to use an extension method defined in <code>Microsoft.EntityFramework.RelationalDatabaseFacadeExtensions</code>.</p>
+<pre><code class="cs">public class TransactionsScenario : ITransactionsScenario&lt;EmployeeClassification&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public TransactionsScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(EmployeeClassification classification, bool shouldRollBack)
+    {
+        using (var context = CreateDbContext())
+        using (var trans = context.Database.BeginTransaction())
+        {
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            var result = classification.EmployeeClassificationKey;
+
+            if (shouldRollBack)
+                trans.Rollback();
+            else
+                trans.Commit();
+
+            return result;
+        }
+    }
+
+    public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        using (var trans = context.Database.BeginTransaction(isolationLevel))
+        {
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            var result = classification.EmployeeClassificationKey;
+
+            if (shouldRollBack)
+                trans.Rollback();
+            else
+                trans.Commit();
+
+            return result;
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+    }
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>EF Core will automatically create and commit a transaction when you call <code>SaveChanges()</code>. To override this behavior, you can explicitly create a transaction. </p>
 <p>When setting the isolation level, you need to use an extension method defined in <code>Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions</code>.</p>
@@ -582,7 +647,65 @@
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">internal class TransactionsScenario : ITransactionsScenario&lt;EmployeeClassification&gt;
+{
+    private IDbConnectionFactory _dbConnectionFactory;
+
+    public TransactionsScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        this._dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(EmployeeClassification classification, bool shouldRollBack)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using(var tx = db.OpenTransaction())
+            {
+                var result = (int) db.Insert(classification, true);
+
+                if (shouldRollBack)
+                    tx.Rollback();
+                else
+                    tx.Commit();
+
+                return result;
+            }
+        }
+    }
+
+    public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            using(var tx = db.OpenTransaction(isolationLevel))
+            {
+                var result = (int) db.Insert(classification, true);
+
+                if (shouldRollBack)
+                    tx.Rollback();
+                else
+                    tx.Commit();
+
+                return result;
+            }
+        }
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

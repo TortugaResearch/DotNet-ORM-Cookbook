@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bulk Inserts - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
+</li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry current"><a class="current" href="BulkInsert.htm">Bulk Inserts</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+</li>
+<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+</li>
+<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="BulkInsert.htm">Bulk Inserts</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="bulk-inserts">Bulk Inserts<a class="headerlink" href="#bulk-inserts" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>This scenario demonstrate how to perform bulk inserts. In order to improve performance, this uses database-specific APIs rather than SQL. </p>
+<p>is used for large collections where SQL isn't appropriate.  operations on collections of 1,000 to 100,000 objects. Some ORMs require special handling for collections of this size. Others use the same pattern seen in .</p>
+<p>Smaller collections should be handled with a batch insert. This is described in <a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a> and <a href="LargeBatch.htm">Batch Inserts with Large Collections</a></p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IBulkInsertScenario&lt;TEmployeeSimple&gt;
+   where TEmployeeSimple : class, IEmployeeSimple, new()
+{
+    /// &lt;summary&gt;
+    /// Gets a collection of Employee rows by their name. Assume the name is not unique.
+    /// &lt;/summary&gt;
+    int CountByLastName(string lastName);
+
+    /// &lt;summary&gt;
+    /// Insert a large collection of Employee rows.
+    /// &lt;/summary&gt;
+    void BulkInsert(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Insert a large collection of Employee rows using a DataTable.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employees&quot;&gt;&lt;/param&gt;
+    void BulkInsert(DataTable employees);
+}
+</code></pre>
+
+<p>For ORMs that do not support bulk inserts from objects, this mapping function is provided.</p>
+<pre><code class="cs">[SuppressMessage(&quot;Design&quot;, &quot;CA1000&quot;)]
+public static DataTable CopyToDataTable(IEnumerable&lt;IEmployeeSimple&gt; employees)
+{
+    if (employees == null || !employees.Any())
+        throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+    var result = new DataTable();
+    result.Columns.Add(&quot;CellPhone&quot;, typeof(string));
+    result.Columns.Add(&quot;EmployeeClassificationKey&quot;, typeof(int));
+    result.Columns.Add(&quot;FirstName&quot;, typeof(string));
+    result.Columns.Add(&quot;MiddleName&quot;, typeof(string));
+    result.Columns.Add(&quot;LastName&quot;, typeof(string));
+    result.Columns.Add(&quot;OfficePhone&quot;, typeof(string));
+    result.Columns.Add(&quot;Title&quot;, typeof(string));
+
+    foreach (var employee in employees)
+    {
+        var row = result.NewRow();
+        row[&quot;CellPhone&quot;] = employee.CellPhone;
+        row[&quot;EmployeeClassificationKey&quot;] = employee.EmployeeClassificationKey;
+        row[&quot;FirstName&quot;] = employee.FirstName;
+        row[&quot;MiddleName&quot;] = employee.MiddleName;
+        row[&quot;LastName&quot;] = employee.LastName;
+        row[&quot;OfficePhone&quot;] = employee.OfficePhone;
+        row[&quot;Title&quot;] = employee.Title;
+
+        result.Rows.Add(row);
+    }
+
+    return result;
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>ADO only supports bulk inserts from a DataTable.</p>
+<pre><code class="cs">public void BulkInsert(IList&lt;EmployeeSimple&gt; employees)
+{
+    if (employees == null || employees.Count == 0)
+        throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+    var dataaTable = Utilities.CopyToDataTable(employees);
+
+    using (var con = OpenConnection())
+    using (var sbc = new SqlBulkCopy(con))
+    {
+        sbc.DestinationTableName = &quot;HR.Employee&quot;;
+        foreach (DataColumn? column in dataaTable.Columns)
+            sbc.ColumnMappings.Add(column!.ColumnName, column.ColumnName);
+        sbc.WriteToServer(dataaTable);
+    }
+}
+
+public void BulkInsert(DataTable employees)
+{
+    if (employees == null)
+        throw new ArgumentNullException(nameof(employees), $&quot;{nameof(employees)} is null.&quot;);
+
+    using (var con = OpenConnection())
+    using (var sbc = new SqlBulkCopy(con))
+    {
+        sbc.DestinationTableName = &quot;HR.Employee&quot;;
+        foreach (DataColumn? column in employees.Columns)
+            sbc.ColumnMappings.Add(column!.ColumnName, column.ColumnName);
+        sbc.WriteToServer(employees);
+    }
+}
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public void BulkInsert(IList&lt;EmployeeSimple&gt; employees)
+{
+    m_DataSource.InsertBulk(employees).Execute();
+}
+
+public void BulkInsert(DataTable employees)
+{
+    m_DataSource.InsertBulk(&quot;HR.Employee&quot;, employees).Execute();
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Dapper does not have support for bulk inserts.</p>
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework does not have support for bulk inserts.</p>
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework Core does not have support for bulk inserts.</p>
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LinqToDB only supports bulk inserts from a collection of objects.</p>
+<p>Note the use of <code>BulkCopyType.ProviderSpecific</code>.</p>
+<pre><code class="cs">public void BulkInsert(IList&lt;Employee&gt; employees)
+{
+    var options = new BulkCopyOptions() { BulkCopyType = BulkCopyType.ProviderSpecific };
+    using (var db = new OrmCookbook())
+        db.BulkCopy(options, employees);
+}
+
+public void BulkInsert(DataTable employees)
+{
+    Assert.Inconclusive(&quot;Bulk insert using a DataTable is not supported.&quot;);
+}
+</code></pre>
+
+<p>For more information see <a href="https://linq2db.github.io/articles/sql/Bulk-Copy.html" target="_blank">Bulk Copy (Bulk Insert)</a></p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>NHibernate does not have support for bulk inserts.</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>ServiceStack does not have support for bulk inserts.</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

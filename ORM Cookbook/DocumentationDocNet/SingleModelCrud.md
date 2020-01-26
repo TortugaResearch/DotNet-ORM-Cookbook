@@ -35,6 +35,20 @@ Dapper is essentially just ADO.NET with some helper methods to reduce the amount
 
 @snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenario.cs] SingleModelCrudScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
+
+@alert info
+The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.
+@end
+
+### Entity Framework 6 - Improved
+
+The design of Entity Framework 6 requires extraneous database calls when performing an update or delete operation. This revised version eliminates the extra calls.
+
+@snippet cs [..\Recipes.EntityFramework\SingleModelCrud\SingleModelCrudScenario2.cs] SingleModelCrudScenario2
+
 ## Entity Framework Core
 
 To use Entity Framework, one needs to create a DbContext class. Here is a minimal example:
@@ -138,12 +152,4 @@ ServiceStack requires the use of annotations on its models. These are specific t
 The repository resemebles Dapper, but with far less SQL.
 
 @snippet cs [..\Recipes.ServiceStack\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
-
-
-
-
-
-
-
-
 

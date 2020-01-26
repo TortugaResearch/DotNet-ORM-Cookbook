@@ -24,9 +24,15 @@ Chain doesn't natively support joins, so raw SQL (or a view) has to be used as a
 
 @snippet cs [..\Recipes.Dapper\Joins\JoinsScenario.cs] JoinsScenario
 
+## Entity Framework 6
+
+Entity Framework natively supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.
+
+@snippet cs [..\Recipes.EntityFramework\Joins\JoinsScenario.cs] JoinsScenario
+
 ## Entity Framework Core
 
-EF Core native supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.
+EF Core natively supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.
 
 @snippet cs [..\Recipes.EntityFrameworkCore\Joins\JoinsScenario.cs] JoinsScenario
 
@@ -62,4 +68,4 @@ RepoDb does not support joins by default, you have to right raw-SQLs to achieve 
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Joins\JoinsScenario.cs] JoinsScenario

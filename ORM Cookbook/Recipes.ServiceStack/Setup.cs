@@ -6,14 +6,23 @@ using ServiceStack.OrmLite;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using ServiceStack.OrmLite.SqlServer.Converters;
 
 namespace Recipes.ServiceStack
 {
     [TestClass]
     public class Setup
     {
-        static Lazy<IDbConnectionFactory> DbConnectionFactoryFactory = new Lazy<IDbConnectionFactory>(() =>
+        private static Lazy<IDbConnectionFactory> DbConnectionFactoryFactory = new Lazy<IDbConnectionFactory>(() =>
         {
+            // About SQL Server TIME Converter
+            // See: https://github.com/ServiceStack/ServiceStack.OrmLite/wiki/OrmLite-Type-Converters#sql-server-time-converter
+            SqlServerDialect.Provider.RegisterConverter<TimeSpan>(
+                new SqlServerTimeConverter
+                {
+                    Precision = 7
+                });
+
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
             var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
             return new OrmLiteConnectionFactory(sqlServerConnectionString, SqlServerDialect.Provider);

@@ -24,6 +24,10 @@ In order to promote code reuse, object population has been moved into the model'
 
 @snippet cs [..\Recipes.Dapper\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario
+
 ## Entity Framework Core
 
 @snippet cs [..\Recipes.EntityFrameworkCore\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario
@@ -46,4 +50,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario

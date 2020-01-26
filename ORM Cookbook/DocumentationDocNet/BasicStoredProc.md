@@ -32,6 +32,10 @@ Future scenarios will cover topics such as:
 
 @snippet cs [..\Recipes.Dapper\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
 
+## Entity Framework 6
+
+TODO
+
 ## Entity Framework Core
 
 To use stored procedures that return values, a class is needed to receive the results. This is true even if a scalar value is returned.
@@ -64,4 +68,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario

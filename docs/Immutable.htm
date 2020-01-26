@@ -58,6 +58,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
@@ -74,6 +76,10 @@
 
 </ul>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
@@ -455,6 +461,144 @@
 
         using (var con = OpenConnection())
             con.Execute(sql, classification);
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.</p>
+<p>Objects need to be materialized client-side before being mapped to the immutable type.</p>
+<pre><code class="cs">public ReadOnlyEmployeeClassification(EmployeeClassification entity)
+{
+    if (entity == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity)} is null.&quot;);
+    if (entity.EmployeeClassificationName == null)
+        throw new ArgumentNullException(nameof(entity), $&quot;{nameof(entity.EmployeeClassificationName)} is null.&quot;);
+
+    EmployeeClassificationKey = entity.EmployeeClassificationKey;
+    EmployeeClassificationName = entity.EmployeeClassificationName;
+    IsExempt = entity.IsExempt;
+    IsEmployee = entity.IsEmployee;
+}
+</code></pre>
+
+<pre><code class="cs">public EmployeeClassification ToEntity()
+{
+    return new EmployeeClassification()
+    {
+        EmployeeClassificationKey = EmployeeClassificationKey,
+        EmployeeClassificationName = EmployeeClassificationName,
+        IsExempt = IsExempt,
+        IsEmployee = IsEmployee
+    };
+}
+</code></pre>
+
+<p>These conversions are used in the repository before write operations and after read operations.</p>
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ImmutableScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            var temp = classification.ToEntity();
+            context.EmployeeClassification.Add(temp);
+            context.SaveChanges();
+            return temp.EmployeeClassificationKey;
+        }
+    }
+
+    public virtual void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
+            {
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification
+                .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+                .ToList() //everything below this line is client-side
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassification
+                .ToList() //everything below this line is client-side
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp == null)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
+            {
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                temp.IsEmployee = classification.IsEmployee;
+                temp.IsExempt = classification.IsExempt;
+                context.SaveChanges();
+            }
+        }
     }
 }
 </code></pre>
@@ -1052,7 +1196,99 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public ImmutableScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return (int)db.Insert(new EmployeeClassification().PopulateWith(classification), true);
+        }
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var deleted = db.Delete&lt;EmployeeClassification&gt;(r =&gt; r.Id == classification.Id);
+            if (deleted != 1)
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var deleted = db.Delete&lt;EmployeeClassification&gt;(r =&gt; r.Id == employeeClassificationKey);
+            if (deleted != 1)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var temp = db.Single&lt;EmployeeClassification&gt;(r =&gt;
+                r.EmployeeClassificationName == employeeClassificationName);
+            return temp == null ? null : new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.Select&lt;EmployeeClassification&gt;()
+                .Select(x =&gt; new ReadOnlyEmployeeClassification(x))
+                .ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var temp = db.Single&lt;EmployeeClassification&gt;(r =&gt;
+                r.Id == employeeClassificationKey);
+            if (temp == null)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Update&lt;EmployeeClassification&gt;(new
+            {
+                classification.IsEmployee,
+                classification.IsExempt,
+                classification.EmployeeClassificationName
+            }, r =&gt; r.Id == classification.Id);
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

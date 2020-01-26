@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -67,6 +71,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -272,6 +278,39 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public RowCountScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int EmployeeCount(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(e =&gt; e.LastName == lastName).Count();
+    }
+
+    public int EmployeeCount()
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Count();
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Employee.AddRange(employees);
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;Employee&gt;
 {
@@ -436,7 +475,41 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;Employee&gt;
+{
+    private IDbConnectionFactory _dbConnectionFactory;
+
+    public RowCountScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        this._dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int EmployeeCount(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return (int) db.Count&lt;Employee&gt;(e =&gt; e.LastName == lastName);
+        }
+    }
+
+    public int EmployeeCount()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return (int) db.Count&lt;Employee&gt;();
+        }
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.InsertAll(employees);
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

@@ -25,6 +25,10 @@ Chain requires operating on the parent and child objects separately.
 
 @snippet cs [..\Recipes.Dapper\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
+## Entity Framework 6
+
+TODO
+
 ## Entity Framework Core
 
 When performing an update, ensure that the `EntityState` is correctly set for each child record based on whether it is an insert or update.
@@ -72,4 +76,4 @@ For partial deletes, ensure that you are using `cascade="all-delete-orphan"`. Ot
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario

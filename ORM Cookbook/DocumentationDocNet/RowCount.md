@@ -20,6 +20,10 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 @snippet cs [..\Recipes.Dapper\RowCount\RowCountScenario.cs] RowCountScenario
 
+## Entity Framework 6
+
+@snippet cs [..\Recipes.EntityFramework\RowCount\RowCountScenario.cs] RowCountScenario
+
 ## Entity Framework Core
 
 @snippet cs [..\Recipes.EntityFrameworkCore\RowCount\RowCountScenario.cs] RowCountScenario
@@ -42,4 +46,4 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\RowCount\RowCountScenario.cs] RowCountScenario

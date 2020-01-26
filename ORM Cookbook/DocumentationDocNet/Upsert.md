@@ -22,6 +22,12 @@ This code demonstrates the MERGE syntax.
 
 @snippet cs [..\Recipes.Dapper\Upsert\UpsertScenario.cs] UpsertScenario
 
+## Entity Framework 6
+
+EF Core doesn't directly support an atomic upsert, so often a read must proceed the update.
+
+@snippet cs [..\Recipes.EntityFramework\Upsert\UpsertScenario.cs] UpsertScenario
+
 ## Entity Framework Core
 
 EF Core doesn't directly support an atomic upsert, so often a read must proceed the update.
@@ -50,4 +56,4 @@ NHibernate doesn't directly support an atomic upsert, so often a read must proce
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Upsert\UpsertScenario.cs] UpsertScenario

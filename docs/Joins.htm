@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry current"><a class="current" href="Joins.htm">Projecting with a Join</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
@@ -61,6 +65,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -409,8 +415,147 @@ VALUES
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework natively supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.</p>
+<pre><code class="cs">public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public JoinsScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Employee.Add(employee);
+            context.SaveChanges();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new { e, ec })
+                    .Where(ed =&gt; ed.ec.EmployeeClassificationKey == employeeClassificationKey)
+                    .ToList() //everything below this line is client-side
+                    .Select(ed =&gt; new EmployeeDetail()
+                    {
+                        EmployeeKey = ed.e.EmployeeKey,
+                        FirstName = ed.e.FirstName,
+                        MiddleName = ed.e.MiddleName,
+                        LastName = ed.e.LastName,
+                        CellPhone = ed.e.CellPhone,
+                        OfficePhone = ed.e.OfficePhone,
+                        Title = ed.e.Title,
+                        EmployeeClassificationKey = ed.ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ed.ec.EmployeeClassificationName,
+                        IsEmployee = ed.ec.IsEmployee,
+                        IsExempt = ed.ec.IsExempt,
+                    })
+                    .ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new { e, ec })
+                .Where(ed =&gt; ed.e.LastName == lastName)
+                .ToList() //everything below this line is client-side
+                .Select(ed =&gt; new EmployeeDetail()
+                {
+                    EmployeeKey = ed.e.EmployeeKey,
+                    FirstName = ed.e.FirstName,
+                    MiddleName = ed.e.MiddleName,
+                    LastName = ed.e.LastName,
+                    CellPhone = ed.e.CellPhone,
+                    OfficePhone = ed.e.OfficePhone,
+                    Title = ed.e.Title,
+                    EmployeeClassificationKey = ed.ec.EmployeeClassificationKey,
+                    EmployeeClassificationName = ed.ec.EmployeeClassificationName,
+                    IsEmployee = ed.ec.IsEmployee,
+                    IsExempt = ed.ec.IsExempt,
+                })
+                .ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new { e, ec })
+                .ToList() //everything below this line is client-side
+                .Select(ed =&gt; new EmployeeDetail()
+                {
+                    EmployeeKey = ed.e.EmployeeKey,
+                    FirstName = ed.e.FirstName,
+                    MiddleName = ed.e.MiddleName,
+                    LastName = ed.e.LastName,
+                    CellPhone = ed.e.CellPhone,
+                    OfficePhone = ed.e.OfficePhone,
+                    Title = ed.e.Title,
+                    EmployeeClassificationKey = ed.ec.EmployeeClassificationKey,
+                    EmployeeClassificationName = ed.ec.EmployeeClassificationName,
+                    IsEmployee = ed.ec.IsEmployee,
+                    IsExempt = ed.ec.IsExempt,
+                })
+                .ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee
+                .Join(context.EmployeeClassification,
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new { e, ec })
+                .Where(ed =&gt; ed.e.EmployeeKey == employeeKey)
+                .ToList() //everything below this line is client-side
+                .Select(ed =&gt; new EmployeeDetail()
+                {
+                    EmployeeKey = ed.e.EmployeeKey,
+                    FirstName = ed.e.FirstName,
+                    MiddleName = ed.e.MiddleName,
+                    LastName = ed.e.LastName,
+                    CellPhone = ed.e.CellPhone,
+                    OfficePhone = ed.e.OfficePhone,
+                    Title = ed.e.Title,
+                    EmployeeClassificationKey = ed.ec.EmployeeClassificationKey,
+                    EmployeeClassificationName = ed.ec.EmployeeClassificationName,
+                    IsEmployee = ed.ec.IsEmployee,
+                    IsExempt = ed.ec.IsExempt,
+                })
+                .SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+    }
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>EF Core native supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.</p>
+<p>EF Core natively supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.</p>
 <pre><code class="cs">public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, Employee&gt;
 {
     private Func&lt;OrmCookbookContext&gt; CreateDbContext;
@@ -1073,7 +1218,76 @@ has been created which is the same projection as the one in the queries in the n
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public JoinsScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return (int) db.Insert(employee, true);
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var q = db.From&lt;Employee&gt;()
+                .Join&lt;EmployeeClassification&gt;()
+                .Where&lt;EmployeeClassification&gt;(x =&gt; x.Id == employeeClassificationKey);
+            return db.Select&lt;EmployeeDetail&gt;(q);
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var q = db.From&lt;Employee&gt;()
+                .Join&lt;EmployeeClassification&gt;()
+                .Where(x =&gt; x.LastName == lastName);
+            return db.Select&lt;EmployeeDetail&gt;(q);
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.Select&lt;EmployeeDetail&gt;(db.From&lt;Employee&gt;().Join&lt;EmployeeClassification&gt;());
+        }
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var q = db.From&lt;Employee&gt;().Join&lt;EmployeeClassification&gt;()
+                .Where(x =&gt; x.Id == employeeKey);
+            return db.Single&lt;EmployeeDetail&gt;(q);
+        }
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

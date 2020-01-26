@@ -52,6 +52,10 @@
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
 <li class="tocentry"><a href="Views.htm">Reading from Views</a>
@@ -78,6 +82,8 @@
 <li class="tocentry"><a href="#chain">Chain</a></li>
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
@@ -587,6 +593,98 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ModelWithLookupSimpleScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Employee.Add(employee);
+            context.SaveChanges();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public void Delete(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(employee).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.Employee.Find(employeeKey);
+            if (temp != null)
+            {
+                context.Employee.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(ec =&gt; ec.LastName == lastName).ToList();
+    }
+
+    public IList&lt;Employee&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.ToList();
+    }
+
+    public Employee? GetByKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Find(employeeKey);
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+    }
+
+    /// &lt;summary&gt;
+    /// Updates the specified employee.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employee&quot;&gt;The employee.&lt;/param&gt;
+    /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;employee&lt;/exception&gt;
+    public void Update(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(employee).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;Employee&gt;
 {
@@ -845,7 +943,70 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;Employee&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    public ModelWithLookupSimpleScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return (int) db.Insert(employee, true);
+    }
+
+    public void Delete(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Delete(employee);
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.DeleteById&lt;Employee&gt;(employeeKey);
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Select&lt;Employee&gt;(e =&gt; e.LastName == lastName);
+    }
+
+    public IList&lt;Employee&gt; GetAll()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Select&lt;Employee&gt;();
+    }
+
+    public Employee? GetByKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.SingleById&lt;Employee&gt;(employeeKey);
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+
+    public void Update(Employee employee)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Update(employee);
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

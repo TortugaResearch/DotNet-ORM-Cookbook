@@ -42,6 +42,10 @@ Read operations must occur against a database view in order to get the propertie
 
 @snippet cs [..\Recipes.Dapper\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
+## Entity Framework 6
+
+TODO
+
 ## Entity Framework Core
 
 Child objects outside of the DBContext (e.g. from a REST call) need to be mapped to an object created by the DBContext.
@@ -83,4 +87,4 @@ Read operations must occur against a database view in order to get the propertie
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario

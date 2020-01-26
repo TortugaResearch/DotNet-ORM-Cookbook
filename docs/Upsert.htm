@@ -54,6 +54,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
 
 <li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
@@ -74,6 +76,10 @@
 <li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
 </li>
 <li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
 </li>
 <li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
 </li>
@@ -513,6 +519,107 @@ OUTPUT Inserted.DivisionKey;&quot;;
     }
 </code></pre>
 
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>EF Core doesn't directly support an atomic upsert, so often a read must proceed the update.</p>
+<pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;Division&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public UpsertScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public Division GetByKey(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Find(divisionKey);
+    }
+
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        //update audit column
+        division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+
+        using (var context = CreateDbContext())
+        {
+            //check to see if the row already exists
+            var actual = context.Division.Where(x =&gt; x.DivisionName == division.DivisionName).SingleOrDefault();
+            if (actual == null) //Insert
+            {
+                context.Division.Add(division);
+                context.SaveChanges();
+                return division.DivisionKey;
+            }
+            else //Update
+            {
+                //Copy manually so we don't overwrite CreatedBy/CreatedDate
+                actual.Department = division.Department;
+                actual.DivisionId = division.DivisionId;
+                actual.DivisionName = division.DivisionName;
+                actual.FloorSpaceBudget = division.FloorSpaceBudget;
+                actual.FteBudget = division.FteBudget;
+                actual.LastReviewCycle = division.LastReviewCycle;
+                actual.MaxEmployees = division.MaxEmployees;
+                actual.ModifiedByEmployeeKey = division.ModifiedByEmployeeKey;
+                actual.ModifiedDate = division.ModifiedDate;
+                actual.SalaryBudget = division.SalaryBudget;
+                actual.StartTime = division.StartTime;
+                actual.SuppliesBudget = division.SuppliesBudget;
+                context.SaveChanges();
+                return actual.DivisionKey;
+            }
+        }
+    }
+
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        //update audit column
+        division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+
+        using (var context = CreateDbContext())
+        {
+            //If DivisionKey is zero, we know this is a new row
+            if (division.DivisionKey == 0) //Insert
+            {
+                context.Division.Add(division);
+                context.SaveChanges();
+                return division.DivisionKey;
+            }
+            else //Update
+            {
+                //This wouldn't be necessary if we were replacing all columns.
+                var actual = context.Division.Find(division.DivisionKey);
+
+                //Copy manually so we don't overwrite CreatedBy/CreatedDate
+                actual.Department = division.Department;
+                actual.DivisionId = division.DivisionId;
+                actual.DivisionName = division.DivisionName;
+                actual.FloorSpaceBudget = division.FloorSpaceBudget;
+                actual.FteBudget = division.FteBudget;
+                actual.LastReviewCycle = division.LastReviewCycle;
+                actual.MaxEmployees = division.MaxEmployees;
+                actual.ModifiedByEmployeeKey = division.ModifiedByEmployeeKey;
+                actual.ModifiedDate = division.ModifiedDate;
+                actual.SalaryBudget = division.SalaryBudget;
+                actual.StartTime = division.StartTime;
+                actual.SuppliesBudget = division.SuppliesBudget;
+                context.SaveChanges();
+                return actual.DivisionKey;
+            }
+        }
+    }
+}
+</code></pre>
+
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>EF Core doesn't directly support an atomic upsert, so often a read must proceed the update.</p>
 <pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;Division&gt;
@@ -934,7 +1041,64 @@ OUTPUT Inserted.DivisionKey;&quot;;
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;Division&gt;
+{
+    private IDbConnectionFactory _dbConnectionFactory;
+
+    public UpsertScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        this._dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public Division GetByKey(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.SingleById&lt;Division&gt;(divisionKey);
+        }
+    }
+
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        if (division.CreatedDate == default(DateTime))
+            division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            var existing = db.Single&lt;Division&gt;(c =&gt; c.DivisionName == division.DivisionName);
+            if (existing != null)
+            {
+                division.PopulateWith(existing.PopulateWithNonDefaultValues(division));
+            }
+            db.Save(division);
+        }
+        
+        return division.Id;
+    }
+
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        if (division.CreatedDate == default(DateTime))
+            division.CreatedDate = DateTime.UtcNow;
+        division.ModifiedDate = DateTime.UtcNow;
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Save(division);
+        }
+
+        return division.Id;
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>
