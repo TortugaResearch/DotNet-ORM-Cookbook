@@ -1216,27 +1216,19 @@ public class EmployeeClassification : IEmployeeClassification
 <pre><code class="cs">[Alias(&quot;EmployeeClassification&quot;), Schema(&quot;HR&quot;)]
 public partial class EmployeeClassification
 {
-    [PrimaryKey, AutoIncrement]
-    [Alias(&quot;EmployeeClassificationKey&quot;)]
+    [PrimaryKey, AutoIncrement, Alias(&quot;EmployeeClassificationKey&quot;)]
     public int Id { get; set; }
+
+    [Required, StringLength(30)]
+    public string? EmployeeClassificationName { get; set; }
 
     public bool IsExempt { get; set; }
 
     public bool IsEmployee { get; set; }
 
     [Reference]
-    public virtual List&lt;Employee&gt; Employees { get; } = new List&lt;Employee&gt;();
-
-    [Required, StringLength(30)]
-    public string? EmployeeClassificationName { get; set; }
-}
-
-    //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class EmployeeClassification : IEmployeeClassification
-    {
-        int IEmployeeClassification.EmployeeClassificationKey { get =&gt; Id; set =&gt; Id = value; }
-        int IReadOnlyEmployeeClassification.EmployeeClassificationKey { get =&gt; Id; }
-    }
+    [SuppressMessage(&quot;Usage&quot;, &quot;CA2227:Collection properties should be read only&quot;, Justification = &quot;Required by ServiceStack&quot;)]
+    public List&lt;Employee&gt; Employees { get; set; } = new List&lt;Employee&gt;();
 }
 </code></pre>
 

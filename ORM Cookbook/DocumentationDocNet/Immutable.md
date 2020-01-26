@@ -113,4 +113,4 @@ Below is the *immutable repository*.
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Immutable\ImmutableScenario.cs] ImmutableScenario

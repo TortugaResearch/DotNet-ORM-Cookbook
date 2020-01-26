@@ -68,4 +68,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario

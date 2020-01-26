@@ -74,7 +74,7 @@ In RepoDb, the `DataTable.Load` can be provided with an `IDataReader` object fro
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\PopulateDataTable\PopulateDataTableScenario.cs] PopulateDataTableScenario
 
 
 

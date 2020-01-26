@@ -598,7 +598,41 @@ public void BulkInsert(DataTable employees)
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>No changes are needed. </p>
+<pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;Employee&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public LargeBatchScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int MaximumBatchSize =&gt; int.MaxValue;
+
+    public int CountByLastName(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return (int)db.Count&lt;Employee&gt;(e =&gt; e.LastName == lastName);
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.InsertAll(employees);
+    }
+
+    public void InsertLargeBatch(IList&lt;Employee&gt; employees, int batchSize)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            foreach (var batch in employees.BatchAsLists(batchSize))
+                db.InsertAll(batch);
+        }
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

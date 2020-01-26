@@ -46,4 +46,4 @@ TODO
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario

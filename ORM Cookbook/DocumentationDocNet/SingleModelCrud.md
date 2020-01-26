@@ -153,11 +153,3 @@ The repository resemebles Dapper, but with far less SQL.
 
 @snippet cs [..\Recipes.ServiceStack\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
 
-
-
-
-
-
-
-
-

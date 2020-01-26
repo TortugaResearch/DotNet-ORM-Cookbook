@@ -50,4 +50,4 @@ Keyset pagination is a technique where the previous result is used to determine 
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\Pagination\PaginationScenario.cs] PaginationScenario

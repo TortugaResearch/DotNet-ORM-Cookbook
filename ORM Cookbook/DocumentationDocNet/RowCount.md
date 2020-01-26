@@ -46,4 +46,4 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 ## ServiceStack
 
-TODO
+@snippet cs [..\Recipes.ServiceStack\RowCount\RowCountScenario.cs] RowCountScenario
