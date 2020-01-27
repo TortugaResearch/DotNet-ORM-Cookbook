@@ -50,8 +50,10 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
             // persistence agnostic object you can pass on freely to add work and then have all the work
             // performed in a single transaction.
             var uow = new UnitOfWork2();
-            uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductLineKey.Equal(productLineKey)));
-            uow.AddDeleteEntitiesDirectlyCall(typeof(ProductLineEntity), new RelationPredicateBucket(ProductLineFields.ProductLineKey.Equal(productLineKey)));
+            uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), 
+											  new RelationPredicateBucket(ProductFields.ProductLineKey.Equal(productLineKey)));
+            uow.AddDeleteEntitiesDirectlyCall(typeof(ProductLineEntity), 
+											  new RelationPredicateBucket(ProductLineFields.ProductLineKey.Equal(productLineKey)));
             using (var adapter = new DataAccessAdapter())
             {
                 uow.Commit(adapter);
@@ -65,7 +67,8 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
                 var metaData = new LinqMetaData(adapter);
                 if (includeProducts)
                 {
-                    return metaData.ProductLine.Where(x => x.ProductLineName == productLineName).WithPath(p => p.Prefetch(pl => pl.Products)).ToList();
+                    return metaData.ProductLine.Where(x => x.ProductLineName == productLineName)
+								   .WithPath(p => p.Prefetch(pl => pl.Products)).ToList();
                 }
                 return metaData.ProductLine.Where(x => x.ProductLineName == productLineName).ToList();
             }
@@ -91,7 +94,8 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
                 var metaData = new LinqMetaData(adapter);
                 if (includeProducts)
                 {
-                    var toReturn = metaData.ProductLine.Where(x => x.ProductLineKey == productLineKey).WithPath(p => p.Prefetch(pl => pl.Products)).SingleOrDefault();
+                    var toReturn = metaData.ProductLine.Where(x => x.ProductLineKey == productLineKey)
+										   .WithPath(p => p.Prefetch(pl => pl.Products)).SingleOrDefault();
                     if (toReturn != null)
                     {
                         // insert removal tracker for tracking removed entities.
@@ -119,7 +123,15 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-            var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+			// Specify the order of operations for the unit of work, so it will first perform delete operations
+			// directly on the database and then do inserts followed by updates. We have to specify the order
+			// here as it's different from the default, where DeletesPerformedDirectly are done last. 
+			var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>()
+									  {
+										  UnitOfWorkBlockType.DeletesPerformedDirectly,
+										  UnitOfWorkBlockType.Inserts, 
+										  UnitOfWorkBlockType.Updates
+									  });
             uow.AddForSave(productLine, null, refetch: true, recurse: false);
             using (var adapter = new DataAccessAdapter())
             {
@@ -132,7 +144,12 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-            var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+			var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>()
+									  {
+										  UnitOfWorkBlockType.DeletesPerformedDirectly,
+										  UnitOfWorkBlockType.Inserts,
+										  UnitOfWorkBlockType.Updates
+									  });
             uow.AddForSave(productLine);
             using (var adapter = new DataAccessAdapter())
             {
@@ -152,7 +169,12 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
             // In the unit of work, we have to schedule the direct deletes before the insert of the new row, otherwise it's removed,
             // as it doesn't have a PK yet, so the IN clause we're using won't match it.
             var currentKeys = productLine.Products.Select(p => p.ProductKey).ToList();
-            var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
+			var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>()
+									  {
+										  UnitOfWorkBlockType.DeletesPerformedDirectly,
+										  UnitOfWorkBlockType.Inserts, 
+										  UnitOfWorkBlockType.Updates
+									  });
             uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.NotIn(currentKeys)));
             uow.AddForSave(productLine);
             using (var adapter = new DataAccessAdapter())
@@ -166,8 +188,12 @@ namespace Recipes.LLBLGenPro.ModelWithChildren
             if (productLine == null)
                 throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-            var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
-
+			var uow = new UnitOfWork2(new List<UnitOfWorkBlockType>()
+									  {
+										  UnitOfWorkBlockType.DeletesPerformedDirectly,
+										  UnitOfWorkBlockType.Inserts,
+										  UnitOfWorkBlockType.Updates
+									  });
             if (productKeysToRemove?.Count > 0)
                 uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.In(productKeysToRemove)));
             uow.AddForSave(productLine);

@@ -29,22 +29,23 @@ namespace Recipes.LLBLGenPro.DynamicSorting
         public IList<EmployeeEntity> SortBy(string lastName, string sortByColumn, bool isDescending)
         {
             using (var adapter = new DataAccessAdapter())
-            {
-                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName)
-                    .OrderBy(sortByColumn, isDescending).ToList();
-            }
+			{
+				return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName)
+												.OrderBy(sortByColumn, isDescending)
+												.ToList();
+			}
         }
 
         public IList<EmployeeEntity> SortBy(string lastName, string sortByColumnA, bool isDescendingA,
             string sortByColumnB, bool isDescendingB)
         {
             using (var adapter = new DataAccessAdapter())
-            {
-                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName)
-                    .OrderBy(sortByColumnA, isDescendingA)
-                    .ThenBy(sortByColumnB, isDescendingB)
-                    .ToList();
-            }
+			{
+				return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName)
+												.OrderBy(sortByColumnA, isDescendingA)
+												.ThenBy(sortByColumnB, isDescendingB)
+												.ToList();
+			}
         }
     }
 }

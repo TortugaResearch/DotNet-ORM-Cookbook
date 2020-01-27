@@ -46,7 +46,8 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
             {
                 // delete directly, so we don't have to fetch the entity first.
                 adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                               new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                               new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																									   .Equal(employeeClassificationKey)));
             }
         }
 
@@ -55,7 +56,9 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
             using (var adapter = new DataAccessAdapter())
             {
                 // let's use QuerySpec
-                return adapter.FetchFirst(new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.EmployeeClassificationName.Equal(employeeClassificationName)));
+                return adapter.FetchFirst(new QueryFactory().EmployeeClassification
+															.Where(EmployeeClassificationFields.EmployeeClassificationName
+																							   .Equal(employeeClassificationName)));
             }
         }
 
@@ -74,7 +77,8 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec => ec.EmployeeClassificationKey == employeeClassificationKey);
+                return new LinqMetaData(adapter).EmployeeClassification
+												.FirstOrDefault(ec => ec.EmployeeClassificationKey == employeeClassificationKey);
             }
         }
 
@@ -89,8 +93,9 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
                 EmployeeClassificationEntity toPersist = classification;
                 if (classification.IsNew)
                 {
-                    toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(
-                                                                     EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                    toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(
+											new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																									.Equal(classification.EmployeeClassificationKey)));
                     toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
                 }
                 if (!toPersist.IsNew)

@@ -45,17 +45,20 @@ namespace Recipes.LLBLGenPro.SingleModelCrudAsync
             using (var adapter = new DataAccessAdapter())
             {
                 await adapter.DeleteEntitiesDirectlyAsync(typeof(EmployeeClassificationEntity),
-                                                          new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey))).ConfigureAwait(false);
+                                                          new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																												  .Equal(employeeClassificationKey)))
+							 .ConfigureAwait(false);
             }
         }
 
         public async Task<EmployeeClassificationEntity?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
         {
             using (var adapter = new DataAccessAdapter())
-            {
-                return await new LinqMetaData(adapter).EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
-                                               .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-            }
+			{
+				return await new LinqMetaData(adapter).EmployeeClassification
+													  .Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
+													  .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+			}
         }
 
         public async Task<IList<EmployeeClassificationEntity>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -70,7 +73,9 @@ namespace Recipes.LLBLGenPro.SingleModelCrudAsync
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return await new LinqMetaData(adapter).EmployeeClassification.FirstOrDefaultAsync(ec => ec.EmployeeClassificationKey == employeeClassificationKey, cancellationToken).ConfigureAwait(false);
+                return await new LinqMetaData(adapter).EmployeeClassification
+													  .FirstOrDefaultAsync(ec => ec.EmployeeClassificationKey == employeeClassificationKey, cancellationToken)
+													  .ConfigureAwait(false);
             }
         }
 
@@ -84,7 +89,9 @@ namespace Recipes.LLBLGenPro.SingleModelCrudAsync
                 EmployeeClassificationEntity toPersist = classification;
                 if (classification.IsNew)
                 {
-                    toPersist = new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec => ec.EmployeeClassificationKey == classification.EmployeeClassificationKey);
+                    toPersist = await new LinqMetaData(adapter).EmployeeClassification
+														 .FirstOrDefaultAsync(ec => ec.EmployeeClassificationKey == classification.EmployeeClassificationKey)
+														 .ConfigureAwait(false);
                     if (toPersist != null)
                     {
                         toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
