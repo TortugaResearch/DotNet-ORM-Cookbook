@@ -462,7 +462,23 @@ public IList&lt;EmployeeEntity&gt; SortBy(string lastName, string sortByColumnA,
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>NHibernate does not support sorting by strings.</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>Columns to be sorted by are passed in as a collection of <code>OrderField</code> objects. They checked against the list of columns at runtime to prevent SQL injection attacks. </p>
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    var sort = new[] { new OrderField(sortByColumn, isDescending ? Order.Descending : Order.Ascending) };
+    return Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+}
+
+public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA, string sortByColumnB, bool isDescendingB)
+{
+    var sort = new[] {
+        new OrderField(sortByColumnA, isDescendingA ? Order.Descending : Order.Ascending),
+        new OrderField(sortByColumnB, isDescendingB ? Order.Descending : Order.Ascending)
+    };
+    return Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>ServiceStack requires validation of sort columns against a statically defined list. ServiceStack will attempt to detect some instances of SQL injection, but potentially dangerous expressions are allowed.</p>
 <pre><code class="cs">public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumn, bool isDescending)

@@ -64,7 +64,9 @@ NHibernate does not support sorting by strings.
 
 ## RepoDb
 
-TODO
+Columns to be sorted by are passed in as a collection of `OrderField` objects. They checked against the list of columns at runtime to prevent SQL injection attacks. 
+
+@snippet cs [..\Recipes.RepoDb\DynamicSorting\DynamicSortingScenario.cs] SortBy
 
 ## ServiceStack
 
