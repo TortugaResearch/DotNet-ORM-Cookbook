@@ -6,7 +6,7 @@ See [Basic Sorting](Sorting.htm) for examples of sorting by a fixed column name.
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes\DynamicSorting\IDynamicSortingScenario`1.cs] IDynamicSortingScenario{TEmployee}
+@snippet cs [..\Recipes\DynamicSorting\IDynamicSortingScenario`1.cs] IDynamicSortingScenario{TEmployeeSimple}
 
 ## ADO.NET
 
