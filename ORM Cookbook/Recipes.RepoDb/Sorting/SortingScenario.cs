@@ -28,17 +28,20 @@ namespace Recipes.RepoDb.Sorting
 
         public IList<EmployeeSimple> SortByFirstName(string lastName)
         {
-            return Query(x => x.LastName == lastName).OrderBy(x => x.FirstName).AsList();
+            return Query(x => x.LastName == lastName)
+                .OrderBy(x => x.FirstName).AsList();
         }
 
         public IList<EmployeeSimple> SortByMiddleNameDescFirstName(string lastName)
         {
-            return Query(x => x.LastName == lastName).OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
+            return Query(x => x.LastName == lastName)
+                .OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
         }
 
         public IList<EmployeeSimple> SortByMiddleNameFirstName(string lastName)
         {
-            return Query(x => x.LastName == lastName).OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
+            return Query(x => x.LastName == lastName)
+                .OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
         }
     }
 }

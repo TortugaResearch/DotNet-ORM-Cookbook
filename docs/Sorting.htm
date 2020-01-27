@@ -140,499 +140,321 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class SortingScenario : ScenarioBase, ISortingScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
+{
+    const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.FirstName&quot;;
+
+    using (var con = OpenConnection())
+    using (var cmd = new SqlCommand(sql, con))
     {
-        public SortingScenario(string connectionString) : base(connectionString)
-        { }
+        cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
 
-        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+        var results = new List&lt;EmployeeSimple&gt;();
 
-            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
-(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
-VALUES &quot;);
+        using (var reader = cmd.ExecuteReader())
+            while (reader.Read())
+                results.Add(new EmployeeSimple(reader));
 
-            for (var i = 0; i &lt; employees.Count; i++)
-            {
-                if (i != 0)
-                    sql.AppendLine(&quot;,&quot;);
-                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
-            }
-            sql.AppendLine(&quot;;&quot;);
-
-            //No transaction is needed because a single SQL statement is used.
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql.ToString(), con))
-            {
-                for (var i = 0; i &lt; employees.Count; i++)
-                {
-                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
-                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
-                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
-                }
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.FirstName&quot;;
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
-
-                var results = new List&lt;EmployeeSimple&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeSimple(reader));
-
-                return results;
-            }
-        }
-
-        public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.MiddleName DESC, e.FirstName&quot;;
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
-
-                var results = new List&lt;EmployeeSimple&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeSimple(reader));
-
-                return results;
-            }
-        }
-
-        public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.MiddleName, e.FirstName&quot;;
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
-
-                var results = new List&lt;EmployeeSimple&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeSimple(reader));
-
-                return results;
-            }
-        }
+        return results;
     }
+}
+</code></pre>
+
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        &quot;ORDER BY e.MiddleName DESC, e.FirstName&quot;;
+
+    using (var con = OpenConnection())
+    using (var cmd = new SqlCommand(sql, con))
+    {
+        cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+        var results = new List&lt;EmployeeSimple&gt;();
+
+        using (var reader = cmd.ExecuteReader())
+            while (reader.Read())
+                results.Add(new EmployeeSimple(reader));
+
+        return results;
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
+{
+    const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        &quot;ORDER BY e.MiddleName, e.FirstName&quot;;
+
+    using (var con = OpenConnection())
+    using (var cmd = new SqlCommand(sql, con))
+    {
+        cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+        var results = new List&lt;EmployeeSimple&gt;();
+
+        using (var reader = cmd.ExecuteReader())
+            while (reader.Read())
+                results.Add(new EmployeeSimple(reader));
+
+        return results;
+    }
+}
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Columns to be sorted by are passed in as strings, but checked against the list of columns at runtime to prevent SQL injection attacks. A <code>SortExpression</code> object is needed for reverse sorting.</p>
-<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
 {
-    const string EmployeeTableName = &quot;HR.Employee&quot;;
-    readonly SqlServerDataSource m_DataSource;
+    return m_DataSource.From(EmployeeTableName, new { lastName })
+        .WithSorting(&quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
+}
+</code></pre>
 
-    public SortingScenario(SqlServerDataSource dataSource)
-    {
-        m_DataSource = dataSource;
-    }
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    return m_DataSource.From(EmployeeTableName, new { lastName })
+        .WithSorting(new SortExpression(&quot;MiddleName&quot;, SortDirection.Descending), &quot;FirstName&quot;)
+        .ToCollection&lt;EmployeeSimple&gt;().Execute();
+}
+</code></pre>
 
-    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-    {
-        m_DataSource.InsertBatch((IReadOnlyList&lt;EmployeeSimple&gt;)employees).Execute();
-    }
-
-    public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
-    {
-        return m_DataSource.From(EmployeeTableName, new { lastName }).WithSorting(&quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
-    }
-
-    public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
-    {
-        return m_DataSource.From(EmployeeTableName, new { lastName }).WithSorting(new SortExpression(&quot;MiddleName&quot;, SortDirection.Descending), &quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
-    }
-
-    public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
-    {
-        return m_DataSource.From(EmployeeTableName, new { lastName }).WithSorting(&quot;MiddleName&quot;, &quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
-    }
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
+{
+    return m_DataSource.From(EmployeeTableName, new { lastName })
+        .WithSorting(&quot;MiddleName&quot;, &quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
 }
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class SortingScenario : ScenarioBase, ISortingScenario&lt;EmployeeSimple&gt;
-    {
-        public SortingScenario(string connectionString) : base(connectionString)
-        {
-        }
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
+{
+    const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        &quot;ORDER BY e.FirstName&quot;;
 
-        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+    using (var con = OpenConnection())
+        return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
+}
+</code></pre>
 
-            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
-(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
-VALUES &quot;);
-            var parameters = new Dictionary&lt;string, object?&gt;();
-            for (var i = 0; i &lt; employees.Count; i++)
-            {
-                if (i != 0)
-                    sql.AppendLine(&quot;,&quot;);
-                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        &quot;ORDER BY e.MiddleName DESC, e.FirstName&quot;;
 
-                parameters[$&quot;@FirstName_{i}&quot;] = employees[i].FirstName;
-                parameters[$&quot;@MiddleName_{i}&quot;] = employees[i].MiddleName;
-                parameters[$&quot;@LastName_{i}&quot;] = employees[i].LastName;
-                parameters[$&quot;@Title_{i}&quot;] = employees[i].Title;
-                parameters[$&quot;@OfficePhone_{i}&quot;] = employees[i].OfficePhone;
-                parameters[$&quot;@CellPhone_{i}&quot;] = employees[i].CellPhone;
-                parameters[$&quot;@EmployeeClassificationKey_{i}&quot;] = employees[i].EmployeeClassificationKey;
-            }
-            sql.AppendLine(&quot;;&quot;);
+    using (var con = OpenConnection())
+        return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
+}
+</code></pre>
 
-            //No transaction is needed because a single SQL statement is used.
-            using (var con = OpenConnection())
-                con.Execute(sql.ToString(), parameters);
-        }
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
+{
+    const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        &quot;ORDER BY e.MiddleName, e.FirstName&quot;;
 
-        public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.FirstName&quot;;
-
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
-        }
-
-        public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.MiddleName DESC, e.FirstName&quot;;
-
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
-        }
-
-        public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.MiddleName, e.FirstName&quot;;
-
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
-        }
-    }
+    using (var con = OpenConnection())
+        return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
+}
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+<pre><code class="cs">public IList&lt;Employee&gt; SortByFirstName(string lastName)
 {
-    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.FirstName).ToList();
+}
+</code></pre>
 
-    public SortingScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
-    {
-        CreateDbContext = dBContextFactory;
-    }
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
+}
+</code></pre>
 
-    public void InsertBatch(IList&lt;Employee&gt; employees)
-    {
-        if (employees == null || employees.Count == 0)
-            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-        using (var context = CreateDbContext())
-        {
-            foreach (var employee in employees)
-                context.Employee.Add(employee);
-            context.SaveChanges();
-        }
-    }
-
-    public IList&lt;Employee&gt; SortByFirstName(string lastName)
-    {
-        using (var context = CreateDbContext())
-            return context.Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.FirstName).ToList();
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
-    {
-        using (var context = CreateDbContext())
-            return context.Employee.Where(x =&gt; x.LastName == lastName).OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
-    {
-        using (var context = CreateDbContext())
-            return context.Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-    }
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
 }
 </code></pre>
 
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+<pre><code class="cs">public IList&lt;Employee&gt; SortByFirstName(string lastName)
 {
-    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.FirstName).ToList();
+}
+</code></pre>
 
-    public SortingScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
-    {
-        CreateDbContext = dBContextFactory;
-    }
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
+}
+</code></pre>
 
-    public void InsertBatch(IList&lt;Employee&gt; employees)
-    {
-        if (employees == null || employees.Count == 0)
-            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-        using (var context = CreateDbContext())
-        {
-            foreach (var employee in employees)
-                context.Employee.Add(employee);
-            context.SaveChanges();
-        }
-    }
-
-    public IList&lt;Employee&gt; SortByFirstName(string lastName)
-    {
-        using (var context = CreateDbContext())
-            return context.Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.FirstName).ToList();
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
-    {
-        using (var context = CreateDbContext())
-            return context.Employee.Where(x =&gt; x.LastName == lastName).OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
-    {
-        using (var context = CreateDbContext())
-            return context.Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-    }
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
 }
 </code></pre>
 
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+<pre><code class="cs">public IList&lt;Employee&gt; SortByFirstName(string lastName)
 {
-    public void InsertBatch(IList&lt;Employee&gt; employees)
-    {
-        var options = new BulkCopyOptions() { BulkCopyType = BulkCopyType.MultipleRows };
-        using (var db = new OrmCookbook())
-            db.BulkCopy(options, employees);
-    }
+    using (var db = new OrmCookbook())
+        return db.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.FirstName).ToList();
+}
+</code></pre>
 
-    public IList&lt;Employee&gt; SortByFirstName(string lastName)
-    {
-        using (var db = new OrmCookbook())
-            return db.Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.FirstName).ToList();
-    }
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    using (var db = new OrmCookbook())
+        return db.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
+}
+</code></pre>
 
-    public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
-    {
-        using (var db = new OrmCookbook())
-            return db.Employee.Where(x =&gt; x.LastName == lastName).OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
-    {
-        using (var db = new OrmCookbook())
-            return db.Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-    }
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
+{
+    using (var db = new OrmCookbook())
+        return db.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
 }
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;EmployeeEntity&gt;
+<pre><code class="cs">public IList&lt;EmployeeEntity&gt; SortByFirstName(string lastName)
 {
-    public void InsertBatch(IList&lt;EmployeeEntity&gt; employees)
+    using (var adapter = new DataAccessAdapter())
     {
-        if (employees == null || employees.Count == 0)
-            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-        using (var toInsert = new EntityCollection&lt;EmployeeEntity&gt;(employees))
-        {
-            using (var adapter = new DataAccessAdapter())
-            {
-                adapter.BatchSize = 100;
-                adapter.SaveEntityCollection(toInsert);
-            }
-        }
+        return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.FirstName).ToList();
     }
+}
+</code></pre>
 
-    public IList&lt;EmployeeEntity&gt; SortByFirstName(string lastName)
+<pre><code class="cs">public IList&lt;EmployeeEntity&gt; SortByMiddleNameDescFirstName(string lastName)
+
+{
+    using (var adapter = new DataAccessAdapter())
     {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.FirstName).ToList();
-        }
+        return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
     }
+}
+</code></pre>
 
-    public IList&lt;EmployeeEntity&gt; SortByMiddleNameDescFirstName(string lastName)
-
+<pre><code class="cs">public IList&lt;EmployeeEntity&gt; SortByMiddleNameFirstName(string lastName)
+{
+    using (var adapter = new DataAccessAdapter())
     {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName).OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-        }
-    }
-
-    public IList&lt;EmployeeEntity&gt; SortByMiddleNameFirstName(string lastName)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
-        }
+        return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
     }
 }
 </code></pre>
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+<pre><code class="cs">public IList&lt;Employee&gt; SortByFirstName(string lastName)
 {
-    readonly ISessionFactory m_SessionFactory;
-
-    public SortingScenario(ISessionFactory sessionFactory)
+    using (var session = m_SessionFactory.OpenStatelessSession())
     {
-        m_SessionFactory = sessionFactory;
+        return session.QueryOver&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.FirstName).Asc
+            .List();
     }
+}
+</code></pre>
 
-    public void InsertBatch(IList&lt;Employee&gt; employees)
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    using (var session = m_SessionFactory.OpenStatelessSession())
     {
-        if (employees == null || employees.Count == 0)
-            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-        using (var session = m_SessionFactory.OpenSession())
-        {
-            foreach (var employee in employees)
-                session.Save(employee);
-            session.Flush();
-        }
+        return session.QueryOver&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.MiddleName).Desc.ThenBy(x =&gt; x.FirstName).Asc
+            .List();
     }
+}
+</code></pre>
 
-    public IList&lt;Employee&gt; SortByFirstName(string lastName)
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
+{
+    using (var session = m_SessionFactory.OpenStatelessSession())
     {
-        using (var session = m_SessionFactory.OpenStatelessSession())
-        {
-            return session
-                .QueryOver&lt;Employee&gt;()
-                .Where(x =&gt; x.LastName == lastName)
-                .OrderBy(x =&gt; x.FirstName).Asc
-                .List();
-        }
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
-    {
-        using (var session = m_SessionFactory.OpenStatelessSession())
-        {
-            return session
-                .QueryOver&lt;Employee&gt;()
-                .Where(x =&gt; x.LastName == lastName)
-                .OrderBy(x =&gt; x.MiddleName).Desc
-                .ThenBy(x =&gt; x.FirstName).Asc
-                .List();
-        }
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
-    {
-        using (var session = m_SessionFactory.OpenStatelessSession())
-        {
-            return session
-                .QueryOver&lt;Employee&gt;()
-                .Where(x =&gt; x.LastName == lastName)
-                .OrderBy(x =&gt; x.MiddleName).Asc
-                .ThenBy(x =&gt; x.FirstName).Asc
-                .List();
-        }
+        return session.QueryOver&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; x.MiddleName).Asc.ThenBy(x =&gt; x.FirstName).Asc
+            .List();
     }
 }
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;,
-    ISortingScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
 {
-    public SortingScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
+    return Query(x =&gt; x.LastName == lastName)
+        .OrderBy(x =&gt; x.FirstName).AsList();
+}
+</code></pre>
 
-    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-    {
-        if (employees == null || employees.Count == 0)
-            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
+{
+    return Query(x =&gt; x.LastName == lastName)
+        .OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).AsList();
+}
+</code></pre>
 
-        InsertAll(employees);
-    }
-
-    public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
-    {
-        return Query(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.FirstName).AsList();
-    }
-
-    public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
-    {
-        return Query(x =&gt; x.LastName == lastName).OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).AsList();
-    }
-
-    public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
-    {
-        return Query(x =&gt; x.LastName == lastName).OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).AsList();
-    }
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
+{
+    return Query(x =&gt; x.LastName == lastName)
+        .OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).AsList();
 }
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class SortingScenario : ISortingScenario&lt;Employee&gt;
+<pre><code class="cs">public IList&lt;Employee&gt; SortByFirstName(string lastName)
 {
-    private readonly IDbConnectionFactory _dbConnectionFactory;
-
-    public SortingScenario(IDbConnectionFactory dbConnectionFactory)
+    using (var db = _dbConnectionFactory.OpenDbConnection())
     {
-        _dbConnectionFactory = dbConnectionFactory;
+        return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; new { x.FirstName })).ToList();
     }
+}
+</code></pre>
 
-    public void InsertBatch(IList&lt;Employee&gt; employees)
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
+
+{
+    using (var db = _dbConnectionFactory.OpenDbConnection())
     {
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-            db.InsertAll(employees);
+        return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderByDescending(x =&gt; new { x.MiddleName }).ThenBy(x =&gt; new { x.FirstName })).ToList();
     }
+}
+</code></pre>
 
-    public IList&lt;Employee&gt; SortByFirstName(string lastName)
+<pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
+
+{
+    using (var db = _dbConnectionFactory.OpenDbConnection())
     {
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-        {
-            return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; new { x.FirstName })).ToList();
-        }
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
-
-    {
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-        {
-            return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName).OrderByDescending(x =&gt; new { x.MiddleName }).ThenBy(x =&gt; new { x.FirstName })).ToList();
-        }
-    }
-
-    public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
-
-    {
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-        {
-            return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName).OrderBy(x =&gt; new { x.MiddleName, x.FirstName })).ToList();
-        }
+        return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderBy(x =&gt; new { x.MiddleName, x.FirstName })).ToList();
     }
 }
 </code></pre>

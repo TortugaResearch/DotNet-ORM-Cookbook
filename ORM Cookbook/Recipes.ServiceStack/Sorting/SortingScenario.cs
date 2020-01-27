@@ -26,7 +26,8 @@ namespace Recipes.ServiceStack.Sorting
         {
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName).OrderBy(x => new { x.FirstName })).ToList();
+                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => new { x.FirstName })).ToList();
             }
         }
 
@@ -35,7 +36,8 @@ namespace Recipes.ServiceStack.Sorting
         {
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName).OrderByDescending(x => new { x.MiddleName }).ThenBy(x => new { x.FirstName })).ToList();
+                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName)
+                    .OrderByDescending(x => new { x.MiddleName }).ThenBy(x => new { x.FirstName })).ToList();
             }
         }
 
@@ -44,7 +46,8 @@ namespace Recipes.ServiceStack.Sorting
         {
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName).OrderBy(x => new { x.MiddleName, x.FirstName })).ToList();
+                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => new { x.MiddleName, x.FirstName })).ToList();
             }
         }
     }

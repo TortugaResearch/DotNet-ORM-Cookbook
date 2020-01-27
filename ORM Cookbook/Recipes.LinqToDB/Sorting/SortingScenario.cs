@@ -19,19 +19,22 @@ namespace Recipes.LinqToDB.Sorting
         public IList<Employee> SortByFirstName(string lastName)
         {
             using (var db = new OrmCookbook())
-                return db.Employee.Where(x => x.LastName == lastName).OrderBy(x => x.FirstName).ToList();
+                return db.Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.FirstName).ToList();
         }
 
         public IList<Employee> SortByMiddleNameDescFirstName(string lastName)
         {
             using (var db = new OrmCookbook())
-                return db.Employee.Where(x => x.LastName == lastName).OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
+                return db.Employee.Where(x => x.LastName == lastName)
+                    .OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
         }
 
         public IList<Employee> SortByMiddleNameFirstName(string lastName)
         {
             using (var db = new OrmCookbook())
-                return db.Employee.Where(x => x.LastName == lastName).OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
+                return db.Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
         }
     }
 }

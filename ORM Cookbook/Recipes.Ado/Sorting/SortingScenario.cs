@@ -25,7 +25,8 @@ VALUES ");
             {
                 if (i != 0)
                     sql.AppendLine(",");
-                sql.Append($"(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})");
+                sql.Append($"(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, " +
+                    $"@CellPhone_{i}, @EmployeeClassificationKey_{i})");
             }
             sql.AppendLine(";");
 
@@ -41,7 +42,8 @@ VALUES ");
                     cmd.Parameters.AddWithValue($"@Title_{i}", (object?)employees[i].Title ?? DBNull.Value);
                     cmd.Parameters.AddWithValue($"@OfficePhone_{i}", (object?)employees[i].OfficePhone ?? DBNull.Value);
                     cmd.Parameters.AddWithValue($"@CellPhone_{i}", (object?)employees[i].CellPhone ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($"@EmployeeClassificationKey_{i}", employees[i].EmployeeClassificationKey);
+                    cmd.Parameters.AddWithValue($"@EmployeeClassificationKey_{i}",
+                        employees[i].EmployeeClassificationKey);
                 }
                 cmd.ExecuteNonQuery();
             }
@@ -49,7 +51,8 @@ VALUES ");
 
         public IList<EmployeeSimple> SortByFirstName(string lastName)
         {
-            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.FirstName";
+            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, " +
+                "e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.FirstName";
 
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql, con))
@@ -68,7 +71,9 @@ VALUES ");
 
         public IList<EmployeeSimple> SortByMiddleNameDescFirstName(string lastName)
         {
-            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.MiddleName DESC, e.FirstName";
+            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, " +
+                "e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName " +
+                "ORDER BY e.MiddleName DESC, e.FirstName";
 
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql, con))
@@ -87,7 +92,9 @@ VALUES ");
 
         public IList<EmployeeSimple> SortByMiddleNameFirstName(string lastName)
         {
-            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName ORDER BY e.MiddleName, e.FirstName";
+            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, " +
+                "e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName " +
+                "ORDER BY e.MiddleName, e.FirstName";
 
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql, con))

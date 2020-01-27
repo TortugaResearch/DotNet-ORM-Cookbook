@@ -32,9 +32,7 @@ namespace Recipes.NHibernate.Sorting
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .QueryOver<Employee>()
-                    .Where(x => x.LastName == lastName)
+                return session.QueryOver<Employee>().Where(x => x.LastName == lastName)
                     .OrderBy(x => x.FirstName).Asc
                     .List();
             }
@@ -44,11 +42,8 @@ namespace Recipes.NHibernate.Sorting
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .QueryOver<Employee>()
-                    .Where(x => x.LastName == lastName)
-                    .OrderBy(x => x.MiddleName).Desc
-                    .ThenBy(x => x.FirstName).Asc
+                return session.QueryOver<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).Desc.ThenBy(x => x.FirstName).Asc
                     .List();
             }
         }
@@ -57,11 +52,8 @@ namespace Recipes.NHibernate.Sorting
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .QueryOver<Employee>()
-                    .Where(x => x.LastName == lastName)
-                    .OrderBy(x => x.MiddleName).Asc
-                    .ThenBy(x => x.FirstName).Asc
+                return session.QueryOver<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).Asc.ThenBy(x => x.FirstName).Asc
                     .List();
             }
         }

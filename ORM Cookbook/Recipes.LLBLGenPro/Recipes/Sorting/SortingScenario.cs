@@ -30,7 +30,8 @@ namespace Recipes.LLBLGenPro.Sorting
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName).OrderBy(x => x.FirstName).ToList();
+                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.FirstName).ToList();
             }
         }
 
@@ -39,7 +40,8 @@ namespace Recipes.LLBLGenPro.Sorting
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName).OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
+                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName)
+                    .OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
             }
         }
 
@@ -47,7 +49,8 @@ namespace Recipes.LLBLGenPro.Sorting
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName).OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
+                return new LinqMetaData(adapter).Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
             }
         }
     }
