@@ -13,11 +13,14 @@ namespace Recipes.DynamicSorting
         /// <summary>
         /// Sorts by a single column
         /// </summary>
-        IList<TEmployeeSimple> SortBy(string lastName, string column, bool isDescending);
+        /// <param name="lastName">The last name filter.</param>
+        IList<TEmployeeSimple> SortBy(string lastName, string sortByColumn, bool isDescending);
 
         /// <summary>
         /// Sorts by a multiple columns
         /// </summary>
-        IList<TEmployeeSimple> SortBy(string lastName, string columnA, bool isDescendingA, string columnB, bool isDescendingB);
+        /// <param name="lastName">The last name filter.</param>
+        IList<TEmployeeSimple> SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+            string sortByColumnB, bool isDescendingB);
     }
 }
