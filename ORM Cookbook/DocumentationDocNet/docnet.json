@@ -35,10 +35,9 @@
     "Reading a Salar Value from a Row": "ScalarValue.md",
     "Reading a Single Column from a Table": "SingleColumn.md",
     "Row Counts": "RowCount.md",
-    "Sorting": {
-      "Basic Sorting": "Sorting.md"
-      /*  ,
-      "Sorting by Dynamically Chosen Columns": "DynamicSorting.md"*/
+    "Sorting Results": {
+      "Basic Sorting": "Sorting.md",
+      "Sorting by Dynamically Chosen Columns": "DynamicSorting.md"
     },
     "Paging Results": "Pagination.md",
     "Populate DataTable": "PopulateDataTable.md",

@@ -152,9 +152,15 @@
     },
     {
       "location": "Sorting.htm",
-      "breadcrumbs": "Home / Sorting / Basic Sorting",
+      "breadcrumbs": "Home / Sorting Results / Basic Sorting",
       "keywords": "1 6 a A Ado ADO against are as at attacks basic Basic be but by Chain checked chosen columns Columns Core cs Dapper DB demonstrate dynamically DynamicSorting Entity EntityFramework EntityFrameworkCore expressions for Framework handled how in injection is ISortingScenario LINQ LinqToDB list LLBLGen LLBLGenPro needed NET NHibernate Note object of or passed perform prevent Pro Prototype Recipes RepoDb reverse runtime Scenario scenarios separate ServiceStack snippet SortByFirstName SortByMiddleNameDescFirstName SortByMiddleNameFirstName sorted SortExpression sorting Sorting SortingScenario sorts SQL strings TEmployeeSimple the These to Tortuga will",
       "title": "Basic Sorting"
+    },
+    {
+      "location": "DynamicSorting.htm",
+      "breadcrumbs": "Home / Sorting Results / Sorting by Dynamically Chosen Columns",
+      "keywords": "1 6 a A acomplished Ado ADO against allowed and are as at attacks attempt Basic be being but by can Chain checked checking Chosen column columns Columns Core cs dangerous Dapper DB defined demonstrate detect directly does don Dynamically DynamicSorting DynamicSortingExtensions DynamicSortingScenario EF Entity EntityFramework examples expressions extensions fixed for For Framework how However htm IDynamicSortingScenario in injection instances IQueryable is LINQ LinqToDB list LLBLGen LLBLGenPro name names natively needed NET NHibernate not object of ORMs parameter passed perform potentially prevent Pro Prototype provided Recipes RepoDb requires reverse runtime Scenario scenarios See ServiceStack snippet some sort SortBy sorted SortExpression sorting Sorting sorts SQL statically string strings support TEmployeeSimple that the these These this to TODO Tortuga use Utilities validation where will with",
+      "title": "Sorting by Dynamically Chosen Columns"
     },
     {
       "location": "Pagination.htm",

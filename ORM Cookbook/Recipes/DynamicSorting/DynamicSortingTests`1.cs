@@ -19,7 +19,9 @@ namespace Recipes.DynamicSorting
         [DataRow("ProductName")]
         [DataRow("; --")]
         [DataRow("FirstName]; --")]
-        public void SortByNonExistantColumn(string columnName)
+        [DataRow("Count(*)")]
+        [DataRow("AND 1 = 1")]
+        public void SortByNonExistentColumn(string columnName)
         {
             var repository = GetScenario();
 
@@ -28,15 +30,25 @@ namespace Recipes.DynamicSorting
             var originals = BuildEmployees(RowCount, batchKey);
             repository.InsertBatch(originals);
 
+            string? failureMessage = null;
+
             try
             {
                 var results = repository.SortBy(batchKey, columnName, false);
-                Assert.Fail("An exception was expected for the non-existant sort column.");
+                failureMessage = "An exception was expected for the non-existent sort column.";
+            }
+            catch (Exception ex) when (ex.GetType().Name == "SqlException")
+            {
+                failureMessage = "A SqlException was caught, suggesting that it tried to execute the query with a non-existent sort column.";
+                Debug.Write("Exception details: " + ex.ToString());
             }
             catch (Exception ex)
             {
                 Debug.Write("Exception details: " + ex.ToString());
             }
+
+            if (failureMessage != null)
+                Assert.Fail(failureMessage);
         }
 
         [TestMethod]
@@ -53,6 +65,23 @@ namespace Recipes.DynamicSorting
             for (var i = 1; i < results.Count; i++)
             {
                 Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+            }
+        }
+
+        [TestMethod]
+        public void SortByFirstNameDescending()
+        {
+            var repository = GetScenario();
+
+            //Ensure some records exist
+            var batchKey = Guid.NewGuid().ToString();
+            var originals = BuildEmployees(RowCount, batchKey);
+            repository.InsertBatch(originals);
+
+            var results = repository.SortBy(batchKey, "FirstName", true);
+            for (var i = 1; i < results.Count; i++)
+            {
+                Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) >= 0);
             }
         }
 
