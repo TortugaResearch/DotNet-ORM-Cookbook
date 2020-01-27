@@ -1,6 +1,5 @@
 ﻿using Recipes.Chain.Models;
 using Recipes.Sorting;
-using System;
 using System.Collections.Generic;
 using Tortuga.Chain;
 
@@ -16,27 +15,28 @@ namespace Recipes.Chain.Sorting
             m_DataSource = dataSource;
         }
 
-        public int Create(EmployeeSimple employee)
+        public void InsertBatch(IList<EmployeeSimple> employees)
         {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
-
-            return m_DataSource.Insert(employee).ToInt32().Execute();
+            m_DataSource.InsertBatch((IReadOnlyList<EmployeeSimple>)employees).Execute();
         }
 
-        public IList<EmployeeSimple> SortByLastName()
+        public IList<EmployeeSimple> SortByFirstName(string lastName)
         {
-            return m_DataSource.From(EmployeeTableName).WithSorting("LastName").ToCollection<EmployeeSimple>().Execute();
+            return m_DataSource.From(EmployeeTableName, new { lastName })
+                .WithSorting("FirstName").ToCollection<EmployeeSimple>().Execute();
         }
 
-        public IList<EmployeeSimple> SortByLastNameDescFirstName()
+        public IList<EmployeeSimple> SortByMiddleNameDescFirstName(string lastName)
         {
-            return m_DataSource.From(EmployeeTableName).WithSorting(new SortExpression("LastName", SortDirection.Descending), "FirstName").ToCollection<EmployeeSimple>().Execute();
+            return m_DataSource.From(EmployeeTableName, new { lastName })
+                .WithSorting(new SortExpression("MiddleName", SortDirection.Descending), "FirstName")
+                .ToCollection<EmployeeSimple>().Execute();
         }
 
-        public IList<EmployeeSimple> SortByLastNameFirstName()
+        public IList<EmployeeSimple> SortByMiddleNameFirstName(string lastName)
         {
-            return m_DataSource.From(EmployeeTableName).WithSorting("LastName", "FirstName").ToCollection<EmployeeSimple>().Execute();
+            return m_DataSource.From(EmployeeTableName, new { lastName })
+                .WithSorting("MiddleName", "FirstName").ToCollection<EmployeeSimple>().Execute();
         }
     }
 }

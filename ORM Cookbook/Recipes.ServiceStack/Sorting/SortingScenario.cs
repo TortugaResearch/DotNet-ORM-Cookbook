@@ -16,35 +16,38 @@ namespace Recipes.ServiceStack.Sorting
             _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public int Create(Employee employee)
+        public void InsertBatch(IList<Employee> employees)
+        {
+            using (var db = _dbConnectionFactory.OpenDbConnection())
+                db.InsertAll(employees);
+        }
+
+        public IList<Employee> SortByFirstName(string lastName)
         {
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return (int)db.Insert(employee, true);
+                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => new { x.FirstName })).ToList();
             }
         }
 
-        public IList<Employee> SortByLastName()
+        public IList<Employee> SortByMiddleNameDescFirstName(string lastName)
+
         {
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return db.Select(db.From<Employee>().OrderBy(x => new { x.LastName })).ToList();
+                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName)
+                    .OrderByDescending(x => new { x.MiddleName }).ThenBy(x => new { x.FirstName })).ToList();
             }
         }
 
-        public IList<Employee> SortByLastNameDescFirstName()
-        {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return db.Select(db.From<Employee>().OrderByDescending(x => new { x.LastName }).ThenBy(x => new { x.FirstName })).ToList();
-            }
-        }
+        public IList<Employee> SortByMiddleNameFirstName(string lastName)
 
-        public IList<Employee> SortByLastNameFirstName()
         {
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return db.Select(db.From<Employee>().OrderBy(x => new { x.LastName, x.FirstName })).ToList();
+                return db.Select(db.From<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => new { x.MiddleName, x.FirstName })).ToList();
             }
         }
     }

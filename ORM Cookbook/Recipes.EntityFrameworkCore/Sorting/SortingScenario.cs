@@ -15,35 +15,38 @@ namespace Recipes.EntityFrameworkCore.Sorting
             CreateDbContext = dBContextFactory;
         }
 
-        public int Create(Employee employee)
+        public void InsertBatch(IList<Employee> employees)
         {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
             using (var context = CreateDbContext())
             {
-                context.Employee.Add(employee);
+                foreach (var employee in employees)
+                    context.Employee.Add(employee);
                 context.SaveChanges();
-                return employee.EmployeeKey;
             }
         }
 
-        public IList<Employee> SortByLastName()
+        public IList<Employee> SortByFirstName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee.OrderBy(x => x.LastName).ToList();
+                return context.Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.FirstName).ToList();
         }
 
-        public IList<Employee> SortByLastNameDescFirstName()
+        public IList<Employee> SortByMiddleNameDescFirstName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee.OrderByDescending(x => x.LastName).ThenBy(x => x.FirstName).ToList();
+                return context.Employee.Where(x => x.LastName == lastName)
+                    .OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
         }
 
-        public IList<Employee> SortByLastNameFirstName()
+        public IList<Employee> SortByMiddleNameFirstName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee.OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList();
+                return context.Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
         }
     }
 }

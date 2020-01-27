@@ -1,7 +1,7 @@
 ﻿using LinqToDB;
+using LinqToDB.Data;
 using Recipes.LinqToDB.Entities;
 using Recipes.Sorting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,33 +9,32 @@ namespace Recipes.LinqToDB.Sorting
 {
     public class SortingScenario : ISortingScenario<Employee>
     {
-        public int Create(Employee employee)
+        public void InsertBatch(IList<Employee> employees)
         {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
-
+            var options = new BulkCopyOptions() { BulkCopyType = BulkCopyType.MultipleRows };
             using (var db = new OrmCookbook())
-            {
-                return db.InsertWithInt32Identity(employee);
-            }
+                db.BulkCopy(options, employees);
         }
 
-        public IList<Employee> SortByLastName()
+        public IList<Employee> SortByFirstName(string lastName)
         {
             using (var db = new OrmCookbook())
-                return db.Employee.OrderBy(x => x.LastName).ToList();
+                return db.Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.FirstName).ToList();
         }
 
-        public IList<Employee> SortByLastNameDescFirstName()
+        public IList<Employee> SortByMiddleNameDescFirstName(string lastName)
         {
             using (var db = new OrmCookbook())
-                return db.Employee.OrderByDescending(x => x.LastName).ThenBy(x => x.FirstName).ToList();
+                return db.Employee.Where(x => x.LastName == lastName)
+                    .OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
         }
 
-        public IList<Employee> SortByLastNameFirstName()
+        public IList<Employee> SortByMiddleNameFirstName(string lastName)
         {
             using (var db = new OrmCookbook())
-                return db.Employee.OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList();
+                return db.Employee.Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).ToList();
         }
     }
 }

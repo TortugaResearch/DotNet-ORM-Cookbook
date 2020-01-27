@@ -1,18 +1,43 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace Recipes.Sorting
+namespace Recipes.DynamicSorting
 {
     /// <summary>
     /// This scenario performs basic CRUD operations on a model containing a foreign key represented by an integer.
     /// </summary>
     /// <typeparam name="TEmployeeSimple">An Employee model or entity</typeparam>
-    [TestCategory("Sorting")]
-    public abstract class SortingTests<TEmployeeSimple> : TestBase
+    [TestCategory("DynamicSorting")]
+    public abstract class DynamicSortingTests<TEmployeeSimple> : TestBase
     where TEmployeeSimple : class, IEmployeeSimple, new()
     {
         const int RowCount = 10;
+
+        [TestMethod]
+        [DataRow("ProductName")]
+        [DataRow("; --")]
+        [DataRow("FirstName]; --")]
+        public void SortByNonExistantColumn(string columnName)
+        {
+            var repository = GetScenario();
+
+            //Ensure some records exist
+            var batchKey = Guid.NewGuid().ToString();
+            var originals = BuildEmployees(RowCount, batchKey);
+            repository.InsertBatch(originals);
+
+            try
+            {
+                var results = repository.SortBy(batchKey, columnName, false);
+                Assert.Fail("An exception was expected for the non-existant sort column.");
+            }
+            catch (Exception ex)
+            {
+                Debug.Write("Exception details: " + ex.ToString());
+            }
+        }
 
         [TestMethod]
         public void SortByFirstName()
@@ -24,7 +49,7 @@ namespace Recipes.Sorting
             var originals = BuildEmployees(RowCount, batchKey);
             repository.InsertBatch(originals);
 
-            var results = repository.SortByFirstName(batchKey);
+            var results = repository.SortBy(batchKey, "FirstName", false);
             for (var i = 1; i < results.Count; i++)
             {
                 Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
@@ -41,7 +66,7 @@ namespace Recipes.Sorting
             var originals = BuildEmployees(RowCount, batchKey);
             repository.InsertBatch(originals);
 
-            var results = repository.SortByMiddleNameDescFirstName(batchKey);
+            var results = repository.SortBy(batchKey, "MiddleName", true, "FirstName", false);
             for (var i = 1; i < results.Count; i++)
             {
                 Assert.IsTrue(string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase) >= 0);
@@ -62,7 +87,7 @@ namespace Recipes.Sorting
             var originals = BuildEmployees(RowCount, batchKey);
             repository.InsertBatch(originals);
 
-            var results = repository.SortByMiddleNameFirstName(batchKey);
+            var results = repository.SortBy(batchKey, "MiddleName", false, "FirstName", false);
             for (var i = 1; i < results.Count; i++)
             {
                 Assert.IsTrue(string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase) <= 0);
@@ -73,7 +98,7 @@ namespace Recipes.Sorting
             }
         }
 
-        protected abstract ISortingScenario<TEmployeeSimple> GetScenario();
+        protected abstract IDynamicSortingScenario<TEmployeeSimple> GetScenario();
 
         static IList<TEmployeeSimple> BuildEmployees(int count, string batchKey)
         {

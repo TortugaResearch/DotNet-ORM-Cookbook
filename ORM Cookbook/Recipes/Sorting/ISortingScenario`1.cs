@@ -2,27 +2,27 @@
 
 namespace Recipes.Sorting
 {
-    public interface ISortingScenario<TEmployee>
-       where TEmployee : class, IEmployeeSimple, new()
+    public interface ISortingScenario<TEmployeeSimple>
+       where TEmployeeSimple : class, IEmployeeSimple, new()
     {
         /// <summary>
-        /// Create a new Employee row, returning the new primary key.
+        /// Insert a collection of Employee rows.
         /// </summary>
-        int Create(TEmployee employee);
+        void InsertBatch(IList<TEmployeeSimple> employees);
 
         /// <summary>
-        /// Sorts by the last name
+        /// Sorts by the first name
         /// </summary>
-        IList<TEmployee> SortByLastName();
+        IList<TEmployeeSimple> SortByFirstName(string lastName);
 
         /// <summary>
-        /// Sorts by the last name in reverse order, then the first name.
+        /// Sorts by the middle name in reverse order, then the first name.
         /// </summary>
-        IList<TEmployee> SortByLastNameDescFirstName();
+        IList<TEmployeeSimple> SortByMiddleNameDescFirstName(string lastName);
 
         /// <summary>
-        /// Sorts by the last name, then the first name.
+        /// Sorts by the middle name, then the first name.
         /// </summary>
-        IList<TEmployee> SortByLastNameFirstName();
+        IList<TEmployeeSimple> SortByMiddleNameFirstName(string lastName);
     }
 }

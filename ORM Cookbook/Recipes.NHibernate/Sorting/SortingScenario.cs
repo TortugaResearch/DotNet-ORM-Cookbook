@@ -15,50 +15,45 @@ namespace Recipes.NHibernate.Sorting
             m_SessionFactory = sessionFactory;
         }
 
-        public int Create(Employee employee)
+        public void InsertBatch(IList<Employee> employees)
         {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
             using (var session = m_SessionFactory.OpenSession())
             {
-                session.Save(employee);
+                foreach (var employee in employees)
+                    session.Save(employee);
                 session.Flush();
-                return employee.EmployeeKey;
             }
         }
 
-        public IList<Employee> SortByLastName()
+        public IList<Employee> SortByFirstName(string lastName)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .QueryOver<Employee>()
-                    .OrderBy(x => x.LastName).Asc
+                return session.QueryOver<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.FirstName).Asc
                     .List();
             }
         }
 
-        public IList<Employee> SortByLastNameDescFirstName()
+        public IList<Employee> SortByMiddleNameDescFirstName(string lastName)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .QueryOver<Employee>()
-                    .OrderBy(x => x.LastName).Desc
-                    .ThenBy(x => x.FirstName).Asc
+                return session.QueryOver<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).Desc.ThenBy(x => x.FirstName).Asc
                     .List();
             }
         }
 
-        public IList<Employee> SortByLastNameFirstName()
+        public IList<Employee> SortByMiddleNameFirstName(string lastName)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())
             {
-                return session
-                    .QueryOver<Employee>()
-                    .OrderBy(x => x.LastName).Asc
-                    .ThenBy(x => x.FirstName).Asc
+                return session.QueryOver<Employee>().Where(x => x.LastName == lastName)
+                    .OrderBy(x => x.MiddleName).Asc.ThenBy(x => x.FirstName).Asc
                     .List();
             }
         }

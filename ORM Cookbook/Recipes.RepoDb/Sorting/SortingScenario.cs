@@ -2,11 +2,12 @@
 using Recipes.Sorting;
 using RepoDb;
 using RepoDb.Extensions;
-using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+
+using RDB = RepoDb;
 
 namespace Recipes.RepoDb.Sorting
 {
@@ -17,27 +18,30 @@ namespace Recipes.RepoDb.Sorting
             : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
-        public int Create(EmployeeSimple employee)
+        public void InsertBatch(IList<EmployeeSimple> employees)
         {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
+            if (employees == null || employees.Count == 0)
+                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            return Insert<int>(employee);
+            InsertAll(employees);
         }
 
-        public IList<EmployeeSimple> SortByLastName()
+        public IList<EmployeeSimple> SortByFirstName(string lastName)
         {
-            return QueryAll().OrderBy(x => x.LastName).AsList();
+            return Query(x => x.LastName == lastName)
+                .OrderBy(x => x.FirstName).AsList();
         }
 
-        public IList<EmployeeSimple> SortByLastNameDescFirstName()
+        public IList<EmployeeSimple> SortByMiddleNameDescFirstName(string lastName)
         {
-            return QueryAll().OrderByDescending(x => x.LastName).ThenBy(x => x.FirstName).AsList();
+            return Query(x => x.LastName == lastName)
+                .OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
         }
 
-        public IList<EmployeeSimple> SortByLastNameFirstName()
+        public IList<EmployeeSimple> SortByMiddleNameFirstName(string lastName)
         {
-            return QueryAll().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).AsList();
+            return Query(x => x.LastName == lastName)
+                .OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
         }
     }
 }
