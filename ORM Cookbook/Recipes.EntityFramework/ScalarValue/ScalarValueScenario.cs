@@ -17,49 +17,49 @@ namespace Recipes.EntityFramework.ScalarValue
         public int? GetDivisionKey(string divisionName)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionName == divisionName).SingleOrDefault()?.DivisionKey;
+                return context.Division.Where(d => d.DivisionName == divisionName).Select(d => (int?)d.DivisionKey).SingleOrDefault();
         }
 
         public string GetDivisionName(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName!;
+                return context.Division.Where(d => d.DivisionKey == divisionKey).Select(d => d.DivisionName!).Single();
         }
 
         public string? GetDivisionNameOrNull(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName;
+                return context.Division.Where(d => d.DivisionKey == divisionKey).Select(d => d.DivisionName!).SingleOrDefault();
         }
 
         public DateTimeOffset? GetLastReviewCycle(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionKey == divisionKey).SingleOrDefault()?.LastReviewCycle;
+                return context.Division.Where(d => d.DivisionKey == divisionKey).Select(d => d.LastReviewCycle).SingleOrDefault();
         }
 
         public int? GetMaxEmployees(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionKey == divisionKey).SingleOrDefault()?.MaxEmployees;
+                return context.Division.Where(d => d.DivisionKey == divisionKey).Select(d => d.MaxEmployees).SingleOrDefault();
         }
 
         public DateTime GetModifiedDate(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionKey == divisionKey).Single().ModifiedDate;
+                return context.Division.Where(d => d.DivisionKey == divisionKey).Select(d => d.ModifiedDate).Single();
         }
 
         public decimal? GetSalaryBudget(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionKey == divisionKey).SingleOrDefault()?.SalaryBudget;
+                return context.Division.Where(d => d.DivisionKey == divisionKey).Select(d => d.SalaryBudget).SingleOrDefault();
         }
 
         public TimeSpan? GetStartTime(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Where(d => d.DivisionKey == divisionKey).SingleOrDefault()?.StartTime;
+                return context.Division.Where(d => d.DivisionKey == divisionKey).Select(d => d.StartTime).SingleOrDefault();
         }
     }
 }

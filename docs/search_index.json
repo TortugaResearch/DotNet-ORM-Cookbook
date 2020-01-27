@@ -139,6 +139,12 @@
       "title": "Reading a Salar Value from a Row"
     },
     {
+      "location": "SingleColumn.htm",
+      "breadcrumbs": "Home / Reading a Single Column from a Table",
+      "keywords": "6 a Ado ADO an Chain column Column Core cs Dapper DB demonstrate discarded else Entity EntityFramework EntityFrameworkCore Everything example ExecuteScalar first For Framework from how htm in In is ISingleColumnScenario LINQ LinqToDB LLBLGen LLBLGenPro NET NHibernate of Pro Prototype read reading Reading Recipes RepoDb resultset returns row Row scalar Scalar Scenario scenarios see ServiceStack single Single SingleColumn SingleColumnScenario snippet table Table the These to TODO value Value",
+      "title": "Reading a Single Column from a Table"
+    },
+    {
       "location": "RowCount.htm",
       "breadcrumbs": "Home / Row Counts",
       "keywords": "1 6 a Ado ADO Chain column Core count Counts cs Dapper DB demonstrate discarded else Entity EntityFramework EntityFrameworkCore Everything ExecuteScalar first Framework from get how in In IRowCountScenario is LINQ LinqToDB LLBLGen LLBLGenPro NET NHibernate of Pro Prototype Recipes RepoDb resultset returns row Row RowCount RowCountScenario Scenario scenarios ServiceStack snippet table TEmployeeSimple the These to Tortuga",

@@ -79,6 +79,7 @@
     <Build Include="HR\HR.sql" />
     <None Include="localhost.publish.xml" />
     <None Include="localhost delete and rebuild.publish.xml" />
+    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -96,5 +97,6 @@
     <Build Include="HR\Programability\GetEmployeeClassifications.sql" />
     <Build Include="HR\Programability\CountEmployeesByClassification.sql" />
     <None Include="Data\Employee.sql" />
+    <None Include="OrmCookbookDB.publish.sql" />
   </ItemGroup>
 </Project>
