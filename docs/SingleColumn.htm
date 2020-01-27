@@ -214,7 +214,7 @@
 
     public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
     {
-        var sql = &quot;SELECT MaxEmployee FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        var sql = &quot;SELECT MaxEmployees FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
         {
@@ -322,7 +322,7 @@
 
     public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
     {
-        var sql = &quot;SELECT MaxEmployee FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
+        var sql = &quot;SELECT MaxEmployees FROM HR.Division WHERE DivisionKey &lt; @MaxDivisionKey;&quot;;
         using (var con = OpenConnection())
             return con.Query&lt;int?&gt;(sql, new { maxDivisionKey }).ToList();
     }

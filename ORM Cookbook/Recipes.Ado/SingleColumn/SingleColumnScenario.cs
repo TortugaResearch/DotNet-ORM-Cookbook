@@ -66,7 +66,7 @@ namespace Recipes.Ado.SingleColumn
 
         public List<int?> GetMaxEmployees(int maxDivisionKey)
         {
-            var sql = "SELECT MaxEmployee FROM HR.Division WHERE DivisionKey < @MaxDivisionKey;";
+            var sql = "SELECT MaxEmployees FROM HR.Division WHERE DivisionKey < @MaxDivisionKey;";
             using (var con = OpenConnection())
             using (var cmd = new SqlCommand(sql, con))
             {

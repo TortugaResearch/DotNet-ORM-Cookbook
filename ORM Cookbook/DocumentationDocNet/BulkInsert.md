@@ -48,7 +48,7 @@ For more information see [Bulk Copy (Bulk Insert)](https://linq2db.github.io/art
 
 ## LLBLGen Pro 
 
-TODO
+LLBLGen Pro does not have support for bulk inserts.
 
 ## NHibernate
 

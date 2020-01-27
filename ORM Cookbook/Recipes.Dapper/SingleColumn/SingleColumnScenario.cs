@@ -35,7 +35,7 @@ namespace Recipes.Dapper.SingleColumn
 
         public List<int?> GetMaxEmployees(int maxDivisionKey)
         {
-            var sql = "SELECT MaxEmployee FROM HR.Division WHERE DivisionKey < @MaxDivisionKey;";
+            var sql = "SELECT MaxEmployees FROM HR.Division WHERE DivisionKey < @MaxDivisionKey;";
             using (var con = OpenConnection())
                 return con.Query<int?>(sql, new { maxDivisionKey }).ToList();
         }
