@@ -612,7 +612,9 @@ POCOs however these aren't able to participate in entity relationships.</p>
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeDetail.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+            return new LinqMetaData(adapter).EmployeeDetail
+                                .Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey)
+                                .ToList();
         }
     }
 
@@ -620,7 +622,9 @@ POCOs however these aren't able to participate in entity relationships.</p>
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
+            return new LinqMetaData(adapter).EmployeeDetail
+                                .Where(x =&gt; x.LastName == lastName)
+                                .ToList();
         }
     }
 
@@ -636,7 +640,8 @@ POCOs however these aren't able to participate in entity relationships.</p>
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeDetail.SingleOrDefault(x =&gt; x.EmployeeKey == employeeKey);
+            return new LinqMetaData(adapter).EmployeeDetail
+                                .SingleOrDefault(x =&gt; x.EmployeeKey == employeeKey);
         }
     }
 
@@ -644,7 +649,8 @@ POCOs however these aren't able to participate in entity relationships.</p>
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+            return new LinqMetaData(adapter).EmployeeClassification
+                                .FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
         }
     }
 }

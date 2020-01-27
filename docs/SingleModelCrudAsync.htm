@@ -780,89 +780,96 @@
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With LLBLGen Pro, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassificationEntity&gt;
+<pre><code class="cs"> public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassificationEntity&gt;
+ {
+     public async Task&lt;int&gt; CreateAsync(EmployeeClassificationEntity classification)
+     {
+         if (classification == null)
+             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+         using (var adapter = new DataAccessAdapter())
+         {
+             await adapter.SaveEntityAsync(classification).ConfigureAwait(false);
+             return classification.EmployeeClassificationKey;
+         }
+     }
+
+     public async Task DeleteAsync(EmployeeClassificationEntity classification)
+     {
+         if (classification == null)
+             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+         using (var adapter = new DataAccessAdapter())
+         {
+             classification.IsNew = false;
+             await adapter.DeleteEntityAsync(classification).ConfigureAwait(false);
+         }
+     }
+
+     public async Task DeleteByKeyAsync(int employeeClassificationKey)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             await adapter.DeleteEntitiesDirectlyAsync(typeof(EmployeeClassificationEntity),
+                                                       new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                                      .Equal(employeeClassificationKey)))
+                 .ConfigureAwait(false);
+         }
+     }
+
+     public async Task&lt;EmployeeClassificationEntity?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+     {
+         using (var adapter = new DataAccessAdapter())
 {
-    public async Task&lt;int&gt; CreateAsync(EmployeeClassificationEntity classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            await adapter.SaveEntityAsync(classification).ConfigureAwait(false);
-            return classification.EmployeeClassificationKey;
-        }
-    }
-
-    public async Task DeleteAsync(EmployeeClassificationEntity classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            classification.IsNew = false;
-            await adapter.DeleteEntityAsync(classification).ConfigureAwait(false);
-        }
-    }
-
-    public async Task DeleteByKeyAsync(int employeeClassificationKey)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            await adapter.DeleteEntitiesDirectlyAsync(typeof(EmployeeClassificationEntity),
-                                                      new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey))).ConfigureAwait(false);
-        }
-    }
-
-    public async Task&lt;EmployeeClassificationEntity?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return await new LinqMetaData(adapter).EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
-                                           .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public async Task&lt;IList&lt;EmployeeClassificationEntity&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return await new LinqMetaData(adapter).EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public async Task&lt;EmployeeClassificationEntity?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return await new LinqMetaData(adapter).EmployeeClassification.FirstOrDefaultAsync(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey, cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public async Task UpdateAsync(EmployeeClassificationEntity classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            EmployeeClassificationEntity toPersist = classification;
-            if (classification.IsNew)
-            {
-                toPersist = new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == classification.EmployeeClassificationKey);
-                if (toPersist != null)
-                {
-                    toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
-                }
-            }
-            if (toPersist != null &amp;&amp; !toPersist.IsNew)
-            {
-                await adapter.SaveEntityAsync(toPersist, refetchAfterSave: false, recurse: false).ConfigureAwait(false);
-            }
-        }
-    }
+    return await new LinqMetaData(adapter).EmployeeClassification
+                                          .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+                                          .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 }
+     }
+
+     public async Task&lt;IList&lt;EmployeeClassificationEntity&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             return await new LinqMetaData(adapter).EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
+         }
+     }
+
+     public async Task&lt;EmployeeClassificationEntity?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             return await new LinqMetaData(adapter).EmployeeClassification
+                                          .FirstOrDefaultAsync(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey, cancellationToken)
+                                          .ConfigureAwait(false);
+         }
+     }
+
+     public async Task UpdateAsync(EmployeeClassificationEntity classification)
+     {
+         if (classification == null)
+             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+         using (var adapter = new DataAccessAdapter())
+         {
+             EmployeeClassificationEntity toPersist = classification;
+             if (classification.IsNew)
+             {
+                 toPersist = await new LinqMetaData(adapter).EmployeeClassification
+                                             .FirstOrDefaultAsync(ec =&gt; ec.EmployeeClassificationKey == classification.EmployeeClassificationKey)
+                                             .ConfigureAwait(false);
+                 if (toPersist != null)
+                 {
+                     toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
+                 }
+             }
+             if (toPersist != null &amp;&amp; !toPersist.IsNew)
+             {
+                 await adapter.SaveEntityAsync(toPersist, refetchAfterSave: false, recurse: false).ConfigureAwait(false);
+             }
+         }
+     }
+ }
 </code></pre>
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

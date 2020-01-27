@@ -892,9 +892,7 @@ public partial class EmployeeClassification
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>LLBLGen Pro is a .NET ORM on the market since 2003 and has seen over 15 major releases since that date. The latest version is v5.6.1, released in October 2019. LLBLGen Pro is a commercial non-poco full ORM which also offers a full plain-SQL API so can be used as a micro ORM as well. </p>
-<p>As all entities derive from a base class, the class models and mappings have to be generated from an abstract entity model which is created in the LLBLGen Pro designer using either model first or database first development (or a mix of both). LLBLGen Pro supports two paradigms: Adapter and SelfServicing. The cookbook looks at Adapter. </p>
-<p>It offers multiple query systems (Linq, QuerySpec (a fluent API) and a low-level API). The recipes illustrate usage of all of these.</p>
+<p>LLBLGen Pro offers multiple ways to perform CRUD operations: via entity instances or directly on the data in the database, to avoid a fetch of entities first. The code below illustrates this and multiple query systems. Entity types are derived from a common base class.</p>
 <pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassificationEntity&gt;
 {
     public int Create(EmployeeClassificationEntity classification)
@@ -928,7 +926,8 @@ public partial class EmployeeClassification
         {
             // delete directly, so we don't have to fetch the entity first.
             adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                       .Equal(employeeClassificationKey)));
         }
     }
 
@@ -937,7 +936,9 @@ public partial class EmployeeClassification
         using (var adapter = new DataAccessAdapter())
         {
             // let's use QuerySpec
-            return adapter.FetchFirst(new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.EmployeeClassificationName.Equal(employeeClassificationName)));
+            return adapter.FetchFirst(new QueryFactory().EmployeeClassification
+                                            .Where(EmployeeClassificationFields.EmployeeClassificationName
+                                                                               .Equal(employeeClassificationName)));
         }
     }
 
@@ -956,7 +957,8 @@ public partial class EmployeeClassification
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+            return new LinqMetaData(adapter).EmployeeClassification
+                                .FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
         }
     }
 
@@ -971,8 +973,9 @@ public partial class EmployeeClassification
             EmployeeClassificationEntity toPersist = classification;
             if (classification.IsNew)
             {
-                toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(
-                                                                 EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                            new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                    .Equal(classification.EmployeeClassificationKey)));
                 toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
             }
             if (!toPersist.IsNew)
@@ -985,8 +988,6 @@ public partial class EmployeeClassification
 </code></pre>
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s Hibernate, it heavily relies on XML configuration files and interfaces.</p>
-<p>The models are interesting in that every property needs to be virtual. Without this, you’ll get a runtime error.</p>
 <pre><code class="cs">public partial class EmployeeClassification : IEmployeeClassification
 {
     public virtual int EmployeeClassificationKey { get; set; }
@@ -1125,8 +1126,7 @@ public partial class EmployeeClassification
 
 <p>The rules on when you need to call <code>Flush</code> are complex. In some cases it will be called for you implicitly, but as a general rule you need to invoke it before leaving a block that includes modifications.</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>RepoDb is a hybrid-ORM that supports both <em>raw-SQLs</em> and <em>fluent</em> calls. When calling the <em>raw-SQL</em> operations, just like <em>Dapper</em> it does need annotations.</p>
-<p>However, by using a <em>fluent</em> calls in the repositories (as recommended), it often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard <code>Table</code>, <code>Column</code>, and <code>Key</code> attributes from .NET.</p>
+<p>When calling the <em>raw-SQL</em> operations, just like <em>Dapper</em>, RepoDB requires annotations on the classes. These are specific to RepoDb, you cannot use the standard <code>Table</code>, <code>Column</code>, and <code>Key</code> attributes from .NET.</p>
 <pre><code class="cs">[Map(&quot;[HR].[EmployeeClassification]&quot;)]
 public class EmployeeClassification : IEmployeeClassification
 {

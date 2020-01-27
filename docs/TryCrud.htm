@@ -1117,7 +1117,8 @@
         {
             // delete directly
             int count = adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                       .Equal(employeeClassificationKey)));
             if (count &lt;= 0)
             {
                 throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
@@ -1131,7 +1132,8 @@
         {
             // delete directly
             int count = adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                                       new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                                       new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                                   .Equal(employeeClassificationKey)));
             return count &gt; 0;
         }
     }
@@ -1167,7 +1169,8 @@
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeClassification.Single(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName);
+            return new LinqMetaData(adapter).EmployeeClassification
+                                .Single(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName);
         }
     }
 
@@ -1175,7 +1178,8 @@
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeClassification.SingleOrDefault(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName);
+            return new LinqMetaData(adapter).EmployeeClassification
+                                .SingleOrDefault(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName);
         }
     }
 
@@ -1183,7 +1187,9 @@
     {
         using (var adapter = new DataAccessAdapter())
         {
-            var ec = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+            var ec = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                    new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                            .Equal(employeeClassificationKey)));
             if (ec.IsNew)
             {
                 throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
@@ -1196,7 +1202,9 @@
     {
         using (var adapter = new DataAccessAdapter())
         {
-            var ec = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+            var ec = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                    new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                            .Equal(employeeClassificationKey)));
             return ec.IsNew ? null : ec;
         }
     }
@@ -1208,8 +1216,9 @@
 
         using (var adapter = new DataAccessAdapter())
         {
-            var toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(
-                                                                EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+            var toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                    new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                            .Equal(classification.EmployeeClassificationKey)));
             if (!toPersist.IsNew)
             {
                 toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
@@ -1231,8 +1240,9 @@
 
         using (var adapter = new DataAccessAdapter())
         {
-            var toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(
-                                                 EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+            var toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                    new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                            .Equal(classification.EmployeeClassificationKey)));
             if (!toPersist.IsNew)
             {
                 toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;

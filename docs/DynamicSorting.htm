@@ -439,22 +439,23 @@ public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumnA, bool 
 <p>LLBLGen Pro does not natively support sorting by strings. However, this can be acomplished with <code>DynamicSortingExtensions</code>.</p>
 <pre><code class="cs">public IList&lt;EmployeeEntity&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
 {
-    using (var adapter = new DataAccessAdapter())
+    using(var adapter = new DataAccessAdapter())
     {
         return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName)
-            .OrderBy(sortByColumn, isDescending).ToList();
+                                        .OrderBy(sortByColumn, isDescending)
+                                        .ToList();
     }
 }
 
 public IList&lt;EmployeeEntity&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
-    string sortByColumnB, bool isDescendingB)
+                                    string sortByColumnB, bool isDescendingB)
 {
-    using (var adapter = new DataAccessAdapter())
+    using(var adapter = new DataAccessAdapter())
     {
         return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName)
-            .OrderBy(sortByColumnA, isDescendingA)
-            .ThenBy(sortByColumnB, isDescendingB)
-            .ToList();
+                                        .OrderBy(sortByColumnA, isDescendingA)
+                                        .ThenBy(sortByColumnB, isDescendingB)
+                                        .ToList();
     }
 }
 </code></pre>
