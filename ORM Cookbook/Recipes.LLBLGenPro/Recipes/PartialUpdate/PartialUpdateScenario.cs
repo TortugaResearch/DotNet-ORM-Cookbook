@@ -30,7 +30,9 @@ namespace Recipes.LLBLGenPro.PartialUpdate
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return adapter.FetchFirst(new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                return adapter.FetchFirst(new QueryFactory().EmployeeClassification
+															.Where(EmployeeClassificationFields.EmployeeClassificationKey
+																							   .Equal(employeeClassificationKey)));
             }
         }
 
@@ -42,7 +44,9 @@ namespace Recipes.LLBLGenPro.PartialUpdate
             using (var adapter = new DataAccessAdapter())
             {
                 // use an entity
-                var temp = adapter.FetchFirst(new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.EmployeeClassificationKey.Equal(updateMessage.EmployeeClassificationKey)));
+                var temp = adapter.FetchFirst(new QueryFactory().EmployeeClassification
+																.Where(EmployeeClassificationFields.EmployeeClassificationKey
+																								   .Equal(updateMessage.EmployeeClassificationKey)));
                 if (temp != null)
                 {
                     temp.EmployeeClassificationName = updateMessage.EmployeeClassificationName;
@@ -62,7 +66,9 @@ namespace Recipes.LLBLGenPro.PartialUpdate
                 var updater = new EmployeeClassificationEntity();
                 updater.IsEmployee = updateMessage.IsEmployee;
                 updater.IsExempt = updateMessage.IsExempt;
-                adapter.UpdateEntitiesDirectly(updater, new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(updateMessage.EmployeeClassificationKey)));
+                adapter.UpdateEntitiesDirectly(updater, 
+											   new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																									   .Equal(updateMessage.EmployeeClassificationKey)));
             }
         }
 

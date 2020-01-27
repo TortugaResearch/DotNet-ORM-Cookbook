@@ -39,6 +39,7 @@ namespace Recipes.LLBLGenPro.RowCount
 			{
 				using(var adapter = new DataAccessAdapter())
 				{
+					// 0 switches off batching
 					adapter.BatchSize = employees?.Count ?? 0;
 					adapter.SaveEntityCollection(toInsert);
 				}

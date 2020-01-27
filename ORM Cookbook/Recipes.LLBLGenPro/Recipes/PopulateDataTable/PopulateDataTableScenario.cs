@@ -14,7 +14,9 @@ namespace Recipes.LLBLGenPro.PopulateDataTable
         {
             using (var adapter = new DataAccessAdapter())
             {
-                var q = new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.IsEmployee.Equal(isEmployee).And(EmployeeClassificationFields.IsExempt.Equal(isExempt)))
+                var q = new QueryFactory().EmployeeClassification
+										  .Where(EmployeeClassificationFields.IsEmployee.Equal(isEmployee)
+												 .And(EmployeeClassificationFields.IsExempt.Equal(isExempt)))
                                           .Select(Projection.Full);
                 return adapter.FetchAsDataTable(q);
             }

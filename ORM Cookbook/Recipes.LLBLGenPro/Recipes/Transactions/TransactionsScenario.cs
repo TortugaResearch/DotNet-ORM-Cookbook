@@ -22,10 +22,13 @@ namespace Recipes.LLBLGenPro.Transactions
                 var result = classification.EmployeeClassificationKey;
 
                 if (shouldRollBack)
-                    adapter.Rollback();
+				{
+					adapter.Rollback();
+				}
                 else
-                    adapter.Commit();
-
+				{
+					adapter.Commit();
+				}
                 return result;
             }
         }
@@ -42,10 +45,13 @@ namespace Recipes.LLBLGenPro.Transactions
                 var result = classification.EmployeeClassificationKey;
 
                 if (shouldRollBack)
-                    adapter.Rollback();
+				{
+					adapter.Rollback();
+				}
                 else
-                    adapter.Commit();
-
+				{
+					adapter.Commit();
+				}
                 return result;
             }
         }
@@ -54,7 +60,8 @@ namespace Recipes.LLBLGenPro.Transactions
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec => ec.EmployeeClassificationKey == employeeClassificationKey);
+                return new LinqMetaData(adapter).EmployeeClassification
+												.FirstOrDefault(ec => ec.EmployeeClassificationKey == employeeClassificationKey);
             }
         }
     }

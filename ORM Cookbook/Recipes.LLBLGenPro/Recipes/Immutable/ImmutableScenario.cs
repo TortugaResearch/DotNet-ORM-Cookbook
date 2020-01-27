@@ -41,7 +41,8 @@ namespace Recipes.LLBLGenPro.Immutable
             using (var adapter = new DataAccessAdapter())
             {
                 adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                               new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                               new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																									   .Equal(employeeClassificationKey)));
             }
         }
 
@@ -51,7 +52,8 @@ namespace Recipes.LLBLGenPro.Immutable
             {
                 return new LinqMetaData(adapter).EmployeeClassification
                                                     .Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
-                                                    .Select(x => new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+                                                    .Select(x => new ReadOnlyEmployeeClassification(x))
+													.SingleOrDefault();
             }
         }
 
@@ -67,7 +69,9 @@ namespace Recipes.LLBLGenPro.Immutable
         {
             using (var adapter = new DataAccessAdapter())
             {
-                var temp = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                var temp = adapter.FetchNewEntity<EmployeeClassificationEntity>(
+															new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																													.Equal(employeeClassificationKey)));
                 if (temp.IsNew)
                     throw new DataException($"No row was found for key {employeeClassificationKey}.");
                 return new ReadOnlyEmployeeClassification(temp);
@@ -83,7 +87,8 @@ namespace Recipes.LLBLGenPro.Immutable
             {
                 //Get a fresh copy of the row from the database
                 var temp = adapter.FetchNewEntity<EmployeeClassificationEntity>(
-                                    new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                                    new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																							.Equal(classification.EmployeeClassificationKey)));
                 if (!temp.IsNew)
                 {
                     //Copy the changed fields

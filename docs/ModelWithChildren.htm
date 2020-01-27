@@ -1173,170 +1173,196 @@ with a removal tracker, which tracks which entities are removed and which can be
 and one with a direct delete on the table using a not-in predicate, available in the regular <code>Update</code> method. </p>
 <p>Nested deletes are implemented explicitly, as cascading deletes aren't supported at the ORM level; to have cascading deletes you 
 have to set up the deletes as cascading on the foreign key constraint. </p>
-<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLineEntity, ProductEntity&gt;
-{
-    public int Create(ProductLineEntity productLine)
-    {
-        if (productLine == null)
-            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+<pre><code class="cs"> public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLineEntity, ProductEntity&gt;
+ {
+     public int Create(ProductLineEntity productLine)
+     {
+         if (productLine == null)
+             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        using (var adapter = new DataAccessAdapter())
-        {
-            adapter.SaveEntity(productLine);
-            return productLine.ProductLineKey;
-        }
-    }
+         using (var adapter = new DataAccessAdapter())
+         {
+             adapter.SaveEntity(productLine);
+             return productLine.ProductLineKey;
+         }
+     }
 
-    public void Delete(ProductLineEntity productLine)
-    {
-        if (productLine == null)
-            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+     public void Delete(ProductLineEntity productLine)
+     {
+         if (productLine == null)
+             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        // We'll have to delete the whole graph so first the related entities, then the main entity.
-        // Let's use a Unit of work here for that.
-        var uow = new UnitOfWork2();
-        uow.AddCollectionForDelete(productLine.Products);
-        uow.AddForDelete(productLine);
-        using (var adapter = new DataAccessAdapter())
-        {
-            uow.Commit(adapter);
-        }
-    }
+         // We'll have to delete the whole graph so first the related entities, then the main entity.
+         // Let's use a Unit of work here for that.
+         var uow = new UnitOfWork2();
+         uow.AddCollectionForDelete(productLine.Products);
+         uow.AddForDelete(productLine);
+         using (var adapter = new DataAccessAdapter())
+         {
+             uow.Commit(adapter);
+         }
+     }
 
-    public void DeleteByKey(int productLineKey)
-    {
-        // let's directly delete the entities, without fetching them. Use a unit of work for this
-        // to wrap everything neatly in a transaction when it's committed. A Unit of work is a
-        // persistence agnostic object you can pass on freely to add work and then have all the work
-        // performed in a single transaction.
-        var uow = new UnitOfWork2();
-        uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductLineKey.Equal(productLineKey)));
-        uow.AddDeleteEntitiesDirectlyCall(typeof(ProductLineEntity), new RelationPredicateBucket(ProductLineFields.ProductLineKey.Equal(productLineKey)));
-        using (var adapter = new DataAccessAdapter())
-        {
-            uow.Commit(adapter);
-        }
-    }
+     public void DeleteByKey(int productLineKey)
+     {
+         // let's directly delete the entities, without fetching them. Use a unit of work for this
+         // to wrap everything neatly in a transaction when it's committed. A Unit of work is a
+         // persistence agnostic object you can pass on freely to add work and then have all the work
+         // performed in a single transaction.
+         var uow = new UnitOfWork2();
+         uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), 
+                                  new RelationPredicateBucket(ProductFields.ProductLineKey.Equal(productLineKey)));
+         uow.AddDeleteEntitiesDirectlyCall(typeof(ProductLineEntity), 
+                                  new RelationPredicateBucket(ProductLineFields.ProductLineKey.Equal(productLineKey)));
+         using (var adapter = new DataAccessAdapter())
+         {
+             uow.Commit(adapter);
+         }
+     }
 
-    public IList&lt;ProductLineEntity&gt; FindByName(string productLineName, bool includeProducts)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            var metaData = new LinqMetaData(adapter);
-            if (includeProducts)
-            {
-                return metaData.ProductLine.Where(x =&gt; x.ProductLineName == productLineName).WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).ToList();
-            }
-            return metaData.ProductLine.Where(x =&gt; x.ProductLineName == productLineName).ToList();
-        }
-    }
+     public IList&lt;ProductLineEntity&gt; FindByName(string productLineName, bool includeProducts)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             var metaData = new LinqMetaData(adapter);
+             if (includeProducts)
+             {
+                 return metaData.ProductLine.Where(x =&gt; x.ProductLineName == productLineName)
+                       .WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).ToList();
+             }
+             return metaData.ProductLine.Where(x =&gt; x.ProductLineName == productLineName).ToList();
+         }
+     }
 
-    public IList&lt;ProductLineEntity&gt; GetAll(bool includeProducts)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            var metaData = new LinqMetaData(adapter);
-            if (includeProducts)
-            {
-                return metaData.ProductLine.WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).ToList();
-            }
-            return metaData.ProductLine.ToList();
-        }
-    }
+     public IList&lt;ProductLineEntity&gt; GetAll(bool includeProducts)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             var metaData = new LinqMetaData(adapter);
+             if (includeProducts)
+             {
+                 return metaData.ProductLine.WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).ToList();
+             }
+             return metaData.ProductLine.ToList();
+         }
+     }
 
-    public ProductLineEntity? GetByKey(int productLineKey, bool includeProducts)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            var metaData = new LinqMetaData(adapter);
-            if (includeProducts)
-            {
-                var toReturn = metaData.ProductLine.Where(x =&gt; x.ProductLineKey == productLineKey).WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).SingleOrDefault();
-                if (toReturn != null)
-                {
-                    // insert removal tracker for tracking removed entities.
-                    toReturn.Products.RemovedEntitiesTracker = new EntityCollection&lt;ProductEntity&gt;();
-                }
-                return toReturn;
-            }
-            return metaData.ProductLine.SingleOrDefault(x =&gt; x.ProductLineKey == productLineKey);
-        }
-    }
+     public ProductLineEntity? GetByKey(int productLineKey, bool includeProducts)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             var metaData = new LinqMetaData(adapter);
+             if (includeProducts)
+             {
+                 var toReturn = metaData.ProductLine.Where(x =&gt; x.ProductLineKey == productLineKey)
+                               .WithPath(p =&gt; p.Prefetch(pl =&gt; pl.Products)).SingleOrDefault();
+                 if (toReturn != null)
+                 {
+                     // insert removal tracker for tracking removed entities.
+                     toReturn.Products.RemovedEntitiesTracker = new EntityCollection&lt;ProductEntity&gt;();
+                 }
+                 return toReturn;
+             }
+             return metaData.ProductLine.SingleOrDefault(x =&gt; x.ProductLineKey == productLineKey);
+         }
+     }
 
-    public void Update(ProductEntity product)
-    {
-        if (product == null)
-            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+     public void Update(ProductEntity product)
+     {
+         if (product == null)
+             throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
 
-        using (var adapter = new DataAccessAdapter())
-        {
-            adapter.SaveEntity(product);
-        }
-    }
+         using (var adapter = new DataAccessAdapter())
+         {
+             adapter.SaveEntity(product);
+         }
+     }
 
-    public void Update(ProductLineEntity productLine)
-    {
-        if (productLine == null)
-            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+     public void Update(ProductLineEntity productLine)
+     {
+         if (productLine == null)
+             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
-        uow.AddForSave(productLine, null, refetch: true, recurse: false);
-        using (var adapter = new DataAccessAdapter())
-        {
-            uow.Commit(adapter);
-        }
-    }
+// Specify the order of operations for the unit of work, so it will first perform delete operations
+// directly on the database and then do inserts followed by updates. We have to specify the order
+// here as it's different from the default, where DeletesPerformedDirectly are done last. 
+var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
+                          {
+                              UnitOfWorkBlockType.DeletesPerformedDirectly,
+                              UnitOfWorkBlockType.Inserts, 
+                              UnitOfWorkBlockType.Updates
+                          });
+         uow.AddForSave(productLine, null, refetch: true, recurse: false);
+         using (var adapter = new DataAccessAdapter())
+         {
+             uow.Commit(adapter);
+         }
+     }
 
-    public void UpdateGraph(ProductLineEntity productLine)
-    {
-        if (productLine == null)
-            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+     public void UpdateGraph(ProductLineEntity productLine)
+     {
+         if (productLine == null)
+             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
-        uow.AddForSave(productLine);
-        using (var adapter = new DataAccessAdapter())
-        {
-            uow.Commit(adapter);
-        }
-    }
+var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
+                          {
+                              UnitOfWorkBlockType.DeletesPerformedDirectly,
+                              UnitOfWorkBlockType.Inserts,
+                              UnitOfWorkBlockType.Updates
+                          });
+         uow.AddForSave(productLine);
+         using (var adapter = new DataAccessAdapter())
+         {
+             uow.Commit(adapter);
+         }
+     }
 
-    public virtual void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
-    {
-        if (productLine == null)
-            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+     public virtual void UpdateGraphWithChildDeletes(ProductLineEntity productLine)
+     {
+         if (productLine == null)
+             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        // this update method will update the related products. Any removed product has to be removed as it's orphaned.
-        // We have to remove all products which key isn't in the set of products currently related to the passed in productline.
-        // To do that we'll do a delete directly using a where clause where all entities with a key not in the set of
-        // keys of the current related product entities are removed. We'll wrap it all in a unit of work for easy transaction handling.
-        // In the unit of work, we have to schedule the direct deletes before the insert of the new row, otherwise it's removed,
-        // as it doesn't have a PK yet, so the IN clause we're using won't match it.
-        var currentKeys = productLine.Products.Select(p =&gt; p.ProductKey).ToList();
-        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
-        uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.NotIn(currentKeys)));
-        uow.AddForSave(productLine);
-        using (var adapter = new DataAccessAdapter())
-        {
-            uow.Commit(adapter);
-        }
-    }
+         // this update method will update the related products. Any removed product has to be removed as it's orphaned.
+         // We have to remove all products which key isn't in the set of products currently related to the passed in productline.
+         // To do that we'll do a delete directly using a where clause where all entities with a key not in the set of
+         // keys of the current related product entities are removed. We'll wrap it all in a unit of work for easy transaction handling.
+         // In the unit of work, we have to schedule the direct deletes before the insert of the new row, otherwise it's removed,
+         // as it doesn't have a PK yet, so the IN clause we're using won't match it.
+         var currentKeys = productLine.Products.Select(p =&gt; p.ProductKey).ToList();
+var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
+                          {
+                              UnitOfWorkBlockType.DeletesPerformedDirectly,
+                              UnitOfWorkBlockType.Inserts, 
+                              UnitOfWorkBlockType.Updates
+                          });
+         uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.NotIn(currentKeys)));
+         uow.AddForSave(productLine);
+         using (var adapter = new DataAccessAdapter())
+         {
+             uow.Commit(adapter);
+         }
+     }
 
-    public void UpdateGraphWithDeletes(ProductLineEntity productLine, IList&lt;int&gt; productKeysToRemove)
-    {
-        if (productLine == null)
-            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+     public void UpdateGraphWithDeletes(ProductLineEntity productLine, IList&lt;int&gt; productKeysToRemove)
+     {
+         if (productLine == null)
+             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;() { UnitOfWorkBlockType.DeletesPerformedDirectly, UnitOfWorkBlockType.Inserts, UnitOfWorkBlockType.Updates });
-
-        if (productKeysToRemove?.Count &gt; 0)
-            uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.In(productKeysToRemove)));
-        uow.AddForSave(productLine);
-        using (var adapter = new DataAccessAdapter())
-        {
-            uow.Commit(adapter);
-        }
-    }
-}
+var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
+                          {
+                              UnitOfWorkBlockType.DeletesPerformedDirectly,
+                              UnitOfWorkBlockType.Inserts,
+                              UnitOfWorkBlockType.Updates
+                          });
+         if (productKeysToRemove?.Count &gt; 0)
+             uow.AddDeleteEntitiesDirectlyCall(typeof(ProductEntity), new RelationPredicateBucket(ProductFields.ProductKey.In(productKeysToRemove)));
+         uow.AddForSave(productLine);
+         using (var adapter = new DataAccessAdapter())
+         {
+             uow.Commit(adapter);
+         }
+     }
+ }
 </code></pre>
 
 <p>Alternative Update method using removal tracker functionality</p>

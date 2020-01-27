@@ -907,7 +907,8 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
         using (var adapter = new DataAccessAdapter())
         {
             adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                       .Equal(employeeClassificationKey)));
         }
     }
 
@@ -917,7 +918,8 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
         {
             return new LinqMetaData(adapter).EmployeeClassification
                                                 .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
-                                                .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+                                                .Select(x =&gt; new ReadOnlyEmployeeClassification(x))
+                                    .SingleOrDefault();
         }
     }
 
@@ -933,7 +935,9 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
     {
         using (var adapter = new DataAccessAdapter())
         {
-            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+            var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                            new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                                    .Equal(employeeClassificationKey)));
             if (temp.IsNew)
                 throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
             return new ReadOnlyEmployeeClassification(temp);
@@ -949,7 +953,8 @@ focus on immutable data in-memory. LLBLGen Pro does not directly support these o
         {
             //Get a fresh copy of the row from the database
             var temp = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
-                                new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                                new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                            .Equal(classification.EmployeeClassificationKey)));
             if (!temp.IsNew)
             {
                 //Copy the changed fields

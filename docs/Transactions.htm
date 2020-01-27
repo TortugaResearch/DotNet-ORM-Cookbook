@@ -548,10 +548,13 @@
             var result = classification.EmployeeClassificationKey;
 
             if (shouldRollBack)
-                adapter.Rollback();
+{
+    adapter.Rollback();
+}
             else
-                adapter.Commit();
-
+{
+    adapter.Commit();
+}
             return result;
         }
     }
@@ -568,10 +571,13 @@
             var result = classification.EmployeeClassificationKey;
 
             if (shouldRollBack)
-                adapter.Rollback();
+{
+    adapter.Rollback();
+}
             else
-                adapter.Commit();
-
+{
+    adapter.Commit();
+}
             return result;
         }
     }
@@ -580,7 +586,8 @@
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+            return new LinqMetaData(adapter).EmployeeClassification
+                                .FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
         }
     }
 }

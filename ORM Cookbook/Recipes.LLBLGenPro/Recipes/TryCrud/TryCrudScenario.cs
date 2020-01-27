@@ -31,7 +31,8 @@ namespace Recipes.LLBLGenPro.TryCrud
             {
                 // delete directly
                 int count = adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                               new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                               new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																									   .Equal(employeeClassificationKey)));
                 if (count <= 0)
                 {
                     throw new DataException($"No row was found for key {employeeClassificationKey}.");
@@ -45,7 +46,8 @@ namespace Recipes.LLBLGenPro.TryCrud
             {
                 // delete directly
                 int count = adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																												   .Equal(employeeClassificationKey)));
                 return count > 0;
             }
         }
@@ -81,7 +83,8 @@ namespace Recipes.LLBLGenPro.TryCrud
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return new LinqMetaData(adapter).EmployeeClassification.Single(ec => ec.EmployeeClassificationName == employeeClassificationName);
+                return new LinqMetaData(adapter).EmployeeClassification
+												.Single(ec => ec.EmployeeClassificationName == employeeClassificationName);
             }
         }
 
@@ -89,7 +92,8 @@ namespace Recipes.LLBLGenPro.TryCrud
         {
             using (var adapter = new DataAccessAdapter())
             {
-                return new LinqMetaData(adapter).EmployeeClassification.SingleOrDefault(ec => ec.EmployeeClassificationName == employeeClassificationName);
+                return new LinqMetaData(adapter).EmployeeClassification
+												.SingleOrDefault(ec => ec.EmployeeClassificationName == employeeClassificationName);
             }
         }
 
@@ -97,7 +101,9 @@ namespace Recipes.LLBLGenPro.TryCrud
         {
             using (var adapter = new DataAccessAdapter())
             {
-                var ec = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                var ec = adapter.FetchNewEntity<EmployeeClassificationEntity>(
+													new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																											.Equal(employeeClassificationKey)));
                 if (ec.IsNew)
                 {
                     throw new DataException($"No row was found for key {employeeClassificationKey}.");
@@ -110,7 +116,9 @@ namespace Recipes.LLBLGenPro.TryCrud
         {
             using (var adapter = new DataAccessAdapter())
             {
-                var ec = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                var ec = adapter.FetchNewEntity<EmployeeClassificationEntity>(
+													new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																											.Equal(employeeClassificationKey)));
                 return ec.IsNew ? null : ec;
             }
         }
@@ -122,8 +130,9 @@ namespace Recipes.LLBLGenPro.TryCrud
 
             using (var adapter = new DataAccessAdapter())
             {
-                var toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(
-                                                                    EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                var toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(
+													new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																											.Equal(classification.EmployeeClassificationKey)));
                 if (!toPersist.IsNew)
                 {
                     toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
@@ -145,8 +154,9 @@ namespace Recipes.LLBLGenPro.TryCrud
 
             using (var adapter = new DataAccessAdapter())
             {
-                var toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(new RelationPredicateBucket(
-                                                     EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                var toPersist = adapter.FetchNewEntity<EmployeeClassificationEntity>(
+													new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+																											.Equal(classification.EmployeeClassificationKey)));
                 if (!toPersist.IsNew)
                 {
                     toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;

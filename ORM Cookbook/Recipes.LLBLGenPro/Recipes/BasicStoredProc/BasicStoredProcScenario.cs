@@ -38,14 +38,16 @@ namespace Recipes.LLBLGenPro.BasicStoredProc
 		public IList<GetEmployeeClassificationsResultRow> GetEmployeeClassifications()
 		{
 			return RetrievalProcedures.FetchGetEmployeeClassificationsResultTypedView(
-													new QueryFactory().GetGetEmployeeClassificationsResultTypedViewProjection(), null);
+													new QueryFactory().GetGetEmployeeClassificationsResultTypedViewProjection(), 
+													null);
 		}
 
 
 		public GetEmployeeClassificationsResultRow? GetEmployeeClassifications(int employeeClassificationKey)
 		{
 			return RetrievalProcedures.FetchGetEmployeeClassificationsResultTypedView(
-													new QueryFactory().GetGetEmployeeClassificationsResultTypedViewProjection(), employeeClassificationKey).FirstOrDefault();
+													new QueryFactory().GetGetEmployeeClassificationsResultTypedViewProjection(), 
+													employeeClassificationKey).FirstOrDefault();
 		}
 	}
 }
