@@ -54,7 +54,8 @@ LinqToDB does not natively support sorting by strings. However, this can be acom
 
 ## LLBLGen Pro 
 
-LLBLGen Pro does not natively support sorting by strings. However, this can be acomplished with `DynamicSortingExtensions`.
+LLBLGen Pro does natively support sorting by strings but it requires a little bit of verbose code using the low-level API of older versions. This
+is illustrated in the code below in the first method. The second method shows the alternative using the `DynamicSortingExtensions`.
 
 @snippet cs [..\Recipes.LLBLGenPro\Recipes\DynamicSorting\DynamicSortingScenario.cs] SortBy
 

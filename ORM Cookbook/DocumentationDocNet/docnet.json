@@ -1,51 +1,66 @@
 ﻿{
-  "Name": "The .NET Core ORM Cookbook",
-  "Source": ".",
-  "Destination": "..\\..\\docs",
-  "IncludeSource": "Includes",
-  "Theme": "Light",
-  "Footer": "The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.",
-  "ConvertLocalLinks": "true",
-  "Pages": {
-    "__index": "index.md",
-    "ORMs": {
-      "ADO.NET": "ADO.md",
-      "Chain": "Chain.md",
-      "Dapper": "Dapper.md",
-      "Entity Framework 6": "EF6.md",
-      "Entity Framework Core": "EFCore.md",
-      "LLBLGen Pro": "LLBLGenPro.md",
-      "NHibernate": "NHibernate.md",
-      "RepoDb": "RepoDb.md",
-      "ServiceStack": "ServiceStack.md"
-    },
-    "FAQ": "FAQ.md",
-    "Single Model CRUD": "SingleModelCrud.md",
-    "Model with Children CRUD": "ModelWithChildren.md",
-    "Async Operations": "SingleModelCrudAsync.md",
-    "TryGet/Update/Delete Operations": "TryCrud.md",
-    "Upsert": "Upsert.md",
-    "Partial Updates": "PartialUpdate.md",
-    "Immutable CRUD": "Immutable.md",
-    "CRUD Operations on Multiple Objects": "MultipleCrud.md",
-    "Batch Inserts with Large Collections": "LargeBatch.md",
-    "Bulk Inserts": "BulkInsert.md",
-    "Projecting with a Join": "Joins.md",
-    "Reading from Views": "Views.md",
-    "Reading a Salar Value from a Row": "ScalarValue.md",
-    "Reading a Single Column from a Table": "SingleColumn.md",
-    "Row Counts": "RowCount.md",
-    "Sorting Results": {
-      "Basic Sorting": "Sorting.md",
-      "Sorting by Dynamically Chosen Columns": "DynamicSorting.md"
-    },
-    "Paging Results": "Pagination.md",
-    "Populate DataTable": "PopulateDataTable.md",
-    "Foreign Key to Lookup Table CRUD": {
-      "Integer-Based Foreign Key": "ModelWithLookupSimple.md",
-      "Object-Based Foreign Key": "ModelWithLookupComplex.md"
-    },
-    "Basic Stored Procedures": "BasicStoredProc.md",
-    "Working with Transactions": "Transactions.md"
-  }
+	"Name": "The .NET Core ORM Cookbook",
+	"Source": ".",
+	"Destination": "..\\..\\docs",
+	"IncludeSource": "Includes",
+	"Theme": "Light",
+	"Footer": "The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.",
+	"ConvertLocalLinks": "true",
+	"Pages": 
+	{
+		"__index": "index.md",
+		"ORMs": {
+		  "ADO.NET": "ADO.md",
+		  "Chain": "Chain.md",
+		  "Dapper": "Dapper.md",
+		  "Entity Framework 6": "EF6.md",
+		  "Entity Framework Core": "EFCore.md",
+		  "LLBLGen Pro": "LLBLGenPro.md",
+		  "NHibernate": "NHibernate.md",
+		  "RepoDb": "RepoDb.md",
+		  "ServiceStack": "ServiceStack.md"
+		},
+		"FAQ": "FAQ.md",
+		"Standard CRUD scenarios":
+		{
+			"Operations on a single entity type": "SingleModelCrud.md",
+			"Operations on sets": "MultipleCrud.md",
+			"Operations on a graph of multiple entity types": "ModelWithChildren.md",
+			"Operations on immutable entities": "Immutable.md",
+			"Handling failures and exceptions": "TryCrud.md",
+			"Operations with a Foreign Key based Lookup Table": 
+			{
+				"FK Lookup table using an integer-based Foreign Key": "ModelWithLookupSimple.md",
+				"FK Lookup table using an object-based Foreign Key": "ModelWithLookupComplex.md"
+			},
+		},
+		"Fetching data scenarios":
+		{
+			"Projecting with a Join": "Joins.md",
+			"Reading from Views": "Views.md",
+			"Row Counts": "RowCount.md",
+			"Paging Results": "Pagination.md",
+			"Populate DataTable": "PopulateDataTable.md",
+			"Reading a Salar Value from a Row": "ScalarValue.md",
+			"Reading a Single Column from a Table": "SingleColumn.md",
+		},
+		"Advanced scenarios":
+		{
+			"Async Operations": "SingleModelCrudAsync.md",
+			"Upsert": "Upsert.md",
+			"Partial Updates": "PartialUpdate.md",
+			"Batch Inserts with Large Collections": "LargeBatch.md",
+			"Bulk Inserts": "BulkInsert.md",
+		},
+		"Sorting scenarios": 
+		{
+			"Basic Sorting": "Sorting.md",
+			"Sorting by Dynamically Chosen Columns": "DynamicSorting.md"
+		},
+		"Stored procedure scenarios":
+		{
+			"Basic Stored Procedures": "BasicStoredProc.md",
+			"Working with Transactions": "Transactions.md"
+		}
+	}
 }
