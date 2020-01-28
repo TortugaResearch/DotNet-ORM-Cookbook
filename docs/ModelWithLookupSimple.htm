@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Integer-Based Foreign Key - The .NET Core ORM Cookbook</title>
+    <title>FK Lookup table using an integer-based Foreign Key - The .NET Core ORM Cookbook</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="css/theme.css" type="text/css" />
     <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
@@ -36,47 +36,23 @@
 </li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
-<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
-</li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
-</li>
-<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
-</li>
-<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
-</li>
-<li class="tocentry"><a href="Upsert.htm">Upsert</a>
-</li>
-<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
-</li>
-<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
-</li>
-<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
-</li>
-<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
-</li>
-<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
-</li>
-<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
-</li>
-<li class="tocentry"><a href="Views.htm">Reading from Views</a>
-</li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
-</li>
-<li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
-</li>
-<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
-</li>
 <li class="tocentry">
-<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="SortingResults.htm">Sorting Results</a></span>
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span></li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Operations on a single entity type</a>
 </li>
-<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+<li class="tocentry"><a href="MultipleCrud.htm">Operations on sets</a>
 </li>
-<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+<li class="tocentry"><a href="ModelWithChildren.htm">Operations on a graph of multiple entity types</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Operations on immutable entities</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">Handling failures and exceptions</a>
 </li>
 <li class="tocentry">
 <ul>
-<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span></li>
-<li class="tocentry current"><a class="current" href="ModelWithLookupSimple.htm">Integer-Based Foreign Key</a>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="OperationswithaForeignKeybasedLookupTable.htm">Operations with a Foreign Key based Lookup Table</a></span></li>
+<li class="tocentry current"><a class="current" href="ModelWithLookupSimple.htm">FK Lookup table using an integer-based Foreign Key</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
@@ -103,14 +79,25 @@
 
 
 </ul>
-<li class="tocentry"><a href="ModelWithLookupComplex.htm">Object-Based Foreign Key</a>
+<li class="tocentry"><a href="ModelWithLookupComplex.htm">FK Lookup table using an object-based Foreign Key</a>
 </li>
 
 </ul>
 </li>
-<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+
+</ul>
 </li>
-<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -130,7 +117,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></li> / <li><a href="ModelWithLookupSimple.htm">Integer-Based Foreign Key</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></li> / <li><a href="OperationswithaForeignKeybasedLookupTable.htm">Operations with a Foreign Key based Lookup Table</a></li> / <li><a href="ModelWithLookupSimple.htm">FK Lookup table using an integer-based Foreign Key</a></li></ul>
 					
                     </div>
                     <hr />

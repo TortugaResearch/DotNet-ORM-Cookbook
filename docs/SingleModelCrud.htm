@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Single Model CRUD - The .NET Core ORM Cookbook</title>
+    <title>Operations on a single entity type - The .NET Core ORM Cookbook</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="css/theme.css" type="text/css" />
     <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
@@ -36,7 +36,10 @@
 </li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
-<li class="tocentry current"><a class="current" href="SingleModelCrud.htm">Single Model CRUD</a>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span></li>
+<li class="tocentry current"><a class="current" href="SingleModelCrud.htm">Operations on a single entity type</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
@@ -63,47 +66,31 @@
 
 
 </ul>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
+<li class="tocentry"><a href="MultipleCrud.htm">Operations on sets</a>
 </li>
-<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+<li class="tocentry"><a href="ModelWithChildren.htm">Operations on a graph of multiple entity types</a>
 </li>
-<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
+<li class="tocentry"><a href="Immutable.htm">Operations on immutable entities</a>
 </li>
-<li class="tocentry"><a href="Upsert.htm">Upsert</a>
-</li>
-<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
-</li>
-<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
-</li>
-<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
-</li>
-<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
-</li>
-<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
-</li>
-<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
-</li>
-<li class="tocentry"><a href="Views.htm">Reading from Views</a>
-</li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
-</li>
-<li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
-</li>
-<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+<li class="tocentry"><a href="TryCrud.htm">Handling failures and exceptions</a>
 </li>
 <li class="tocentry">
-<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="SortingResults.htm">Sorting Results</a></span>
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="OperationswithaForeignKeybasedLookupTable.htm">Operations with a Foreign Key based Lookup Table</a></span>
 </li>
-<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
-</li>
-<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+
+</ul>
 </li>
 <li class="tocentry">
-<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
 </li>
-<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
 </li>
-<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -123,7 +110,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="SingleModelCrud.htm">Single Model CRUD</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></li> / <li><a href="SingleModelCrud.htm">Operations on a single entity type</a></li></ul>
 					
                     </div>
                     <hr />
@@ -892,9 +879,7 @@ public partial class EmployeeClassification
 </code></pre>
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>LLBLGen Pro is a .NET ORM on the market since 2003 and has seen over 15 major releases since that date. The latest version is v5.6.1, released in October 2019. LLBLGen Pro is a commercial non-poco full ORM which also offers a full plain-SQL API so can be used as a micro ORM as well. </p>
-<p>As all entities derive from a base class, the class models and mappings have to be generated from an abstract entity model which is created in the LLBLGen Pro designer using either model first or database first development (or a mix of both). LLBLGen Pro supports two paradigms: Adapter and SelfServicing. The cookbook looks at Adapter. </p>
-<p>It offers multiple query systems (Linq, QuerySpec (a fluent API) and a low-level API). The recipes illustrate usage of all of these.</p>
+<p>LLBLGen Pro offers multiple ways to perform CRUD operations: via entity instances or directly on the data in the database, to avoid a fetch of entities first. The code below illustrates this and multiple query systems. Entity types are derived from a common base class.</p>
 <pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassificationEntity&gt;
 {
     public int Create(EmployeeClassificationEntity classification)
@@ -928,7 +913,8 @@ public partial class EmployeeClassification
         {
             // delete directly, so we don't have to fetch the entity first.
             adapter.DeleteEntitiesDirectly(typeof(EmployeeClassificationEntity),
-                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey)));
+                                           new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                       .Equal(employeeClassificationKey)));
         }
     }
 
@@ -937,7 +923,9 @@ public partial class EmployeeClassification
         using (var adapter = new DataAccessAdapter())
         {
             // let's use QuerySpec
-            return adapter.FetchFirst(new QueryFactory().EmployeeClassification.Where(EmployeeClassificationFields.EmployeeClassificationName.Equal(employeeClassificationName)));
+            return adapter.FetchFirst(new QueryFactory().EmployeeClassification
+                                            .Where(EmployeeClassificationFields.EmployeeClassificationName
+                                                                               .Equal(employeeClassificationName)));
         }
     }
 
@@ -956,7 +944,8 @@ public partial class EmployeeClassification
     {
         using (var adapter = new DataAccessAdapter())
         {
-            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+            return new LinqMetaData(adapter).EmployeeClassification
+                                .FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
         }
     }
 
@@ -971,8 +960,9 @@ public partial class EmployeeClassification
             EmployeeClassificationEntity toPersist = classification;
             if (classification.IsNew)
             {
-                toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(new RelationPredicateBucket(
-                                                                 EmployeeClassificationFields.EmployeeClassificationKey.Equal(classification.EmployeeClassificationKey)));
+                toPersist = adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                            new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                    .Equal(classification.EmployeeClassificationKey)));
                 toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
             }
             if (!toPersist.IsNew)
@@ -985,8 +975,6 @@ public partial class EmployeeClassification
 </code></pre>
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>NHibernate is one of the oldest ORMs for the .NET Framework. Based on Java’s Hibernate, it heavily relies on XML configuration files and interfaces.</p>
-<p>The models are interesting in that every property needs to be virtual. Without this, you’ll get a runtime error.</p>
 <pre><code class="cs">public partial class EmployeeClassification : IEmployeeClassification
 {
     public virtual int EmployeeClassificationKey { get; set; }
@@ -1125,8 +1113,7 @@ public partial class EmployeeClassification
 
 <p>The rules on when you need to call <code>Flush</code> are complex. In some cases it will be called for you implicitly, but as a general rule you need to invoke it before leaving a block that includes modifications.</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>RepoDb is a hybrid-ORM that supports both <em>raw-SQLs</em> and <em>fluent</em> calls. When calling the <em>raw-SQL</em> operations, just like <em>Dapper</em> it does need annotations.</p>
-<p>However, by using a <em>fluent</em> calls in the repositories (as recommended), it often requires the use of annotations on its models. These are specific to RepoDb, you cannot use the standard <code>Table</code>, <code>Column</code>, and <code>Key</code> attributes from .NET.</p>
+<p>When calling the <em>raw-SQL</em> operations, just like <em>Dapper</em>, RepoDB requires annotations on the classes. These are specific to RepoDb, you cannot use the standard <code>Table</code>, <code>Column</code>, and <code>Key</code> attributes from .NET.</p>
 <pre><code class="cs">[Map(&quot;[HR].[EmployeeClassification]&quot;)]
 public class EmployeeClassification : IEmployeeClassification
 {

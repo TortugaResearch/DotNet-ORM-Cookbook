@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sorting Results - The .NET Core ORM Cookbook</title>
+    <title>Standard CRUD scenarios - The .NET Core ORM Cookbook</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="css/theme.css" type="text/css" />
     <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
@@ -36,56 +36,36 @@
 </li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
-<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
-</li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
-</li>
-<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
-</li>
-<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
-</li>
-<li class="tocentry"><a href="Upsert.htm">Upsert</a>
-</li>
-<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
-</li>
-<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
-</li>
-<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
-</li>
-<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
-</li>
-<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
-</li>
-<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
-</li>
-<li class="tocentry"><a href="Views.htm">Reading from Views</a>
-</li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
-</li>
-<li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
-</li>
-<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
-</li>
 <li class="tocentry">
 <ul class="current">
-<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="SortingResults.htm">Sorting Results</a></span></li>
-<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span></li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Operations on a single entity type</a>
 </li>
-<li class="tocentry"><a href="DynamicSorting.htm">Sorting by Dynamically Chosen Columns</a>
+<li class="tocentry"><a href="MultipleCrud.htm">Operations on sets</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Operations on a graph of multiple entity types</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Operations on immutable entities</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">Handling failures and exceptions</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="OperationswithaForeignKeybasedLookupTable.htm">Operations with a Foreign Key based Lookup Table</a></span>
 </li>
 
 </ul>
 </li>
-<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
-</li>
-<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
 </li>
 <li class="tocentry">
-<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
 </li>
-<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
 </li>
-<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -105,18 +85,22 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="SortingResults.htm">Sorting Results</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></li></ul>
 					
                     </div>
                     <hr />
                 </div>
                 <div role="main">
                     <div class="section">
-<h1 id="sorting-results">Sorting Results<a class="headerlink" href="#sorting-results" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<h1 id="standard-crud-scenarios">Standard CRUD scenarios<a class="headerlink" href="#standard-crud-scenarios" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
 <p>Please select one of the topics in this section:</p>
 <ul>
-<li><a href="Sorting.htm">Basic Sorting</a></li>
-<li><a href="DynamicSorting.htm">Sorting by Dynamically Chosen Columns</a></li>
+<li><a href="SingleModelCrud.htm">Operations on a single entity type</a></li>
+<li><a href="MultipleCrud.htm">Operations on sets</a></li>
+<li><a href="ModelWithChildren.htm">Operations on a graph of multiple entity types</a></li>
+<li><a href="Immutable.htm">Operations on immutable entities</a></li>
+<li><a href="TryCrud.htm">Handling failures and exceptions</a></li>
+<li><a href="OperationswithaForeignKeybasedLookupTable.htm">Operations with a Foreign Key based Lookup Table</a></li>
 </ul>
 
                     </div>

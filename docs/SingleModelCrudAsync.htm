@@ -36,10 +36,15 @@
 </li>
 <li class="tocentry"><a href="FAQ.htm">FAQ</a>
 </li>
-<li class="tocentry"><a href="SingleModelCrud.htm">Single Model CRUD</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
 </li>
-<li class="tocentry"><a href="ModelWithChildren.htm">Model with Children CRUD</a>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
 </li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span></li>
 <li class="tocentry current"><a class="current" href="SingleModelCrudAsync.htm">Async Operations</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
@@ -67,43 +72,22 @@
 
 
 </ul>
-<li class="tocentry"><a href="TryCrud.htm">TryGet/Update/Delete Operations</a>
-</li>
 <li class="tocentry"><a href="Upsert.htm">Upsert</a>
 </li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
-</li>
-<li class="tocentry"><a href="Immutable.htm">Immutable CRUD</a>
-</li>
-<li class="tocentry"><a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a>
 </li>
 <li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
 </li>
 <li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
 </li>
-<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
-</li>
-<li class="tocentry"><a href="Views.htm">Reading from Views</a>
-</li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
-</li>
-<li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
-</li>
-<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+
+</ul>
 </li>
 <li class="tocentry">
-<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="SortingResults.htm">Sorting Results</a></span>
-</li>
-<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
-</li>
-<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
 </li>
 <li class="tocentry">
-<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ForeignKeytoLookupTableCRUD.htm">Foreign Key to Lookup Table CRUD</a></span>
-</li>
-<li class="tocentry"><a href="BasicStoredProc.htm">Basic Stored Procedures</a>
-</li>
-<li class="tocentry"><a href="Transactions.htm">Working with Transactions</a>
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
 </li>
 </ul>
 				<div class="toc-footer">
@@ -123,7 +107,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="SingleModelCrudAsync.htm">Async Operations</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Advancedscenarios.htm">Advanced scenarios</a></li> / <li><a href="SingleModelCrudAsync.htm">Async Operations</a></li></ul>
 					
                     </div>
                     <hr />
@@ -780,89 +764,96 @@
 
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With LLBLGen Pro, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassificationEntity&gt;
+<pre><code class="cs"> public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassificationEntity&gt;
+ {
+     public async Task&lt;int&gt; CreateAsync(EmployeeClassificationEntity classification)
+     {
+         if (classification == null)
+             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+         using (var adapter = new DataAccessAdapter())
+         {
+             await adapter.SaveEntityAsync(classification).ConfigureAwait(false);
+             return classification.EmployeeClassificationKey;
+         }
+     }
+
+     public async Task DeleteAsync(EmployeeClassificationEntity classification)
+     {
+         if (classification == null)
+             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+         using (var adapter = new DataAccessAdapter())
+         {
+             classification.IsNew = false;
+             await adapter.DeleteEntityAsync(classification).ConfigureAwait(false);
+         }
+     }
+
+     public async Task DeleteByKeyAsync(int employeeClassificationKey)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             await adapter.DeleteEntitiesDirectlyAsync(typeof(EmployeeClassificationEntity),
+                                                       new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                                                                                      .Equal(employeeClassificationKey)))
+                 .ConfigureAwait(false);
+         }
+     }
+
+     public async Task&lt;EmployeeClassificationEntity?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+     {
+         using (var adapter = new DataAccessAdapter())
 {
-    public async Task&lt;int&gt; CreateAsync(EmployeeClassificationEntity classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            await adapter.SaveEntityAsync(classification).ConfigureAwait(false);
-            return classification.EmployeeClassificationKey;
-        }
-    }
-
-    public async Task DeleteAsync(EmployeeClassificationEntity classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            classification.IsNew = false;
-            await adapter.DeleteEntityAsync(classification).ConfigureAwait(false);
-        }
-    }
-
-    public async Task DeleteByKeyAsync(int employeeClassificationKey)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            await adapter.DeleteEntitiesDirectlyAsync(typeof(EmployeeClassificationEntity),
-                                                      new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey.Equal(employeeClassificationKey))).ConfigureAwait(false);
-        }
-    }
-
-    public async Task&lt;EmployeeClassificationEntity?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return await new LinqMetaData(adapter).EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
-                                           .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public async Task&lt;IList&lt;EmployeeClassificationEntity&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return await new LinqMetaData(adapter).EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public async Task&lt;EmployeeClassificationEntity?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return await new LinqMetaData(adapter).EmployeeClassification.FirstOrDefaultAsync(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey, cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public async Task UpdateAsync(EmployeeClassificationEntity classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        using (var adapter = new DataAccessAdapter())
-        {
-            EmployeeClassificationEntity toPersist = classification;
-            if (classification.IsNew)
-            {
-                toPersist = new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == classification.EmployeeClassificationKey);
-                if (toPersist != null)
-                {
-                    toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
-                }
-            }
-            if (toPersist != null &amp;&amp; !toPersist.IsNew)
-            {
-                await adapter.SaveEntityAsync(toPersist, refetchAfterSave: false, recurse: false).ConfigureAwait(false);
-            }
-        }
-    }
+    return await new LinqMetaData(adapter).EmployeeClassification
+                                          .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+                                          .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 }
+     }
+
+     public async Task&lt;IList&lt;EmployeeClassificationEntity&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             return await new LinqMetaData(adapter).EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
+         }
+     }
+
+     public async Task&lt;EmployeeClassificationEntity?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+     {
+         using (var adapter = new DataAccessAdapter())
+         {
+             return await new LinqMetaData(adapter).EmployeeClassification
+                                          .FirstOrDefaultAsync(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey, cancellationToken)
+                                          .ConfigureAwait(false);
+         }
+     }
+
+     public async Task UpdateAsync(EmployeeClassificationEntity classification)
+     {
+         if (classification == null)
+             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+         using (var adapter = new DataAccessAdapter())
+         {
+             EmployeeClassificationEntity toPersist = classification;
+             if (classification.IsNew)
+             {
+                 toPersist = await new LinqMetaData(adapter).EmployeeClassification
+                                             .FirstOrDefaultAsync(ec =&gt; ec.EmployeeClassificationKey == classification.EmployeeClassificationKey)
+                                             .ConfigureAwait(false);
+                 if (toPersist != null)
+                 {
+                     toPersist.EmployeeClassificationName = classification.EmployeeClassificationName;
+                 }
+             }
+             if (toPersist != null &amp;&amp; !toPersist.IsNew)
+             {
+                 await adapter.SaveEntityAsync(toPersist, refetchAfterSave: false, recurse: false).ConfigureAwait(false);
+             }
+         }
+     }
+ }
 </code></pre>
 
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
