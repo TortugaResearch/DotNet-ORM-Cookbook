@@ -7,7 +7,8 @@ using System.Data;
 
 namespace Recipes.Ado.BasicStoredProc
 {
-    public class BasicStoredProcScenario : ScenarioBase, IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount>
+    public class BasicStoredProcScenario : ScenarioBase,
+        IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount>
     {
         public BasicStoredProcScenario(string connectionString) : base(connectionString)
         { }
@@ -15,7 +16,8 @@ namespace Recipes.Ado.BasicStoredProc
         public IList<EmployeeClassificationWithCount> CountEmployeesByClassification()
         {
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand("HR.CountEmployeesByClassification", con) { CommandType = CommandType.StoredProcedure })
+            using (var cmd = new SqlCommand("HR.CountEmployeesByClassification", con)
+            { CommandType = CommandType.StoredProcedure })
             using (var reader = cmd.ExecuteReader())
             {
                 var results = new List<EmployeeClassificationWithCount>();
@@ -29,12 +31,15 @@ namespace Recipes.Ado.BasicStoredProc
         public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
         {
             if (employeeClassification == null)
-                throw new ArgumentNullException(nameof(employeeClassification), $"{nameof(employeeClassification)} is null.");
+                throw new ArgumentNullException(nameof(employeeClassification),
+                    $"{nameof(employeeClassification)} is null.");
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand("HR.CreateEmployeeClassification", con) { CommandType = CommandType.StoredProcedure })
+            using (var cmd = new SqlCommand("HR.CreateEmployeeClassification", con)
+            { CommandType = CommandType.StoredProcedure })
             {
-                cmd.Parameters.AddWithValue("@EmployeeClassificationName", employeeClassification.EmployeeClassificationName);
+                cmd.Parameters.AddWithValue("@EmployeeClassificationName",
+                        employeeClassification.EmployeeClassificationName);
                 cmd.Parameters.AddWithValue("@IsEmployee", employeeClassification.IsEmployee);
                 cmd.Parameters.AddWithValue("@IsExempt", employeeClassification.IsExempt);
 
@@ -45,7 +50,8 @@ namespace Recipes.Ado.BasicStoredProc
         public IList<EmployeeClassification> GetEmployeeClassifications()
         {
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand("HR.GetEmployeeClassifications", con) { CommandType = CommandType.StoredProcedure })
+            using (var cmd = new SqlCommand("HR.GetEmployeeClassifications", con)
+            { CommandType = CommandType.StoredProcedure })
             using (var reader = cmd.ExecuteReader())
             {
                 var results = new List<EmployeeClassification>();
@@ -59,7 +65,8 @@ namespace Recipes.Ado.BasicStoredProc
         public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
         {
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand("HR.GetEmployeeClassifications", con) { CommandType = CommandType.StoredProcedure })
+            using (var cmd = new SqlCommand("HR.GetEmployeeClassifications", con)
+            { CommandType = CommandType.StoredProcedure })
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
                 using (var reader = cmd.ExecuteReader())

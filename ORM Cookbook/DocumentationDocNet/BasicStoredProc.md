@@ -40,9 +40,13 @@ TODO
 
 To use stored procedures that return values, a class is needed to receive the results. This is true even if a scalar value is returned.
 
-The receiver class should be registered in the DbContext just like any other Entity, but with two additional requirements in the `modelBuilder` configuration:
+@snippet cs [..\Recipes.EntityFrameworkCore\Entities\EmployeeClassificationWithCount.cs] EmployeeClassificationWithCount
 
-* `entity.HasNoKey();`
+@snippet cs [..\Recipes.EntityFrameworkCore\Entities\EmployeeClassificationKeyHolder.cs] EmployeeClassificationKeyHolder
+
+The receiver class should be registered in the DbContext as shown below:
+
+@snippet cs [..\Recipes.EntityFrameworkCore\Entities\OrmCookbookContext.BasicStoredProc.cs] OrmCookbookContext
 
 @snippet cs [..\Recipes.EntityFrameworkCore\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
 

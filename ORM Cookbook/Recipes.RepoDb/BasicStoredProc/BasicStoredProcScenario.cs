@@ -2,12 +2,13 @@
 using Recipes.RepoDb.Models;
 using RepoDb;
 using RepoDb.Extensions;
-using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+
+using RDB = RepoDb;
 
 namespace Recipes.RepoDb.BasicStoredProc
 {
@@ -27,9 +28,15 @@ namespace Recipes.RepoDb.BasicStoredProc
         public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
         {
             if (employeeClassification == null)
-                throw new ArgumentNullException(nameof(employeeClassification), $"{nameof(employeeClassification)} is null.");
+                throw new ArgumentNullException(nameof(employeeClassification),
+                    $"{nameof(employeeClassification)} is null.");
 
-            return Insert<EmployeeClassification, int>(employeeClassification);
+            return ExecuteScalar<int>("[HR].[CreateEmployeeClassification]", new
+            {
+                employeeClassification.EmployeeClassificationName,
+                employeeClassification.IsExempt,
+                employeeClassification.IsEmployee
+            }, commandType: CommandType.StoredProcedure);
         }
 
         public IList<EmployeeClassification> GetEmployeeClassifications()

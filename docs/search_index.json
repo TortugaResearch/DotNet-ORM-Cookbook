@@ -151,18 +151,6 @@
       "title": "Async Operations"
     },
     {
-      "location": "Upsert.htm",
-      "breadcrumbs": "Home / Advanced scenarios / Upsert",
-      "keywords": "1 6 a Ado ADO an atomic be Chain code Core cs Dapper DB demonstrate demonstrates directly doesn EF Entity EntityFramework EntityFrameworkCore Framework how in insert IUpsertScenario LINQ LinqToDB LLBLGen LLBLGenPro MERGE must NET NHibernate often perform performed possible Pro proceed Prototype read Recipes RepoDb Scenario scenarios ServiceStack should single snippet so statement support syntax TDivision the These this This to Tortuga update upsert Upsert UpsertScenario Where",
-      "title": "Upsert"
-    },
-    {
-      "location": "PartialUpdate.htm",
-      "breadcrumbs": "Home / Advanced scenarios / Partial Updates",
-      "keywords": "1 2 6 a above Ado ADO and are be below can Chain class ClassMappedNameCache Code column columns Core cs Dapper DB decide demonstrate directly do dynamic e either entity Entity EntityFramework EntityFrameworkCore extract fetch fetching filter first following for Framework from g have help how in In IPartialUpdateScenario it item key Limit LINQ LinqToDB LLBLGen LLBLGenPro model modify name NET NHibernate object of on one or original parameter partial Partial PartialUpdate PartialUpdateScenario pass passed perform primary Pro properties Prototype Recipes record RepoDb resembles row s Scenario scenarios separate ServiceStack snippet snippets Specify table targe target targetted the The then These to To Tortuga unpacked update Updated updates Updates UpdateWithObject UpdateWithSeparateParameters will without you your",
-      "title": "Partial Updates"
-    },
-    {
       "location": "LargeBatch.htm",
       "breadcrumbs": "Home / Advanced scenarios / Batch Inserts with Large Collections",
       "keywords": "000 1 10 100 2100 6 a adjust ADO after and approximately are articles as atomic batch Batch BatchAsLists batches be better breaking broken Bulk BulkCopyType BulkInsert BulkInsertScenario but can Chain changes collection collections Collections columns command consider Copy Core counts CRUD cs Dapper database DB DBContext degration demonstrate doesn effect Entity EntityFramework EntityFrameworkCore every features for For Framework from function github handling how htm html https ILargeBatchScenario in increases information insert Insert InsertBatch InsertMultipleBatch inserts Inserts instead into io is it Large LargeBatch LargeBatchScenario limit LINQ linq2db LinqToDB LLBLGen LLBLGenPro many maximum mitigate more Multiple MultipleRows necessary need needed NET new NHibernate No not Note number objects Objects of offer on only operations Operations ORMs other overcomes parameter perform performance Pro Prototype provided Recipes RepoDb require scenario Scenario see Server ServiceStack severe should size snippet Some special sql SQL Start suffer supports T TEmployeeSimple that the The this This to To Tortuga tracks transaction up use used using Utilities with",
@@ -173,6 +161,24 @@
       "breadcrumbs": "Home / Advanced scenarios / Bulk Inserts",
       "keywords": "000 1 100 6 a ADO and APIs appropriate articles batch Batch be bulk Bulk BulkCopyType BulkInsert BulkInsertScenario Chain collection collections Collections Copy CopyToDataTable Core CRUD cs Dapper database DataTable DB demonstrate described do does Entity for For Framework from function github handled handling have how htm html https IBulkInsertScenario improve in In information insert Insert inserts Inserts io is isn large Large LargeBatch LINQ linq2db LinqToDB LLBLGen mapping more Multiple MultipleCrud NET NHibernate not Note objects Objects of on only operations Operations order ORMs Others pattern perform performance Pro Prototype provided ProviderSpecific rather Recipes RepoDb require same scenario Scenario see seen ServiceStack should size Smaller snippet Some special specific sql SQL support supports TEmployeeSimple than that the this This to TODO Tortuga use used uses Utilities where with",
       "title": "Bulk Inserts"
+    },
+    {
+      "location": "PartialUpdate.htm",
+      "breadcrumbs": "Home / Advanced scenarios / Partial Updates",
+      "keywords": "1 2 6 a above Ado ADO and are be below can Chain class ClassMappedNameCache Code column columns Core cs Dapper DB decide demonstrate directly do dynamic e either entity Entity EntityFramework EntityFrameworkCore extract fetch fetching filter first following for Framework from g have help how in In IPartialUpdateScenario it item key Limit LINQ LinqToDB LLBLGen LLBLGenPro model modify name NET NHibernate object of on one or original parameter partial Partial PartialUpdate PartialUpdateScenario pass passed perform primary Pro properties Prototype Recipes record RepoDb resembles row s Scenario scenarios separate ServiceStack snippet snippets Specify table targe target targetted the The then These to To Tortuga unpacked update Updated updates Updates UpdateWithObject UpdateWithSeparateParameters will without you your",
+      "title": "Partial Updates"
+    },
+    {
+      "location": "Transactions.htm",
+      "breadcrumbs": "Home / Advanced scenarios / Transactions",
+      "keywords": "1 6 a Ado ADO after against all an and are associated automatically be BeginTransaction behavior call calling can capabilities Chain commands commit connection Core create cs Dapper DataAccessAdapter database DataSource DB defined demonstrate disposed EF Entity EntityFramework EntityFrameworkCore explcitly explicitly extension Framework get holds how in is isolation ITransactionsScenario itself level LINQ LinqToDB LLBLGen LLBLGenPro manages method Microsoft must need NET NHibernate normal object of open operations or original override Pro Prototype provided Recipes RelationalDatabaseFacadeExtensions RepoDb rollback SaveChanges Scenario scenarios ServiceStack setting snippet TEmployeeClassification the The then there These this thus to To TODO Tortuga transaction TransactionalDataSource Transactions TransactionsScenario Unlike use when When While will with Working you",
+      "title": "Transactions"
+    },
+    {
+      "location": "Upsert.htm",
+      "breadcrumbs": "Home / Advanced scenarios / Upsert",
+      "keywords": "1 6 a Ado ADO an atomic be Chain code Core cs Dapper DB demonstrate demonstrates directly doesn EF Entity EntityFramework EntityFrameworkCore Framework how in insert IUpsertScenario LINQ LinqToDB LLBLGen LLBLGenPro MERGE must NET NHibernate often perform performed possible Pro proceed Prototype read Recipes RepoDb Scenario scenarios ServiceStack should single snippet so statement support syntax TDivision the These this This to Tortuga update upsert Upsert UpsertScenario Where",
+      "title": "Upsert"
     },
     {
       "location": "Sorting.htm",
@@ -189,14 +195,8 @@
     {
       "location": "BasicStoredProc.htm",
       "breadcrumbs": "Home / Stored procedure scenarios / Basic Stored Procedures",
-      "keywords": "2 6 a additional Ado ADO any as basic Basic BasicStoredProc BasicStoredProcScenario be but call can Chain class collection configuration Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DB DbContext demonstrate entity Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications HasNoKey how HR IBasicStoredProcScenario if in interpreted is just like LINQ LinqToDB LLBLGen LLBLGenPro modelBuilder Multiple needed NET NHibernate of or OrmCookbookDB other Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb requirements results resultset Resultsets return Return returned row rows s scalar Scenario scenarios ServiceStack should single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true two use value values will with",
+      "keywords": "2 6 a Ado ADO as basic Basic BasicStoredProc BasicStoredProcScenario be below call can Chain class collection Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DB DbContext demonstrate EmployeeClassificationKeyHolder EmployeeClassificationWithCount Entities Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications how HR IBasicStoredProcScenario if in interpreted is LINQ LinqToDB LLBLGen LLBLGenPro Multiple needed NET NHibernate of or OrmCookbookContext OrmCookbookDB Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb results resultset Resultsets return Return returned row rows s scalar Scenario scenarios ServiceStack should shown single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true use value values will",
       "title": "Basic Stored Procedures"
-    },
-    {
-      "location": "Transactions.htm",
-      "breadcrumbs": "Home / Stored procedure scenarios / Working with Transactions",
-      "keywords": "1 6 a Ado ADO after against all an and are associated automatically be BeginTransaction behavior call calling can capabilities Chain commands commit connection Core create cs Dapper DataAccessAdapter database DataSource DB defined demonstrate disposed EF Entity EntityFramework EntityFrameworkCore explcitly explicitly extension Framework get holds how in is isolation ITransactionsScenario itself level LINQ LinqToDB LLBLGen LLBLGenPro manages method Microsoft must need NET NHibernate normal object of open operations or original override Pro Prototype provided Recipes RelationalDatabaseFacadeExtensions RepoDb rollback SaveChanges Scenario scenarios ServiceStack setting snippet TEmployeeClassification the The then there These this thus to To TODO Tortuga transaction TransactionalDataSource Transactions TransactionsScenario Unlike use when When While will with Working you",
-      "title": "Working with Transactions"
     }
   ]
 }
