@@ -1,14 +1,12 @@
-﻿using Recipes.RepoDb.Models;
-using Recipes.ScalarValue;
+﻿using Recipes.ScalarValue;
 using RepoDb;
 using RDB = RepoDb;
 using System;
 using System.Data.SqlClient;
-using System.Linq;
 
 namespace Recipes.RepoDb.ScalarValue
 {
-    public class ScalarValueScenario : BaseRepository<Division, SqlConnection>,
+    public class ScalarValueScenario : DbRepository<SqlConnection>,
         IScalarValueScenario
     {
         public ScalarValueScenario(string connectionString)
@@ -17,52 +15,58 @@ namespace Recipes.RepoDb.ScalarValue
 
         public int? GetDivisionKey(string divisionName)
         {
-            var division = Query(
-                e => e.DivisionName == divisionName).FirstOrDefault();
-            return division?.DivisionKey;
+            var sql = "SELECT DivisionKey FROM [HR].[Division] WHERE (DivisionName = @DivisionName);";
+
+            return ExecuteScalar<int?>(sql, new { divisionName });
         }
 
         public string GetDivisionName(int divisionKey)
         {
-            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division?.DivisionName != null ?
-                division.DivisionName : string.Empty;
+            var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+
+            return ExecuteScalar<string>(sql, new { divisionKey });
         }
 
         public string? GetDivisionNameOrNull(int divisionKey)
         {
-            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division?.DivisionName;
+            var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+
+            return ExecuteScalar<string>(sql, new { divisionKey });
         }
 
         public DateTimeOffset? GetLastReviewCycle(int divisionKey)
         {
-            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division?.LastReviewCycle;
+            var sql = "SELECT LastReviewCycle FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+
+            return ExecuteScalar<DateTimeOffset?>(sql, new { divisionKey });
         }
 
         public int? GetMaxEmployees(int divisionKey)
         {
-            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division?.MaxEmployees;
+            var sql = "SELECT MaxEmployees FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+
+            return ExecuteScalar<int?>(sql, new { divisionKey });
         }
 
         public DateTime GetModifiedDate(int divisionKey)
         {
-            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division.ModifiedDate;
+            var sql = "SELECT ModifiedDate FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+
+            return ExecuteScalar<DateTime>(sql, new { divisionKey });
         }
 
         public decimal? GetSalaryBudget(int divisionKey)
         {
-            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division.SalaryBudget;
+            var sql = "SELECT SalaryBudget FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+
+            return ExecuteScalar<decimal?>(sql, new { divisionKey });
         }
 
         public TimeSpan? GetStartTime(int divisionKey)
         {
-            var division = Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
-            return division.StartTime;
+            var sql = "SELECT StartTime FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+
+            return ExecuteScalar<TimeSpan?>(sql, new { divisionKey });
         }
     }
 }
