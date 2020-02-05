@@ -16,7 +16,7 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 ## Chain
 
-TODO
+@snippet cs [..\Recipes.Tortuga.Chain\SingleColumn\SingleColumnScenario.cs] SingleColumnScenario
 
 ## Dapper
 

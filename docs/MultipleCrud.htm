@@ -455,7 +455,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 
     public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
     {
-        return m_DataSource.From(EmployeeTableName, new { lastName }).ToCollection&lt;EmployeeSimple&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName }).ToCollection().Execute();
     }
 
     public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)

@@ -460,12 +460,12 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
     public IList&lt;EmployeeSimple&gt; GetAll()
     {
-        return m_DataSource.From(TableName).ToCollection&lt;EmployeeSimple&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeSimple&gt;().ToCollection().Execute();
     }
 
     public EmployeeSimple? GetByKey(int employeeKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeKey).ToObject&lt;EmployeeSimple&gt;(RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.GetByKey(TableName, employeeKey).ToObjectOrNull&lt;EmployeeSimple&gt;().Execute();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)

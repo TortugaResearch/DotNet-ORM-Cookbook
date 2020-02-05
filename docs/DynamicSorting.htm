@@ -288,24 +288,24 @@ public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA,
 <p>Columns to be sorted by are passed in as strings, but checked against the list of columns at runtime to prevent SQL injection attacks. A <code>SortExpression</code> object is needed for reverse sorting.</p>
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
 {
-    var sortDirection = isDescending ? SortDirection.Descending : SortDirection.Ascending;
+    var sortDirection = isDescending ? &quot; DESC&quot; : &quot;&quot;;
 
-    return m_DataSource.From(EmployeeTableName, new { lastName })
-        .WithSorting(new SortExpression(sortByColumn, sortDirection))
-        .ToCollection&lt;EmployeeSimple&gt;().Execute();
+    return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
+        .WithSorting(sortByColumn + sortDirection)
+        .ToCollection().Execute();
 }
 
 public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
     string sortByColumnB, bool isDescendingB)
 {
-    var sortDirectionA = isDescendingA ? SortDirection.Descending : SortDirection.Ascending;
-    var sortDirectionB = isDescendingB ? SortDirection.Descending : SortDirection.Ascending;
+    var sortDirectionA = isDescendingA ? &quot; DESC&quot; : &quot;&quot;;
+    var sortDirectionB = isDescendingB ? &quot; DESC&quot; : &quot;&quot;;
 
-    return m_DataSource.From(EmployeeTableName, new { lastName })
+    return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
         .WithSorting(
-            new SortExpression(sortByColumnA, sortDirectionA),
-            new SortExpression(sortByColumnB, sortDirectionB))
-        .ToCollection&lt;EmployeeSimple&gt;().Execute();
+            sortByColumnA + sortDirectionA,
+            sortByColumnB + sortDirectionB)
+        .ToCollection().Execute();
 }
 </code></pre>
 

@@ -315,17 +315,17 @@
 
     public Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
     {
-        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationName }).ToObjectOrNull().ExecuteAsync(cancellationToken);
     }
 
     public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await m_DataSource.From(TableName).ToCollection&lt;EmployeeClassification&gt;().ExecuteAsync(cancellationToken).ConfigureAwait(false);
+        return await m_DataSource.From&lt;EmployeeClassification&gt;().ToCollection().ExecuteAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull&lt;EmployeeClassification&gt;().ExecuteAsync(cancellationToken);
     }
 
     public Task UpdateAsync(EmployeeClassification classification)

@@ -592,7 +592,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
     public IList&lt;ProductLine&gt; FindByName(string productLineName, bool includeProducts)
     {
-        var results = m_DataSource.From(ProductLineTable, new { productLineName }).ToCollection&lt;ProductLine&gt;().Execute();
+        var results = m_DataSource.From&lt;ProductLine&gt;(new { productLineName }).ToCollection().Execute();
         if (results.Count &gt; 0 &amp;&amp; includeProducts)
         {
             var children = m_DataSource.GetByKeyList(ProductTable, &quot;ProductLineKey&quot;, results.Select(pl =&gt; pl.ProductLineKey)).ToCollection&lt;Product&gt;().Execute();
@@ -604,10 +604,10 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
     public IList&lt;ProductLine&gt; GetAll(bool includeProducts)
     {
-        var results = m_DataSource.From(ProductLineTable).ToCollection&lt;ProductLine&gt;().Execute();
+        var results = m_DataSource.From&lt;ProductLine&gt;().ToCollection().Execute();
         if (includeProducts)
         {
-            var children = m_DataSource.From(ProductTable).ToCollection&lt;Product&gt;().Execute();
+            var children = m_DataSource.From&lt;Product&gt;().ToCollection().Execute();
             foreach (var line in results)
                 line.Products.AddRange(children.Where(x =&gt; x.ProductLineKey == line.ProductLineKey));
         }
@@ -616,10 +616,10 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
     public ProductLine? GetByKey(int productLineKey, bool includeProducts)
     {
-        var result = m_DataSource.GetByKey(ProductLineTable, productLineKey).ToObject&lt;ProductLine&gt;(RowOptions.AllowEmptyResults).Execute();
+        var result = m_DataSource.GetByKey(ProductLineTable, productLineKey).ToObjectOrNull&lt;ProductLine&gt;().Execute();
         if (result != null &amp;&amp; includeProducts)
         {
-            var children = m_DataSource.From(ProductTable, new { result.ProductLineKey }).ToCollection&lt;Product&gt;().Execute();
+            var children = m_DataSource.From&lt;Product&gt;(new { result.ProductLineKey }).ToCollection().Execute();
             result.Products.AddRange(children);
         }
         return result;
@@ -673,7 +673,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             trans.Update(productLine).Execute();
 
             //Find the list of child keys to remove
-            var oldKeys = trans.From(ProductTable, new { productLine.ProductLineKey }).ToInt32List(&quot;ProductKey&quot;).Execute().ToHashSet();
+            var oldKeys = trans.From&lt;Product&gt;(new { productLine.ProductLineKey }).ToInt32List(&quot;ProductKey&quot;).Execute().ToHashSet();
             foreach (var key in productLine.Products.Select(x =&gt; x.ProductKey))
                 oldKeys.Remove(key);
 

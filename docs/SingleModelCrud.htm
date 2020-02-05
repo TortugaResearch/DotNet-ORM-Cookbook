@@ -376,17 +376,19 @@ public class EmployeeClassification : IEmployeeClassification
 
     public EmployeeClassification FindByName(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationName })
+            .ToObject().Execute();
     }
 
     public IList&lt;EmployeeClassification&gt; GetAll()
     {
-        return m_DataSource.From(TableName).ToCollection&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeClassification&gt;().ToCollection().Execute();
     }
 
     public EmployeeClassification GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey)
+            .ToObject&lt;EmployeeClassification&gt;().Execute();
     }
 
     public void Update(EmployeeClassification classification)

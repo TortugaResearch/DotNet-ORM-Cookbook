@@ -45,12 +45,12 @@ namespace Recipes.Chain.ModelWithLookup
 
         public IList<EmployeeSimple> GetAll()
         {
-            return m_DataSource.From(TableName).ToCollection<EmployeeSimple>().Execute();
+            return m_DataSource.From<EmployeeSimple>().ToCollection().Execute();
         }
 
         public EmployeeSimple? GetByKey(int employeeKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeKey).ToObject<EmployeeSimple>(RowOptions.AllowEmptyResults).Execute();
+            return m_DataSource.GetByKey(TableName, employeeKey).ToObjectOrNull<EmployeeSimple>().Execute();
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)

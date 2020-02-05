@@ -8,7 +8,6 @@ namespace Recipes.Chain.LargeBatch
 {
     public class LargeBatchScenario : ILargeBatchScenario<EmployeeSimple>
     {
-        const string EmployeeTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public LargeBatchScenario(SqlServerDataSource dataSource)
@@ -18,7 +17,7 @@ namespace Recipes.Chain.LargeBatch
 
         public int CountByLastName(string lastName)
         {
-            return (int)m_DataSource.From(EmployeeTableName, new { lastName }).AsCount().Execute();
+            return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
         }
 
         public int MaximumBatchSize => 2100 / 7;

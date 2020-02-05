@@ -454,22 +454,22 @@
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
+        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;().Execute();
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObjectOrNull&lt;EmployeeClassification&gt;().Execute();
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().NeverNull().Execute();
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().Execute();
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull&lt;EmployeeClassification&gt;().Execute();
     }
 
     public void UpdateOrException(EmployeeClassification classification)

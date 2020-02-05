@@ -42,7 +42,7 @@ namespace Recipes.Chain.Views
 
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
-            return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObject<EmployeeDetail>(RowOptions.AllowEmptyResults).Execute();
+            return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObjectOrNull<EmployeeDetail>().Execute();
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
