@@ -7,7 +7,6 @@ namespace Recipes.Chain.DynamicSorting
 {
     public class DynamicSortingScenario : IDynamicSortingScenario<EmployeeSimple>
     {
-        const string EmployeeTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public DynamicSortingScenario(SqlServerDataSource dataSource)
@@ -22,24 +21,24 @@ namespace Recipes.Chain.DynamicSorting
 
         public IList<EmployeeSimple> SortBy(string lastName, string sortByColumn, bool isDescending)
         {
-            var sortDirection = isDescending ? SortDirection.Descending : SortDirection.Ascending;
+            var sortDirection = isDescending ? " DESC" : "";
 
-            return m_DataSource.From(EmployeeTableName, new { lastName })
-                .WithSorting(new SortExpression(sortByColumn, sortDirection))
-                .ToCollection<EmployeeSimple>().Execute();
+            return m_DataSource.From<EmployeeSimple>(new { lastName })
+                .WithSorting(sortByColumn + sortDirection)
+                .ToCollection().Execute();
         }
 
         public IList<EmployeeSimple> SortBy(string lastName, string sortByColumnA, bool isDescendingA,
             string sortByColumnB, bool isDescendingB)
         {
-            var sortDirectionA = isDescendingA ? SortDirection.Descending : SortDirection.Ascending;
-            var sortDirectionB = isDescendingB ? SortDirection.Descending : SortDirection.Ascending;
+            var sortDirectionA = isDescendingA ? " DESC" : "";
+            var sortDirectionB = isDescendingB ? " DESC" : "";
 
-            return m_DataSource.From(EmployeeTableName, new { lastName })
+            return m_DataSource.From<EmployeeSimple>(new { lastName })
                 .WithSorting(
-                    new SortExpression(sortByColumnA, sortDirectionA),
-                    new SortExpression(sortByColumnB, sortDirectionB))
-                .ToCollection<EmployeeSimple>().Execute();
+                    sortByColumnA + sortDirectionA,
+                    sortByColumnB + sortDirectionB)
+                .ToCollection().Execute();
         }
     }
 }

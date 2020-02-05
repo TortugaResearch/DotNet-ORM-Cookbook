@@ -338,7 +338,6 @@ ORDER BY e.FirstName,
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class PaginationScenario : IPaginationScenario&lt;EmployeeSimple&gt;
 {
-    const string EmployeeTableName = &quot;HR.Employee&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public PaginationScenario(SqlServerDataSource dataSource)
@@ -356,31 +355,31 @@ ORDER BY e.FirstName,
 
     public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
     {
-        return m_DataSource.From(EmployeeTableName, new { lastName })
+        return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
             .WithSorting(&quot;FirstName&quot;, &quot;EmployeeKey&quot;)
             .WithLimits(page * pageSize, pageSize)
-            .ToCollection&lt;EmployeeSimple&gt;().Execute();
+            .ToCollection().Execute();
     }
 
     public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
     {
         var link = (skipPast == null) ?
-            m_DataSource.From(EmployeeTableName, new { lastName }) :
-            m_DataSource.From(EmployeeTableName, &quot;LastName = @LastName AND ((FirstName &gt; @FirstName) OR (FirstName = @FirstName AND EmployeeKey &gt; @EmployeeKey))&quot;,
+            m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName }) :
+            m_DataSource.From&lt;EmployeeSimple&gt;(&quot;LastName = @LastName AND ((FirstName &gt; @FirstName) OR (FirstName = @FirstName AND EmployeeKey &gt; @EmployeeKey))&quot;,
             new { lastName, skipPast.FirstName, skipPast.EmployeeKey });
 
         return link
             .WithSorting(&quot;FirstName&quot;, &quot;EmployeeKey&quot;)
             .WithLimits(take)
-            .ToCollection&lt;EmployeeSimple&gt;().Execute();
+            .ToCollection().Execute();
     }
 
     public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
     {
-        return m_DataSource.From(EmployeeTableName, new { lastName })
+        return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
             .WithSorting(&quot;FirstName&quot;, &quot;EmployeeKey&quot;)
             .WithLimits(skip, take)
-            .ToCollection&lt;EmployeeSimple&gt;().Execute();
+            .ToCollection().Execute();
     }
 }
 </code></pre>

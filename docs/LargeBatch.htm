@@ -254,7 +254,6 @@ VALUES &quot;);
 <p>The <code>InsertMultipleBatch</code> command is not atomic and should be used in a transaction.</p>
 <pre><code class="cs">public class LargeBatchScenario : ILargeBatchScenario&lt;EmployeeSimple&gt;
 {
-    const string EmployeeTableName = &quot;HR.Employee&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public LargeBatchScenario(SqlServerDataSource dataSource)
@@ -264,7 +263,7 @@ VALUES &quot;);
 
     public int CountByLastName(string lastName)
     {
-        return (int)m_DataSource.From(EmployeeTableName, new { lastName }).AsCount().Execute();
+        return (int)m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName }).AsCount().Execute();
     }
 
     public int MaximumBatchSize =&gt; 2100 / 7;

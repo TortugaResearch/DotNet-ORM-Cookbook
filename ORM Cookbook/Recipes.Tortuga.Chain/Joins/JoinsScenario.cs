@@ -49,7 +49,7 @@ namespace Recipes.Chain.Joins
         {
             const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey";
 
-            return m_DataSource.Sql(sql, new { employeeKey }).ToObject<EmployeeDetail>(RowOptions.AllowEmptyResults).Execute();
+            return m_DataSource.Sql(sql, new { employeeKey }).ToObjectOrNull<EmployeeDetail>().Execute();
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)

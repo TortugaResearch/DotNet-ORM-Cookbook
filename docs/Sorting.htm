@@ -207,14 +207,14 @@
 <p>Columns to be sorted by are passed in as strings, but checked against the list of columns at runtime to prevent SQL injection attacks. A <code>SortExpression</code> object is needed for reverse sorting.</p>
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
 {
-    return m_DataSource.From(EmployeeTableName, new { lastName })
-        .WithSorting(&quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
+    return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
+        .WithSorting(&quot;FirstName&quot;).ToCollection().Execute();
 }
 </code></pre>
 
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
 {
-    return m_DataSource.From(EmployeeTableName, new { lastName })
+    return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
         .WithSorting(new SortExpression(&quot;MiddleName&quot;, SortDirection.Descending), &quot;FirstName&quot;)
         .ToCollection&lt;EmployeeSimple&gt;().Execute();
 }
@@ -222,7 +222,7 @@
 
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
 {
-    return m_DataSource.From(EmployeeTableName, new { lastName })
+    return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
         .WithSorting(&quot;MiddleName&quot;, &quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
 }
 </code></pre>

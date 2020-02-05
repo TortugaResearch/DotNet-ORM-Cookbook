@@ -43,7 +43,7 @@ namespace Recipes.Chain.BasicStoredProc
         public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
         {
             return m_DataSource.Procedure("HR.GetEmployeeClassifications", new { employeeClassificationKey })
-                .ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
+                .ToObjectOrNull<EmployeeClassification>().Execute();
         }
     }
 }

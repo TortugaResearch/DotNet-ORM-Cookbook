@@ -219,7 +219,7 @@ public void BulkInsert(DataTable employees)
 
 public void BulkInsert(DataTable employees)
 {
-    m_DataSource.InsertBulk(&quot;HR.Employee&quot;, employees).Execute();
+    m_DataSource.InsertBulk(EmployeeTableName, employees).Execute();
 }
 </code></pre>
 

@@ -23,12 +23,12 @@ namespace Recipes.Chain.BulkInsert
 
         public void BulkInsert(DataTable employees)
         {
-            m_DataSource.InsertBulk("HR.Employee", employees).Execute();
+            m_DataSource.InsertBulk(EmployeeTableName, employees).Execute();
         }
 
         public int CountByLastName(string lastName)
         {
-            return (int)m_DataSource.From(EmployeeTableName, new { lastName }).AsCount().Execute();
+            return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
         }
     }
 }

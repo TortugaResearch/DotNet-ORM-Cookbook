@@ -344,7 +344,7 @@ VALUES
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
-        return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObject&lt;EmployeeDetail&gt;(RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)

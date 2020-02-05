@@ -56,7 +56,7 @@ namespace Recipes.Chain.Transactions
 
         public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
+            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull<EmployeeClassification>().Execute();
         }
     }
 }

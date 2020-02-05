@@ -348,17 +348,17 @@
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
-        return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor | RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.From&lt;ReadOnlyEmployeeClassification&gt;(new { employeeClassificationName }).ToObjectOrNull(RowOptions.InferConstructor | RowOptions.AllowEmptyResults).Execute();
     }
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
-        return m_DataSource.From(TableName).ToImmutableArray&lt;ReadOnlyEmployeeClassification&gt;(CollectionOptions.InferConstructor).Execute();
+        return m_DataSource.From&lt;ReadOnlyEmployeeClassification&gt;().ToImmutableArray(CollectionOptions.InferConstructor).Execute();
     }
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor).NeverNull().Execute();
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor).Execute();
     }
 
     public void Update(ReadOnlyEmployeeClassification classification)
