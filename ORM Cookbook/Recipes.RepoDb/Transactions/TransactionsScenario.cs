@@ -21,14 +21,14 @@ namespace Recipes.RepoDb.Transactions
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using (var transanction = CreateConnection().EnsureOpen().BeginTransaction())
+            using (var transaction = CreateConnection().EnsureOpen().BeginTransaction())
             {
-                var result = Insert<int>(classification, transanction);
+                var result = Insert<int>(classification, transaction: transaction);
 
                 if (shouldRollBack)
-                    transanction.Rollback();
+                    transaction.Rollback();
                 else
-                    transanction.Commit();
+                    transaction.Commit();
 
                 return result;
             }
@@ -39,14 +39,14 @@ namespace Recipes.RepoDb.Transactions
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using (var transanction = CreateConnection().EnsureOpen().BeginTransaction(isolationLevel))
+            using (var transaction = CreateConnection().EnsureOpen().BeginTransaction(isolationLevel))
             {
-                var result = Insert<int>(classification, transanction);
+                var result = Insert<int>(classification, transaction: transaction);
 
                 if (shouldRollBack)
-                    transanction.Rollback();
+                    transaction.Rollback();
                 else
-                    transanction.Commit();
+                    transaction.Commit();
 
                 return result;
             }
