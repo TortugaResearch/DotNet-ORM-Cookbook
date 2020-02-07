@@ -332,7 +332,7 @@ VALUES
     {
         const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
 
-        return m_DataSource.Sql(sql, new { employeeKey }).ToObject&lt;EmployeeDetail&gt;(RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.Sql(sql, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)

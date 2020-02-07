@@ -4,7 +4,7 @@ using Tortuga.Chain;
 
 namespace Recipes.Chain.Models
 {
-    [Table("HR.Employee")]
+    [Table("HR.EmployeeDetail")]
     public partial class EmployeeComplex
     {
         public string? CellPhone { get; set; }

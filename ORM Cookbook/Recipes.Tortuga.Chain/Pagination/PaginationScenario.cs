@@ -8,7 +8,6 @@ namespace Recipes.Chain.Pagination
 {
     public class PaginationScenario : IPaginationScenario<EmployeeSimple>
     {
-        const string EmployeeTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public PaginationScenario(SqlServerDataSource dataSource)
@@ -26,31 +25,31 @@ namespace Recipes.Chain.Pagination
 
         public IList<EmployeeSimple> PaginateWithPageSize(string lastName, int page, int pageSize)
         {
-            return m_DataSource.From(EmployeeTableName, new { lastName })
+            return m_DataSource.From<EmployeeSimple>(new { lastName })
                 .WithSorting("FirstName", "EmployeeKey")
                 .WithLimits(page * pageSize, pageSize)
-                .ToCollection<EmployeeSimple>().Execute();
+                .ToCollection().Execute();
         }
 
         public IList<EmployeeSimple> PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
         {
             var link = (skipPast == null) ?
-                m_DataSource.From(EmployeeTableName, new { lastName }) :
-                m_DataSource.From(EmployeeTableName, "LastName = @LastName AND ((FirstName > @FirstName) OR (FirstName = @FirstName AND EmployeeKey > @EmployeeKey))",
+                m_DataSource.From<EmployeeSimple>(new { lastName }) :
+                m_DataSource.From<EmployeeSimple>("LastName = @LastName AND ((FirstName > @FirstName) OR (FirstName = @FirstName AND EmployeeKey > @EmployeeKey))",
                 new { lastName, skipPast.FirstName, skipPast.EmployeeKey });
 
             return link
                 .WithSorting("FirstName", "EmployeeKey")
                 .WithLimits(take)
-                .ToCollection<EmployeeSimple>().Execute();
+                .ToCollection().Execute();
         }
 
         public IList<EmployeeSimple> PaginateWithSkipTake(string lastName, int skip, int take)
         {
-            return m_DataSource.From(EmployeeTableName, new { lastName })
+            return m_DataSource.From<EmployeeSimple>(new { lastName })
                 .WithSorting("FirstName", "EmployeeKey")
                 .WithLimits(skip, take)
-                .ToCollection<EmployeeSimple>().Execute();
+                .ToCollection().Execute();
         }
     }
 }

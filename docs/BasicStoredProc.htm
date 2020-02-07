@@ -314,7 +314,7 @@ END;
     public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
     {
         return m_DataSource.Procedure(&quot;HR.GetEmployeeClassifications&quot;, new { employeeClassificationKey })
-            .ToObject&lt;EmployeeClassification&gt;(RowOptions.AllowEmptyResults).Execute();
+            .ToObjectOrNull&lt;EmployeeClassification&gt;().Execute();
     }
 }
 </code></pre>

@@ -7,7 +7,6 @@ namespace Recipes.Chain.Sorting
 {
     public class SortingScenario : ISortingScenario<EmployeeSimple>
     {
-        const string EmployeeTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public SortingScenario(SqlServerDataSource dataSource)
@@ -22,20 +21,20 @@ namespace Recipes.Chain.Sorting
 
         public IList<EmployeeSimple> SortByFirstName(string lastName)
         {
-            return m_DataSource.From(EmployeeTableName, new { lastName })
-                .WithSorting("FirstName").ToCollection<EmployeeSimple>().Execute();
+            return m_DataSource.From<EmployeeSimple>(new { lastName })
+                .WithSorting("FirstName").ToCollection().Execute();
         }
 
         public IList<EmployeeSimple> SortByMiddleNameDescFirstName(string lastName)
         {
-            return m_DataSource.From(EmployeeTableName, new { lastName })
+            return m_DataSource.From<EmployeeSimple>(new { lastName })
                 .WithSorting(new SortExpression("MiddleName", SortDirection.Descending), "FirstName")
                 .ToCollection<EmployeeSimple>().Execute();
         }
 
         public IList<EmployeeSimple> SortByMiddleNameFirstName(string lastName)
         {
-            return m_DataSource.From(EmployeeTableName, new { lastName })
+            return m_DataSource.From<EmployeeSimple>(new { lastName })
                 .WithSorting("MiddleName", "FirstName").ToCollection<EmployeeSimple>().Execute();
         }
     }

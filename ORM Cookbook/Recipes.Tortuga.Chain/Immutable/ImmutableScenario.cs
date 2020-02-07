@@ -34,17 +34,17 @@ namespace Recipes.Chain.Immutable
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
         {
-            return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject<ReadOnlyEmployeeClassification>(RowOptions.InferConstructor | RowOptions.AllowEmptyResults).Execute();
+            return m_DataSource.From<ReadOnlyEmployeeClassification>(new { employeeClassificationName }).ToObjectOrNull(RowOptions.InferConstructor | RowOptions.AllowEmptyResults).Execute();
         }
 
         public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
         {
-            return m_DataSource.From(TableName).ToImmutableArray<ReadOnlyEmployeeClassification>(CollectionOptions.InferConstructor).Execute();
+            return m_DataSource.From<ReadOnlyEmployeeClassification>().ToImmutableArray(CollectionOptions.InferConstructor).Execute();
         }
 
         public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<ReadOnlyEmployeeClassification>(RowOptions.InferConstructor).NeverNull().Execute();
+            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull<ReadOnlyEmployeeClassification>(RowOptions.InferConstructor).Execute();
         }
 
         public void Update(ReadOnlyEmployeeClassification classification)

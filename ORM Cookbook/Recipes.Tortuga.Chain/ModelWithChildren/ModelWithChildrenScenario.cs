@@ -59,7 +59,7 @@ namespace Recipes.Chain.ModelWithChildren
 
         public IList<ProductLine> FindByName(string productLineName, bool includeProducts)
         {
-            var results = m_DataSource.From(ProductLineTable, new { productLineName }).ToCollection<ProductLine>().Execute();
+            var results = m_DataSource.From<ProductLine>(new { productLineName }).ToCollection().Execute();
             if (results.Count > 0 && includeProducts)
             {
                 var children = m_DataSource.GetByKeyList(ProductTable, "ProductLineKey", results.Select(pl => pl.ProductLineKey)).ToCollection<Product>().Execute();
@@ -71,10 +71,10 @@ namespace Recipes.Chain.ModelWithChildren
 
         public IList<ProductLine> GetAll(bool includeProducts)
         {
-            var results = m_DataSource.From(ProductLineTable).ToCollection<ProductLine>().Execute();
+            var results = m_DataSource.From<ProductLine>().ToCollection().Execute();
             if (includeProducts)
             {
-                var children = m_DataSource.From(ProductTable).ToCollection<Product>().Execute();
+                var children = m_DataSource.From<Product>().ToCollection().Execute();
                 foreach (var line in results)
                     line.Products.AddRange(children.Where(x => x.ProductLineKey == line.ProductLineKey));
             }
@@ -83,10 +83,10 @@ namespace Recipes.Chain.ModelWithChildren
 
         public ProductLine? GetByKey(int productLineKey, bool includeProducts)
         {
-            var result = m_DataSource.GetByKey(ProductLineTable, productLineKey).ToObject<ProductLine>(RowOptions.AllowEmptyResults).Execute();
+            var result = m_DataSource.GetByKey(ProductLineTable, productLineKey).ToObjectOrNull<ProductLine>().Execute();
             if (result != null && includeProducts)
             {
-                var children = m_DataSource.From(ProductTable, new { result.ProductLineKey }).ToCollection<Product>().Execute();
+                var children = m_DataSource.From<Product>(new { result.ProductLineKey }).ToCollection().Execute();
                 result.Products.AddRange(children);
             }
             return result;
@@ -140,7 +140,7 @@ namespace Recipes.Chain.ModelWithChildren
                 trans.Update(productLine).Execute();
 
                 //Find the list of child keys to remove
-                var oldKeys = trans.From(ProductTable, new { productLine.ProductLineKey }).ToInt32List("ProductKey").Execute().ToHashSet();
+                var oldKeys = trans.From<Product>(new { productLine.ProductLineKey }).ToInt32List("ProductKey").Execute().ToHashSet();
                 foreach (var key in productLine.Products.Select(x => x.ProductKey))
                     oldKeys.Remove(key);
 

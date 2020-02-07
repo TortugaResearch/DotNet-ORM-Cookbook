@@ -41,17 +41,17 @@ namespace Recipes.Chain.SingleModelCrudAsync
 
         public Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
         {
-            return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
+            return m_DataSource.From<EmployeeClassification>(new { employeeClassificationName }).ToObjectOrNull().ExecuteAsync(cancellationToken);
         }
 
         public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await m_DataSource.From(TableName).ToCollection<EmployeeClassification>().ExecuteAsync(cancellationToken).ConfigureAwait(false);
+            return await m_DataSource.From<EmployeeClassification>().ToCollection().ExecuteAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).ExecuteAsync(cancellationToken);
+            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull<EmployeeClassification>().ExecuteAsync(cancellationToken);
         }
 
         public Task UpdateAsync(EmployeeClassification classification)

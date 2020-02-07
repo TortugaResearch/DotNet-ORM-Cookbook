@@ -35,7 +35,7 @@ namespace Recipes.Chain.MultipleCrud
 
         public IList<EmployeeSimple> FindByLastName(string lastName)
         {
-            return m_DataSource.From(EmployeeTableName, new { lastName }).ToCollection<EmployeeSimple>().Execute();
+            return m_DataSource.From<EmployeeSimple>(new { lastName }).ToCollection().Execute();
         }
 
         public void InsertBatch(IList<EmployeeSimple> employees)
