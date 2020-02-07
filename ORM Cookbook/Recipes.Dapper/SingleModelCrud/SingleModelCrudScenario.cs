@@ -13,7 +13,7 @@ namespace Recipes.Dapper.SingleModelCrud
         {
         }
 
-        public int Create(EmployeeClassification classification)
+        virtual public int Create(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -26,7 +26,7 @@ namespace Recipes.Dapper.SingleModelCrud
                 return con.ExecuteScalar<int>(sql, classification);
         }
 
-        public void Delete(EmployeeClassification classification)
+        virtual public void Delete(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -55,7 +55,7 @@ namespace Recipes.Dapper.SingleModelCrud
                 return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationName });
         }
 
-        public IList<EmployeeClassification> GetAll()
+        virtual public IList<EmployeeClassification> GetAll()
         {
             var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;";
 
@@ -63,7 +63,7 @@ namespace Recipes.Dapper.SingleModelCrud
                 return con.Query<EmployeeClassification>(sql).ToList();
         }
 
-        public EmployeeClassification? GetByKey(int employeeClassificationKey)
+        virtual public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
             var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                         FROM HR.EmployeeClassification ec
@@ -73,7 +73,7 @@ namespace Recipes.Dapper.SingleModelCrud
                 return con.QuerySingle<EmployeeClassification>(sql, new { employeeClassificationKey });
         }
 
-        public void Update(EmployeeClassification classification)
+        virtual public void Update(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");

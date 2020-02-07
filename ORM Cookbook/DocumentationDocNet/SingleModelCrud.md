@@ -35,6 +35,12 @@ Dapper is essentially just ADO.NET with some helper methods to reduce the amount
 
 @snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenario.cs] SingleModelCrudScenario
 
+### Dapper.Contrib
+
+The Dapper.Contrib library can elimiante the boilerplate for some common scenarios.
+
+@snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenarioContrib.cs] SingleModelCrudScenarioContrib
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario

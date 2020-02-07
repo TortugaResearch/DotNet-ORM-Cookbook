@@ -342,7 +342,7 @@
 <p>For non-cancellable operation, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
 <p>If cancellation is required, then you must wrap your parameters in a <code>CommandDefinition</code>. For example,</p>
 <p>Original:</p>
-<pre><code class="cs">public EmployeeClassification? GetByKey(int employeeClassificationKey)
+<pre><code class="cs">virtual public EmployeeClassification? GetByKey(int employeeClassificationKey)
 {
     var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                 FROM HR.EmployeeClassification ec
