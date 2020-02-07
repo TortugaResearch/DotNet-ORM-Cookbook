@@ -11,10 +11,9 @@ namespace Recipes.EntityFrameworkCore
     [TestClass]
     public class Setup
     {
-#nullable disable
-        internal static Func<OrmCookbookContext> DBContextFactory { get; private set; }
-        internal static Func<OrmCookbookContext> LazyLoadingDBContextFactory { get; private set; }
-#nullable enable
+        internal static Func<OrmCookbookContext> DBContextFactory { get; private set; } = null!;
+        internal static Func<OrmCookbookContext> LazyLoadingDBContextFactory { get; private set; } = null!;
+        internal static string SqlServerConnectionString { get; private set; } = null!;
 
         [AssemblyCleanup]
         public static void AssemblyCleanup()
@@ -26,12 +25,12 @@ namespace Recipes.EntityFrameworkCore
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
-            var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
+            SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
 
-            var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(sqlServerConnectionString).Options;
+            var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(SqlServerConnectionString).Options;
             DBContextFactory = () => new OrmCookbookContext(options);
 
-            var options2 = new DbContextOptionsBuilder<OrmCookbookContext>().UseLazyLoadingProxies().UseSqlServer(sqlServerConnectionString).Options;
+            var options2 = new DbContextOptionsBuilder<OrmCookbookContext>().UseLazyLoadingProxies().UseSqlServer(SqlServerConnectionString).Options;
             LazyLoadingDBContextFactory = () => new OrmCookbookContext(options2);
 
             try
@@ -39,19 +38,6 @@ namespace Recipes.EntityFrameworkCore
                 (new Setup()).Warmup();
             }
             catch { }
-        }
-
-        [TestMethod]
-        public void Warmup()
-        {
-            //Touch all of the models to warmup the DBContext.
-            using (var context = DBContextFactory())
-            {
-                context.Department.FirstOrDefault();
-                context.DepartmentDetail.FirstOrDefault();
-                context.Employee.FirstOrDefault();
-                context.EmployeeClassification.FirstOrDefault();
-            }
         }
 
         [TestMethod]
@@ -77,6 +63,19 @@ namespace Recipes.EntityFrameworkCore
             {
                 var cl = context.EmployeeClassification.Where(e => e.EmployeeClassificationKey == 2).Single();
                 Assert.AreNotEqual(0, cl.Employee.Count);
+            }
+        }
+
+        [TestMethod]
+        public void Warmup()
+        {
+            //Touch all of the models to warmup the DBContext.
+            using (var context = DBContextFactory())
+            {
+                context.Department.FirstOrDefault();
+                context.DepartmentDetail.FirstOrDefault();
+                context.Employee.FirstOrDefault();
+                context.EmployeeClassification.FirstOrDefault();
             }
         }
     }

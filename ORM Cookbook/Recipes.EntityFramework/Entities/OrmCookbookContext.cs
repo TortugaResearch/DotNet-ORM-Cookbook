@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
 
 namespace Recipes.EntityFramework.Entities
 {
@@ -12,6 +11,9 @@ namespace Recipes.EntityFramework.Entities
         {
             Configuration.LazyLoadingEnabled = lazyLoadingEnabled;
         }
+
+        public OrmCookbookContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection) { }
 
 #nullable disable //Assume that the DbContext constructor will populate these properties
         public virtual DbSet<Department> Department { get; set; }
