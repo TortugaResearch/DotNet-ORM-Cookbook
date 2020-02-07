@@ -46,6 +46,7 @@ namespace Recipes.EntityFrameworkCore.ConnectionSharing
         public (SqlConnection Connection, object State) OpenConnection()
         {
             var context = CreateDbContext();
+            context.Database.OpenConnection(); //Force the connection open since we haven't used it yet.
             var connection = (SqlConnection)context.Database.GetDbConnection();
             return (connection, context);
         }

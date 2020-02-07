@@ -61,6 +61,7 @@ namespace Recipes.ConnectionSharing
 
             (var connection, var state) = repository.OpenConnection();
             Assert.IsNotNull(connection);
+            Assert.AreEqual(ConnectionState.Open, connection.State);
 
             using (var cmd = factory.CreateCommand())
             {
@@ -71,6 +72,8 @@ namespace Recipes.ConnectionSharing
             }
 
             repository.CloseConnection(state);
+
+            Assert.AreEqual(ConnectionState.Closed, connection.State);
         }
 
         [TestMethod]
@@ -81,6 +84,7 @@ namespace Recipes.ConnectionSharing
 
             (var connection, var transaction, var state) = repository.OpenConnectionAndTransaction();
             Assert.IsNotNull(connection);
+            Assert.AreEqual(ConnectionState.Open, connection.State);
             Assert.IsNotNull(transaction);
 
             using (var cmd = factory.CreateCommand())
@@ -93,6 +97,8 @@ namespace Recipes.ConnectionSharing
             }
 
             repository.CloseConnectionAndTransaction(state);
+
+            Assert.AreEqual(ConnectionState.Closed, connection.State);
         }
 
         protected abstract IConnectionSharingScenario<TModel, TConnection, TTransaction> GetScenario();
