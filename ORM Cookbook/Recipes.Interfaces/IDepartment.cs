@@ -6,7 +6,7 @@ namespace Recipes
     {
         int DepartmentKey { get; set; }
         string? DepartmentName { get; set; }
-        int? DivisionKey { get; set; }
+        int DivisionKey { get; set; }
 
         DateTime? CreatedDate { get; set; }
         DateTime? ModifiedDate { get; set; }
