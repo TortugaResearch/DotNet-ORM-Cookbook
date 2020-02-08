@@ -12,6 +12,7 @@ namespace Recipes.EntityFrameworkCore
     public class Setup
     {
         internal static Func<OrmCookbookContext> DBContextFactory { get; private set; } = null!;
+        internal static Func<User, OrmCookbookContextWithUser> DBContextWithUserFactory { get; private set; } = null!;
         internal static Func<OrmCookbookContext> LazyLoadingDBContextFactory { get; private set; } = null!;
         internal static string SqlServerConnectionString { get; private set; } = null!;
 
@@ -29,6 +30,7 @@ namespace Recipes.EntityFrameworkCore
 
             var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(SqlServerConnectionString).Options;
             DBContextFactory = () => new OrmCookbookContext(options);
+            DBContextWithUserFactory = (User u) => new OrmCookbookContextWithUser(options, u);
 
             var options2 = new DbContextOptionsBuilder<OrmCookbookContext>().UseLazyLoadingProxies().UseSqlServer(SqlServerConnectionString).Options;
             LazyLoadingDBContextFactory = () => new OrmCookbookContext(options2);

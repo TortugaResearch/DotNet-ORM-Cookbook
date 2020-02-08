@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Audit Columns - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span></li>
+<li class="tocentry current"><a class="current" href="AuditColumns.htm">Audit Columns</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+
+</ul>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></li> / <li><a href="AuditColumns.htm">Audit Columns</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="audit-columns">Audit Columns<a class="headerlink" href="#audit-columns" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to ensure that audit columns are populated. </p>
+<p>For each operation, a <code>User</code> object will be supplied along with the object being created or updated.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IAuditColumnsScenario&lt;TDepartment&gt;
+   where TDepartment : class, IDepartment, new()
+{
+    /// &lt;summary&gt;
+    /// Creates the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;department&quot;&gt;The department.&lt;/param&gt;
+    /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+    /// &lt;returns&gt;System.Int32.&lt;/returns&gt;
+    int CreateDepartment(TDepartment department, User user);
+
+    /// &lt;summary&gt;
+    /// Updates the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;department&quot;&gt;The department.&lt;/param&gt;
+    /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+    void UpdateDepartment(TDepartment department, User user);
+
+    /// &lt;summary&gt;
+    /// Gets the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;departmentKey&quot;&gt;The department key.&lt;/param&gt;
+    /// &lt;returns&gt;TDepartment.&lt;/returns&gt;
+    TDepartment GetDepartment(int departmentKey, User user);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>ADO requires that audit columns be manually supplied. This is usually done when the parameters are generated.</p>
+<pre><code class="cs">    public class AuditColumnsScenario : ScenarioBase, IAuditColumnsScenario&lt;Department&gt;
+    {
+        public AuditColumnsScenario(string connectionString) : base(connectionString)
+        { }
+
+        public int CreateDepartment(Department department, User user)
+        {
+            if (department == null)
+                throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), $&quot;{nameof(user)} is null.&quot;);
+
+            const string sql = @&quot;INSERT INTO HR.Department
+(
+    DepartmentName,
+    DivisionKey,
+    CreatedDate,
+    ModifiedDate,
+    CreatedByEmployeeKey,
+    ModifiedByEmployeeKey
+)
+OUTPUT Inserted.DepartmentKey
+VALUES
+(@DepartmentName, @DivisionKey, @CreatedDate, @ModifiedDate, @CreatedByEmployeeKey, @ModifiedByEmployeeKey);&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@DepartmentName&quot;, department.DepartmentName);
+                cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, department.DivisionKey);
+                cmd.Parameters.AddWithValue(&quot;@CreatedDate&quot;, DateTime.UtcNow);
+                cmd.Parameters.AddWithValue(&quot;@ModifiedDate&quot;, DateTime.UtcNow);
+                cmd.Parameters.AddWithValue(&quot;@CreatedByEmployeeKey&quot;, user.UserKey);
+                cmd.Parameters.AddWithValue(&quot;@ModifiedByEmployeeKey&quot;, user.UserKey);
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        public Department GetDepartment(int departmentKey, User user)
+        {
+            const string sql = @&quot;SELECT d.DepartmentKey,
+       d.DepartmentName,
+       d.DivisionKey,
+       d.CreatedDate,
+       d.ModifiedDate,
+       d.CreatedByEmployeeKey,
+       d.ModifiedByEmployeeKey FROM HR.Department d WHERE d.DepartmentKey = @DepartmentKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@DepartmentKey&quot;, departmentKey);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+
+                    return new Department(reader);
+                }
+            }
+        }
+
+        public void UpdateDepartment(Department department, User user)
+        {
+            if (department == null)
+                throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), $&quot;{nameof(user)} is null.&quot;);
+
+            const string sql = @&quot;UPDATE HR.Department SET
+    DepartmentName = @DepartmentName,
+    DivisionKey = @DivisionKey,
+    ModifiedDate = @ModifiedDate,
+    ModifiedByEmployeeKey = @ModifiedByEmployeeKey
+WHERE DepartmentKey = @DepartmentKey;&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@DepartmentKey&quot;, department.DepartmentKey);
+                cmd.Parameters.AddWithValue(&quot;@DepartmentName&quot;, department.DepartmentName);
+                cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, department.DivisionKey);
+                cmd.Parameters.AddWithValue(&quot;@ModifiedDate&quot;, DateTime.UtcNow);
+                cmd.Parameters.AddWithValue(&quot;@ModifiedByEmployeeKey&quot;, user.UserKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain requires that the audit columns be configured at the <code>DataSource</code> level.</p>
+<p>Then to supply the actual user data, use <code>dataSource.WithUser(user)</code>.</p>
+<pre><code class="cs">public class AuditColumnsScenario :
+    IAuditColumnsScenario&lt;Department&gt;
+{
+    private const string TableName = &quot;HR.Department&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public AuditColumnsScenario(SqlServerDataSource dataSource)
+    {
+        if (dataSource == null)
+            throw new ArgumentNullException(nameof(dataSource), $&quot;{nameof(dataSource)} is null.&quot;);
+
+        //Normally this would be configured application-wide, not just for one repository instance.
+        m_DataSource = dataSource.WithRules(
+            new DateTimeRule(&quot;CreatedDate&quot;, DateTimeKind.Utc, OperationTypes.Insert),
+            new DateTimeRule(&quot;ModifiedDate&quot;, DateTimeKind.Utc, OperationTypes.InsertOrUpdate),
+            new UserDataRule(&quot;CreatedByEmployeeKey&quot;, &quot;UserKey&quot;, OperationTypes.Insert),
+            new UserDataRule(&quot;ModifiedByEmployeeKey&quot;, &quot;UserKey&quot;, OperationTypes.InsertOrUpdate)
+            );
+    }
+
+    public int CreateDepartment(Department department, User user)
+    {
+        return m_DataSource.WithUser(user).Insert(department).ToInt32().Execute();
+    }
+
+    public Department GetDepartment(int departmentKey, User user)
+    {
+        return m_DataSource.WithUser(user).GetByKey(TableName, departmentKey).ToObject&lt;Department&gt;().Execute();
+    }
+
+    public void UpdateDepartment(Department department, User user)
+    {
+        m_DataSource.WithUser(user).Update(department).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Dapper requires that audit columns be manually merged into the object being inserted/updated. </p>
+<pre><code class="cs">    public class AuditColumnsScenario : ScenarioBase, IAuditColumnsScenario&lt;Department&gt;
+    {
+        public AuditColumnsScenario(string connectionString) : base(connectionString)
+        { }
+
+        public int CreateDepartment(Department department, User user)
+        {
+            if (department == null)
+                throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), $&quot;{nameof(user)} is null.&quot;);
+
+            //Manually apply the audit columns
+            department.CreatedDate = DateTime.UtcNow;
+            department.ModifiedDate = DateTime.UtcNow;
+            department.CreatedByEmployeeKey = user.UserKey;
+            department.ModifiedByEmployeeKey = user.UserKey;
+
+            const string sql = @&quot;INSERT INTO HR.Department
+(
+    DepartmentName,
+    DivisionKey,
+    CreatedDate,
+    ModifiedDate,
+    CreatedByEmployeeKey,
+    ModifiedByEmployeeKey
+)
+OUTPUT Inserted.DepartmentKey
+VALUES
+(@DepartmentName, @DivisionKey, @CreatedDate, @ModifiedDate, @CreatedByEmployeeKey, @ModifiedByEmployeeKey);&quot;;
+
+            using (var con = OpenConnection())
+                return con.ExecuteScalar&lt;int&gt;(sql, department);
+        }
+
+        public Department GetDepartment(int departmentKey, User user)
+        {
+            const string sql = @&quot;SELECT d.DepartmentKey,
+       d.DepartmentName,
+       d.DivisionKey,
+       d.CreatedDate,
+       d.ModifiedDate,
+       d.CreatedByEmployeeKey,
+       d.ModifiedByEmployeeKey FROM HR.Department d WHERE d.DepartmentKey = @DepartmentKey&quot;;
+
+            using (var con = OpenConnection())
+                return con.QuerySingle&lt;Department&gt;(sql, new { departmentKey });
+        }
+
+        public void UpdateDepartment(Department department, User user)
+        {
+            if (department == null)
+                throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), $&quot;{nameof(user)} is null.&quot;);
+
+            //Manually apply the audit columns
+            department.ModifiedDate = DateTime.UtcNow;
+            department.ModifiedByEmployeeKey = user.UserKey;
+
+            const string sql = @&quot;UPDATE HR.Department SET
+    DepartmentName = @DepartmentName,
+    DivisionKey = @DivisionKey,
+    ModifiedDate = @ModifiedDate,
+    ModifiedByEmployeeKey = @ModifiedByEmployeeKey
+WHERE DepartmentKey = @DepartmentKey;&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql, department);
+        }
+    }
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To generalize audit column management in Entity Framework, create an interface with the list of audit columns. Then overide the <code>SaveChanges</code> method to provide the audit values.</p>
+<pre><code class="cs">public interface IAuditableEntity
+{
+    DateTime? CreatedDate { get; set; }
+    DateTime? ModifiedDate { get; set; }
+    int? CreatedByEmployeeKey { get; set; }
+    int? ModifiedByEmployeeKey { get; set; }
+}
+</code></pre>
+
+<pre><code class="cs">public override int SaveChanges()
+{
+    // Get added entries
+    var addedEntryCollection = ChangeTracker.Entries&lt;IAuditableEntity&gt;()
+       .Where(p =&gt; p.State == EntityState.Added)
+       .Select(p =&gt; p.Entity);
+
+    // Get modified entries
+    var modifiedEntryCollection = ChangeTracker.Entries&lt;IAuditableEntity&gt;()
+      .Where(p =&gt; p.State == EntityState.Modified)
+      .Select(p =&gt; p.Entity);
+
+    // Set audit fields of added entries
+    foreach (var addedEntity in addedEntryCollection)
+    {
+        addedEntity.CreatedDate = DateTime.Now;
+        addedEntity.CreatedByEmployeeKey = m_User.UserKey;
+        addedEntity.ModifiedDate = DateTime.Now;
+        addedEntity.ModifiedByEmployeeKey = m_User.UserKey;
+    }
+
+    // Set audit fields of modified entries
+    foreach (var modifiedEntity in modifiedEntryCollection)
+    {
+        modifiedEntity.ModifiedDate = DateTime.Now;
+        modifiedEntity.ModifiedByEmployeeKey = m_User.UserKey;
+    }
+
+    return base.SaveChanges();
+}
+</code></pre>
+
+<pre><code class="cs">public class AuditColumnsScenario : IAuditColumnsScenario&lt;Department&gt;
+{
+    private Func&lt;User, OrmCookbookContextWithUser&gt; CreateDbContext;
+
+    public AuditColumnsScenario(Func&lt;User, OrmCookbookContextWithUser&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int CreateDepartment(Department department, User user)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext(user))
+        {
+            context.Department.Add(department);
+            context.SaveChanges();
+            return department.DepartmentKey;
+        }
+    }
+
+    public Department GetDepartment(int departmentKey, User user)
+    {
+        using (var context = CreateDbContext(user))
+        {
+            return context.Department.Find(departmentKey);
+        }
+    }
+
+    public void UpdateDepartment(Department department, User user)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext(user))
+        {
+            context.Entry(department).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<div class="alert alert-warning"><span class="alert-title"><i class="fa fa-warning"></i> Warning!</span><p>This design pattern does not prevent someone from intentionally altering the CreatedBy/CreatedDate columns.</p>
+</div><h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To generalize audit column management in EF Core, create an interface with the list of audit columns. Then overide the <code>SaveChanges</code> method to provide the audit values.</p>
+<pre><code class="cs">public interface IAuditableEntity
+{
+    DateTime? CreatedDate { get; set; }
+    DateTime? ModifiedDate { get; set; }
+    int? CreatedByEmployeeKey { get; set; }
+    int? ModifiedByEmployeeKey { get; set; }
+}
+</code></pre>
+
+<pre><code class="cs">public override int SaveChanges()
+{
+    // Get added entries
+    var addedEntryCollection = ChangeTracker.Entries&lt;IAuditableEntity&gt;()
+       .Where(p =&gt; p.State == EntityState.Added)
+       .Select(p =&gt; p.Entity);
+
+    // Get modified entries
+    var modifiedEntryCollection = ChangeTracker.Entries&lt;IAuditableEntity&gt;()
+      .Where(p =&gt; p.State == EntityState.Modified)
+      .Select(p =&gt; p.Entity);
+
+    // Set audit fields of added entries
+    foreach (var addedEntity in addedEntryCollection)
+    {
+        addedEntity.CreatedDate = DateTime.UtcNow;
+        addedEntity.CreatedByEmployeeKey = m_User.UserKey;
+        addedEntity.ModifiedDate = DateTime.UtcNow;
+        addedEntity.ModifiedByEmployeeKey = m_User.UserKey;
+    }
+
+    // Set audit fields of modified entries
+    foreach (var modifiedEntity in modifiedEntryCollection)
+    {
+        modifiedEntity.ModifiedDate = DateTime.UtcNow;
+        modifiedEntity.ModifiedByEmployeeKey = m_User.UserKey;
+    }
+
+    return base.SaveChanges();
+}
+</code></pre>
+
+<pre><code class="cs">public class AuditColumnsScenario : IAuditColumnsScenario&lt;Department&gt;
+{
+    private Func&lt;User, OrmCookbookContextWithUser&gt; CreateDbContext;
+
+    public AuditColumnsScenario(Func&lt;User, OrmCookbookContextWithUser&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int CreateDepartment(Department department, User user)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext(user))
+        {
+            context.Department.Add(department);
+            context.SaveChanges();
+            return department.DepartmentKey;
+        }
+    }
+
+    public Department GetDepartment(int departmentKey, User user)
+    {
+        using (var context = CreateDbContext(user))
+        {
+            return context.Department.Find(departmentKey);
+        }
+    }
+
+    public void UpdateDepartment(Department department, User user)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext(user))
+        {
+            context.Entry(department).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<div class="alert alert-warning"><span class="alert-title"><i class="fa fa-warning"></i> Warning!</span><p>This design pattern does not prevent someone from intentionally altering the CreatedBy/CreatedDate columns.</p>
+</div><h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

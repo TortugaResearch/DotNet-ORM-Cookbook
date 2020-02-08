@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,5 +17,15 @@ namespace Recipes.EntityFramework.Entities
         public int DivisionKey { get; set; }
 
         public virtual Division? Division { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime? CreatedDate { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime? ModifiedDate { get; set; }
+
+        public int? CreatedByEmployeeKey { get; set; }
+
+        public int? ModifiedByEmployeeKey { get; set; }
     }
 }
