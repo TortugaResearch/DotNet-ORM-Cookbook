@@ -27,5 +27,6 @@ namespace Recipes.EntityFramework.Entities
         public int? CreatedByEmployeeKey { get; set; }
 
         public int? ModifiedByEmployeeKey { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
