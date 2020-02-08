@@ -14,6 +14,7 @@
       "Dapper": "Dapper.md",
       "Entity Framework 6": "EF6.md",
       "Entity Framework Core": "EFCore.md",
+      "LINQ to DB": "LinqToDB.md",
       "LLBLGen Pro": "LLBLGenPro.md",
       "NHibernate": "NHibernate.md",
       "RepoDb": "RepoDb.md",

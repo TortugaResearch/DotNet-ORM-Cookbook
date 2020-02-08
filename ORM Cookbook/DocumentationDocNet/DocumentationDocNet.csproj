@@ -57,6 +57,7 @@
     <None Include="EFCore.md" />
     <None Include="BulkInsert.md" />
     <None Include="LargeBatch.md" />
+    <None Include="LinqToDB.md" />
     <None Include="NHibernate.md" />
     <None Include="Pagination.md" />
     <None Include="RowCount.md" />
