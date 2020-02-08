@@ -50,6 +50,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ConnectionSharing.md" />
+    <None Include="AuditColumns.md" />
     <None Include="Chain.md" />
     <None Include="EF6.md" />
     <None Include="EFCore.md" />

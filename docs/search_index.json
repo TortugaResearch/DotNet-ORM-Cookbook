@@ -163,6 +163,12 @@
       "title": "Bulk Inserts"
     },
     {
+      "location": "ConnectionSharing.htm",
+      "breadcrumbs": "Home / Advanced scenarios / Connection Sharing",
+      "keywords": "4 6 a ADO always applicable Chain combining connection Connection ConnectionSharing ConnectionSharingScenario Core cs Dapper DB demonstrate directly Entity EntityFramework EntityFrameworkCore especially Framework how IConnectionSharingScenario important in is LINQ LLBLGen NET NHibernate Not objecsts on ORMs Pro Prototype raw Recipes RepoDb same Scenario scenarios ServiceStack share Sharing snippet TConnection the These This TModel to TODO Tortuga transaction TState TTransaction two when works",
+      "title": "Connection Sharing"
+    },
+    {
       "location": "PartialUpdate.htm",
       "breadcrumbs": "Home / Advanced scenarios / Partial Updates",
       "keywords": "1 2 6 a above Ado ADO and are be below can Chain class ClassMappedNameCache Code column columns Core cs Dapper DB decide demonstrate directly do dynamic e either entity Entity EntityFramework EntityFrameworkCore extract fetch fetching filter first following for Framework from g have help how in In IPartialUpdateScenario it item key Limit LINQ LinqToDB LLBLGen LLBLGenPro model modify name NET NHibernate object of on one or original parameter partial Partial PartialUpdate PartialUpdateScenario pass passed perform primary Pro properties Prototype Recipes record RepoDb resembles row s Scenario scenarios separate ServiceStack snippet snippets Specify table targe target targetted the The then These to To Tortuga unpacked update Updated updates Updates UpdateWithObject UpdateWithSeparateParameters will without you your",
@@ -197,6 +203,12 @@
       "breadcrumbs": "Home / Stored procedure scenarios / Basic Stored Procedures",
       "keywords": "2 6 a Ado ADO as basic Basic BasicStoredProc BasicStoredProcScenario be below call can Chain class collection Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DB DbContext demonstrate EmployeeClassificationKeyHolder EmployeeClassificationWithCount Entities Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications how HR IBasicStoredProcScenario if in interpreted is LINQ LinqToDB LLBLGen LLBLGenPro Multiple needed NET NHibernate of or OrmCookbookContext OrmCookbookDB Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb results resultset Resultsets return Return returned row rows s scalar Scenario scenarios ServiceStack should shown single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true use value values will",
       "title": "Basic Stored Procedures"
+    },
+    {
+      "location": "AuditColumns.htm",
+      "breadcrumbs": "Home / Auditing and history scenarios / Audit Columns",
+      "keywords": "1 6 a actual Ado ADO alert along altering an are at audit Audit AuditColumns AuditColumnsScenario be being Chain column columns Columns configured Core create created CreatedBy CreatedDate cs Dapper data dataSource DataSource DB demonstrate design does done each EF end ensure Entities Entity EntityFramework EntityFrameworkCore For Framework from generalize generated how IAuditableEntity IAuditColumnsScenario in inserted intentionally interface into is level LINQ list LLBLGen management manually merged method NET NHibernate not object of operation or OrmCookbookContextWithUser overide parameters pattern populated prevent Pro Prototype provide Recipes RepoDb requires SaveChanges Scenario scenarios ServiceStack snippet someone supplied supply TDepartment that the Then These This to To TODO Tortuga updated use user User usually values warning when will with WithUser",
+      "title": "Audit Columns"
     }
   ]
 }

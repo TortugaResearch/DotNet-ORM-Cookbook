@@ -312,20 +312,6 @@ CREATE SCHEMA [Sales]
 
 
 GO
-PRINT N'Creating [HR].[Department]...';
-
-
-GO
-CREATE TABLE [HR].[Department] (
-    [DepartmentKey]  INT           IDENTITY (1000, 1) NOT NULL,
-    [DepartmentName] NVARCHAR (30) NOT NULL,
-    [DivisionKey]    INT           NOT NULL,
-    CONSTRAINT [PK_Department] PRIMARY KEY CLUSTERED ([DepartmentKey] ASC),
-    CONSTRAINT [UX_Department_DepartmentName] UNIQUE NONCLUSTERED ([DepartmentName] ASC)
-);
-
-
-GO
 PRINT N'Creating [HR].[Division]...';
 
 
@@ -347,21 +333,6 @@ CREATE TABLE [HR].[Division] (
     [StartTime]             TIME (7)           NULL,
     CONSTRAINT [PK_Division] PRIMARY KEY CLUSTERED ([DivisionKey] ASC),
     CONSTRAINT [UX_Division_DivisionName] UNIQUE NONCLUSTERED ([DivisionName] ASC)
-);
-
-
-GO
-PRINT N'Creating [HR].[EmployeeClassification]...';
-
-
-GO
-CREATE TABLE [HR].[EmployeeClassification] (
-    [EmployeeClassificationKey]  INT          IDENTITY (1000, 1) NOT NULL,
-    [EmployeeClassificationName] VARCHAR (30) NOT NULL,
-    [IsExempt]                   BIT          NOT NULL,
-    [IsEmployee]                 BIT          NOT NULL,
-    CONSTRAINT [PK_EmployeeClassification] PRIMARY KEY CLUSTERED ([EmployeeClassificationKey] ASC),
-    CONSTRAINT [UX_EmployeeClassification_EmployeeClassificationName] UNIQUE NONCLUSTERED ([EmployeeClassificationName] ASC)
 );
 
 
@@ -390,6 +361,39 @@ PRINT N'Creating [HR].[Employee].[IX_Employee_LastName]...';
 GO
 CREATE NONCLUSTERED INDEX [IX_Employee_LastName]
     ON [HR].[Employee]([LastName] ASC);
+
+
+GO
+PRINT N'Creating [HR].[EmployeeClassification]...';
+
+
+GO
+CREATE TABLE [HR].[EmployeeClassification] (
+    [EmployeeClassificationKey]  INT          IDENTITY (1000, 1) NOT NULL,
+    [EmployeeClassificationName] VARCHAR (30) NOT NULL,
+    [IsExempt]                   BIT          NOT NULL,
+    [IsEmployee]                 BIT          NOT NULL,
+    CONSTRAINT [PK_EmployeeClassification] PRIMARY KEY CLUSTERED ([EmployeeClassificationKey] ASC),
+    CONSTRAINT [UX_EmployeeClassification_EmployeeClassificationName] UNIQUE NONCLUSTERED ([EmployeeClassificationName] ASC)
+);
+
+
+GO
+PRINT N'Creating [HR].[Department]...';
+
+
+GO
+CREATE TABLE [HR].[Department] (
+    [DepartmentKey]         INT           IDENTITY (1000, 1) NOT NULL,
+    [DepartmentName]        NVARCHAR (30) NOT NULL,
+    [DivisionKey]           INT           NOT NULL,
+    [CreatedDate]           DATETIME2 (7) NULL,
+    [ModifiedDate]          DATETIME2 (7) NULL,
+    [CreatedByEmployeeKey]  INT           NULL,
+    [ModifiedByEmployeeKey] INT           NULL,
+    CONSTRAINT [PK_Department] PRIMARY KEY CLUSTERED ([DepartmentKey] ASC),
+    CONSTRAINT [UX_Department_DepartmentName] UNIQUE NONCLUSTERED ([DepartmentName] ASC)
+);
 
 
 GO
@@ -466,15 +470,6 @@ ALTER TABLE [HR].[EmployeeClassification]
 
 
 GO
-PRINT N'Creating [HR].[FK_Department_DivisionKey]...';
-
-
-GO
-ALTER TABLE [HR].[Department]
-    ADD CONSTRAINT [FK_Department_DivisionKey] FOREIGN KEY ([DivisionKey]) REFERENCES [HR].[Division] ([DivisionKey]);
-
-
-GO
 PRINT N'Creating [HR].[FK_Division_CreatedByEmployeeKey]...';
 
 
@@ -499,6 +494,33 @@ PRINT N'Creating [HR].[FK_Employee_EmployeeClassificationKey]...';
 GO
 ALTER TABLE [HR].[Employee]
     ADD CONSTRAINT [FK_Employee_EmployeeClassificationKey] FOREIGN KEY ([EmployeeClassificationKey]) REFERENCES [HR].[EmployeeClassification] ([EmployeeClassificationKey]);
+
+
+GO
+PRINT N'Creating [HR].[FK_Department_DivisionKey]...';
+
+
+GO
+ALTER TABLE [HR].[Department]
+    ADD CONSTRAINT [FK_Department_DivisionKey] FOREIGN KEY ([DivisionKey]) REFERENCES [HR].[Division] ([DivisionKey]);
+
+
+GO
+PRINT N'Creating [HR].[FK_Department_CreatedByEmployeeKey]...';
+
+
+GO
+ALTER TABLE [HR].[Department]
+    ADD CONSTRAINT [FK_Department_CreatedByEmployeeKey] FOREIGN KEY ([CreatedByEmployeeKey]) REFERENCES [HR].[Employee] ([EmployeeKey]);
+
+
+GO
+PRINT N'Creating [HR].[FK_Department_ModifiedByEmployeeKey]...';
+
+
+GO
+ALTER TABLE [HR].[Department]
+    ADD CONSTRAINT [FK_Department_ModifiedByEmployeeKey] FOREIGN KEY ([ModifiedByEmployeeKey]) REFERENCES [HR].[Employee] ([EmployeeKey]);
 
 
 GO
