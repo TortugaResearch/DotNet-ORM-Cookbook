@@ -62,7 +62,9 @@ While the transaction is open, all operations are automatically associated with 
 
 ## RepoDb
 
-TODO
+Simply call the `BeginTransaction()` method of the `DbConnection` object and pass the instance of `DbTransaction` when you are calling any of the operations.
+
+@snippet cs [..\Recipes.RepoDb\Transactions\TransactionsScenario.cs] TransactionsScenario
 
 ## ServiceStack
 

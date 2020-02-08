@@ -56,7 +56,7 @@ NHibernate does not have support for bulk inserts.
 
 ## RepoDb
 
-TODO
+@snippet cs [..\Recipes.RepoDb\BulkInsert\BulkInsertScenario.cs] BulkInsert
 
 ## ServiceStack
 

@@ -256,7 +256,23 @@ public void BulkInsert(DataTable employees)
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>NHibernate does not have support for bulk inserts.</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public void BulkInsert(IList&lt;EmployeeSimple&gt; employees)
+{
+    if (employees == null || employees.Count == 0)
+        throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+    this.BulkInsert&lt;EmployeeSimple&gt;(employees);
+}
+
+public void BulkInsert(DataTable employees)
+{
+    if (employees == null)
+        throw new ArgumentNullException(nameof(employees), $&quot;{nameof(employees)} is null.&quot;);
+
+    this.BulkInsert&lt;EmployeeSimple&gt;(employees, rowState: DataRowState.Added);
+}
+</code></pre>
+
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>ServiceStack does not have support for bulk inserts.</p>
 
