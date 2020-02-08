@@ -35,6 +35,20 @@ Dapper is essentially just ADO.NET with some helper methods to reduce the amount
 
 @snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenario.cs] SingleModelCrudScenario
 
+@alert info
+The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.
+@end
+
+### Dapper.Contrib
+
+The Dapper.Contrib library can elimiante the boilerplate for some common scenarios. 
+
+To enable it, models need to be decorated with `Table` and `Key` attributes. 
+
+@snippet cs [../Recipes.Dapper\Models\EmployeeClassification.cs] EmployeeClassification
+
+@snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenarioContrib.cs] SingleModelCrudScenarioContrib
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario

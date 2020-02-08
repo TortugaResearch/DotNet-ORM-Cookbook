@@ -22,12 +22,12 @@ namespace Recipes.Dapper.LargeBatch
 
         public int MaximumBatchSize => 2100 / 7;
 
-        public void InsertLargeBatch(IList<EmployeeSimple> employees)
+        virtual public void InsertLargeBatch(IList<EmployeeSimple> employees)
         {
             InsertLargeBatch(employees, 250);
         }
 
-        public void InsertLargeBatch(IList<EmployeeSimple> employees, int batchSize)
+        virtual public void InsertLargeBatch(IList<EmployeeSimple> employees, int batchSize)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));

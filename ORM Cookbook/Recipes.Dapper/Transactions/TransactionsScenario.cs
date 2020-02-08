@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using Recipes.Dapper.Models;
 using Recipes.Transactions;
 using System;
@@ -60,12 +61,8 @@ namespace Recipes.Dapper.Transactions
 
         public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                        FROM HR.EmployeeClassification ec
-                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
-
             using (var con = OpenConnection())
-                return con.QuerySingleOrDefault<EmployeeClassification>(sql, new { employeeClassificationKey });
+                return con.Get<EmployeeClassification>(employeeClassificationKey);
         }
     }
 }

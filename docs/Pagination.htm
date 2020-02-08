@@ -398,11 +398,8 @@ ORDER BY e.FirstName,
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-            const string sql = @&quot;INSERT INTO HR.Employee
-(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
-VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey)&quot;;
             using (var con = OpenConnection())
-                con.Execute(sql, employees);
+                con.Insert(employees);
         }
 
         public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)

@@ -34,6 +34,16 @@ Large collections need to be broken up into batches. For SQL Server, the maximum
 
 @snippet cs [..\Recipes.Dapper\LargeBatch\LargeBatchScenario.cs] LargeBatchScenario
 
+@alert info
+The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.
+@end
+
+### Dapper.Contrib
+
+The Dapper.Contrib library removes the need to explicilty batch inserts. 
+
+@snippet cs [../Recipes.Dapper/LargeBatch/LargeBatchScenarioContrib.cs] LargeBatchScenarioContrib
+
 ## Entity Framework 6
 
 Entity Framework can suffer severe performance degration as the number of objects it tracks increases. To mitigate this effect, a new `DBContext` after every batch is necessary. Start with a batch size of 100 and adjust as needed.

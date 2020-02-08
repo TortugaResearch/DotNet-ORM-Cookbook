@@ -316,12 +316,12 @@ VALUES &quot;);
 
         public int MaximumBatchSize =&gt; 2100 / 7;
 
-        public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
+        virtual public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
         {
             InsertLargeBatch(employees, 250);
         }
 
-        public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
+        virtual public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
@@ -357,6 +357,44 @@ VALUES &quot;);
             }
         }
     }
+</code></pre>
+
+<div class="alert alert-info"><span class="alert-title"><i class="fa fa-info-circle"></i> Info</span><p>The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.</p>
+</div><h3 id="dapper.contrib">Dapper.Contrib<a class="headerlink" href="#dapper.contrib" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>The Dapper.Contrib library removes the need to explicilty batch inserts. </p>
+<pre><code class="cs">public class LargeBatchScenarioContrib : LargeBatchScenario
+{
+    public LargeBatchScenarioContrib(string connectionString) : base(connectionString)
+    { }
+
+    override public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var con = OpenConnection())
+        using (var trans = con.BeginTransaction())
+        {
+            con.Insert(employees, trans);
+            trans.Commit();
+        }
+    }
+
+    override public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var con = OpenConnection())
+        using (var trans = con.BeginTransaction())
+        {
+            foreach (var batch in employees.BatchAsLists(batchSize))
+                con.Insert(batch, trans);
+
+            trans.Commit();
+        }
+    }
+}
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

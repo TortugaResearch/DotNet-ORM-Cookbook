@@ -506,12 +506,8 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
-
         using (var con = OpenConnection())
-            return con.ExecuteScalar&lt;int&gt;(sql, classification);
+            return (int)con.Insert(classification);
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)

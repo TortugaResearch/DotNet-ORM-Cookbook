@@ -349,12 +349,8 @@
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
-
         using (var con = OpenConnection())
-            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
+            return con.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
     }
 }
 </code></pre>

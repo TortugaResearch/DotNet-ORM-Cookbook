@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using Recipes.Dapper.Models;
 using Recipes.Pagination;
 using System;
@@ -17,11 +18,8 @@ namespace Recipes.Dapper.Pagination
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            const string sql = @"INSERT INTO HR.Employee
-(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
-VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey)";
             using (var con = OpenConnection())
-                con.Execute(sql, employees);
+                con.Insert(employees);
         }
 
         public IList<EmployeeSimple> PaginateWithPageSize(string lastName, int page, int pageSize)
