@@ -75,31 +75,6 @@ namespace Recipes.LLBLGenPro.Joins
             }
         }
 
-        public IList<EmployeeDetailEntity> GetAll()
-        {
-            using (var adapter = new DataAccessAdapter())
-            {
-                var metaData = new LinqMetaData(adapter);
-                var q = from e in metaData.Employee
-                        join ec in metaData.EmployeeClassification on e.EmployeeClassificationKey equals ec.EmployeeClassificationKey
-                        select new EmployeeDetailEntity()
-                        {
-                            EmployeeKey = e.EmployeeKey,
-                            FirstName = e.FirstName,
-                            MiddleName = e.MiddleName,
-                            LastName = e.LastName,
-                            CellPhone = e.CellPhone,
-                            OfficePhone = e.OfficePhone,
-                            Title = e.Title,
-                            EmployeeClassificationKey = ec.EmployeeClassificationKey,
-                            EmployeeClassificationName = ec.EmployeeClassificationName,
-                            IsEmployee = ec.IsEmployee,
-                            IsExempt = ec.IsExempt,
-                        };
-                return q.ToList();
-            }
-        }
-
         public EmployeeDetailEntity? GetByEmployeeKey(int employeeKey)
         {
             using (var adapter = new DataAccessAdapter())

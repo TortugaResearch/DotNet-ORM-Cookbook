@@ -45,14 +45,6 @@ namespace Recipes.LLBLGenPro.Joins
             }
         }
 
-        public IList<EmployeeJoinedRow> GetAll()
-        {
-            using (var adapter = new DataAccessAdapter())
-            {
-                return new LinqMetaData(adapter).GetEmployeeJoinedTypedList().ToList();
-            }
-        }
-
         public EmployeeJoinedRow? GetByEmployeeKey(int employeeKey)
         {
             using (var adapter = new DataAccessAdapter())

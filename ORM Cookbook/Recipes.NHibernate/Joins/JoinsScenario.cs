@@ -81,31 +81,6 @@ namespace Recipes.NHibernate.Joins
             }
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var session = m_SessionFactory.OpenStatelessSession())
-            {
-                return session.QueryOver<EmployeeComplex>()
-                    .JoinQueryOver(e => e.EmployeeClassification)
-                    .List()
-                    .Select(e => new EmployeeDetail()
-                    {
-                        EmployeeKey = e.EmployeeKey,
-                        FirstName = e.FirstName,
-                        MiddleName = e.MiddleName,
-                        LastName = e.LastName,
-                        CellPhone = e.CellPhone,
-                        OfficePhone = e.OfficePhone,
-                        Title = e.Title,
-                        EmployeeClassificationKey = e.EmployeeClassification!.EmployeeClassificationKey,
-                        EmployeeClassificationName = e.EmployeeClassification.EmployeeClassificationName,
-                        IsEmployee = e.EmployeeClassification.IsEmployee,
-                        IsExempt = e.EmployeeClassification.IsExempt,
-                    })
-                    .ToList();
-            }
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())

@@ -75,23 +75,6 @@ VALUES
             }
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            const string sql = "SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed";
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                var results = new List<EmployeeDetail>();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeDetail(reader));
-
-                return results;
-            }
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             const string sql = "SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey";

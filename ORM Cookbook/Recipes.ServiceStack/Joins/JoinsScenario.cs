@@ -23,7 +23,7 @@ namespace Recipes.ServiceStack.Joins
 
             using (var db = _dbConnectionFactory.OpenDbConnection())
             {
-                return (int) db.Insert(employee, true);
+                return (int)db.Insert(employee, true);
             }
         }
 
@@ -46,14 +46,6 @@ namespace Recipes.ServiceStack.Joins
                     .Join<EmployeeClassification>()
                     .Where(x => x.LastName == lastName);
                 return db.Select<EmployeeDetail>(q);
-            }
-        }
-
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return db.Select<EmployeeDetail>(db.From<Employee>().Join<EmployeeClassification>());
             }
         }
 

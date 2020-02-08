@@ -146,11 +146,6 @@
     IList&lt;TEmployeeDetail&gt; FindByLastName(string lastName);
 
     /// &lt;summary&gt;
-    /// Gets all EmployeeDetail rows.
-    /// &lt;/summary&gt;
-    IList&lt;TEmployeeDetail&gt; GetAll();
-
-    /// &lt;summary&gt;
     /// Gets an EmployeeDetail row by its primary key.
     /// &lt;/summary&gt;
     TEmployeeDetail? GetByEmployeeKey(int employeeKey);
@@ -223,23 +218,6 @@ VALUES
             {
                 cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
 
-                var results = new List&lt;EmployeeDetail&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeDetail(reader));
-
-                return results;
-            }
-        }
-
-        public IList&lt;EmployeeDetail&gt; GetAll()
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey&quot;;
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
                 var results = new List&lt;EmployeeDetail&gt;();
 
                 using (var reader = cmd.ExecuteReader())
@@ -324,13 +302,6 @@ VALUES
         return m_DataSource.Sql(sql, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey&quot;;
-
-        return m_DataSource.Sql(sql).ToCollection&lt;EmployeeDetail&gt;().Execute();
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
@@ -375,14 +346,6 @@ VALUES
 
         using (var con = OpenConnection())
             return con.Query&lt;EmployeeDetail&gt;(sql, new { lastName }).ToList();
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey&quot;;
-
-        using (var con = OpenConnection())
-            return con.Query&lt;EmployeeDetail&gt;(sql).ToList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
@@ -463,32 +426,6 @@ VALUES
                     ec =&gt; ec.EmployeeClassificationKey,
                     (e, ec) =&gt; new { e, ec })
                 .Where(ed =&gt; ed.e.LastName == lastName)
-                .ToList() //everything below this line is client-side
-                .Select(ed =&gt; new EmployeeDetail()
-                {
-                    EmployeeKey = ed.e.EmployeeKey,
-                    FirstName = ed.e.FirstName,
-                    MiddleName = ed.e.MiddleName,
-                    LastName = ed.e.LastName,
-                    CellPhone = ed.e.CellPhone,
-                    OfficePhone = ed.e.OfficePhone,
-                    Title = ed.e.Title,
-                    EmployeeClassificationKey = ed.ec.EmployeeClassificationKey,
-                    EmployeeClassificationName = ed.ec.EmployeeClassificationName,
-                    IsEmployee = ed.ec.IsEmployee,
-                    IsExempt = ed.ec.IsExempt,
-                })
-                .ToList();
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var context = CreateDbContext())
-            return context.Employee
-                .Join(context.EmployeeClassification,
-                    e =&gt; e.EmployeeClassificationKey,
-                    ec =&gt; ec.EmployeeClassificationKey,
-                    (e, ec) =&gt; new { e, ec })
                 .ToList() //everything below this line is client-side
                 .Select(ed =&gt; new EmployeeDetail()
                 {
@@ -616,30 +553,6 @@ VALUES
                 .ToList();
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var context = CreateDbContext())
-            return context.Employee
-                .Join(context.EmployeeClassification,
-                    e =&gt; e.EmployeeClassificationKey,
-                    ec =&gt; ec.EmployeeClassificationKey,
-                    (e, ec) =&gt; new EmployeeDetail()
-                    {
-                        EmployeeKey = e.EmployeeKey,
-                        FirstName = e.FirstName,
-                        MiddleName = e.MiddleName,
-                        LastName = e.LastName,
-                        CellPhone = e.CellPhone,
-                        OfficePhone = e.OfficePhone,
-                        Title = e.Title,
-                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
-                        EmployeeClassificationName = ec.EmployeeClassificationName,
-                        IsEmployee = ec.IsEmployee ?? true,
-                        IsExempt = ec.IsExempt,
-                    })
-                .ToList();
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         using (var context = CreateDbContext())
@@ -733,30 +646,6 @@ VALUES
                         IsExempt = ec.IsExempt,
                     })
                 .Where(ed =&gt; ed.LastName == lastName)
-                .ToList();
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var db = new OrmCookbook())
-            return db.Employee
-                .Join(db.EmployeeClassification,
-                    e =&gt; e.EmployeeClassificationKey,
-                    ec =&gt; ec.EmployeeClassificationKey,
-                    (e, ec) =&gt; new EmployeeDetail()
-                    {
-                        EmployeeKey = e.EmployeeKey,
-                        FirstName = e.FirstName,
-                        MiddleName = e.MiddleName,
-                        LastName = e.LastName,
-                        CellPhone = e.CellPhone,
-                        OfficePhone = e.OfficePhone,
-                        Title = e.Title,
-                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
-                        EmployeeClassificationName = ec.EmployeeClassificationName,
-                        IsEmployee = ec.IsEmployee,
-                        IsExempt = ec.IsExempt,
-                    })
                 .ToList();
     }
 
@@ -861,31 +750,6 @@ In the entity API, multiple objects need to be explicitly mapped.</p>
         }
     }
 
-    public IList&lt;EmployeeDetailEntity&gt; GetAll()
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            var metaData = new LinqMetaData(adapter);
-            var q = from e in metaData.Employee
-                    join ec in metaData.EmployeeClassification on e.EmployeeClassificationKey equals ec.EmployeeClassificationKey
-                    select new EmployeeDetailEntity()
-                    {
-                        EmployeeKey = e.EmployeeKey,
-                        FirstName = e.FirstName,
-                        MiddleName = e.MiddleName,
-                        LastName = e.LastName,
-                        CellPhone = e.CellPhone,
-                        OfficePhone = e.OfficePhone,
-                        Title = e.Title,
-                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
-                        EmployeeClassificationName = ec.EmployeeClassificationName,
-                        IsEmployee = ec.IsEmployee,
-                        IsExempt = ec.IsExempt,
-                    };
-            return q.ToList();
-        }
-    }
-
     public EmployeeDetailEntity? GetByEmployeeKey(int employeeKey)
     {
         using (var adapter = new DataAccessAdapter())
@@ -957,14 +821,6 @@ has been created which is the same projection as the one in the queries in the n
             var q = metaData.GetEmployeeJoinedTypedList()
                             .Where(ec =&gt; ec.LastName == lastName);
             return q.ToList();
-        }
-    }
-
-    public IList&lt;EmployeeJoinedRow&gt; GetAll()
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return new LinqMetaData(adapter).GetEmployeeJoinedTypedList().ToList();
         }
     }
 
@@ -1096,31 +952,6 @@ has been created which is the same projection as the one in the queries in the n
         }
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var session = m_SessionFactory.OpenStatelessSession())
-        {
-            return session.QueryOver&lt;EmployeeComplex&gt;()
-                .JoinQueryOver(e =&gt; e.EmployeeClassification)
-                .List()
-                .Select(e =&gt; new EmployeeDetail()
-                {
-                    EmployeeKey = e.EmployeeKey,
-                    FirstName = e.FirstName,
-                    MiddleName = e.MiddleName,
-                    LastName = e.LastName,
-                    CellPhone = e.CellPhone,
-                    OfficePhone = e.OfficePhone,
-                    Title = e.Title,
-                    EmployeeClassificationKey = e.EmployeeClassification!.EmployeeClassificationKey,
-                    EmployeeClassificationName = e.EmployeeClassification.EmployeeClassificationName,
-                    IsEmployee = e.EmployeeClassification.IsEmployee,
-                    IsExempt = e.EmployeeClassification.IsExempt,
-                })
-                .ToList();
-        }
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         using (var session = m_SessionFactory.OpenStatelessSession())
@@ -1184,11 +1015,6 @@ has been created which is the same projection as the one in the queries in the n
         return ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { lastName }).AsList();
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        return QueryAll&lt;EmployeeDetail&gt;().AsList();
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
@@ -1222,7 +1048,7 @@ has been created which is the same projection as the one in the queries in the n
 
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            return (int) db.Insert(employee, true);
+            return (int)db.Insert(employee, true);
         }
     }
 
@@ -1245,14 +1071,6 @@ has been created which is the same projection as the one in the queries in the n
                 .Join&lt;EmployeeClassification&gt;()
                 .Where(x =&gt; x.LastName == lastName);
             return db.Select&lt;EmployeeDetail&gt;(q);
-        }
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-        {
-            return db.Select&lt;EmployeeDetail&gt;(db.From&lt;Employee&gt;().Join&lt;EmployeeClassification&gt;());
         }
     }
 

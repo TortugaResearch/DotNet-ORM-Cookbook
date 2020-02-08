@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using RepoDb;
+
 using RDB = RepoDb;
+
 using RepoDb.Extensions;
 using System.Linq;
 
@@ -37,11 +39,6 @@ namespace Recipes.RepoDb.Joins
             const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName";
 
             return ExecuteQuery<EmployeeDetail>(sql, new { lastName }).AsList();
-        }
-
-        public IList<EmployeeDetail> GetAll()
-        {
-            return QueryAll<EmployeeDetail>().AsList();
         }
 
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)

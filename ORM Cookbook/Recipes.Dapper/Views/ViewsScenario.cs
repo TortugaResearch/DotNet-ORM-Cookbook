@@ -39,14 +39,6 @@ namespace Recipes.Dapper.Views
                 return con.Query<EmployeeDetail>(sql, new { lastName }).ToList();
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            const string sql = "SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed";
-
-            using (var con = OpenConnection())
-                return con.Query<EmployeeDetail>(sql).ToList();
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             const string sql = "SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey";

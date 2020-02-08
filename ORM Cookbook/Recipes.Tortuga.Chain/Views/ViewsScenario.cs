@@ -35,11 +35,6 @@ namespace Recipes.Chain.Views
             return m_DataSource.From(EmployeeDetailViewName, new { lastName }).ToCollection<EmployeeDetail>().Execute();
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            return m_DataSource.From(EmployeeDetailViewName).ToCollection<EmployeeDetail>().Execute();
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObjectOrNull<EmployeeDetail>().Execute();

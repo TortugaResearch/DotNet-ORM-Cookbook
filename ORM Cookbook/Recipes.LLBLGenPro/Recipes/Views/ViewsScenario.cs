@@ -27,8 +27,8 @@ namespace Recipes.LLBLGenPro.Views
             using (var adapter = new DataAccessAdapter())
             {
                 return new LinqMetaData(adapter).EmployeeDetail
-												.Where(x => x.EmployeeClassificationKey == employeeClassificationKey)
-												.ToList();
+                                                .Where(x => x.EmployeeClassificationKey == employeeClassificationKey)
+                                                .ToList();
             }
         }
 
@@ -37,16 +37,8 @@ namespace Recipes.LLBLGenPro.Views
             using (var adapter = new DataAccessAdapter())
             {
                 return new LinqMetaData(adapter).EmployeeDetail
-												.Where(x => x.LastName == lastName)
-												.ToList();
-            }
-        }
-
-        public IList<EmployeeDetailEntity> GetAll()
-        {
-            using (var adapter = new DataAccessAdapter())
-            {
-                return new LinqMetaData(adapter).EmployeeDetail.ToList();
+                                                .Where(x => x.LastName == lastName)
+                                                .ToList();
             }
         }
 
@@ -55,7 +47,7 @@ namespace Recipes.LLBLGenPro.Views
             using (var adapter = new DataAccessAdapter())
             {
                 return new LinqMetaData(adapter).EmployeeDetail
-												.SingleOrDefault(x => x.EmployeeKey == employeeKey);
+                                                .SingleOrDefault(x => x.EmployeeKey == employeeKey);
             }
         }
 
@@ -64,7 +56,7 @@ namespace Recipes.LLBLGenPro.Views
             using (var adapter = new DataAccessAdapter())
             {
                 return new LinqMetaData(adapter).EmployeeClassification
-												.FirstOrDefault(ec => ec.EmployeeClassificationKey == employeeClassificationKey);
+                                                .FirstOrDefault(ec => ec.EmployeeClassificationKey == employeeClassificationKey);
             }
         }
     }

@@ -79,30 +79,6 @@ namespace Recipes.EntityFrameworkCore.Joins
                     .ToList();
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var context = CreateDbContext())
-                return context.Employee
-                    .Join(context.EmployeeClassification,
-                        e => e.EmployeeClassificationKey,
-                        ec => ec.EmployeeClassificationKey,
-                        (e, ec) => new EmployeeDetail()
-                        {
-                            EmployeeKey = e.EmployeeKey,
-                            FirstName = e.FirstName,
-                            MiddleName = e.MiddleName,
-                            LastName = e.LastName,
-                            CellPhone = e.CellPhone,
-                            OfficePhone = e.OfficePhone,
-                            Title = e.Title,
-                            EmployeeClassificationKey = ec.EmployeeClassificationKey,
-                            EmployeeClassificationName = ec.EmployeeClassificationName,
-                            IsEmployee = ec.IsEmployee ?? true,
-                            IsExempt = ec.IsExempt,
-                        })
-                    .ToList();
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var context = CreateDbContext())

@@ -41,14 +41,6 @@ namespace Recipes.ServiceStack.Views
             }
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return db.Select<EmployeeDetail>();
-            }
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var db = _dbConnectionFactory.OpenDbConnection())

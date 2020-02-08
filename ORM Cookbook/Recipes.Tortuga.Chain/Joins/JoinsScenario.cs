@@ -38,13 +38,6 @@ namespace Recipes.Chain.Joins
             return m_DataSource.Sql(sql, new { lastName }).ToCollection<EmployeeDetail>().Execute();
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey";
-
-            return m_DataSource.Sql(sql).ToCollection<EmployeeDetail>().Execute();
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey";

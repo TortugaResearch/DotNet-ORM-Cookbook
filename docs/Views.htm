@@ -147,11 +147,6 @@
     IList&lt;TEmployeeDetail&gt; FindByLastName(string lastName);
 
     /// &lt;summary&gt;
-    /// Gets all EmployeeDetail rows.
-    /// &lt;/summary&gt;
-    IList&lt;TEmployeeDetail&gt; GetAll();
-
-    /// &lt;summary&gt;
     /// Gets an EmployeeDetail row by its primary key.
     /// &lt;/summary&gt;
     TEmployeeDetail? GetByEmployeeKey(int employeeKey);
@@ -253,23 +248,6 @@ VALUES
             }
         }
 
-        public IList&lt;EmployeeDetail&gt; GetAll()
-        {
-            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                var results = new List&lt;EmployeeDetail&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeDetail(reader));
-
-                return results;
-            }
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
@@ -340,11 +318,6 @@ VALUES
         return m_DataSource.From(EmployeeDetailViewName, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        return m_DataSource.From(EmployeeDetailViewName).ToCollection&lt;EmployeeDetail&gt;().Execute();
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
@@ -387,14 +360,6 @@ VALUES
 
         using (var con = OpenConnection())
             return con.Query&lt;EmployeeDetail&gt;(sql, new { lastName }).ToList();
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
-
-        using (var con = OpenConnection())
-            return con.Query&lt;EmployeeDetail&gt;(sql).ToList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
@@ -448,12 +413,6 @@ VALUES
     {
         using (var context = CreateDbContext())
             return context.EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var context = CreateDbContext())
-            return context.EmployeeDetail.ToList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
@@ -510,12 +469,6 @@ VALUES
             return context.EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var context = CreateDbContext())
-            return context.EmployeeDetail.ToList();
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         using (var context = CreateDbContext())
@@ -556,12 +509,6 @@ VALUES
             return db.EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var db = new OrmCookbook())
-            return db.EmployeeDetail.ToList();
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         using (var db = new OrmCookbook())
@@ -598,8 +545,8 @@ POCOs however these aren't able to participate in entity relationships.</p>
         using (var adapter = new DataAccessAdapter())
         {
             return new LinqMetaData(adapter).EmployeeDetail
-                                .Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey)
-                                .ToList();
+                                            .Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey)
+                                            .ToList();
         }
     }
 
@@ -608,16 +555,8 @@ POCOs however these aren't able to participate in entity relationships.</p>
         using (var adapter = new DataAccessAdapter())
         {
             return new LinqMetaData(adapter).EmployeeDetail
-                                .Where(x =&gt; x.LastName == lastName)
-                                .ToList();
-        }
-    }
-
-    public IList&lt;EmployeeDetailEntity&gt; GetAll()
-    {
-        using (var adapter = new DataAccessAdapter())
-        {
-            return new LinqMetaData(adapter).EmployeeDetail.ToList();
+                                            .Where(x =&gt; x.LastName == lastName)
+                                            .ToList();
         }
     }
 
@@ -626,7 +565,7 @@ POCOs however these aren't able to participate in entity relationships.</p>
         using (var adapter = new DataAccessAdapter())
         {
             return new LinqMetaData(adapter).EmployeeDetail
-                                .SingleOrDefault(x =&gt; x.EmployeeKey == employeeKey);
+                                            .SingleOrDefault(x =&gt; x.EmployeeKey == employeeKey);
         }
     }
 
@@ -635,7 +574,7 @@ POCOs however these aren't able to participate in entity relationships.</p>
         using (var adapter = new DataAccessAdapter())
         {
             return new LinqMetaData(adapter).EmployeeClassification
-                                .FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+                                            .FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
         }
     }
 }
@@ -717,14 +656,6 @@ POCOs however these aren't able to participate in entity relationships.</p>
         }
     }
 
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var session = m_SessionFactory.OpenStatelessSession())
-        {
-            return session.QueryOver&lt;EmployeeDetail&gt;().List();
-        }
-    }
-
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         using (var session = m_SessionFactory.OpenStatelessSession())
@@ -763,11 +694,6 @@ POCOs however these aren't able to participate in entity relationships.</p>
     public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
     {
         return Query&lt;EmployeeDetail&gt;(e =&gt; e.LastName == lastName).AsList();
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        return QueryAll&lt;EmployeeDetail&gt;().AsList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
@@ -815,14 +741,6 @@ POCOs however these aren't able to participate in entity relationships.</p>
         {
             return db.Select&lt;EmployeeDetail&gt;(
                 r =&gt; r.LastName == lastName);
-        }
-    }
-
-    public IList&lt;EmployeeDetail&gt; GetAll()
-    {
-        using (var db = _dbConnectionFactory.OpenDbConnection())
-        {
-            return db.Select&lt;EmployeeDetail&gt;();
         }
     }
 
