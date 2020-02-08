@@ -20,6 +20,16 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 
 @snippet cs [..\Recipes.Dapper\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
+@alert info
+The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.
+@end
+
+### Dapper.Contrib
+
+The Dapper.Contrib library can elimiante the boilerplate for some common scenarios. 
+
+@snippet cs [../Recipes.Dapper/MultipleCrud/MultipleCrudScenarioContrib.cs] MultipleCrudScenarioContrib
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario

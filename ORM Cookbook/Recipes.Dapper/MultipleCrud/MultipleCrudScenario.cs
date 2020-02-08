@@ -13,7 +13,7 @@ namespace Recipes.Dapper.MultipleCrud
         public MultipleCrudScenario(string connectionString) : base(connectionString)
         { }
 
-        public void DeleteBatch(IList<EmployeeSimple> employees)
+        virtual public void DeleteBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
@@ -45,7 +45,7 @@ namespace Recipes.Dapper.MultipleCrud
                 return con.Query<EmployeeSimple>(sql, new { lastName }).ToList();
         }
 
-        public void InsertBatch(IList<EmployeeSimple> employees)
+        virtual public void InsertBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
@@ -179,7 +179,7 @@ VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone
             }
         }
 
-        public void UpdateBatch(IList<EmployeeSimple> employees)
+        virtual public void UpdateBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));

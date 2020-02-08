@@ -1,12 +1,20 @@
 using System;
+using Dapper.Contrib.Extensions;
 
 namespace Recipes.Dapper.Models
 {
+    [Table("HR.Employee")]
     public class EmployeeSimple : IEmployeeSimple
     {
+        //Table and Key attributes are only used by Dapper.Contrib.
+        //They are not needed in the Dapper-only examples.
+
         public string? CellPhone { get; set; }
         public int EmployeeClassificationKey { get; set; }
+
+        [Key]
         public int EmployeeKey { get; set; }
+
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? MiddleName { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using Recipes.Dapper.Models;
 using Recipes.TryCrud;
 using System;
@@ -17,12 +18,8 @@ namespace Recipes.Dapper.TryCrud
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            var sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                        OUTPUT Inserted.EmployeeClassificationKey
-                        VALUES(@EmployeeClassificationName )";
-
             using (var con = OpenConnection())
-                return con.ExecuteScalar<int>(sql, classification);
+                return (int)con.Insert(classification);
         }
 
         public void DeleteByKeyOrException(int employeeClassificationKey)

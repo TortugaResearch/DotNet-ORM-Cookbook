@@ -5,7 +5,7 @@ using Recipes.SingleModelCrud;
 namespace Recipes.Dapper.SingleModelCrud
 {
     [TestClass]
-    public class SingleModelCrudTestsContribz : SingleModelCrudTests<EmployeeClassification>
+    public class SingleModelCrudTestsContrib : SingleModelCrudTests<EmployeeClassification>
     {
         protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {

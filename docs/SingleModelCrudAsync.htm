@@ -354,7 +354,7 @@
 </code></pre>
 
 <p>Async with cancellation:</p>
-<pre><code class="cs">public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+<pre><code class="cs">virtual public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
 {
     var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                 FROM HR.EmployeeClassification ec
@@ -373,7 +373,7 @@
     {
     }
 
-    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    virtual public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
@@ -386,7 +386,7 @@
             return await con.ExecuteScalarAsync&lt;int&gt;(sql, classification).ConfigureAwait(false);
     }
 
-    public async Task DeleteAsync(EmployeeClassification classification)
+    virtual public async Task DeleteAsync(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
@@ -416,7 +416,7 @@
                 new CommandDefinition(sql, parameters: new { employeeClassificationName }, cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
-    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+    virtual public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;&quot;;
 
@@ -424,7 +424,7 @@
             return (await con.QueryAsync&lt;EmployeeClassification&gt;(new CommandDefinition(sql, cancellationToken: cancellationToken)).ConfigureAwait(false)).ToList();
     }
 
-    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+    virtual public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                     FROM HR.EmployeeClassification ec
@@ -435,7 +435,7 @@
                 new CommandDefinition(sql, parameters: new { employeeClassificationKey }, cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(EmployeeClassification classification)
+    virtual public async Task UpdateAsync(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
@@ -446,6 +446,58 @@
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
+    }
+}
+</code></pre>
+
+<div class="alert alert-info"><span class="alert-title"><i class="fa fa-info-circle"></i> Info</span><p>The repository methods are not normally virtual. This was done so that they could be overridden with alternate implementations as shown below.</p>
+</div><h3 id="dapper.contrib">Dapper.Contrib<a class="headerlink" href="#dapper.contrib" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>The Dapper.Contrib library can elimiante the boilerplate for some common scenarios. However, it doesn't support a <code>CancellationToken</code> so it may not be appropriate for all use cases.</p>
+<pre><code class="cs">public class SingleModelCrudAsyncScenarioContrib : SingleModelCrudAsyncScenario
+{
+    public SingleModelCrudAsyncScenarioContrib(string connectionString) : base(connectionString)
+    {
+    }
+
+    override public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+            return await con.InsertAsync(classification).ConfigureAwait(false);
+    }
+
+    override public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+            await con.DeleteAsync(classification).ConfigureAwait(false);
+    }
+
+    override public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        //WARNING: Dapper.Contrib does not support CancellationToken
+        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+            return (await con.GetAllAsync&lt;EmployeeClassification&gt;().ConfigureAwait(false)).ToList();
+    }
+
+    override public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+    {
+        //WARNING: Dapper.Contrib does not support CancellationToken
+        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+            return await con.GetAsync&lt;EmployeeClassification&gt;(employeeClassificationKey).ConfigureAwait(false);
+    }
+
+    override public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var con = await OpenConnectionAsync().ConfigureAwait(false))
+            await con.UpdateAsync(classification).ConfigureAwait(false);
     }
 }
 </code></pre>
