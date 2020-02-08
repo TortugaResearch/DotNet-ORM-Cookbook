@@ -6,8 +6,7 @@ using Tortuga.Chain.AuditRules;
 
 namespace Recipes.Chain.SoftDelete
 {
-    public class SoftDeleteScenario :
-        ISoftDeleteScenario<Department>
+    public class SoftDeleteScenario : ISoftDeleteScenario<Department>
     {
         private const string TableName = "HR.Department";
         readonly SqlServerDataSource m_DataSource;
