@@ -8,7 +8,7 @@ using Tortuga.Chain.DataSources;
 namespace Recipes.Chain.ConnectionSharing
 {
     public class ConnectionSharingScenario : IConnectionSharingScenario<EmployeeClassification,
-        SqlConnection, SqlTransaction>
+        SqlConnection, SqlTransaction, IOpenDataSource>
     {
         readonly SqlServerDataSource m_DataSource;
         readonly string m_ConnectionString;
@@ -20,21 +20,19 @@ namespace Recipes.Chain.ConnectionSharing
             m_DataSource = dataSource;
         }
 
-        public void CloseConnection(object state)
+        public void CloseConnection(IOpenDataSource dataSource)
         {
-            if (state == null)
-                throw new ArgumentNullException(nameof(state), $"{nameof(state)} is null.");
+            if (dataSource == null)
+                throw new ArgumentNullException(nameof(dataSource), $"{nameof(dataSource)} is null.");
 
-            var dataSource = (IOpenDataSource)state;
             dataSource.Close();
         }
 
-        public void CloseConnectionAndTransaction(object state)
+        public void CloseConnectionAndTransaction(IOpenDataSource dataSource)
         {
-            if (state == null)
-                throw new ArgumentNullException(nameof(state), $"{nameof(state)} is null.");
+            if (dataSource == null)
+                throw new ArgumentNullException(nameof(dataSource), $"{nameof(dataSource)} is null.");
 
-            var dataSource = (IOpenDataSource)state;
             dataSource.TryCommit();
             dataSource.Close();
         }
@@ -44,14 +42,15 @@ namespace Recipes.Chain.ConnectionSharing
             return m_ConnectionString;
         }
 
-        public (SqlConnection Connection, object State) OpenConnection()
+        public ConnectionResult<SqlConnection, IOpenDataSource> OpenConnection()
         {
             var connection = m_DataSource.CreateConnection();
             var openDataSource = m_DataSource.CreateOpenDataSource(connection);
             return (connection, openDataSource);
         }
 
-        public (SqlConnection Connection, SqlTransaction Transaction, object State) OpenConnectionAndTransaction()
+        public ConnectionTransactionResult<SqlConnection, SqlTransaction, IOpenDataSource>
+            OpenConnectionAndTransaction()
         {
             var connection = m_DataSource.CreateConnection();
             var transaction = connection.BeginTransaction();

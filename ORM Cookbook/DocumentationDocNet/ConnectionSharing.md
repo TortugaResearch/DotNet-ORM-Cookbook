@@ -4,7 +4,7 @@ These scenarios demonstrate how to share a connection. This is especially import
 
 ## Scenario Prototype
 
-@snippet cs [..\Recipes\ConnectionSharing\IConnectionSharingScenario`3.cs] IConnectionSharingScenario{TModel, TConnection, TTransaction}
+@snippet cs [..\Recipes\ConnectionSharing\IConnectionSharingScenario`4.cs] IConnectionSharingScenario{TModel, TConnection, TTransaction, TState}
 
 ## ADO.NET
 
@@ -20,11 +20,11 @@ Not applicable, Dapper always works directly on raw connection/transaction objec
 
 ## Entity Framework 6
 
-@snippet cs [..\Recipes.Tortuga.EntityFramework\ConnectionSharing\ConnectionSharingScenario.cs] ConnectionSharingScenario
+@snippet cs [..\Recipes.EntityFramework\ConnectionSharing\ConnectionSharingScenario.cs] ConnectionSharingScenario
 
 ## Entity Framework Core
 
-@snippet cs [..\Recipes.Tortuga.EntityFrameworkCore\ConnectionSharing\ConnectionSharingScenario.cs] ConnectionSharingScenario
+@snippet cs [..\Recipes.EntityFrameworkCore\ConnectionSharing\ConnectionSharingScenario.cs] ConnectionSharingScenario
 
 ## LINQ to DB
 

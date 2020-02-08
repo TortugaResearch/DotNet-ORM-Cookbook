@@ -2,7 +2,7 @@
 
 namespace Recipes.ConnectionSharing
 {
-    public interface IConnectionSharingScenario<TModel, TConnection, TTransaction>
+    public interface IConnectionSharingScenario<TModel, TConnection, TTransaction, TState>
        where TModel : class, IEmployeeClassification, new()
         where TConnection : DbConnection
         where TTransaction : DbTransaction
@@ -11,25 +11,25 @@ namespace Recipes.ConnectionSharing
         /// Closes a previous opened connection.
         /// </summary>
         /// <param name="state">ORM specific state such as a context/session</param>
-        void CloseConnection(object state);
+        void CloseConnection(TState state);
 
         /// <summary>
         /// Closes a previous opened connection and transaction.
         /// </summary>
         /// <param name="state">ORM specific state such as a context/session</param>
-        void CloseConnectionAndTransaction(object state);
+        void CloseConnectionAndTransaction(TState state);
 
         /// <summary>
         /// Open and return a connection that can be used by another ORM.
         /// </summary>
         /// <returns>The open connection and any ORM-specific state such as a context/session.</returns>
-        (TConnection Connection, object State) OpenConnection();
+        ConnectionResult<TConnection, TState> OpenConnection();
 
         /// <summary>
         /// Open and return a connection/transaction pair that can be used by another ORM.
         /// </summary>
         /// <returns>The open connection/transaction pair and any ORM-specific state such as a context/session.</returns>
-        (TConnection Connection, TTransaction Transaction, object State) OpenConnectionAndTransaction();
+        ConnectionTransactionResult<TConnection, TTransaction, TState> OpenConnectionAndTransaction();
 
         /// <summary>
         /// Gets an EmployeeClassification row by its primary key, reusing an open connection.

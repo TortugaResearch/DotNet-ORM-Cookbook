@@ -17,3 +17,6 @@ dotnet_diagnostic.CA1033.severity = none
 
 # CA1305: Specify IFormatProvider
 dotnet_diagnostic.CA1305.severity = none
+
+# CA1034: Nested types should not be visible
+dotnet_diagnostic.CA1034.severity = none

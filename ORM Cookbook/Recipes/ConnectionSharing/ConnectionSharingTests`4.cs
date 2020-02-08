@@ -9,7 +9,7 @@ namespace Recipes.ConnectionSharing
     /// </summary>
     /// <typeparam name="TModel">A EmployeeClassification model or entity</typeparam>
     [TestCategory("ConnectionSharing")]
-    public abstract class ConnectionSharingTests<TModel, TFactory, TConnection, TTransaction> : TestBase
+    public abstract class ConnectionSharingTests<TModel, TFactory, TConnection, TTransaction, TState> : TestBase
         where TModel : class, IEmployeeClassification, new()
         where TFactory : DbProviderFactory
         where TConnection : DbConnection
@@ -101,6 +101,6 @@ namespace Recipes.ConnectionSharing
             Assert.AreEqual(ConnectionState.Closed, connection.State);
         }
 
-        protected abstract IConnectionSharingScenario<TModel, TConnection, TTransaction> GetScenario();
+        protected abstract IConnectionSharingScenario<TModel, TConnection, TTransaction, TState> GetScenario();
     }
 }

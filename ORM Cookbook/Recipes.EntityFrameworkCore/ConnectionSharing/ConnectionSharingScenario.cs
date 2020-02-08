@@ -8,7 +8,7 @@ using System;
 namespace Recipes.EntityFrameworkCore.ConnectionSharing
 {
     public class ConnectionSharingScenario : IConnectionSharingScenario<EmployeeClassification,
-        SqlConnection, SqlTransaction>
+        SqlConnection, SqlTransaction, OrmCookbookContext>
     {
         readonly string m_ConnectionString;
         private Func<OrmCookbookContext> CreateDbContext;
@@ -19,21 +19,19 @@ namespace Recipes.EntityFrameworkCore.ConnectionSharing
             CreateDbContext = dBContextFactory;
         }
 
-        public void CloseConnection(object state)
+        public void CloseConnection(OrmCookbookContext context)
         {
-            if (state == null)
-                throw new ArgumentNullException(nameof(state), $"{nameof(state)} is null.");
+            if (context == null)
+                throw new ArgumentNullException(nameof(context), $"{nameof(context)} is null.");
 
-            var context = (OrmCookbookContext)state;
             context.Dispose();
         }
 
-        public void CloseConnectionAndTransaction(object state)
+        public void CloseConnectionAndTransaction(OrmCookbookContext context)
         {
-            if (state == null)
-                throw new ArgumentNullException(nameof(state), $"{nameof(state)} is null.");
+            if (context == null)
+                throw new ArgumentNullException(nameof(context), $"{nameof(context)} is null.");
 
-            var context = (OrmCookbookContext)state;
             context.Database.CommitTransaction();
             context.Dispose();
         }
@@ -43,7 +41,7 @@ namespace Recipes.EntityFrameworkCore.ConnectionSharing
             return m_ConnectionString;
         }
 
-        public (SqlConnection Connection, object State) OpenConnection()
+        public ConnectionResult<SqlConnection, OrmCookbookContext> OpenConnection()
         {
             var context = CreateDbContext();
             context.Database.OpenConnection(); //Force the connection open since we haven't used it yet.
@@ -51,7 +49,8 @@ namespace Recipes.EntityFrameworkCore.ConnectionSharing
             return (connection, context);
         }
 
-        public (SqlConnection Connection, SqlTransaction Transaction, object State) OpenConnectionAndTransaction()
+        public ConnectionTransactionResult<SqlConnection, SqlTransaction, OrmCookbookContext>
+            OpenConnectionAndTransaction()
         {
             var context = CreateDbContext();
             var connection = (SqlConnection)context.Database.GetDbConnection();
@@ -61,7 +60,7 @@ namespace Recipes.EntityFrameworkCore.ConnectionSharing
         }
 
         public EmployeeClassification UseOpenConnection(SqlConnection connection, SqlTransaction? transaction,
-            int employeeClassificationKey)
+                    int employeeClassificationKey)
         {
             var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(connection).Options;
             using (var context = new OrmCookbookContext(options))
