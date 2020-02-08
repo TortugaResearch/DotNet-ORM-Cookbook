@@ -10,9 +10,8 @@ namespace Recipes.Chain
     [TestClass]
     public class Setup
     {
-#nullable disable
-        internal static SqlServerDataSource PrimaryDataSource { get; private set; }
-#nullable enable
+        internal static SqlServerDataSource PrimaryDataSource { get; private set; } = null!;
+        internal static string SqlServerConnectionString { get; private set; } = null!;
 
         [AssemblyCleanup]
         public static void AssemblyCleanup()
@@ -24,8 +23,8 @@ namespace Recipes.Chain
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
-            var sqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
-            PrimaryDataSource = new SqlServerDataSource(sqlServerConnectionString);
+            SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
+            PrimaryDataSource = new SqlServerDataSource(SqlServerConnectionString);
 
             try
             {

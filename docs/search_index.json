@@ -159,8 +159,14 @@
     {
       "location": "BulkInsert.htm",
       "breadcrumbs": "Home / Advanced scenarios / Bulk Inserts",
-      "keywords": "000 1 100 6 a ADO and APIs appropriate articles batch Batch be bulk Bulk BulkCopyType BulkInsert BulkInsertScenario Chain collection collections Collections Copy CopyToDataTable Core CRUD cs Dapper database DataTable DB demonstrate described do does Entity for For Framework from function github handled handling have how htm html https IBulkInsertScenario improve in In information insert Insert inserts Inserts io is isn large Large LargeBatch LINQ linq2db LinqToDB LLBLGen mapping more Multiple MultipleCrud NET NHibernate not Note objects Objects of on only operations Operations order ORMs Others pattern perform performance Pro Prototype provided ProviderSpecific rather Recipes RepoDb require same scenario Scenario see seen ServiceStack should size Smaller snippet Some special specific sql SQL support supports TEmployeeSimple than that the this This to TODO Tortuga use used uses Utilities where with",
+      "keywords": "000 1 100 6 a ADO and APIs appropriate articles batch Batch be bulk Bulk BulkCopyType BulkInsert BulkInsertScenario Chain collection collections Collections Copy CopyToDataTable Core CRUD cs Dapper database DataTable DB demonstrate described do does Entity for For Framework from function github handled handling have how htm html https IBulkInsertScenario improve in In information insert Insert inserts Inserts io is isn large Large LargeBatch LINQ linq2db LinqToDB LLBLGen mapping more Multiple MultipleCrud NET NHibernate not Note objects Objects of on only operations Operations order ORMs Others pattern perform performance Pro Prototype provided ProviderSpecific rather Recipes RepoDb require same scenario Scenario see seen ServiceStack should size Smaller snippet Some special specific sql SQL support supports TEmployeeSimple than that the this This to Tortuga use used uses Utilities where with",
       "title": "Bulk Inserts"
+    },
+    {
+      "location": "ConnectionSharing.htm",
+      "breadcrumbs": "Home / Advanced scenarios / Connection Sharing",
+      "keywords": "4 6 a ADO always applicable Chain combining connection Connection ConnectionSharing ConnectionSharingScenario Core cs Dapper DB demonstrate directly Entity EntityFramework EntityFrameworkCore especially Framework how IConnectionSharingScenario important in is LINQ LLBLGen NET NHibernate Not objecsts on ORMs Pro Prototype raw Recipes RepoDb same Scenario scenarios ServiceStack share Sharing snippet TConnection the These This TModel to TODO Tortuga transaction TState TTransaction two when works",
+      "title": "Connection Sharing"
     },
     {
       "location": "PartialUpdate.htm",
@@ -171,7 +177,7 @@
     {
       "location": "Transactions.htm",
       "breadcrumbs": "Home / Advanced scenarios / Transactions",
-      "keywords": "1 6 a Ado ADO after against all an and are associated automatically be BeginTransaction behavior call calling can capabilities Chain commands commit connection Core create cs Dapper DataAccessAdapter database DataSource DB defined demonstrate disposed EF Entity EntityFramework EntityFrameworkCore explcitly explicitly extension Framework get holds how in is isolation ITransactionsScenario itself level LINQ LinqToDB LLBLGen LLBLGenPro manages method Microsoft must need NET NHibernate normal object of open operations or original override Pro Prototype provided Recipes RelationalDatabaseFacadeExtensions RepoDb rollback SaveChanges Scenario scenarios ServiceStack setting snippet TEmployeeClassification the The then there These this thus to To TODO Tortuga transaction TransactionalDataSource Transactions TransactionsScenario Unlike use when When While will with Working you",
+      "keywords": "1 6 a Ado ADO after against all an and any are associated automatically be BeginTransaction behavior call calling can capabilities Chain commands commit connection Core create cs Dapper DataAccessAdapter database DataSource DB DbConnection DbTransaction defined demonstrate disposed EF Entity EntityFramework EntityFrameworkCore explcitly explicitly extension Framework get holds how in instance is isolation ITransactionsScenario itself level LINQ LinqToDB LLBLGen LLBLGenPro manages method Microsoft must need NET NHibernate normal object of open operations or original override pass Pro Prototype provided Recipes RelationalDatabaseFacadeExtensions RepoDb rollback SaveChanges Scenario scenarios ServiceStack setting Simply snippet TEmployeeClassification the The then there These this thus to To Tortuga transaction TransactionalDataSource Transactions TransactionsScenario Unlike use when When While will with Working you",
       "title": "Transactions"
     },
     {
@@ -197,6 +203,12 @@
       "breadcrumbs": "Home / Stored procedure scenarios / Basic Stored Procedures",
       "keywords": "2 6 a Ado ADO as basic Basic BasicStoredProc BasicStoredProcScenario be below call can Chain class collection Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DB DbContext demonstrate EmployeeClassificationKeyHolder EmployeeClassificationWithCount Entities Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications how HR IBasicStoredProcScenario if in interpreted is LINQ LinqToDB LLBLGen LLBLGenPro Multiple needed NET NHibernate of or OrmCookbookContext OrmCookbookDB Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb results resultset Resultsets return Return returned row rows s scalar Scenario scenarios ServiceStack should shown single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true use value values will",
       "title": "Basic Stored Procedures"
+    },
+    {
+      "location": "AuditColumns.htm",
+      "breadcrumbs": "Home / Auditing and history scenarios / Audit Columns",
+      "keywords": "1 6 a actual Ado ADO alert along altering an are at audit Audit AuditColumns AuditColumnsScenario be being Chain column columns Columns configured Core create created CreatedBy CreatedDate cs Dapper data dataSource DataSource DB demonstrate design does done each EF end ensure Entities Entity EntityFramework EntityFrameworkCore For Framework from generalize generated how IAuditableEntity IAuditColumnsScenario in inserted intentionally interface into is level LINQ list LLBLGen management manually merged method NET NHibernate not object of operation or OrmCookbookContextWithUser overide parameters pattern populated prevent Pro Prototype provide Recipes RepoDb requires SaveChanges Scenario scenarios ServiceStack snippet someone supplied supply TDepartment that the Then These This to To TODO Tortuga updated use user User usually values warning when will with WithUser",
+      "title": "Audit Columns"
     }
   ]
 }

@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
 
 namespace Recipes.EntityFramework.Entities
 {
@@ -13,16 +12,21 @@ namespace Recipes.EntityFramework.Entities
             Configuration.LazyLoadingEnabled = lazyLoadingEnabled;
         }
 
-#nullable disable //Assume that the DbContext constructor will populate these properties
-        public virtual DbSet<Department> Department { get; set; }
-        public virtual DbSet<DepartmentDetail> DepartmentDetail { get; set; }
-        public virtual DbSet<Division> Division { get; set; }
-        public virtual DbSet<Employee> Employee { get; set; }
-        public virtual DbSet<EmployeeClassification> EmployeeClassification { get; set; }
-        public virtual DbSet<EmployeeDetail> EmployeeDetail { get; set; }
-        public virtual DbSet<Product> Product { get; set; }
-        public virtual DbSet<ProductLine> ProductLine { get; set; }
-#nullable enable
+        public OrmCookbookContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection) { }
+
+
+        //Using "= null!;" to remove the compiler warning.
+        //Assume that the DbContext constructor will populate these properties
+        public virtual DbSet<Department> Department { get; set; } = null!;
+
+        public virtual DbSet<DepartmentDetail> DepartmentDetail { get; set; } = null!;
+        public virtual DbSet<Division> Division { get; set; } = null!;
+        public virtual DbSet<Employee> Employee { get; set; } = null!;
+        public virtual DbSet<EmployeeClassification> EmployeeClassification { get; set; } = null!;
+        public virtual DbSet<EmployeeDetail> EmployeeDetail { get; set; } = null!;
+        public virtual DbSet<Product> Product { get; set; } = null!;
+        public virtual DbSet<ProductLine> ProductLine { get; set; } = null!;
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
