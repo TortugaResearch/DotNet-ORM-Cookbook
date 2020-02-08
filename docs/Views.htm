@@ -358,67 +358,61 @@ VALUES
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class ViewsScenario : ScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+<pre><code class="cs">public class ViewsScenario : ScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public ViewsScenario(string connectionString) : base(connectionString)
     {
-        public ViewsScenario(string connectionString) : base(connectionString)
-        {
-        }
-
-        public int Create(EmployeeSimple employee)
-        {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-
-            const string sql = @&quot;INSERT INTO HR.Employee
-(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
-OUTPUT Inserted.EmployeeKey
-VALUES
-(@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
-
-            using (var con = OpenConnection())
-                return con.ExecuteScalar&lt;int&gt;(sql, employee);
-        }
-
-        public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
-        {
-            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
-
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).ToList();
-        }
-
-        public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
-        {
-            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
-
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeDetail&gt;(sql, new { lastName }).ToList();
-        }
-
-        public IList&lt;EmployeeDetail&gt; GetAll()
-        {
-            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
-
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeDetail&gt;(sql).ToList();
-        }
-
-        public EmployeeDetail? GetByEmployeeKey(int employeeKey)
-        {
-            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
-
-            using (var con = OpenConnection())
-                return con.QuerySingleOrDefault&lt;EmployeeDetail&gt;(sql, new { employeeKey });
-        }
-
-        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
-        {
-            const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
-
-            using (var con = OpenConnection())
-                return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
-        }
     }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var con = OpenConnection())
+            return (int)con.Insert(employee);
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
+
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeDetail&gt;(sql, new { lastName }).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; GetAll()
+    {
+        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
+
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeDetail&gt;(sql).ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingleOrDefault&lt;EmployeeDetail&gt;(sql, new { employeeKey });
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
+    }
+}
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
