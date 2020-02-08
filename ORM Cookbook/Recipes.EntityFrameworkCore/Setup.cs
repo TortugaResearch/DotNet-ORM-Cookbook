@@ -13,6 +13,7 @@ namespace Recipes.EntityFrameworkCore
     {
         internal static Func<OrmCookbookContext> DBContextFactory { get; private set; } = null!;
         internal static Func<User, OrmCookbookContextWithUser> DBContextWithUserFactory { get; private set; } = null!;
+        internal static Func<OrmCookbookContextWithSoftDelete> DBContextWithSoftDelete { get; private set; } = null!;
         internal static Func<OrmCookbookContext> LazyLoadingDBContextFactory { get; private set; } = null!;
         internal static string SqlServerConnectionString { get; private set; } = null!;
 
@@ -31,6 +32,7 @@ namespace Recipes.EntityFrameworkCore
             var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(SqlServerConnectionString).Options;
             DBContextFactory = () => new OrmCookbookContext(options);
             DBContextWithUserFactory = (User u) => new OrmCookbookContextWithUser(options, u);
+            DBContextWithSoftDelete = () => new OrmCookbookContextWithSoftDelete(options);
 
             var options2 = new DbContextOptionsBuilder<OrmCookbookContext>().UseLazyLoadingProxies().UseSqlServer(SqlServerConnectionString).Options;
             LazyLoadingDBContextFactory = () => new OrmCookbookContext(options2);

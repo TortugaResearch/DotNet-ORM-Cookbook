@@ -391,6 +391,7 @@ CREATE TABLE [HR].[Department] (
     [ModifiedDate]          DATETIME2 (7) NULL,
     [CreatedByEmployeeKey]  INT           NULL,
     [ModifiedByEmployeeKey] INT           NULL,
+    [IsDeleted]             BIT           NOT NULL,
     CONSTRAINT [PK_Department] PRIMARY KEY CLUSTERED ([DepartmentKey] ASC),
     CONSTRAINT [UX_Department_DepartmentName] UNIQUE NONCLUSTERED ([DepartmentName] ASC)
 );
@@ -467,6 +468,15 @@ PRINT N'Creating [HR].[D_EmployeeClassification_IsEmployee]...';
 GO
 ALTER TABLE [HR].[EmployeeClassification]
     ADD CONSTRAINT [D_EmployeeClassification_IsEmployee] DEFAULT (1) FOR [IsEmployee];
+
+
+GO
+PRINT N'Creating [HR].[D_Department_IsDeleted]...';
+
+
+GO
+ALTER TABLE [HR].[Department]
+    ADD CONSTRAINT [D_Department_IsDeleted] DEFAULT (0) FOR [IsDeleted];
 
 
 GO

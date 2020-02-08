@@ -13,5 +13,6 @@ namespace Recipes.Chain.Models
         public DateTime? ModifiedDate { get; set; }
         public int? CreatedByEmployeeKey { get; set; }
         public int? ModifiedByEmployeeKey { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
