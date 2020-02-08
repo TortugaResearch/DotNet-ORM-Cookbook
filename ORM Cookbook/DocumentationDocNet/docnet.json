@@ -58,7 +58,8 @@
       "Basic Stored Procedures": "BasicStoredProc.md"
     },
     "Auditing and history scenarios": {
-      "Audit Columns": "AuditColumns.md"
+      "Audit Columns": "AuditColumns.md",
+      "Soft Delete": "SoftDelete.md"
     }
   }
 }
