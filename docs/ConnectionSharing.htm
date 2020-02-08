@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Connection Sharing - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span></li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
+<li class="tocentry current"><a class="current" href="ConnectionSharing.htm">Connection Sharing</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Transactions.htm">Transactions</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Advancedscenarios.htm">Advanced scenarios</a></li> / <li><a href="ConnectionSharing.htm">Connection Sharing</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="connection-sharing">Connection Sharing<a class="headerlink" href="#connection-sharing" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to share a connection. This is especially important when combining two ORMs in the same transaction.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IConnectionSharingScenario&lt;TModel, TConnection, TTransaction, TState&gt;
+   where TModel : class, IEmployeeClassification, new()
+    where TConnection : DbConnection
+    where TTransaction : DbTransaction
+{
+    /// &lt;summary&gt;
+    /// Closes a previous opened connection.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;state&quot;&gt;ORM specific state such as a context/session&lt;/param&gt;
+    void CloseConnection(TState state);
+
+    /// &lt;summary&gt;
+    /// Closes a previous opened connection and transaction.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;state&quot;&gt;ORM specific state such as a context/session&lt;/param&gt;
+    void CloseConnectionAndTransaction(TState state);
+
+    /// &lt;summary&gt;
+    /// Open and return a connection that can be used by another ORM.
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;The open connection and any ORM-specific state such as a context/session.&lt;/returns&gt;
+    ConnectionResult&lt;TConnection, TState&gt; OpenConnection();
+
+    /// &lt;summary&gt;
+    /// Open and return a connection/transaction pair that can be used by another ORM.
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;The open connection/transaction pair and any ORM-specific state such as a context/session.&lt;/returns&gt;
+    ConnectionTransactionResult&lt;TConnection, TTransaction, TState&gt; OpenConnectionAndTransaction();
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its primary key, reusing an open connection.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;connection&quot;&gt;A open database connection&lt;/param&gt;
+    /// &lt;param name=&quot;transaction&quot;&gt;An open transaction. May be null.&lt;/param&gt;
+    TModel UseOpenConnection(TConnection connection, TTransaction? transaction, int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Returns a connection string.
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    /// &lt;remarks&gt;This should come directly from the config file, not the ORM.&lt;/remarks&gt;
+    string GetConnectionString();
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Not applicable, ADO.NET always works directly on raw connection/transaction objecsts.</p>
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ConnectionSharingScenario : IConnectionSharingScenario&lt;EmployeeClassification,
+    SqlConnection, SqlTransaction, IOpenDataSource&gt;
+{
+    readonly SqlServerDataSource m_DataSource;
+    readonly string m_ConnectionString;
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
+
+    public ConnectionSharingScenario(SqlServerDataSource dataSource, string connectionString)
+    {
+        m_ConnectionString = connectionString;
+        m_DataSource = dataSource;
+    }
+
+    public void CloseConnection(IOpenDataSource dataSource)
+    {
+        if (dataSource == null)
+            throw new ArgumentNullException(nameof(dataSource), $&quot;{nameof(dataSource)} is null.&quot;);
+
+        dataSource.Close();
+    }
+
+    public void CloseConnectionAndTransaction(IOpenDataSource dataSource)
+    {
+        if (dataSource == null)
+            throw new ArgumentNullException(nameof(dataSource), $&quot;{nameof(dataSource)} is null.&quot;);
+
+        dataSource.TryCommit();
+        dataSource.Close();
+    }
+
+    public string GetConnectionString()
+    {
+        return m_ConnectionString;
+    }
+
+    public ConnectionResult&lt;SqlConnection, IOpenDataSource&gt; OpenConnection()
+    {
+        var connection = m_DataSource.CreateConnection();
+        var openDataSource = m_DataSource.CreateOpenDataSource(connection);
+        return (connection, openDataSource);
+    }
+
+    public ConnectionTransactionResult&lt;SqlConnection, SqlTransaction, IOpenDataSource&gt;
+        OpenConnectionAndTransaction()
+    {
+        var connection = m_DataSource.CreateConnection();
+        var transaction = connection.BeginTransaction();
+        var openDataSource = m_DataSource.CreateOpenDataSource(connection, transaction);
+        return (connection, transaction, openDataSource);
+    }
+
+    public EmployeeClassification UseOpenConnection(SqlConnection connection, SqlTransaction? transaction,
+        int employeeClassificationKey)
+    {
+        var openDataSource = m_DataSource.CreateOpenDataSource(connection, transaction);
+        return openDataSource.GetByKey(TableName, employeeClassificationKey)
+            .ToObject&lt;EmployeeClassification&gt;().Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Not applicable, Dapper always works directly on raw connection/transaction objecsts.</p>
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ConnectionSharingScenario : IConnectionSharingScenario&lt;EmployeeClassification,
+    SqlConnection, SqlTransaction, OrmCookbookContext&gt;
+{
+    readonly string m_ConnectionString;
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ConnectionSharingScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory, string connectionString)
+    {
+        m_ConnectionString = connectionString;
+        CreateDbContext = dBContextFactory;
+    }
+
+    public void CloseConnection(OrmCookbookContext context)
+    {
+        if (context == null)
+            throw new ArgumentNullException(nameof(context), $&quot;{nameof(context)} is null.&quot;);
+
+        context.Dispose();
+    }
+
+    public void CloseConnectionAndTransaction(OrmCookbookContext context)
+    {
+        if (context == null)
+            throw new ArgumentNullException(nameof(context), $&quot;{nameof(context)} is null.&quot;);
+
+        var contextTransaction = context.Database.CurrentTransaction;
+        contextTransaction.Commit();
+        context.Dispose();
+    }
+
+    public string GetConnectionString()
+    {
+        return m_ConnectionString;
+    }
+
+    public ConnectionResult&lt;SqlConnection, OrmCookbookContext&gt; OpenConnection()
+    {
+        var context = CreateDbContext();
+        context.Database.Connection.Open(); //Force the connection open since we haven't used it yet.
+        var connection = (SqlConnection)context.Database.Connection;
+        return (connection, context);
+    }
+
+    public ConnectionTransactionResult&lt;SqlConnection, SqlTransaction, OrmCookbookContext&gt;
+        OpenConnectionAndTransaction()
+    {
+        var context = CreateDbContext();
+        var connection = (SqlConnection)context.Database.Connection;
+        var contextTransaction = context.Database.BeginTransaction();
+        var transaction = (SqlTransaction)contextTransaction.UnderlyingTransaction;
+        return (connection, transaction, context);
+    }
+
+    public EmployeeClassification UseOpenConnection(SqlConnection connection, SqlTransaction? transaction,
+        int employeeClassificationKey)
+    {
+        //Set contextOwnsConnection to false so the underlying connection will not be closed
+        using (var context = new OrmCookbookContext(connection, contextOwnsConnection: false))
+        {
+            if (transaction != null)
+                context.Database.UseTransaction(transaction);
+
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+        }
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ConnectionSharingScenario : IConnectionSharingScenario&lt;EmployeeClassification,
+    SqlConnection, SqlTransaction, OrmCookbookContext&gt;
+{
+    readonly string m_ConnectionString;
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ConnectionSharingScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory, string connectionString)
+    {
+        m_ConnectionString = connectionString;
+        CreateDbContext = dBContextFactory;
+    }
+
+    public void CloseConnection(OrmCookbookContext context)
+    {
+        if (context == null)
+            throw new ArgumentNullException(nameof(context), $&quot;{nameof(context)} is null.&quot;);
+
+        context.Dispose();
+    }
+
+    public void CloseConnectionAndTransaction(OrmCookbookContext context)
+    {
+        if (context == null)
+            throw new ArgumentNullException(nameof(context), $&quot;{nameof(context)} is null.&quot;);
+
+        context.Database.CommitTransaction();
+        context.Dispose();
+    }
+
+    public string GetConnectionString()
+    {
+        return m_ConnectionString;
+    }
+
+    public ConnectionResult&lt;SqlConnection, OrmCookbookContext&gt; OpenConnection()
+    {
+        var context = CreateDbContext();
+        context.Database.OpenConnection(); //Force the connection open since we haven't used it yet.
+        var connection = (SqlConnection)context.Database.GetDbConnection();
+        return (connection, context);
+    }
+
+    public ConnectionTransactionResult&lt;SqlConnection, SqlTransaction, OrmCookbookContext&gt;
+        OpenConnectionAndTransaction()
+    {
+        var context = CreateDbContext();
+        var connection = (SqlConnection)context.Database.GetDbConnection();
+        var contextTransaction = context.Database.BeginTransaction();
+        var transaction = (SqlTransaction)contextTransaction.GetDbTransaction();
+        return (connection, transaction, context);
+    }
+
+    public EmployeeClassification UseOpenConnection(SqlConnection connection, SqlTransaction? transaction,
+                int employeeClassificationKey)
+    {
+        var options = new DbContextOptionsBuilder&lt;OrmCookbookContext&gt;().UseSqlServer(connection).Options;
+        using (var context = new OrmCookbookContext(options))
+        {
+            if (transaction != null)
+                context.Database.UseTransaction(transaction);
+
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

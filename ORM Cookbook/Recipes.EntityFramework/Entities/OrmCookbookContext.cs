@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.Entity;
 
 namespace Recipes.EntityFramework.Entities
@@ -10,6 +11,10 @@ namespace Recipes.EntityFramework.Entities
         {
             Configuration.LazyLoadingEnabled = lazyLoadingEnabled;
         }
+
+        public OrmCookbookContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection) { }
+
 
         //Using "= null!;" to remove the compiler warning.
         //Assume that the DbContext constructor will populate these properties
