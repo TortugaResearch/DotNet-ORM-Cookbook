@@ -197,6 +197,12 @@
       "breadcrumbs": "Home / Stored procedure scenarios / Basic Stored Procedures",
       "keywords": "2 6 a Ado ADO as basic Basic BasicStoredProc BasicStoredProcScenario be below call can Chain class collection Core CountEmployeesByClassification cover CreateEmployeeClassification cs Dapper Database DB DbContext demonstrate EmployeeClassificationKeyHolder EmployeeClassificationWithCount Entities Entity EntityFrameworkCore even Framework Future GetEmployeeClassifications how HR IBasicStoredProcScenario if in interpreted is LINQ LinqToDB LLBLGen LLBLGenPro Multiple needed NET NHibernate of or OrmCookbookContext OrmCookbookDB Output parameter Pro procedures Procedures Programability Prototype receive receiver Recipes registered RepoDb results resultset Resultsets return Return returned row rows s scalar Scenario scenarios ServiceStack should shown single snippet sql stored Stored such TEmployeeClassification TEmployeeClassificationWithCount text that the The These This to To TODO topics Tortuga true use value values will",
       "title": "Basic Stored Procedures"
+    },
+    {
+      "location": "AuditColumns.htm",
+      "breadcrumbs": "Home / Auditing and history scenarios / Audit Columns",
+      "keywords": "1 6 a actual Ado ADO alert along altering an are at audit Audit AuditColumns AuditColumnsScenario be being Chain column columns Columns configured Core create created CreatedBy CreatedDate cs Dapper data dataSource DataSource DB demonstrate design does done each EF end ensure Entities Entity EntityFramework EntityFrameworkCore For Framework from generalize generated how IAuditableEntity IAuditColumnsScenario in inserted intentionally interface into is level LINQ list LLBLGen management manually merged method NET NHibernate not object of operation or OrmCookbookContextWithUser overide parameters pattern populated prevent Pro Prototype provide Recipes RepoDb requires SaveChanges Scenario scenarios ServiceStack snippet someone supplied supply TDepartment that the Then These This to To TODO Tortuga updated use user User usually values warning when will with WithUser",
+      "title": "Audit Columns"
     }
   ]
 }

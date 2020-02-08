@@ -54,6 +54,9 @@
     },
     "Stored procedure scenarios": {
       "Basic Stored Procedures": "BasicStoredProc.md"
+    },
+    "Auditing and history scenarios": {
+      "Audit Columns": "AuditColumns.md"
     }
   }
 }

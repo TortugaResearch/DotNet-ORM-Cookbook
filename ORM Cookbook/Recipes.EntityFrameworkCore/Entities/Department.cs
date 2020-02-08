@@ -20,5 +20,15 @@ namespace Recipes.EntityFrameworkCore.Entities
         [ForeignKey(nameof(DivisionKey))]
         [InverseProperty(nameof(Division.Department))]
         public virtual Division? DivisionKeyNavigation { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime? CreatedDate { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime? ModifiedDate { get; set; }
+
+        public int? CreatedByEmployeeKey { get; set; }
+
+        public int? ModifiedByEmployeeKey { get; set; }
     }
 }
