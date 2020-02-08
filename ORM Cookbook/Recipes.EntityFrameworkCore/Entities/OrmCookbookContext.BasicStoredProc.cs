@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Recipes.EntityFrameworkCore.Entities
 {
     partial class OrmCookbookContext : DbContext
     {
-#nullable disable //Assume that the DbContext constructor will populate these properties
-        public virtual DbSet<EmployeeClassificationKeyHolder> EmployeeClassificationKeyHolder { get; set; }
-        public virtual DbSet<EmployeeClassificationWithCount> EmployeeClassificationWithCount { get; set; }
-#nullable enable
+        //Using "= null!;" to remove the compiler warning.
+        //Assume that the DbContext constructor will populate these properties
+        public virtual DbSet<EmployeeClassificationKeyHolder> EmployeeClassificationKeyHolder { get; set; } = null!;
+
+        public virtual DbSet<EmployeeClassificationWithCount> EmployeeClassificationWithCount { get; set; } = null!;
 
         static void RegisterEntitiesForStoredProcedures(ModelBuilder modelBuilder)
         {
