@@ -194,7 +194,6 @@
 
 <p>The repository methods use raw SQL strings. All other ORMs internally generate the same code. </p>
 <h3 id="sql-server">SQL Server<a class="headerlink" href="#sql-server" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
-<p>To return a primary key from an <code>INSERT</code> statement, use <code>OUTPUT Inserted.EmployeeClassificationKey</code>.</p>
 <pre><code class="cs">public class SingleModelCrudScenario : SqlServerScenarioBase, ISingleModelCrudScenario&lt;EmployeeClassification&gt;
 {
     public SingleModelCrudScenario(string connectionString) : base(connectionString)
@@ -335,7 +334,6 @@
 </code></pre>
 
 <h3 id="postgresql">PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
-<p>To return a primary key from an <code>INSERT</code> statement, use <code>RETURNING EmployeeClassificationKey</code>.</p>
 <pre><code class="cs">public class SingleModelCrudPostgreSqlScenario : PostgreSqlScenarioBase, ISingleModelCrudScenario&lt;EmployeeClassification&gt;
 {
     public SingleModelCrudPostgreSqlScenario(string connectionString) : base(connectionString)

@@ -11,9 +11,7 @@ namespace Recipes.Chain
     public class Setup
     {
         internal static SqlServerDataSource PrimaryDataSource { get; private set; } = null!;
-        internal static PostgreSqlDataSource PostgreSqlDataSource { get; private set; } = null!;
         internal static string SqlServerConnectionString { get; private set; } = null!;
-        internal static string PostgreSqlConnectionString { get; private set; } = null!;
 
         [AssemblyCleanup]
         public static void AssemblyCleanup()
@@ -28,31 +26,19 @@ namespace Recipes.Chain
             SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
             PrimaryDataSource = new SqlServerDataSource(SqlServerConnectionString);
 
-            PostgreSqlConnectionString = configuration.GetSection("ConnectionStrings")["PostgreSqlTestDatabase"];
-            PostgreSqlDataSource = new PostgreSqlDataSource(PostgreSqlConnectionString);
-
             try
             {
-                (new Setup()).Warmup_SqlServer();
-                (new Setup()).Warmup_PostgreSql();
+                (new Setup()).Warmup();
             }
             catch { }
         }
 
         [TestMethod]
-        public void Warmup_SqlServer()
+        public void Warmup()
         {
             //Preload all of the database metadata to warmup the data source
             PrimaryDataSource.DatabaseMetadata.Preload();
             PrimaryDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
-        }
-
-        [TestMethod]
-        public void Warmup_PostgreSql()
-        {
-            //Preload all of the database metadata to warmup the data source
-            PostgreSqlDataSource.DatabaseMetadata.Preload();
-            PostgreSqlDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
         }
     }
 }
