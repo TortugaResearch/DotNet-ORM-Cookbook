@@ -31,6 +31,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Tortuga.Chain.CompiledMaterializers" Version="3.2.0" />
+    <PackageReference Include="Tortuga.Chain.PostgreSql" Version="3.2.1" />
     <PackageReference Include="Tortuga.Chain.SqlServer" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
   </ItemGroup>

@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Bulk Inserts - The .NET Core ORM Cookbook</title>
+    <title>Multiple Databases - The .NET Core ORM Cookbook</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="css/theme.css" type="text/css" />
     <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
@@ -49,7 +49,11 @@
 </li>
 <li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
 </li>
-<li class="tocentry current"><a class="current" href="BulkInsert.htm">Bulk Inserts</a>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
+<li class="tocentry"><a href="ConnectionSharing.htm">Connection Sharing</a>
+</li>
+<li class="tocentry current"><a class="current" href="MultipleDB.htm">Multiple Databases</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
@@ -76,10 +80,6 @@
 
 
 </ul>
-<li class="tocentry"><a href="ConnectionSharing.htm">Connection Sharing</a>
-</li>
-<li class="tocentry"><a href="MultipleDB.htm">Multiple Databases</a>
-</li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
 <li class="tocentry"><a href="Transactions.htm">Transactions</a>
@@ -116,167 +116,162 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="Advancedscenarios.htm">Advanced scenarios</a></li> / <li><a href="BulkInsert.htm">Bulk Inserts</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Advancedscenarios.htm">Advanced scenarios</a></li> / <li><a href="MultipleDB.htm">Multiple Databases</a></li></ul>
 					
                     </div>
                     <hr />
                 </div>
                 <div role="main">
                     <div class="section">
-<h1 id="bulk-inserts">Bulk Inserts<a class="headerlink" href="#bulk-inserts" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>This scenario demonstrate how to perform bulk inserts. In order to improve performance, this uses database-specific APIs rather than SQL. </p>
-<p>is used for large collections where SQL isn't appropriate.  operations on collections of 1,000 to 100,000 objects. Some ORMs require special handling for collections of this size. Others use the same pattern seen in .</p>
-<p>Smaller collections should be handled with a batch insert. This is described in <a href="MultipleCrud.htm">CRUD Operations on Multiple Objects</a> and <a href="LargeBatch.htm">Batch Inserts with Large Collections</a></p>
+<h1 id="multiple-databases">Multiple Databases<a class="headerlink" href="#multiple-databases" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to support multiple databases with the same code. For demonstration purposes, SQL Server and PostgreSQL will be used.</p>
 <h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public interface IBulkInsertScenario&lt;TEmployeeSimple&gt;
-   where TEmployeeSimple : class, IEmployeeSimple, new()
+<pre><code class="cs">public interface IMultipleDBScenario&lt;TModel&gt;
+   where TModel : class, IEmployeeClassification, new()
 {
     /// &lt;summary&gt;
-    /// Gets a collection of Employee rows by their name. Assume the name is not unique.
+    /// Create a new EmployeeClassification row, returning the new primary key.
     /// &lt;/summary&gt;
-    int CountByLastName(string lastName);
+    int Create(TModel classification);
 
     /// &lt;summary&gt;
-    /// Insert a large collection of Employee rows.
+    /// Delete a EmployeeClassification row using an object.
     /// &lt;/summary&gt;
-    void BulkInsert(IList&lt;TEmployeeSimple&gt; employees);
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Delete(TModel classification);
 
     /// &lt;summary&gt;
-    /// Insert a large collection of Employee rows using a DataTable.
+    /// Delete a EmployeeClassification row using its primary key.
     /// &lt;/summary&gt;
-    /// &lt;param name=&quot;employees&quot;&gt;&lt;/param&gt;
-    void BulkInsert(DataTable employees);
-}
-</code></pre>
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void DeleteByKey(int employeeClassificationKey);
 
-<p>For ORMs that do not support bulk inserts from objects, this mapping function is provided.</p>
-<pre><code class="cs">[SuppressMessage(&quot;Design&quot;, &quot;CA1000&quot;)]
-public static DataTable CopyToDataTable(IEnumerable&lt;IEmployeeSimple&gt; employees)
-{
-    if (employees == null || !employees.Any())
-        throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its name. Assume the name is unique.
+    /// &lt;/summary&gt;
+    TModel? FindByName(string employeeClassificationName);
 
-    var result = new DataTable();
-    result.Columns.Add(&quot;CellPhone&quot;, typeof(string));
-    result.Columns.Add(&quot;EmployeeClassificationKey&quot;, typeof(int));
-    result.Columns.Add(&quot;FirstName&quot;, typeof(string));
-    result.Columns.Add(&quot;MiddleName&quot;, typeof(string));
-    result.Columns.Add(&quot;LastName&quot;, typeof(string));
-    result.Columns.Add(&quot;OfficePhone&quot;, typeof(string));
-    result.Columns.Add(&quot;Title&quot;, typeof(string));
+    /// &lt;summary&gt;
+    /// Gets all EmployeeClassification rows.
+    /// &lt;/summary&gt;
+    IList&lt;TModel&gt; GetAll();
 
-    foreach (var employee in employees)
-    {
-        var row = result.NewRow();
-        row[&quot;CellPhone&quot;] = employee.CellPhone;
-        row[&quot;EmployeeClassificationKey&quot;] = employee.EmployeeClassificationKey;
-        row[&quot;FirstName&quot;] = employee.FirstName;
-        row[&quot;MiddleName&quot;] = employee.MiddleName;
-        row[&quot;LastName&quot;] = employee.LastName;
-        row[&quot;OfficePhone&quot;] = employee.OfficePhone;
-        row[&quot;Title&quot;] = employee.Title;
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its primary key.
+    /// &lt;/summary&gt;
+    TModel? GetByKey(int employeeClassificationKey);
 
-        result.Rows.Add(row);
-    }
-
-    return result;
+    /// &lt;summary&gt;
+    /// Update a EmployeeClassification row.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Update(TModel classification);
 }
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>ADO only supports bulk inserts from a DataTable.</p>
-<pre><code class="cs">public void BulkInsert(IList&lt;EmployeeSimple&gt; employees)
+<p>In order to support multiple databases with the same code, ADO.NET provides a <code>DbProviderFactory</code> implmentation for each database. This is used to create the connection, command, and parameter objects.</p>
+<pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
 {
-    if (employees == null || employees.Count == 0)
-        throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+    readonly DbProviderFactory m_ProviderFactory;
+    readonly string m_ConnectionString;
+    readonly DatabaseType m_DatabaseType;
 
-    var dataaTable = Utilities.CopyToDataTable(employees);
-
-    using (var con = OpenConnection())
-    using (var sbc = new SqlBulkCopy(con))
+    public MultipleDBScenario(string connectionString, DatabaseType databaseType)
     {
-        sbc.DestinationTableName = &quot;HR.Employee&quot;;
-        foreach (DataColumn? column in dataaTable.Columns)
-            sbc.ColumnMappings.Add(column!.ColumnName, column.ColumnName);
-        sbc.WriteToServer(dataaTable);
-    }
-}
+        m_ConnectionString = connectionString;
+        m_DatabaseType = databaseType;
 
-public void BulkInsert(DataTable employees)
-{
-    if (employees == null)
-        throw new ArgumentNullException(nameof(employees), $&quot;{nameof(employees)} is null.&quot;);
-
-    using (var con = OpenConnection())
-    using (var sbc = new SqlBulkCopy(con))
-    {
-        sbc.DestinationTableName = &quot;HR.Employee&quot;;
-        foreach (DataColumn? column in employees.Columns)
-            sbc.ColumnMappings.Add(column!.ColumnName, column.ColumnName);
-        sbc.WriteToServer(employees);
+        m_ProviderFactory = databaseType switch
+        {
+            DatabaseType.SqlServer =&gt; Microsoft.Data.SqlClient.SqlClientFactory.Instance,
+            DatabaseType.PostgreSql =&gt; Npgsql.NpgsqlFactory.Instance,
+            _ =&gt; throw new NotImplementedException()
+        };
     }
-}
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public void BulkInsert(IList&lt;EmployeeSimple&gt; employees)
+<p>In Chain, each named <code>DataSource</code> exposes database-specific functionality. For functionality that's common across all database, a set of interfaces are offered.</p>
+<ul>
+<li><code>IClass0DataSource</code>: Raw SQL only. </li>
+<li><code>IClass1DataSource</code>: CRUD operations. Database reflection.</li>
+<li><code>IClass2DataSource</code>: Functions and Stored procedures</li>
+</ul>
+<pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
 {
-    m_DataSource.InsertBulk(employees).Execute();
-}
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
+    readonly IClass1DataSource m_DataSource;
 
-public void BulkInsert(DataTable employees)
-{
-    m_DataSource.InsertBulk(EmployeeTableName, employees).Execute();
+    public MultipleDBScenario(IClass1DataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return m_DataSource.Insert(classification).ToInt32().Execute();
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Delete(classification).Execute();
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationName })
+            .ToObject().Execute();
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        return m_DataSource.From&lt;EmployeeClassification&gt;().ToCollection().Execute();
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey)
+            .ToObject&lt;EmployeeClassification&gt;().Execute();
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Update(classification).Execute();
+    }
 }
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>Dapper does not have support for bulk inserts.</p>
+<p>TODO</p>
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>Entity Framework does not have support for bulk inserts.</p>
+<p>TODO</p>
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>Entity Framework Core does not have support for bulk inserts.</p>
+<p>TODO</p>
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>LinqToDB only supports bulk inserts from a collection of objects.</p>
-<p>Note the use of <code>BulkCopyType.ProviderSpecific</code>.</p>
-<pre><code class="cs">public void BulkInsert(IList&lt;Employee&gt; employees)
-{
-    var options = new BulkCopyOptions() { BulkCopyType = BulkCopyType.ProviderSpecific };
-    using (var db = new OrmCookbook())
-        db.BulkCopy(options, employees);
-}
-
-public void BulkInsert(DataTable employees)
-{
-    Assert.Inconclusive(&quot;Bulk insert using a DataTable is not supported.&quot;);
-}
-</code></pre>
-
-<p>For more information see <a href="https://linq2db.github.io/articles/sql/Bulk-Copy.html" target="_blank">Bulk Copy (Bulk Insert)</a></p>
+<p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>LLBLGen Pro does not have support for bulk inserts.</p>
+<p>TODO</p>
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>NHibernate does not have support for bulk inserts.</p>
+<p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public void BulkInsert(IList&lt;EmployeeSimple&gt; employees)
-{
-    if (employees == null || employees.Count == 0)
-        throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-    this.BulkInsert&lt;EmployeeSimple&gt;(employees);
-}
-
-public void BulkInsert(DataTable employees)
-{
-    if (employees == null)
-        throw new ArgumentNullException(nameof(employees), $&quot;{nameof(employees)} is null.&quot;);
-
-    this.BulkInsert&lt;EmployeeSimple&gt;(employees, rowState: DataRowState.Added);
-}
-</code></pre>
-
+<p>TODO</p>
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>ServiceStack does not have support for bulk inserts.</p>
+<p>TODO</p>
 
                     </div>
                 </div>
