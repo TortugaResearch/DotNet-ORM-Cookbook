@@ -11,7 +11,6 @@ namespace Recipes.EntityFramework.Entities
         public OrmCookbookContextWithUser(string nameOrConnectionString, bool lazyLoadingEnabled, User user)
     : base(nameOrConnectionString, lazyLoadingEnabled)
         {
-            Configuration.LazyLoadingEnabled = lazyLoadingEnabled;
             m_User = user;
         }
 
