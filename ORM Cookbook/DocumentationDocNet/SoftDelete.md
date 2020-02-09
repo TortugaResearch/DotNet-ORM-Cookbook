@@ -22,11 +22,23 @@ TODO
 
 ## Entity Framework 6
 
-TODO
+To generalize soft delete support in EF 6, create an interface with the soft delete column(s). Then overide the `SaveChanges` method to provide the values.
+
+For the select operations, you'll also need to manually filter out deleted columns. 
+
+@snippet cs [..\Recipes.EntityFramework\Entities\ISoftDeletable.cs] ISoftDeletable
+
+@snippet cs [..\Recipes.EntityFramework\Entities\OrmCookbookContextWithSoftDelete.cs] SaveChanges()
+
+@snippet cs [..\Recipes.EntityFramework\SoftDelete\SoftDeleteScenario.cs] SoftDeleteScenario
+
+@alert warning
+This design pattern is only a partial solution. When including related objects, you'll also need to filter out those deleted rows. See https://github.com/Grauenwolf/DotNet-ORM-Cookbook/issues/229 for alternate implementations.
+@end
 
 ## Entity Framework Core
 
-To generalize audit column management in EF Core, create an interface with the soft delete column(s). Then overide the `SaveChanges` method to provide the values.
+To generalize soft delete support in EF Core, create an interface with the soft delete column(s). Then overide the `SaveChanges` method to provide the values.
 
 For the select operations, you'll also need to add a `HasQueryFilter` for each entity that supported soft deletes.
 

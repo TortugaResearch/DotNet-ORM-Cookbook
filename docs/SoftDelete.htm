@@ -225,9 +225,102 @@
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
-<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>To generalize audit column management in EF Core, create an interface with the soft delete column(s). Then overide the <code>SaveChanges</code> method to provide the values.</p>
+<p>To generalize soft delete support in EF 6, create an interface with the soft delete column(s). Then overide the <code>SaveChanges</code> method to provide the values.</p>
+<p>For the select operations, you'll also need to manually filter out deleted columns. </p>
+<pre><code class="cs">public interface ISoftDeletable
+{
+    bool IsDeleted { get; set; }
+}
+</code></pre>
+
+<pre><code class="cs">public override int SaveChanges()
+{
+    // Get deleted entries
+    var deletedEntryCollection = ChangeTracker.Entries&lt;ISoftDeletable&gt;()
+        .Where(p =&gt; p.State == EntityState.Deleted);
+
+    // Set flags on deleted entries
+    foreach (var entry in deletedEntryCollection)
+    {
+        entry.State = EntityState.Modified;
+        entry.Entity.IsDeleted = true;
+    }
+
+    return base.SaveChanges();
+}
+</code></pre>
+
+<pre><code class="cs">public class SoftDeleteScenario : ISoftDeleteScenario&lt;Department&gt;
+{
+    private Func&lt;OrmCookbookContextWithSoftDelete&gt; CreateDbContext;
+    private Func&lt;OrmCookbookContext&gt; CreateBypassDbContext;
+
+    public SoftDeleteScenario(Func&lt;OrmCookbookContextWithSoftDelete&gt; dBContextFactory, Func&lt;OrmCookbookContext&gt; bypassContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+        CreateBypassDbContext = bypassContextFactory;
+    }
+
+    public int CreateDepartment(Department department)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Department.Add(department);
+            context.SaveChanges();
+            return department.DepartmentKey;
+        }
+    }
+
+    public void DeleteDepartment(Department department)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Entry(department).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public Department? GetDepartment(int departmentKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Department
+                .Where(d =&gt; !d.IsDeleted) //Removed deleted rows
+                .Where(d =&gt; d.DepartmentKey == departmentKey) //Any additional filtering
+                .SingleOrDefault();
+    }
+
+    public Department? GetDepartmentIgnoringIsDeleted(int departmentKey)
+    {
+        using (var context = CreateBypassDbContext())
+            return context.Department.Find(departmentKey);
+    }
+
+    public void UndeleteDepartment(int departmentKey)
+    {
+        using (var context = CreateDbContext())
+            context.Database.ExecuteSqlCommand(&quot;UPDATE HR.Department SET IsDeleted = 0 WHERE DepartmentKey = @p0&quot;, departmentKey);
+    }
+
+    public void UpdateDepartment(Department department)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(department).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<div class="alert alert-warning"><span class="alert-title"><i class="fa fa-warning"></i> Warning!</span><p>This design pattern is only a partial solution. When including related objects, you'll also need to filter out those deleted rows. See https://github.com/Grauenwolf/DotNet-ORM-Cookbook/issues/229 for alternate implementations.</p>
+</div><h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To generalize soft delete support in EF Core, create an interface with the soft delete column(s). Then overide the <code>SaveChanges</code> method to provide the values.</p>
 <p>For the select operations, you'll also need to add a <code>HasQueryFilter</code> for each entity that supported soft deletes.</p>
 <pre><code class="cs">public interface ISoftDeletable
 {
