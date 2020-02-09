@@ -9,7 +9,7 @@ namespace Recipes.Ado.Joins
     {
         protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
         {
-            return new JoinsScenario(Setup.ConnectionString);
+            return new JoinsScenario(Setup.SqlServerConnectionString);
         }
     }
 }

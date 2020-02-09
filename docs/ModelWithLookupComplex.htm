@@ -254,7 +254,7 @@ FROM HR.Employee e
 </code></pre>
 
 <p>Likewise, a database view was used to join the Employee table with its lookup table(s).</p>
-<pre><code class="cs">    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : SqlServerScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
     {
         public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
         { }

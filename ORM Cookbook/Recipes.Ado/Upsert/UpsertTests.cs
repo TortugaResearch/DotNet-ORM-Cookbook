@@ -9,7 +9,7 @@ namespace Recipes.Ado.Upsert
     {
         protected override IUpsertScenario<Division> GetScenario()
         {
-            return new UpsertScenario(Setup.ConnectionString);
+            return new UpsertScenario(Setup.SqlServerConnectionString);
         }
     }
 }

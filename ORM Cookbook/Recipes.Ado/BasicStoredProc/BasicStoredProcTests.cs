@@ -9,7 +9,7 @@ namespace Recipes.Ado.BasicStoredProc
     {
         protected override IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount> GetScenario()
         {
-            return new BasicStoredProcScenario(Setup.ConnectionString);
+            return new BasicStoredProcScenario(Setup.SqlServerConnectionString);
         }
     }
 }

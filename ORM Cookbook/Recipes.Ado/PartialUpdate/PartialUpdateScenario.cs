@@ -5,7 +5,7 @@ using System;
 
 namespace Recipes.Ado.PartialUpdate
 {
-    public class PartialUpdateScenario : ScenarioBase, IPartialUpdateScenario<EmployeeClassification>
+    public class PartialUpdateScenario : SqlServerScenarioBase, IPartialUpdateScenario<EmployeeClassification>
     {
         public PartialUpdateScenario(string connectionString) : base(connectionString)
         { }

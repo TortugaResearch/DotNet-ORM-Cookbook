@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Recipes.Ado.ModelWithChildren
 {
-    public class ModelWithChildrenScenario : ScenarioBase, IModelWithChildrenScenario<ProductLine, Product>
+    public class ModelWithChildrenScenario : SqlServerScenarioBase, IModelWithChildrenScenario<ProductLine, Product>
     {
         public ModelWithChildrenScenario(string connectionString) : base(connectionString)
         { }

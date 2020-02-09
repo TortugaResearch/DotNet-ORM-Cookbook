@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Recipes.Ado.SingleModelCrudAsync
 {
-    public class SingleModelCrudAsyncScenario : ScenarioBase, ISingleModelCrudAsyncScenario<EmployeeClassification>
+    public class SingleModelCrudAsyncScenario : SqlServerScenarioBase, ISingleModelCrudAsyncScenario<EmployeeClassification>
     {
         public SingleModelCrudAsyncScenario(string connectionString) : base(connectionString)
         { }

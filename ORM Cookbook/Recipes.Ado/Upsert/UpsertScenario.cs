@@ -5,7 +5,7 @@ using System;
 
 namespace Recipes.Ado.Upsert
 {
-    public class UpsertScenario : ScenarioBase, IUpsertScenario<Division>
+    public class UpsertScenario : SqlServerScenarioBase, IUpsertScenario<Division>
     {
         public UpsertScenario(string connectionString) : base(connectionString)
         { }

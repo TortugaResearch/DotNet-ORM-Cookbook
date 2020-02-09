@@ -154,7 +154,7 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>While there is an open transaction against a connection, all commands must be explcitly provided with the transaction object. </p>
-<pre><code class="cs">public class TransactionsScenario : ScenarioBase, ITransactionsScenario&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TransactionsScenario : SqlServerScenarioBase, ITransactionsScenario&lt;EmployeeClassification&gt;
 {
     public TransactionsScenario(string connectionString) : base(connectionString)
     { }

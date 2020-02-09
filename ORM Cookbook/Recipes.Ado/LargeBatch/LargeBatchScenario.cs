@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Recipes.Ado.LargeBatch
 {
-    public class LargeBatchScenario : ScenarioBase, ILargeBatchScenario<EmployeeSimple>
+    public class LargeBatchScenario : SqlServerScenarioBase, ILargeBatchScenario<EmployeeSimple>
     {
         public LargeBatchScenario(string connectionString) : base(connectionString)
         { }

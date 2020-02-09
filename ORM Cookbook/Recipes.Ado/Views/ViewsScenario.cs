@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.Views
 {
-    public class ViewsScenario : ScenarioBase, IViewsScenario<EmployeeDetail, EmployeeSimple>
+    public class ViewsScenario : SqlServerScenarioBase, IViewsScenario<EmployeeDetail, EmployeeSimple>
     {
         public ViewsScenario(string connectionString) : base(connectionString)
         { }

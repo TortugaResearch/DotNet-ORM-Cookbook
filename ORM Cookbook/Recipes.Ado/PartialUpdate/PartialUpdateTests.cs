@@ -9,7 +9,7 @@ namespace Recipes.Ado.PartialUpdate
     {
         protected override IPartialUpdateScenario<EmployeeClassification> GetScenario()
         {
-            return new PartialUpdateScenario(Setup.ConnectionString);
+            return new PartialUpdateScenario(Setup.SqlServerConnectionString);
         }
     }
 }

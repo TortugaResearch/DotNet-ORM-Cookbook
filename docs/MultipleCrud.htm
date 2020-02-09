@@ -171,7 +171,7 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class MultipleCrudScenario : ScenarioBase, IMultipleCrudScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class MultipleCrudScenario : SqlServerScenarioBase, IMultipleCrudScenario&lt;EmployeeSimple&gt;
     {
         public MultipleCrudScenario(string connectionString) : base(connectionString)
         { }
