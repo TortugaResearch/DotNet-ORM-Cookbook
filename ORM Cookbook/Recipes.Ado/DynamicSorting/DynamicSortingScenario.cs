@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Recipes.Ado.DynamicSorting
 {
-    public class DynamicSortingScenario : ScenarioBase, IDynamicSortingScenario<EmployeeSimple>
+    public class DynamicSortingScenario : SqlServerScenarioBase, IDynamicSortingScenario<EmployeeSimple>
     {
         public DynamicSortingScenario(string connectionString) : base(connectionString)
         { }

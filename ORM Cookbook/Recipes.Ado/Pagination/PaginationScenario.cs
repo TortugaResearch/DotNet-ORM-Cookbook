@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Recipes.Ado.Pagination
 {
-    public class PaginationScenario : ScenarioBase, IPaginationScenario<EmployeeSimple>
+    public class PaginationScenario : SqlServerScenarioBase, IPaginationScenario<EmployeeSimple>
     {
         public PaginationScenario(string connectionString) : base(connectionString)
         { }

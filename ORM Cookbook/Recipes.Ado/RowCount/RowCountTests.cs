@@ -9,7 +9,7 @@ namespace Recipes.Ado.RowCount
     {
         protected override IRowCountScenario<EmployeeSimple> GetScenario()
         {
-            return new RowCountScenario(Setup.ConnectionString);
+            return new RowCountScenario(Setup.SqlServerConnectionString);
         }
     }
 }

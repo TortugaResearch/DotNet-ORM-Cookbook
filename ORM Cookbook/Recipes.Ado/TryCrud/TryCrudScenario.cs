@@ -6,7 +6,7 @@ using System.Data;
 
 namespace Recipes.Ado.TryCrud
 {
-    public class TryCrudScenario : ScenarioBase, ITryCrudScenario<EmployeeClassification>
+    public class TryCrudScenario : SqlServerScenarioBase, ITryCrudScenario<EmployeeClassification>
     {
         public TryCrudScenario(string connectionString) : base(connectionString)
         { }

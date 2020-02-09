@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.SingleColumn
 {
-    public class SingleColumnScenario : ScenarioBase, ISingleColumnScenario
+    public class SingleColumnScenario : SqlServerScenarioBase, ISingleColumnScenario
     {
         public SingleColumnScenario(string connectionString) : base(connectionString)
         { }

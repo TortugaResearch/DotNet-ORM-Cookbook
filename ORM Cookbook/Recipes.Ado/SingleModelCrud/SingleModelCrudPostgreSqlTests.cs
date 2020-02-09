@@ -5,11 +5,11 @@ using Recipes.SingleModelCrud;
 namespace Recipes.Ado.SingleModelCrud
 {
     [TestClass]
-    public class SingleModelCrudTests : SingleModelCrudTests<EmployeeClassification>
+    public class SingleModelCrudPostgreSqlTests : SingleModelCrudTests<EmployeeClassification>
     {
         protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudScenario(Setup.SqlServerConnectionString);
+            return new SingleModelCrudPostgreSqlScenario(Setup.PostgreSqlConnectionString);
         }
     }
 }

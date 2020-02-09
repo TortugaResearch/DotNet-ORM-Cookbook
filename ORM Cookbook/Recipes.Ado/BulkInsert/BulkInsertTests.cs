@@ -9,7 +9,7 @@ namespace Recipes.Ado.BulkInsert
     {
         protected override IBulkInsertScenario<EmployeeSimple> GetScenario()
         {
-            return new BulkInsertScenario(Setup.ConnectionString);
+            return new BulkInsertScenario(Setup.SqlServerConnectionString);
         }
     }
 }

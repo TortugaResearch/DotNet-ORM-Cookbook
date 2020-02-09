@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.Joins
 {
-    public class JoinsScenario : ScenarioBase, IJoinsScenario<EmployeeDetail, EmployeeSimple>
+    public class JoinsScenario : SqlServerScenarioBase, IJoinsScenario<EmployeeDetail, EmployeeSimple>
     {
         public JoinsScenario(string connectionString) : base(connectionString)
         { }

@@ -9,7 +9,7 @@ namespace Recipes.Ado.Transactions
     {
         protected override ITransactionsScenario<EmployeeClassification> GetScenario()
         {
-            return new TransactionsScenario(Setup.ConnectionString);
+            return new TransactionsScenario(Setup.SqlServerConnectionString);
         }
     }
 }

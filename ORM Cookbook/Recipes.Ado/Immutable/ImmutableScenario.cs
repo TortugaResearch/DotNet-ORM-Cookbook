@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 
 namespace Recipes.Ado.Immutable
 {
-    public class ImmutableScenario : ScenarioBase, IImmutableScenario<ReadOnlyEmployeeClassification>
+    public class ImmutableScenario : SqlServerScenarioBase, IImmutableScenario<ReadOnlyEmployeeClassification>
     {
         public ImmutableScenario(string connectionString) : base(connectionString)
         { }

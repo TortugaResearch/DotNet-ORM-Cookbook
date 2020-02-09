@@ -10,6 +10,10 @@ Dapper supports any database that offers an ADO.NET provider.
 
 ADO.NET requires the writing of SQL, which is often database specific.
 
+@alert warning
+Unless otherwise indicated, all examples of SQL are for SQL Server.
+@end
+
 ## Libraries
 
 * [ADO.NET](ADO.htm#libraries) Database Specific Provider 

@@ -6,7 +6,7 @@ using System.Data;
 
 namespace Recipes.Ado.Transactions
 {
-    public class TransactionsScenario : ScenarioBase, ITransactionsScenario<EmployeeClassification>
+    public class TransactionsScenario : SqlServerScenarioBase, ITransactionsScenario<EmployeeClassification>
     {
         public TransactionsScenario(string connectionString) : base(connectionString)
         { }

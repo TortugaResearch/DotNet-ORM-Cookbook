@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Npgsql;
 using Recipes.Ado.Models;
 using Recipes.SingleModelCrud;
 using System;
@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.SingleModelCrud
 {
-    public class SingleModelCrudScenario : SqlServerScenarioBase, ISingleModelCrudScenario<EmployeeClassification>
+    public class SingleModelCrudPostgreSqlScenario : PostgreSqlScenarioBase, ISingleModelCrudScenario<EmployeeClassification>
     {
-        public SingleModelCrudScenario(string connectionString) : base(connectionString)
+        public SingleModelCrudPostgreSqlScenario(string connectionString) : base(connectionString)
         { }
 
         public int Create(EmployeeClassification classification)
@@ -17,11 +17,11 @@ namespace Recipes.Ado.SingleModelCrud
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
             const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                        OUTPUT Inserted.EmployeeClassificationKey
-                        VALUES(@EmployeeClassificationName )";
+                        VALUES(@EmployeeClassificationName )
+                        RETURNING EmployeeClassificationKey";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var cmd = new NpgsqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
                 return (int)cmd.ExecuteScalar();
@@ -33,10 +33,10 @@ namespace Recipes.Ado.SingleModelCrud
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            const string sql = @"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var cmd = new NpgsqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
                 cmd.ExecuteNonQuery();
@@ -45,10 +45,10 @@ namespace Recipes.Ado.SingleModelCrud
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            const string sql = @"DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
+            const string sql = @"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var cmd = new NpgsqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
                 cmd.ExecuteNonQuery();
@@ -62,7 +62,7 @@ namespace Recipes.Ado.SingleModelCrud
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var cmd = new NpgsqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", employeeClassificationName);
                 using (var reader = cmd.ExecuteReader())
@@ -86,7 +86,7 @@ namespace Recipes.Ado.SingleModelCrud
             var result = new List<EmployeeClassification>();
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var cmd = new NpgsqlCommand(sql, con))
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -108,7 +108,7 @@ namespace Recipes.Ado.SingleModelCrud
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var cmd = new NpgsqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
                 using (var reader = cmd.ExecuteReader())
@@ -135,7 +135,7 @@ namespace Recipes.Ado.SingleModelCrud
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var cmd = new NpgsqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationKey", classification.EmployeeClassificationKey);
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);

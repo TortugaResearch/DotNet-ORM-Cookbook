@@ -4,7 +4,7 @@ using System.Data;
 
 namespace Recipes.Ado.PopulateDataTable
 {
-    public class PopulateDataTableScenario : ScenarioBase, IPopulateDataTableScenario
+    public class PopulateDataTableScenario : SqlServerScenarioBase, IPopulateDataTableScenario
     {
         public PopulateDataTableScenario(string connectionString) : base(connectionString)
         { }

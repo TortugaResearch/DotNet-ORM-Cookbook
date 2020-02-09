@@ -204,7 +204,7 @@ BEGIN
     RETURN 0;
 END;
 </pre><h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class BasicStoredProcScenario : ScenarioBase,
+<pre><code class="cs">public class BasicStoredProcScenario : SqlServerScenarioBase,
     IBasicStoredProcScenario&lt;EmployeeClassification, EmployeeClassificationWithCount&gt;
 {
     public BasicStoredProcScenario(string connectionString) : base(connectionString)

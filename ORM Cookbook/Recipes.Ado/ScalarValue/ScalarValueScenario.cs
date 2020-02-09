@@ -4,7 +4,7 @@ using System;
 
 namespace Recipes.Ado.ScalarValue
 {
-    public class ScalarValueScenario : ScenarioBase, IScalarValueScenario
+    public class ScalarValueScenario : SqlServerScenarioBase, IScalarValueScenario
     {
         public ScalarValueScenario(string connectionString) : base(connectionString)
         { }

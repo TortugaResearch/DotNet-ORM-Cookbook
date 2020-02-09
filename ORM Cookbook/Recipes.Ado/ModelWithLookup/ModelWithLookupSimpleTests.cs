@@ -9,7 +9,7 @@ namespace Recipes.Ado.ModelWithLookup
     {
         protected override IModelWithLookupSimpleScenario<EmployeeSimple> GetScenario()
         {
-            return new ModelWithLookupSimpleScenario(Setup.ConnectionString);
+            return new ModelWithLookupSimpleScenario(Setup.SqlServerConnectionString);
         }
     }
 }

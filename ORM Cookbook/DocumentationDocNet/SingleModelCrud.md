@@ -15,7 +15,17 @@ With ADO.NET, the model does not actually participate in database operations so 
 
 The repository methods use raw SQL strings. All other ORMs internally generate the same code. 
 
+### SQL Server
+
+To return a primary key from an `INSERT` statement, use `OUTPUT Inserted.EmployeeClassificationKey`.
+
 @snippet cs [../Recipes.Ado/SingleModelCrud/SingleModelCrudScenario.cs] SingleModelCrudScenario
+
+### PostgreSQL
+
+To return a primary key from an `INSERT` statement, use `RETURNING EmployeeClassificationKey`.
+
+@snippet cs [../Recipes.Ado/SingleModelCrud/SingleModelCrudPostgreSqlScenario.cs] SingleModelCrudPostgreSqlScenario
 
 ## Chain
 

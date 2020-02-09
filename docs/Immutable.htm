@@ -173,7 +173,7 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Since ADO doesn't directly interact with models, no changes are needed for immutable objects other than to call a constructor instead of setting individual properties.</p>
-<pre><code class="cs">public class ImmutableScenario : ScenarioBase, IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+<pre><code class="cs">public class ImmutableScenario : SqlServerScenarioBase, IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     public ImmutableScenario(string connectionString) : base(connectionString)
     { }

@@ -8,7 +8,7 @@ namespace Recipes.Ado.SingleColumn
     {
         protected override ISingleColumnScenario GetScenario()
         {
-            return new SingleColumnScenario(Setup.ConnectionString);
+            return new SingleColumnScenario(Setup.SqlServerConnectionString);
         }
     }
 }

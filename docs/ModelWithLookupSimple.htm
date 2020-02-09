@@ -247,7 +247,7 @@
 }
 </code></pre>
 
-<pre><code class="cs">    public class ModelWithLookupSimpleScenario : ScenarioBase, IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class ModelWithLookupSimpleScenario : SqlServerScenarioBase, IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
     {
         public ModelWithLookupSimpleScenario(string connectionString) : base(connectionString)
         { }

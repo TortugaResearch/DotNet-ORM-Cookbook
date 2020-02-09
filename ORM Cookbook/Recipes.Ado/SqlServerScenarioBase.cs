@@ -6,11 +6,11 @@ namespace Recipes.Ado
     /// <summary>
     /// Base class containing common code used by all ADO scenarios.
     /// </summary>
-    public abstract class ScenarioBase
+    public abstract class SqlServerScenarioBase
     {
         readonly string m_ConnectionString;
 
-        public ScenarioBase(string connectionString)
+        public SqlServerScenarioBase(string connectionString)
         {
             m_ConnectionString = connectionString;
         }

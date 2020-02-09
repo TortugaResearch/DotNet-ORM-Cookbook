@@ -15,7 +15,7 @@ namespace Recipes.Ado.Immutable
 
         protected override IImmutableScenario<ReadOnlyEmployeeClassification> GetScenario()
         {
-            return new ImmutableScenario(Setup.ConnectionString);
+            return new ImmutableScenario(Setup.SqlServerConnectionString);
         }
 
         protected override ReadOnlyEmployeeClassification UpdateWithValues(ReadOnlyEmployeeClassification original, string name, bool isExempt, bool isEmployee)

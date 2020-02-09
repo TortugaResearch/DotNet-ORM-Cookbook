@@ -7,7 +7,7 @@ using System.Data;
 
 namespace Recipes.Ado.BulkInsert
 {
-    public class BulkInsertScenario : ScenarioBase, IBulkInsertScenario<EmployeeSimple>
+    public class BulkInsertScenario : SqlServerScenarioBase, IBulkInsertScenario<EmployeeSimple>
     {
         public BulkInsertScenario(string connectionString) : base(connectionString)
         { }
