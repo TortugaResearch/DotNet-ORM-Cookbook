@@ -48,10 +48,10 @@ namespace Recipes.Chain.MultipleDB
             return m_DataSource.From<EmployeeClassification>().ToCollection().Execute();
         }
 
-        public EmployeeClassification GetByKey(int employeeClassificationKey)
+        public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
             return m_DataSource.GetByKey(TableName, employeeClassificationKey)
-                .ToObject<EmployeeClassification>().Execute();
+                .ToObjectOrNull<EmployeeClassification>().Execute();
         }
 
         public void Update(EmployeeClassification classification)

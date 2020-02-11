@@ -23,7 +23,7 @@ namespace PostgreSqlDb
                 Execute("CREATE SCHEMA Production;");
                 Execute("CREATE SCHEMA Sales;");
                 //Execute("CREATE EXTENSION IF NOT EXISTS \"uuid - ossp\";");
-                Execute(@"CREATE TABLE HR.EmployeeClassification
+                Execute(@"CREATE TABLE ""HR.EmployeeClassification""
 (
     EmployeeClassificationKey INT NOT NULL GENERATED ALWAYS AS IDENTITY(START 1000)
         CONSTRAINT PK_EmployeeClassification PRIMARY KEY,
