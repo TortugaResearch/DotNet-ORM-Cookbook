@@ -43,12 +43,12 @@ namespace Recipes.Chain.SoftDelete
 
         public Department? GetDepartment(int departmentKey)
         {
-            return m_DataSource.GetByKey(TableName, departmentKey).ToObjectOrNull<Department>().Execute();
+            return m_DataSource.GetByKey<Department>(departmentKey).ToObjectOrNull().Execute();
         }
 
         public Department? GetDepartmentIgnoringIsDeleted(int departmentKey)
         {
-            return m_DataSourceBypassSoftDelete.GetByKey(TableName, departmentKey).ToObjectOrNull<Department>().Execute();
+            return m_DataSourceBypassSoftDelete.GetByKey<Department>(departmentKey).ToObjectOrNull().Execute();
         }
 
         public void UndeleteDepartment(int departmentKey)

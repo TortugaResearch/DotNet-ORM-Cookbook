@@ -426,7 +426,6 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
 {
-    const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
     const string TableName = &quot;HR.Employee&quot;;
     readonly SqlServerDataSource m_DataSource;
 
@@ -468,12 +467,12 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 
     public EmployeeSimple? GetByKey(int employeeKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeKey).ToObjectOrNull&lt;EmployeeSimple&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeSimple&gt;(employeeKey).ToObjectOrNull().Execute();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(ClassificationTableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ToObject().Execute();
     }
 
     public void Update(EmployeeSimple employee)

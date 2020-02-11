@@ -291,8 +291,6 @@ VALUES
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
 {
-    const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
-    const string EmployeeDetailViewName = &quot;HR.EmployeeDetail&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public ViewsScenario(SqlServerDataSource dataSource)
@@ -310,22 +308,22 @@ VALUES
 
     public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
     {
-        return m_DataSource.From(EmployeeDetailViewName, new { employeeClassificationKey }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeDetail&gt;(new { employeeClassificationKey }).ToCollection().Execute();
     }
 
     public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
     {
-        return m_DataSource.From(EmployeeDetailViewName, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeDetail&gt;(new { lastName }).ToCollection().Execute();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
-        return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeDetail&gt;(new { employeeKey }).ToObjectOrNull().Execute();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return m_DataSource.From(ClassificationTableName, new { employeeClassificationKey }).ToObject&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationKey }).ToObject().Execute();
     }
 }
 </code></pre>

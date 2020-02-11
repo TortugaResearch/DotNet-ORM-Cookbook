@@ -289,12 +289,12 @@
 <p>With Tortuga Chain, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
 <pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
 {
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public SingleModelCrudAsyncScenario(SqlServerDataSource dataSource)
     {
-        m_DataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource), $&quot;{nameof(dataSource)} is null.&quot;);
+        m_DataSource = dataSource ??
+            throw new ArgumentNullException(nameof(dataSource), $&quot;{nameof(dataSource)} is null.&quot;);
     }
 
     public Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
@@ -315,22 +315,27 @@
 
     public Task DeleteByKeyAsync(int employeeClassificationKey)
     {
-        return m_DataSource.DeleteByKey(TableName, employeeClassificationKey).ExecuteAsync();
+        return m_DataSource.DeleteByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ExecuteAsync();
     }
 
-    public Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+    public Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName,
+        CancellationToken cancellationToken = default)
     {
-        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationName }).ToObjectOrNull().ExecuteAsync(cancellationToken);
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationName })
+            .ToObjectOrNull().ExecuteAsync(cancellationToken);
     }
 
     public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await m_DataSource.From&lt;EmployeeClassification&gt;().ToCollection().ExecuteAsync(cancellationToken).ConfigureAwait(false);
+        return await m_DataSource.From&lt;EmployeeClassification&gt;().ToCollection().ExecuteAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
-    public Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+    public Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey,
+        CancellationToken cancellationToken = default)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull&lt;EmployeeClassification&gt;().ExecuteAsync(cancellationToken);
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ToObjectOrNull()
+            .ExecuteAsync(cancellationToken);
     }
 
     public Task UpdateAsync(EmployeeClassification classification)
