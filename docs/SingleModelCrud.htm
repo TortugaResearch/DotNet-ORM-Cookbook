@@ -194,6 +194,7 @@
 
 <p>The repository methods use raw SQL strings. All other ORMs internally generate the same code. </p>
 <h3 id="sql-server">SQL Server<a class="headerlink" href="#sql-server" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>To return a primary key from an <code>INSERT</code> statement, use <code>OUTPUT Inserted.EmployeeClassificationKey</code>.</p>
 <pre><code class="cs">public class SingleModelCrudScenario : SqlServerScenarioBase, ISingleModelCrudScenario&lt;EmployeeClassification&gt;
 {
     public SingleModelCrudScenario(string connectionString) : base(connectionString)
@@ -334,6 +335,7 @@
 </code></pre>
 
 <h3 id="postgresql">PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>To return a primary key from an <code>INSERT</code> statement, use <code>RETURNING EmployeeClassificationKey</code>.</p>
 <pre><code class="cs">public class SingleModelCrudPostgreSqlScenario : PostgreSqlScenarioBase, ISingleModelCrudScenario&lt;EmployeeClassification&gt;
 {
     public SingleModelCrudPostgreSqlScenario(string connectionString) : base(connectionString)
@@ -489,7 +491,6 @@ public class EmployeeClassification : IEmployeeClassification
 <p>Other information such as primary keys are read from the database's metadata.</p>
 <pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt;
 {
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public SingleModelCrudScenario(SqlServerDataSource dataSource)
@@ -515,7 +516,7 @@ public class EmployeeClassification : IEmployeeClassification
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+        m_DataSource.DeleteByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).Execute();
     }
 
     public EmployeeClassification FindByName(string employeeClassificationName)
@@ -531,8 +532,8 @@ public class EmployeeClassification : IEmployeeClassification
 
     public EmployeeClassification GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey)
-            .ToObject&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey)
+            .ToObject().Execute();
     }
 
     public void Update(EmployeeClassification classification)

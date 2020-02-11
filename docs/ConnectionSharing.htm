@@ -177,7 +177,6 @@
 {
     readonly SqlServerDataSource m_DataSource;
     readonly string m_ConnectionString;
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
 
     public ConnectionSharingScenario(SqlServerDataSource dataSource, string connectionString)
     {
@@ -227,7 +226,7 @@
         int employeeClassificationKey)
     {
         var openDataSource = m_DataSource.CreateOpenDataSource(connection, transaction);
-        return openDataSource.GetByKey(TableName, employeeClassificationKey)
+        return openDataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey)
             .ToObject&lt;EmployeeClassification&gt;().Execute();
     }
 }

@@ -338,7 +338,6 @@ OUTPUT Inserted.DivisionKey;&quot;;
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;Division&gt;
 {
-    const string DivisionTableName = &quot;HR.Division&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public UpsertScenario(SqlServerDataSource dataSource)
@@ -354,7 +353,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
 
     public Division GetByKey(int divisionKey)
     {
-        return m_DataSource.GetByKey(DivisionTableName, divisionKey).ToObject&lt;Division&gt;().Execute()!;
+        return m_DataSource.GetByKey&lt;Division&gt;(divisionKey).ToObject().Execute()!;
     }
 
     public int UpsertByName(Division division)

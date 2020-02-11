@@ -22,7 +22,9 @@ namespace Recipes.Chain
         [SuppressMessage("Usage", "CA1801")]
         public static void AssemblyInit(TestContext context)
         {
-            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
+            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json").Build();
+
             SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
             PrimaryDataSource = new SqlServerDataSource(SqlServerConnectionString);
 
@@ -38,7 +40,8 @@ namespace Recipes.Chain
         {
             //Preload all of the database metadata to warmup the data source
             PrimaryDataSource.DatabaseMetadata.Preload();
-            PrimaryDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
+            PrimaryDataSource.From("HR.EmployeeClassification", "1=0").Compile()
+                .ToObjectOrNull<EmployeeClassification>().Execute();
         }
     }
 }

@@ -325,7 +325,6 @@
 <p>To populate immutable objects, use either the <code>InferConstructor</code> option or a <code>.WithConstructor&lt;...&gt;</code> link to indicate that a non-default constructor should be used.</p>
 <pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public ImmutableScenario(SqlServerDataSource dataSource)
@@ -351,17 +350,20 @@
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
-        return m_DataSource.From&lt;ReadOnlyEmployeeClassification&gt;(new { employeeClassificationName }).ToObjectOrNull(RowOptions.InferConstructor | RowOptions.AllowEmptyResults).Execute();
+        return m_DataSource.From&lt;ReadOnlyEmployeeClassification&gt;(new { employeeClassificationName })
+            .ToObjectOrNull(RowOptions.InferConstructor).Execute();
     }
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
-        return m_DataSource.From&lt;ReadOnlyEmployeeClassification&gt;().ToImmutableArray(CollectionOptions.InferConstructor).Execute();
+        return m_DataSource.From&lt;ReadOnlyEmployeeClassification&gt;()
+            .ToImmutableArray(CollectionOptions.InferConstructor).Execute();
     }
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor).Execute();
+        return m_DataSource.GetByKey&lt;ReadOnlyEmployeeClassification&gt;(employeeClassificationKey)
+            .ToObjectOrNull&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor).Execute();
     }
 
     public void Update(ReadOnlyEmployeeClassification classification)

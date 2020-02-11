@@ -8,7 +8,6 @@ namespace Recipes.Chain.Immutable
 {
     public class ImmutableScenario : IImmutableScenario<ReadOnlyEmployeeClassification>
     {
-        const string TableName = "HR.EmployeeClassification";
         readonly SqlServerDataSource m_DataSource;
 
         public ImmutableScenario(SqlServerDataSource dataSource)
@@ -34,17 +33,20 @@ namespace Recipes.Chain.Immutable
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
         {
-            return m_DataSource.From<ReadOnlyEmployeeClassification>(new { employeeClassificationName }).ToObjectOrNull(RowOptions.InferConstructor | RowOptions.AllowEmptyResults).Execute();
+            return m_DataSource.From<ReadOnlyEmployeeClassification>(new { employeeClassificationName })
+                .ToObjectOrNull(RowOptions.InferConstructor).Execute();
         }
 
         public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
         {
-            return m_DataSource.From<ReadOnlyEmployeeClassification>().ToImmutableArray(CollectionOptions.InferConstructor).Execute();
+            return m_DataSource.From<ReadOnlyEmployeeClassification>()
+                .ToImmutableArray(CollectionOptions.InferConstructor).Execute();
         }
 
         public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull<ReadOnlyEmployeeClassification>(RowOptions.InferConstructor).Execute();
+            return m_DataSource.GetByKey<ReadOnlyEmployeeClassification>(employeeClassificationKey)
+                .ToObjectOrNull<ReadOnlyEmployeeClassification>(RowOptions.InferConstructor).Execute();
         }
 
         public void Update(ReadOnlyEmployeeClassification classification)

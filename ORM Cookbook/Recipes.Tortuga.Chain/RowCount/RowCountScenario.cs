@@ -8,7 +8,6 @@ namespace Recipes.Chain.RowCount
 {
     public class RowCountScenario : IRowCountScenario<EmployeeSimple>
     {
-        const string EmployeeTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public RowCountScenario(SqlServerDataSource dataSource)
@@ -18,12 +17,12 @@ namespace Recipes.Chain.RowCount
 
         public int EmployeeCount(string lastName)
         {
-            return (int)m_DataSource.From(EmployeeTableName, new { lastName }).AsCount().Execute();
+            return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
         }
 
         public int EmployeeCount()
         {
-            return (int)m_DataSource.From(EmployeeTableName).AsCount().Execute();
+            return (int)m_DataSource.From<EmployeeSimple>().AsCount().Execute();
         }
 
         public void InsertBatch(IList<EmployeeSimple> employees)

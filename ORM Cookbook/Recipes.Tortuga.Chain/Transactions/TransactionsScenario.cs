@@ -8,7 +8,6 @@ namespace Recipes.Chain.Transactions
 {
     public class TransactionsScenario : ITransactionsScenario<EmployeeClassification>
     {
-        const string TableName = "HR.EmployeeClassification";
         readonly SqlServerDataSource m_DataSource;
 
         public TransactionsScenario(SqlServerDataSource dataSource)
@@ -56,7 +55,7 @@ namespace Recipes.Chain.Transactions
 
         public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull<EmployeeClassification>().Execute();
+            return m_DataSource.GetByKey<EmployeeClassification>(employeeClassificationKey).ToObjectOrNull().Execute();
         }
     }
 }

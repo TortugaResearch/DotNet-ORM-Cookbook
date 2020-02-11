@@ -240,7 +240,6 @@
 <p>Unlike a normal <code>DataSource</code>, a <code>TransactionalDataSource</code> holds an open database connection and thus must be disposed after use.</p>
 <pre><code class="cs">public class TransactionsScenario : ITransactionsScenario&lt;EmployeeClassification&gt;
 {
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public TransactionsScenario(SqlServerDataSource dataSource)
@@ -288,7 +287,7 @@
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ToObjectOrNull().Execute();
     }
 }
 </code></pre>

@@ -201,12 +201,12 @@
 
     public Department? GetDepartment(int departmentKey)
     {
-        return m_DataSource.GetByKey(TableName, departmentKey).ToObjectOrNull&lt;Department&gt;().Execute();
+        return m_DataSource.GetByKey&lt;Department&gt;(departmentKey).ToObjectOrNull().Execute();
     }
 
     public Department? GetDepartmentIgnoringIsDeleted(int departmentKey)
     {
-        return m_DataSourceBypassSoftDelete.GetByKey(TableName, departmentKey).ToObjectOrNull&lt;Department&gt;().Execute();
+        return m_DataSourceBypassSoftDelete.GetByKey&lt;Department&gt;(departmentKey).ToObjectOrNull().Execute();
     }
 
     public void UndeleteDepartment(int departmentKey)
