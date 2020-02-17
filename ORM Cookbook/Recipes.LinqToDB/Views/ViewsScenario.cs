@@ -33,12 +33,6 @@ namespace Recipes.LinqToDB.Views
                 return db.EmployeeDetail.Where(x => x.LastName == lastName).ToList();
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var db = new OrmCookbook())
-                return db.EmployeeDetail.ToList();
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var db = new OrmCookbook())

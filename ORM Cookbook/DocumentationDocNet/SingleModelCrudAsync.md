@@ -38,6 +38,16 @@ Here is the full repository.
 
 @snippet cs [../Recipes.Dapper/SingleModelCrudAsync/SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
 
+@alert info
+The repository methods are not normally virtual. This was done so that they could be overridden with alternate implementations as shown below.
+@end
+
+### Dapper.Contrib
+
+The Dapper.Contrib library can elimiante the boilerplate for some common scenarios. However, it doesn't support a `CancellationToken` so it may not be appropriate for all use cases.
+
+
+@snippet cs [../Recipes.Dapper/SingleModelCrudAsync/SingleModelCrudAsyncScenarioContrib.cs] SingleModelCrudAsyncScenarioContrib
 
 ## Entity Framework 6
 

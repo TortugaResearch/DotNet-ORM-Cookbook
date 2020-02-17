@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using Recipes.Dapper.Models;
 using Recipes.Joins;
 using System;
@@ -18,14 +19,8 @@ namespace Recipes.Dapper.Joins
             if (employee == null)
                 throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
 
-            const string sql = @"INSERT INTO HR.Employee
-(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
-OUTPUT Inserted.EmployeeKey
-VALUES
-(@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);";
-
             using (var con = OpenConnection())
-                return con.ExecuteScalar<int>(sql, employee);
+                return (int)con.Insert(employee);
         }
 
         public IList<EmployeeDetail> FindByEmployeeClassificationKey(int employeeClassificationKey)
@@ -42,14 +37,6 @@ VALUES
 
             using (var con = OpenConnection())
                 return con.Query<EmployeeDetail>(sql, new { lastName }).ToList();
-        }
-
-        public IList<EmployeeDetail> GetAll()
-        {
-            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey";
-
-            using (var con = OpenConnection())
-                return con.Query<EmployeeDetail>(sql).ToList();
         }
 
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)

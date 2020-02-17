@@ -12,6 +12,10 @@ Most databases also implement their own ADO.NET provider.  that implements the A
 
 ADO.NET requires the writing of SQL, which is often database specific.
 
+@alert warning
+Unless otherwise indicated, all examples of SQL are for SQL Server.
+@end
+
 ## Libraries
 
 ADO.NET is incorporated into .NET Framework. This includes the SQL Server, OleDB, and ODBC libraries.
@@ -31,7 +35,11 @@ For .NET Core, you'll need the [System.Data.Common](https://www.nuget.org/packag
 
 No special setup is needed for ADO.NET beyond just a connection string. 
 
-@snippet cs [..\Recipes.Ado\ScenarioBase.cs] OpenConnection()
+@snippet cs [..\Recipes.Ado\SqlServerScenarioBase.cs] OpenConnection()
+
+The exact class names vary by database.
+
+@snippet cs [..\Recipes.Ado\PostgreSqlScenarioBase.cs] OpenConnection()
 
 For information on creating connection strings, try [The Connection Strings Reference](https://www.connectionstrings.com/).
 

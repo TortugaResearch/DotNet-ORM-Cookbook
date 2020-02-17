@@ -12,7 +12,6 @@ namespace Recipes.Chain.ConnectionSharing
     {
         readonly SqlServerDataSource m_DataSource;
         readonly string m_ConnectionString;
-        const string TableName = "HR.EmployeeClassification";
 
         public ConnectionSharingScenario(SqlServerDataSource dataSource, string connectionString)
         {
@@ -62,7 +61,7 @@ namespace Recipes.Chain.ConnectionSharing
             int employeeClassificationKey)
         {
             var openDataSource = m_DataSource.CreateOpenDataSource(connection, transaction);
-            return openDataSource.GetByKey(TableName, employeeClassificationKey)
+            return openDataSource.GetByKey<EmployeeClassification>(employeeClassificationKey)
                 .ToObject<EmployeeClassification>().Execute();
         }
     }

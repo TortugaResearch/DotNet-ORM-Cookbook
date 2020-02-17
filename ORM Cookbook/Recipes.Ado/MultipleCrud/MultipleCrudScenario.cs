@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Recipes.Ado.MultipleCrud
 {
-    public class MultipleCrudScenario : ScenarioBase, IMultipleCrudScenario<EmployeeSimple>
+    public class MultipleCrudScenario : SqlServerScenarioBase, IMultipleCrudScenario<EmployeeSimple>
     {
         public MultipleCrudScenario(string connectionString) : base(connectionString)
         { }

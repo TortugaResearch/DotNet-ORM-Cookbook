@@ -171,7 +171,7 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class MultipleCrudScenario : ScenarioBase, IMultipleCrudScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">    public class MultipleCrudScenario : SqlServerScenarioBase, IMultipleCrudScenario&lt;EmployeeSimple&gt;
     {
         public MultipleCrudScenario(string connectionString) : base(connectionString)
         { }
@@ -524,7 +524,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         public MultipleCrudScenario(string connectionString) : base(connectionString)
         { }
 
-        public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+        virtual public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
@@ -556,7 +556,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
                 return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
         }
 
-        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+        virtual public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
@@ -690,7 +690,7 @@ VALUES (@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone
             }
         }
 
-        public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+        virtual public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
@@ -729,6 +729,43 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
             }
         }
     }
+</code></pre>
+
+<div class="alert alert-info"><span class="alert-title"><i class="fa fa-info-circle"></i> Info</span><p>The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.</p>
+</div><h3 id="dapper.contrib">Dapper.Contrib<a class="headerlink" href="#dapper.contrib" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>The Dapper.Contrib library can elimiante the boilerplate for some common scenarios. </p>
+<pre><code class="cs">public class MultipleCrudScenarioContrib : MultipleCrudScenario
+{
+    public MultipleCrudScenarioContrib(string connectionString) : base(connectionString)
+    { }
+
+    override public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var con = OpenConnection())
+            con.Delete(employees);
+    }
+
+    override public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var con = OpenConnection())
+            con.Insert(employees);
+    }
+
+    override public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using (var con = OpenConnection())
+            con.Update(employees);
+    }
+}
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

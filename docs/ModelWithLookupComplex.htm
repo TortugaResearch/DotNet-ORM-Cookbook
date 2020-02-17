@@ -254,7 +254,7 @@ FROM HR.Employee e
 </code></pre>
 
 <p>Likewise, a database view was used to join the Employee table with its lookup table(s).</p>
-<pre><code class="cs">    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : SqlServerScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
     {
         public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
         { }
@@ -437,7 +437,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.</p>
 <p>Read operations must occur against a database view in order to get the properties from the child object. The <code>Decompose</code> attribute indicates that the child should be populated from the same view.</p>
-<pre><code class="cs">[Table(&quot;HR.EmployeeDetail&quot;)]
+<pre><code class="cs">[TableAndView(&quot;HR.Employee&quot;, ViewName = &quot;HR.EmployeeDetail&quot;)]
 public partial class EmployeeComplex
 {
     public string? CellPhone { get; set; }
@@ -470,9 +470,6 @@ public partial class EmployeeComplex
 
 <pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
 {
-    const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
-    const string WriteTableName = &quot;HR.Employee&quot;;
-
     readonly SqlServerDataSource m_DataSource;
 
     public ModelWithLookupComplexScenario(SqlServerDataSource dataSource)
@@ -486,7 +483,7 @@ public partial class EmployeeComplex
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
         //The object is mapped to the view, so we need to override the table we write to.
-        return m_DataSource.Insert(WriteTableName, employee).ToInt32().Execute();
+        return m_DataSource.Insert(employee).ToInt32().Execute();
     }
 
     public void Delete(EmployeeComplex employee)
@@ -495,12 +492,12 @@ public partial class EmployeeComplex
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
         //The object is mapped to the view, so we need to override the table we write to.
-        m_DataSource.Delete(WriteTableName, employee).Execute();
+        m_DataSource.Delete(employee).Execute();
     }
 
     public void DeleteByKey(int employeeKey)
     {
-        m_DataSource.DeleteByKey(WriteTableName, employeeKey).Execute();
+        m_DataSource.DeleteByKey&lt;EmployeeComplex&gt;(employeeKey).Execute();
     }
 
     public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
@@ -520,7 +517,7 @@ public partial class EmployeeComplex
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(ClassificationTableName, employeeClassificationKey).ToObject&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ToObject().Execute();
     }
 
     public void Update(EmployeeComplex employee)
@@ -529,7 +526,7 @@ public partial class EmployeeComplex
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
         //The object is mapped to the view, so we need to override the table we write to.
-        m_DataSource.Update(WriteTableName, employee).Execute();
+        m_DataSource.Update(employee).Execute();
     }
 }
 </code></pre>

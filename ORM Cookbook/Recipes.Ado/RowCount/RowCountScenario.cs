@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Recipes.Ado.RowCount
 {
-    public class RowCountScenario : ScenarioBase, IRowCountScenario<EmployeeSimple>
+    public class RowCountScenario : SqlServerScenarioBase, IRowCountScenario<EmployeeSimple>
     {
         public RowCountScenario(string connectionString) : base(connectionString)
         { }

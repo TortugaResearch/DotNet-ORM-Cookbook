@@ -12,5 +12,6 @@ namespace Recipes
         DateTime? ModifiedDate { get; set; }
         int? CreatedByEmployeeKey { get; set; }
         int? ModifiedByEmployeeKey { get; set; }
+        bool IsDeleted { get; set; }
     }
 }

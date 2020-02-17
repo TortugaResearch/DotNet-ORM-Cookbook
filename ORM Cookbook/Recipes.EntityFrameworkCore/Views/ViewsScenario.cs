@@ -41,12 +41,6 @@ namespace Recipes.EntityFrameworkCore.Views
                 return context.EmployeeDetail.Where(x => x.LastName == lastName).ToList();
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var context = CreateDbContext())
-                return context.EmployeeDetail.ToList();
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var context = CreateDbContext())

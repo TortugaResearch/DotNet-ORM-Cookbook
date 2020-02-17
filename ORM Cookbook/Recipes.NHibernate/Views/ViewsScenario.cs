@@ -46,14 +46,6 @@ namespace Recipes.NHibernate.Views
             }
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var session = m_SessionFactory.OpenStatelessSession())
-            {
-                return session.QueryOver<EmployeeDetail>().List();
-            }
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var session = m_SessionFactory.OpenStatelessSession())

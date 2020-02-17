@@ -154,7 +154,7 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>While there is an open transaction against a connection, all commands must be explcitly provided with the transaction object. </p>
-<pre><code class="cs">public class TransactionsScenario : ScenarioBase, ITransactionsScenario&lt;EmployeeClassification&gt;
+<pre><code class="cs">public class TransactionsScenario : SqlServerScenarioBase, ITransactionsScenario&lt;EmployeeClassification&gt;
 {
     public TransactionsScenario(string connectionString) : base(connectionString)
     { }
@@ -240,7 +240,6 @@
 <p>Unlike a normal <code>DataSource</code>, a <code>TransactionalDataSource</code> holds an open database connection and thus must be disposed after use.</p>
 <pre><code class="cs">public class TransactionsScenario : ITransactionsScenario&lt;EmployeeClassification&gt;
 {
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public TransactionsScenario(SqlServerDataSource dataSource)
@@ -288,7 +287,7 @@
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ToObjectOrNull().Execute();
     }
 }
 </code></pre>
@@ -349,12 +348,8 @@
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
-
         using (var con = OpenConnection())
-            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
+            return con.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
     }
 }
 </code></pre>

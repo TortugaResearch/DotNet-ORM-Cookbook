@@ -7,7 +7,6 @@ namespace Recipes.Chain.TryCrud
 {
     public class TryCrudScenario : ITryCrudScenario<EmployeeClassification>
     {
-        const string TableName = "HR.EmployeeClassification";
         readonly SqlServerDataSource m_DataSource;
 
         public TryCrudScenario(SqlServerDataSource dataSource)
@@ -25,14 +24,14 @@ namespace Recipes.Chain.TryCrud
 
         public void DeleteByKeyOrException(int employeeClassificationKey)
         {
-            var count = m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+            var count = m_DataSource.DeleteByKey<EmployeeClassification>(employeeClassificationKey).Execute();
             if (count == 0)
                 throw new MissingDataException();
         }
 
         public bool DeleteByKeyWithStatus(int employeeClassificationKey)
         {
-            return 1 == m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+            return 1 == m_DataSource.DeleteByKey<EmployeeClassification>(employeeClassificationKey).Execute();
         }
 
         public void DeleteOrException(EmployeeClassification classification)
@@ -55,22 +54,24 @@ namespace Recipes.Chain.TryCrud
 
         public EmployeeClassification FindByNameOrException(string employeeClassificationName)
         {
-            return m_DataSource.From(TableName, new { employeeClassificationName }).ToObject<EmployeeClassification>().Execute();
+            return m_DataSource.From<EmployeeClassification>(new { employeeClassificationName })
+                .ToObject().Execute();
         }
 
         public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
         {
-            return m_DataSource.From(TableName, new { employeeClassificationName }).ToObjectOrNull<EmployeeClassification>().Execute();
+            return m_DataSource.From<EmployeeClassification>(new { employeeClassificationName })
+                .ToObjectOrNull().Execute();
         }
 
         public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>().Execute();
+            return m_DataSource.GetByKey<EmployeeClassification>(employeeClassificationKey).ToObject().Execute();
         }
 
         public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObjectOrNull<EmployeeClassification>().Execute();
+            return m_DataSource.GetByKey<EmployeeClassification>(employeeClassificationKey).ToObjectOrNull().Execute();
         }
 
         public void UpdateOrException(EmployeeClassification classification)

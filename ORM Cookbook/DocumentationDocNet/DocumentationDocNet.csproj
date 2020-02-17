@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="SoftDelete.md" />
     <None Include="ConnectionSharing.md" />
     <None Include="AuditColumns.md" />
     <None Include="Chain.md" />
@@ -57,6 +58,7 @@
     <None Include="EFCore.md" />
     <None Include="BulkInsert.md" />
     <None Include="LargeBatch.md" />
+    <None Include="LinqToDB.md" />
     <None Include="NHibernate.md" />
     <None Include="Pagination.md" />
     <None Include="RowCount.md" />

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Recipes.Ado.Sorting
 {
-    public class SortingScenario : ScenarioBase, ISortingScenario<EmployeeSimple>
+    public class SortingScenario : SqlServerScenarioBase, ISortingScenario<EmployeeSimple>
     {
         public SortingScenario(string connectionString) : base(connectionString)
         { }

@@ -15,7 +15,17 @@ With ADO.NET, the model does not actually participate in database operations so 
 
 The repository methods use raw SQL strings. All other ORMs internally generate the same code. 
 
+### SQL Server
+
+To return a primary key from an `INSERT` statement, use `OUTPUT Inserted.EmployeeClassificationKey`.
+
 @snippet cs [../Recipes.Ado/SingleModelCrud/SingleModelCrudScenario.cs] SingleModelCrudScenario
+
+### PostgreSQL
+
+To return a primary key from an `INSERT` statement, use `RETURNING EmployeeClassificationKey`.
+
+@snippet cs [../Recipes.Ado/SingleModelCrud/SingleModelCrudPostgreSqlScenario.cs] SingleModelCrudPostgreSqlScenario
 
 ## Chain
 
@@ -34,6 +44,20 @@ Other information such as primary keys are read from the database's metadata.
 Dapper is essentially just ADO.NET with some helper methods to reduce the amount of boilerplate code.
 
 @snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenario.cs] SingleModelCrudScenario
+
+@alert info
+The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.
+@end
+
+### Dapper.Contrib
+
+The Dapper.Contrib library can elimiante the boilerplate for some common scenarios. 
+
+To enable it, models need to be decorated with `Table` and `Key` attributes. 
+
+@snippet cs [../Recipes.Dapper\Models\EmployeeClassification.cs] EmployeeClassification
+
+@snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenarioContrib.cs] SingleModelCrudScenarioContrib
 
 ## Entity Framework 6
 

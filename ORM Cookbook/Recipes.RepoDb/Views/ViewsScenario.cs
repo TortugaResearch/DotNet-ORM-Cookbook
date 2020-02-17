@@ -1,7 +1,9 @@
 ﻿using Recipes.RepoDb.Models;
 using Recipes.Views;
 using RepoDb;
+
 using RDB = RepoDb;
+
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -33,11 +35,6 @@ namespace Recipes.RepoDb.Views
         public IList<EmployeeDetail> FindByLastName(string lastName)
         {
             return Query<EmployeeDetail>(e => e.LastName == lastName).AsList();
-        }
-
-        public IList<EmployeeDetail> GetAll()
-        {
-            return QueryAll<EmployeeDetail>().AsList();
         }
 
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)

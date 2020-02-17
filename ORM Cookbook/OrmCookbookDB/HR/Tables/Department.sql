@@ -15,5 +15,8 @@
         REFERENCES HR.Employee (EmployeeKey),
     ModifiedByEmployeeKey INT NULL
         CONSTRAINT FK_Department_ModifiedByEmployeeKey
-        REFERENCES HR.Employee (EmployeeKey)
+        REFERENCES HR.Employee (EmployeeKey),
+    IsDeleted BIT NOT NULL
+        CONSTRAINT D_Department_IsDeleted
+            DEFAULT (0)
 );

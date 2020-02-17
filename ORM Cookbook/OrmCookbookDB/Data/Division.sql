@@ -36,7 +36,7 @@ VALUES
 (1, 'HR', 875000, 10.5, 20000, 12000, 15, '9:00'),
 (2, 'Accounting', null, null, null, null, null, null),
 (3, 'Sales', 2312000, 40.5, 65000, 1000, 60, '12:00'),
-(4, 'Manufactoring', 323000, 30, 24520000, 120000, 35, '6:00'),
+(4, 'Manufacturing', 323000, 30, 24520000, 120000, 35, '6:00'),
 (5, 'Engineering', 23000, 4, 25000, 32000, 8, '11:00');
 
 SET IDENTITY_INSERT HR.Division ON;

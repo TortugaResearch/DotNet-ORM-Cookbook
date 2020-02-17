@@ -8,8 +8,6 @@ namespace Recipes.Chain.Views
 {
     public class ViewsScenario : IViewsScenario<EmployeeDetail, EmployeeSimple>
     {
-        const string ClassificationTableName = "HR.EmployeeClassification";
-        const string EmployeeDetailViewName = "HR.EmployeeDetail";
         readonly SqlServerDataSource m_DataSource;
 
         public ViewsScenario(SqlServerDataSource dataSource)
@@ -27,27 +25,22 @@ namespace Recipes.Chain.Views
 
         public IList<EmployeeDetail> FindByEmployeeClassificationKey(int employeeClassificationKey)
         {
-            return m_DataSource.From(EmployeeDetailViewName, new { employeeClassificationKey }).ToCollection<EmployeeDetail>().Execute();
+            return m_DataSource.From<EmployeeDetail>(new { employeeClassificationKey }).ToCollection().Execute();
         }
 
         public IList<EmployeeDetail> FindByLastName(string lastName)
         {
-            return m_DataSource.From(EmployeeDetailViewName, new { lastName }).ToCollection<EmployeeDetail>().Execute();
-        }
-
-        public IList<EmployeeDetail> GetAll()
-        {
-            return m_DataSource.From(EmployeeDetailViewName).ToCollection<EmployeeDetail>().Execute();
+            return m_DataSource.From<EmployeeDetail>(new { lastName }).ToCollection().Execute();
         }
 
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
-            return m_DataSource.From(EmployeeDetailViewName, new { employeeKey }).ToObjectOrNull<EmployeeDetail>().Execute();
+            return m_DataSource.From<EmployeeDetail>(new { employeeKey }).ToObjectOrNull().Execute();
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
-            return m_DataSource.From(ClassificationTableName, new { employeeClassificationKey }).ToObject<EmployeeClassification>().Execute();
+            return m_DataSource.From<EmployeeClassification>(new { employeeClassificationKey }).ToObject().Execute();
         }
     }
 }

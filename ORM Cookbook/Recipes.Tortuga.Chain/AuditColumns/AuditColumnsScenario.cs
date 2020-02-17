@@ -9,7 +9,6 @@ namespace Recipes.Chain.AuditColumns
     public class AuditColumnsScenario :
         IAuditColumnsScenario<Department>
     {
-        private const string TableName = "HR.Department";
         readonly SqlServerDataSource m_DataSource;
 
         public AuditColumnsScenario(SqlServerDataSource dataSource)
@@ -33,7 +32,7 @@ namespace Recipes.Chain.AuditColumns
 
         public Department GetDepartment(int departmentKey, User user)
         {
-            return m_DataSource.WithUser(user).GetByKey(TableName, departmentKey).ToObject<Department>().Execute();
+            return m_DataSource.WithUser(user).GetByKey<Department>(departmentKey).ToObject<Department>().Execute();
         }
 
         public void UpdateDepartment(Department department, User user)

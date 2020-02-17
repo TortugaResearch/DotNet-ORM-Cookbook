@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.ModelWithLookup
 {
-    public class ModelWithLookupSimpleScenario : ScenarioBase, IModelWithLookupSimpleScenario<EmployeeSimple>
+    public class ModelWithLookupSimpleScenario : SqlServerScenarioBase, IModelWithLookupSimpleScenario<EmployeeSimple>
     {
         public ModelWithLookupSimpleScenario(string connectionString) : base(connectionString)
         { }

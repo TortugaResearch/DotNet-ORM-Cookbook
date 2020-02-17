@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.SingleModelCrud
 {
-    public class SingleModelCrudScenario : ScenarioBase, ISingleModelCrudScenario<EmployeeClassification>
+    public class SingleModelCrudScenario : SqlServerScenarioBase, ISingleModelCrudScenario<EmployeeClassification>
     {
         public SingleModelCrudScenario(string connectionString) : base(connectionString)
         { }

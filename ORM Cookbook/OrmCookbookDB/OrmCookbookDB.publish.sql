@@ -391,6 +391,7 @@ CREATE TABLE [HR].[Department] (
     [ModifiedDate]          DATETIME2 (7) NULL,
     [CreatedByEmployeeKey]  INT           NULL,
     [ModifiedByEmployeeKey] INT           NULL,
+    [IsDeleted]             BIT           NOT NULL,
     CONSTRAINT [PK_Department] PRIMARY KEY CLUSTERED ([DepartmentKey] ASC),
     CONSTRAINT [UX_Department_DepartmentName] UNIQUE NONCLUSTERED ([DepartmentName] ASC)
 );
@@ -467,6 +468,15 @@ PRINT N'Creating [HR].[D_EmployeeClassification_IsEmployee]...';
 GO
 ALTER TABLE [HR].[EmployeeClassification]
     ADD CONSTRAINT [D_EmployeeClassification_IsEmployee] DEFAULT (1) FOR [IsEmployee];
+
+
+GO
+PRINT N'Creating [HR].[D_Department_IsDeleted]...';
+
+
+GO
+ALTER TABLE [HR].[Department]
+    ADD CONSTRAINT [D_Department_IsDeleted] DEFAULT (0) FOR [IsDeleted];
 
 
 GO
@@ -814,7 +824,7 @@ VALUES
 (1, 'HR', 875000, 10.5, 20000, 12000, 15, '9:00'),
 (2, 'Accounting', null, null, null, null, null, null),
 (3, 'Sales', 2312000, 40.5, 65000, 1000, 60, '12:00'),
-(4, 'Manufactoring', 323000, 30, 24520000, 120000, 35, '6:00'),
+(4, 'Manufacturing', 323000, 30, 24520000, 120000, 35, '6:00'),
 (5, 'Engineering', 23000, 4, 25000, 32000, 8, '11:00');
 
 SET IDENTITY_INSERT HR.Division ON;

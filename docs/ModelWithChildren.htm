@@ -209,7 +209,7 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class ModelWithChildrenScenario : ScenarioBase, IModelWithChildrenScenario&lt;ProductLine, Product&gt;
+<pre><code class="cs">    public class ModelWithChildrenScenario : SqlServerScenarioBase, IModelWithChildrenScenario&lt;ProductLine, Product&gt;
     {
         public ModelWithChildrenScenario(string connectionString) : base(connectionString)
         { }
@@ -546,7 +546,6 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 <pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     readonly SqlServerDataSource m_DataSource;
-    readonly string ProductLineTable = &quot;Production.ProductLine&quot;;
     readonly string ProductTable = &quot;Production.Product&quot;;
 
     public ModelWithChildrenScenario(SqlServerDataSource dataSource)
@@ -577,7 +576,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
         using (var trans = m_DataSource.BeginTransaction())
         {
-            trans.DeleteWithFilter(ProductTable, new { productLine.ProductLineKey }).Execute();
+            trans.DeleteWithFilter&lt;Product&gt;(new { productLine.ProductLineKey }).Execute();
             trans.Delete(productLine).Execute();
             trans.Commit();
         }
@@ -587,8 +586,8 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
     {
         using (var trans = m_DataSource.BeginTransaction())
         {
-            trans.DeleteWithFilter(ProductTable, new { productLineKey }).Execute();
-            trans.DeleteByKey(ProductLineTable, productLineKey).Execute();
+            trans.DeleteWithFilter&lt;Product&gt;(new { productLineKey }).Execute();
+            trans.DeleteByKey&lt;ProductLine&gt;(productLineKey).Execute();
             trans.Commit();
         }
     }
@@ -598,7 +597,8 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
         var results = m_DataSource.From&lt;ProductLine&gt;(new { productLineName }).ToCollection().Execute();
         if (results.Count &gt; 0 &amp;&amp; includeProducts)
         {
-            var children = m_DataSource.GetByKeyList(ProductTable, &quot;ProductLineKey&quot;, results.Select(pl =&gt; pl.ProductLineKey)).ToCollection&lt;Product&gt;().Execute();
+            var children = m_DataSource.GetByKeyList(ProductTable, &quot;ProductLineKey&quot;,
+                results.Select(pl =&gt; pl.ProductLineKey)).ToCollection&lt;Product&gt;().Execute();
             foreach (var line in results)
                 line.Products.AddRange(children.Where(x =&gt; x.ProductLineKey == line.ProductLineKey));
         }
@@ -619,7 +619,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 
     public ProductLine? GetByKey(int productLineKey, bool includeProducts)
     {
-        var result = m_DataSource.GetByKey(ProductLineTable, productLineKey).ToObjectOrNull&lt;ProductLine&gt;().Execute();
+        var result = m_DataSource.GetByKey&lt;ProductLine&gt;(productLineKey).ToObjectOrNull().Execute();
         if (result != null &amp;&amp; includeProducts)
         {
             var children = m_DataSource.From&lt;Product&gt;(new { result.ProductLineKey }).ToCollection().Execute();
@@ -676,7 +676,9 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             trans.Update(productLine).Execute();
 
             //Find the list of child keys to remove
-            var oldKeys = trans.From&lt;Product&gt;(new { productLine.ProductLineKey }).ToInt32List(&quot;ProductKey&quot;).Execute().ToHashSet();
+            var oldKeys = trans.From&lt;Product&gt;(new { productLine.ProductLineKey }).ToInt32List(&quot;ProductKey&quot;)
+                .Execute().ToHashSet();
+
             foreach (var key in productLine.Products.Select(x =&gt; x.ProductKey))
                 oldKeys.Remove(key);
 

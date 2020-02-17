@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using Microsoft.Data.SqlClient;
 using Recipes.Dapper.Models;
 using Recipes.DynamicSorting;
@@ -19,30 +20,8 @@ namespace Recipes.Dapper.DynamicSorting
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            var sql = new StringBuilder(@"INSERT INTO HR.Employee
-(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
-VALUES ");
-            var parameters = new Dictionary<string, object?>();
-            for (var i = 0; i < employees.Count; i++)
-            {
-                if (i != 0)
-                    sql.AppendLine(",");
-                sql.Append($"(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, " +
-                    $"@CellPhone_{i}, @EmployeeClassificationKey_{i})");
-
-                parameters[$"@FirstName_{i}"] = employees[i].FirstName;
-                parameters[$"@MiddleName_{i}"] = employees[i].MiddleName;
-                parameters[$"@LastName_{i}"] = employees[i].LastName;
-                parameters[$"@Title_{i}"] = employees[i].Title;
-                parameters[$"@OfficePhone_{i}"] = employees[i].OfficePhone;
-                parameters[$"@CellPhone_{i}"] = employees[i].CellPhone;
-                parameters[$"@EmployeeClassificationKey_{i}"] = employees[i].EmployeeClassificationKey;
-            }
-            sql.AppendLine(";");
-
-            //No transaction is needed because a single SQL statement is used.
             using (var con = OpenConnection())
-                con.Execute(sql.ToString(), parameters);
+                con.Insert(employees);
         }
 
         public IList<EmployeeSimple> SortBy(string lastName, string sortByColumn, bool isDescending)

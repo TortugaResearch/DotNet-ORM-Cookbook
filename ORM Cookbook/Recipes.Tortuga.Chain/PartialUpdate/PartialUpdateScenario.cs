@@ -25,7 +25,7 @@ namespace Recipes.Chain.PartialUpdate
 
         public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey).ToObject<EmployeeClassification>().Execute();
+            return m_DataSource.GetByKey<EmployeeClassification>(employeeClassificationKey).ToObject().Execute();
         }
 
         public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)

@@ -22,11 +22,6 @@ namespace Recipes.Views
         IList<TEmployeeDetail> FindByLastName(string lastName);
 
         /// <summary>
-        /// Gets all EmployeeDetail rows.
-        /// </summary>
-        IList<TEmployeeDetail> GetAll();
-
-        /// <summary>
         /// Gets an EmployeeDetail row by its primary key.
         /// </summary>
         TEmployeeDetail? GetByEmployeeKey(int employeeKey);

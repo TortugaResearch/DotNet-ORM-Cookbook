@@ -10,7 +10,7 @@ namespace Recipes.Ado.MultipleCrud
     {
         protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
         {
-            return new MultipleCrudScenario(Setup.ConnectionString);
+            return new MultipleCrudScenario(Setup.SqlServerConnectionString);
         }
     }
 }

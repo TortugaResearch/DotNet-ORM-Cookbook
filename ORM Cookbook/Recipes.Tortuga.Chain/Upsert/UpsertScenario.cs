@@ -8,7 +8,6 @@ namespace Recipes.Chain.Upsert
 {
     public class UpsertScenario : IUpsertScenario<Division>
     {
-        const string DivisionTableName = "HR.Division";
         readonly SqlServerDataSource m_DataSource;
 
         public UpsertScenario(SqlServerDataSource dataSource)
@@ -24,7 +23,7 @@ namespace Recipes.Chain.Upsert
 
         public Division GetByKey(int divisionKey)
         {
-            return m_DataSource.GetByKey(DivisionTableName, divisionKey).ToObject<Division>().Execute()!;
+            return m_DataSource.GetByKey<Division>(divisionKey).ToObject().Execute()!;
         }
 
         public int UpsertByName(Division division)

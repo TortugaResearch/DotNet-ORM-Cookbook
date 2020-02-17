@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Soft Delete - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span></li>
+<li class="tocentry"><a href="AuditColumns.htm">Audit Columns</a>
+</li>
+<li class="tocentry current"><a class="current" href="SoftDelete.htm">Soft Delete</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+
+</ul>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></li> / <li><a href="SoftDelete.htm">Soft Delete</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="soft-delete">Soft Delete<a class="headerlink" href="#soft-delete" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to use soft deletes (i.e. <code>IsDeleted</code> flag) rather than hard deletes. </p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface ISoftDeleteScenario&lt;TDepartment&gt;
+   where TDepartment : class, IDepartment, new()
+{
+    /// &lt;summary&gt;
+    /// Creates the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;department&quot;&gt;The department.&lt;/param&gt;
+    /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+    /// &lt;returns&gt;System.Int32.&lt;/returns&gt;
+    int CreateDepartment(TDepartment department);
+
+    /// &lt;summary&gt;
+    /// Deletes the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;department&quot;&gt;The department.&lt;/param&gt;
+    void DeleteDepartment(TDepartment department);
+
+    /// &lt;summary&gt;
+    /// Updates the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;department&quot;&gt;The department.&lt;/param&gt;
+    /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+    void UpdateDepartment(TDepartment department);
+
+    /// &lt;summary&gt;
+    /// Undeletes the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;departmentKey&quot;&gt;The department key.&lt;/param&gt;
+    void UndeleteDepartment(int departmentKey);
+
+    /// &lt;summary&gt;
+    /// Gets the department.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;departmentKey&quot;&gt;The department key.&lt;/param&gt;
+    /// &lt;returns&gt;TDepartment.&lt;/returns&gt;
+    TDepartment? GetDepartment(int departmentKey);
+
+    /// &lt;summary&gt;
+    /// Gets the department ignoring the IsDeleted flag.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;departmentKey&quot;&gt;The department key.&lt;/param&gt;
+    /// &lt;returns&gt;System.Nullable&amp;lt;TDepartment&amp;gt;.&lt;/returns&gt;
+    TDepartment? GetDepartmentIgnoringIsDeleted(int departmentKey);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain requires that soft delete be configured at the <code>DataSource</code> level.</p>
+<pre><code class="cs">public class SoftDeleteScenario : ISoftDeleteScenario&lt;Department&gt;
+{
+    private const string TableName = &quot;HR.Department&quot;;
+    readonly SqlServerDataSource m_DataSource;
+    readonly SqlServerDataSource m_DataSourceBypassSoftDelete;
+
+    public SoftDeleteScenario(SqlServerDataSource dataSource)
+    {
+        if (dataSource == null)
+            throw new ArgumentNullException(nameof(dataSource), $&quot;{nameof(dataSource)} is null.&quot;);
+
+        //We need the original data source without the soft delete rule enabled for the by-pass scenario.
+        m_DataSourceBypassSoftDelete = dataSource;
+
+        //Normally this would be configured application-wide, not just for one repository instance.
+        m_DataSource = dataSource.WithRules(
+        new SoftDeleteRule(&quot;IsDeleted&quot;, true, OperationTypes.SelectOrDelete)
+        );
+    }
+
+    public int CreateDepartment(Department department, User user)
+    {
+        return m_DataSource.WithUser(user).Insert(department).ToInt32().Execute();
+    }
+
+    public int CreateDepartment(Department department)
+    {
+        return m_DataSource.Insert(department).ToInt32().Execute();
+    }
+
+    public void DeleteDepartment(Department department)
+    {
+        m_DataSource.Delete(department).Execute();
+    }
+
+    public Department? GetDepartment(int departmentKey)
+    {
+        return m_DataSource.GetByKey&lt;Department&gt;(departmentKey).ToObjectOrNull().Execute();
+    }
+
+    public Department? GetDepartmentIgnoringIsDeleted(int departmentKey)
+    {
+        return m_DataSourceBypassSoftDelete.GetByKey&lt;Department&gt;(departmentKey).ToObjectOrNull().Execute();
+    }
+
+    public void UndeleteDepartment(int departmentKey)
+    {
+        //The SoftDeleteRule does not apply to Update operations
+        m_DataSource.Update(TableName, new { departmentKey, IsDeleted = false }).Execute();
+    }
+
+    public void UpdateDepartment(Department department)
+    {
+        m_DataSource.Update(department).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To generalize soft delete support in EF 6, create an interface with the soft delete column(s). Then overide the <code>SaveChanges</code> method to provide the values.</p>
+<p>For the select operations, you'll also need to manually filter out deleted columns. </p>
+<pre><code class="cs">public interface ISoftDeletable
+{
+    bool IsDeleted { get; set; }
+}
+</code></pre>
+
+<pre><code class="cs">public override int SaveChanges()
+{
+    // Get deleted entries
+    var deletedEntryCollection = ChangeTracker.Entries&lt;ISoftDeletable&gt;()
+        .Where(p =&gt; p.State == EntityState.Deleted);
+
+    // Set flags on deleted entries
+    foreach (var entry in deletedEntryCollection)
+    {
+        entry.State = EntityState.Modified;
+        entry.Entity.IsDeleted = true;
+    }
+
+    return base.SaveChanges();
+}
+</code></pre>
+
+<pre><code class="cs">public class SoftDeleteScenario : ISoftDeleteScenario&lt;Department&gt;
+{
+    private Func&lt;OrmCookbookContextWithSoftDelete&gt; CreateDbContext;
+    private Func&lt;OrmCookbookContext&gt; CreateBypassDbContext;
+
+    public SoftDeleteScenario(Func&lt;OrmCookbookContextWithSoftDelete&gt; dBContextFactory, Func&lt;OrmCookbookContext&gt; bypassContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+        CreateBypassDbContext = bypassContextFactory;
+    }
+
+    public int CreateDepartment(Department department)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Department.Add(department);
+            context.SaveChanges();
+            return department.DepartmentKey;
+        }
+    }
+
+    public void DeleteDepartment(Department department)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Entry(department).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public Department? GetDepartment(int departmentKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Department
+                .Where(d =&gt; !d.IsDeleted) //Removed deleted rows
+                .Where(d =&gt; d.DepartmentKey == departmentKey) //Any additional filtering
+                .SingleOrDefault();
+    }
+
+    public Department? GetDepartmentIgnoringIsDeleted(int departmentKey)
+    {
+        using (var context = CreateBypassDbContext())
+            return context.Department.Find(departmentKey);
+    }
+
+    public void UndeleteDepartment(int departmentKey)
+    {
+        using (var context = CreateDbContext())
+            context.Database.ExecuteSqlCommand(&quot;UPDATE HR.Department SET IsDeleted = 0 WHERE DepartmentKey = @p0&quot;, departmentKey);
+    }
+
+    public void UpdateDepartment(Department department)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(department).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<div class="alert alert-warning"><span class="alert-title"><i class="fa fa-warning"></i> Warning!</span><p>This design pattern is only a partial solution. When including related objects, you'll also need to filter out those deleted rows. See https://github.com/Grauenwolf/DotNet-ORM-Cookbook/issues/229 for alternate implementations.</p>
+</div><h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To generalize soft delete support in EF Core, create an interface with the soft delete column(s). Then overide the <code>SaveChanges</code> method to provide the values.</p>
+<p>For the select operations, you'll also need to add a <code>HasQueryFilter</code> for each entity that supported soft deletes.</p>
+<pre><code class="cs">public interface ISoftDeletable
+{
+    bool IsDeleted { get; set; }
+}
+</code></pre>
+
+<pre><code class="cs">public override int SaveChanges()
+{
+    // Get deleted entries
+    var deletedEntryCollection = ChangeTracker.Entries&lt;ISoftDeletable&gt;()
+        .Where(p =&gt; p.State == EntityState.Deleted);
+
+    // Set flags on deleted entries
+    foreach (var entry in deletedEntryCollection)
+    {
+        entry.State = EntityState.Modified;
+        entry.Entity.IsDeleted = true;
+    }
+
+    return base.SaveChanges();
+}
+</code></pre>
+
+<pre><code class="cs">protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    if (modelBuilder == null)
+        throw new ArgumentNullException(nameof(modelBuilder), $&quot;{nameof(modelBuilder)} is null.&quot;);
+
+    base.OnModelCreating(modelBuilder);
+    modelBuilder.Entity&lt;Department&gt;().HasQueryFilter(m =&gt; EF.Property&lt;bool&gt;(m, &quot;IsDeleted&quot;) == false);
+}
+</code></pre>
+
+<pre><code class="cs">public class SoftDeleteScenario : ISoftDeleteScenario&lt;Department&gt;
+{
+    private Func&lt;OrmCookbookContextWithSoftDelete&gt; CreateDbContext;
+    private Func&lt;OrmCookbookContext&gt; CreateBypassDbContext;
+
+    public SoftDeleteScenario(Func&lt;OrmCookbookContextWithSoftDelete&gt; dBContextFactory, Func&lt;OrmCookbookContext&gt; bypassContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+        CreateBypassDbContext = bypassContextFactory;
+    }
+
+    public int CreateDepartment(Department department)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Department.Add(department);
+            context.SaveChanges();
+            return department.DepartmentKey;
+        }
+    }
+
+    public void DeleteDepartment(Department department)
+    {
+        using (var context = CreateDbContext())
+        {
+            context.Entry(department).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public Department? GetDepartment(int departmentKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Department.Find(departmentKey);
+    }
+
+    public Department? GetDepartmentIgnoringIsDeleted(int departmentKey)
+    {
+        using (var context = CreateBypassDbContext())
+            return context.Department.Find(departmentKey);
+    }
+
+    public void UndeleteDepartment(int departmentKey)
+    {
+        using (var context = CreateDbContext())
+            context.Database.ExecuteSqlInterpolated($&quot;UPDATE HR.Department SET IsDeleted = 0 WHERE DepartmentKey = {departmentKey}&quot;);
+    }
+
+    public void UpdateDepartment(Department department)
+    {
+        if (department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(department).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

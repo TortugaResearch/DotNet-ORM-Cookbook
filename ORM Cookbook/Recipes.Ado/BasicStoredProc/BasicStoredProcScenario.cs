@@ -7,7 +7,7 @@ using System.Data;
 
 namespace Recipes.Ado.BasicStoredProc
 {
-    public class BasicStoredProcScenario : ScenarioBase,
+    public class BasicStoredProcScenario : SqlServerScenarioBase,
         IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount>
     {
         public BasicStoredProcScenario(string connectionString) : base(connectionString)

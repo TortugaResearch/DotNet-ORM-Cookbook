@@ -15,7 +15,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
         {
         }
 
-        public async Task<int> CreateAsync(EmployeeClassification classification)
+        virtual public async Task<int> CreateAsync(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -28,7 +28,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
                 return await con.ExecuteScalarAsync<int>(sql, classification).ConfigureAwait(false);
         }
 
-        public async Task DeleteAsync(EmployeeClassification classification)
+        virtual public async Task DeleteAsync(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
@@ -58,7 +58,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
                     new CommandDefinition(sql, parameters: new { employeeClassificationName }, cancellationToken: cancellationToken)).ConfigureAwait(false);
         }
 
-        public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
+        virtual public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var sql = @"SELECT	ec.EmployeeClassificationKey, ec.EmployeeClassificationName FROM HR.EmployeeClassification ec;";
 
@@ -66,7 +66,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
                 return (await con.QueryAsync<EmployeeClassification>(new CommandDefinition(sql, cancellationToken: cancellationToken)).ConfigureAwait(false)).ToList();
         }
 
-        public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+        virtual public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
         {
             var sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                         FROM HR.EmployeeClassification ec
@@ -77,7 +77,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
                     new CommandDefinition(sql, parameters: new { employeeClassificationKey }, cancellationToken: cancellationToken)).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(EmployeeClassification classification)
+        virtual public async Task UpdateAsync(EmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");

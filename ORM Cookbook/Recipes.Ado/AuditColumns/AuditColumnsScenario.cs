@@ -5,7 +5,7 @@ using System;
 
 namespace Recipes.Ado.AuditColumns
 {
-    public class AuditColumnsScenario : ScenarioBase, IAuditColumnsScenario<Department>
+    public class AuditColumnsScenario : SqlServerScenarioBase, IAuditColumnsScenario<Department>
     {
         public AuditColumnsScenario(string connectionString) : base(connectionString)
         { }

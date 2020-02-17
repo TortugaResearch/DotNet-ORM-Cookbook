@@ -71,30 +71,6 @@ namespace Recipes.LinqToDB.Joins
                     .ToList();
         }
 
-        public IList<EmployeeDetail> GetAll()
-        {
-            using (var db = new OrmCookbook())
-                return db.Employee
-                    .Join(db.EmployeeClassification,
-                        e => e.EmployeeClassificationKey,
-                        ec => ec.EmployeeClassificationKey,
-                        (e, ec) => new EmployeeDetail()
-                        {
-                            EmployeeKey = e.EmployeeKey,
-                            FirstName = e.FirstName,
-                            MiddleName = e.MiddleName,
-                            LastName = e.LastName,
-                            CellPhone = e.CellPhone,
-                            OfficePhone = e.OfficePhone,
-                            Title = e.Title,
-                            EmployeeClassificationKey = ec.EmployeeClassificationKey,
-                            EmployeeClassificationName = ec.EmployeeClassificationName,
-                            IsEmployee = ec.IsEmployee,
-                            IsExempt = ec.IsExempt,
-                        })
-                    .ToList();
-        }
-
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var db = new OrmCookbook())

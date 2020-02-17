@@ -9,7 +9,7 @@ namespace Recipes.Ado.SingleModelCrud
     {
         protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudScenario(Setup.ConnectionString);
+            return new SingleModelCrudScenario(Setup.SqlServerConnectionString);
         }
     }
 }

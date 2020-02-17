@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Recipes.Ado.Joins
 {
-    public class JoinsScenario : ScenarioBase, IJoinsScenario<EmployeeDetail, EmployeeSimple>
+    public class JoinsScenario : SqlServerScenarioBase, IJoinsScenario<EmployeeDetail, EmployeeSimple>
     {
         public JoinsScenario(string connectionString) : base(connectionString)
         { }
@@ -65,23 +65,6 @@ VALUES
             {
                 cmd.Parameters.AddWithValue("@LastName", lastName);
 
-                var results = new List<EmployeeDetail>();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeDetail(reader));
-
-                return results;
-            }
-        }
-
-        public IList<EmployeeDetail> GetAll()
-        {
-            const string sql = "SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey";
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
                 var results = new List<EmployeeDetail>();
 
                 using (var reader = cmd.ExecuteReader())
