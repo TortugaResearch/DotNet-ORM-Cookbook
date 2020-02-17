@@ -1,11 +1,11 @@
-﻿using Recipes.ModelWithLookup;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.ModelWithLookup;
 using Recipes.RepoDb.Models;
+using RDB = RepoDb;
 using RepoDb;
 using RepoDb.Extensions;
-using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Recipes.RepoDb.ModelWithLookup

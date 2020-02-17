@@ -5,8 +5,8 @@ using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 
 namespace Recipes.RepoDb.Immutable
 {

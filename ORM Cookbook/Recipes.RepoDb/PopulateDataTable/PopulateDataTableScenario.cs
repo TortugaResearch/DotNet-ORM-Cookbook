@@ -1,7 +1,7 @@
-﻿using Recipes.PopulateDataTable;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.PopulateDataTable;
 using RepoDb;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace Recipes.RepoDb.PopulateDataTable
 {
