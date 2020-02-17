@@ -52,10 +52,14 @@ namespace LLBLGenPro.OrmCookbook.DatabaseSpecific
 		/// <summary>Inits DepartmentEntity's mappings</summary>
 		private void InitDepartmentEntityMappings()
 		{
-			this.AddElementMapping("DepartmentEntity", @"ORMCookbook", @"HR", "Department", 3, 0);
-			this.AddElementFieldMapping("DepartmentEntity", "DepartmentKey", "DepartmentKey", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
-			this.AddElementFieldMapping("DepartmentEntity", "DepartmentName", "DepartmentName", false, "NVarChar", 30, 0, 0, false, "", null, typeof(System.String), 1);
-			this.AddElementFieldMapping("DepartmentEntity", "DivisionKey", "DivisionKey", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 2);
+			this.AddElementMapping("DepartmentEntity", @"ORMCookbook", @"HR", "Department", 7, 0);
+			this.AddElementFieldMapping("DepartmentEntity", "CreatedByEmployeeKey", "CreatedByEmployeeKey", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 0);
+			this.AddElementFieldMapping("DepartmentEntity", "CreatedDate", "CreatedDate", true, "DateTime2", 0, 0, 0, false, "", null, typeof(System.DateTime), 1);
+			this.AddElementFieldMapping("DepartmentEntity", "DepartmentKey", "DepartmentKey", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 2);
+			this.AddElementFieldMapping("DepartmentEntity", "DepartmentName", "DepartmentName", false, "NVarChar", 30, 0, 0, false, "", null, typeof(System.String), 3);
+			this.AddElementFieldMapping("DepartmentEntity", "DivisionKey", "DivisionKey", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 4);
+			this.AddElementFieldMapping("DepartmentEntity", "ModifiedByEmployeeKey", "ModifiedByEmployeeKey", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 5);
+			this.AddElementFieldMapping("DepartmentEntity", "ModifiedDate", "ModifiedDate", true, "DateTime2", 0, 0, 0, false, "", null, typeof(System.DateTime), 6);
 		}
 
 		/// <summary>Inits DivisionEntity's mappings</summary>

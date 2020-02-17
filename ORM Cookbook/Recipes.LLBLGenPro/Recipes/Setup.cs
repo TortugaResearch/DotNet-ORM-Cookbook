@@ -6,8 +6,11 @@ using SD.LLBLGen.Pro.DQE.SqlServer;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.Tools.OrmProfiler.Interceptor;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
+using Injectables;
 
 namespace Recipes.LLBLGenPro
 {
@@ -32,6 +35,9 @@ namespace Recipes.LLBLGenPro
                                                                                                      typeof(Microsoft.Data.SqlClient.SqlClientFactory)))
                                                                                .SetDefaultCompatibilityLevel(SqlServerCompatibilityLevel.SqlServer2012));
             RuntimeConfiguration.Entity.SetMarkSavedEntitiesAsFetched(true);
+			// Setup the dependency injection system to auto-inject e.g. auditors when needed. 
+			RuntimeConfiguration.SetDependencyInjectionInfo(new List<Assembly>() { typeof(DepartmentAuditor).Assembly}, null);
+			
             try
             {
                 (new Setup()).Warmup();

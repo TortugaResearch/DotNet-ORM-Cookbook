@@ -13,12 +13,20 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 	/// <summary>Field Creation Class for entity DepartmentEntity</summary>
 	public partial class DepartmentFields
 	{
+		/// <summary>Creates a new DepartmentEntity.CreatedByEmployeeKey field instance</summary>
+		public static EntityField2 CreatedByEmployeeKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentFieldIndex.CreatedByEmployeeKey); }}
+		/// <summary>Creates a new DepartmentEntity.CreatedDate field instance</summary>
+		public static EntityField2 CreatedDate { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentFieldIndex.CreatedDate); }}
 		/// <summary>Creates a new DepartmentEntity.DepartmentKey field instance</summary>
 		public static EntityField2 DepartmentKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentFieldIndex.DepartmentKey); }}
 		/// <summary>Creates a new DepartmentEntity.DepartmentName field instance</summary>
 		public static EntityField2 DepartmentName { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentFieldIndex.DepartmentName); }}
 		/// <summary>Creates a new DepartmentEntity.DivisionKey field instance</summary>
 		public static EntityField2 DivisionKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentFieldIndex.DivisionKey); }}
+		/// <summary>Creates a new DepartmentEntity.ModifiedByEmployeeKey field instance</summary>
+		public static EntityField2 ModifiedByEmployeeKey { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentFieldIndex.ModifiedByEmployeeKey); }}
+		/// <summary>Creates a new DepartmentEntity.ModifiedDate field instance</summary>
+		public static EntityField2 ModifiedDate { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(DepartmentFieldIndex.ModifiedDate); }}
 	}
 
 	/// <summary>Field Creation Class for entity DivisionEntity</summary>
