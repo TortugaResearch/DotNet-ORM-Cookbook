@@ -171,7 +171,7 @@
     {
       "location": "ConnectionSharing.htm",
       "breadcrumbs": "Home / Advanced scenarios / Connection Sharing",
-      "keywords": "4 6 a ADO always applicable Chain combining connection Connection ConnectionSharing ConnectionSharingScenario Core cs Dapper DB demonstrate directly Entity EntityFramework EntityFrameworkCore especially Framework how IConnectionSharingScenario important in is LINQ LLBLGen NET NHibernate Not objecsts on ORMs Pro Prototype raw Recipes RepoDb same Scenario scenarios ServiceStack share Sharing snippet TConnection the These This TModel to TODO Tortuga transaction TState TTransaction two when works",
+      "keywords": "4 6 a A actively adapter add adjust adjustments ADO alert all always and applicable are around as back be better but by care Chain class closing code collect combining committing connection Connection ConnectionSharing ConnectionSharingScenario controlling Core create cs Dapper DataAccessAdapter DatabaseSpecific DB demonstrate design directly disposing do end Entity EntityFramework EntityFrameworkCore especially exposes Extensions following for Framework have how IConnectionSharingScenario important Important in is isn it LINQ LLBLGen LLBLGenPro managed means multi needs NET NHibernate Not objecsts objects of on or ORMs out owned partial passing Pro Prototype raw realize Recipes RepoDb rolling same scenario Scenario scenarios scope ServiceStack share Sharing simple small snippet some support supported System take TConnection that the The These this This TModel to To TODO Tortuga transaction transactions Transactions TransactionScope TState TTransaction two Unit use very way we when With work Work works you",
       "title": "Connection Sharing"
     },
     {
