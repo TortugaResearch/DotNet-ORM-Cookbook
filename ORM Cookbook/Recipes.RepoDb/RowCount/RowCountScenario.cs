@@ -1,10 +1,10 @@
-﻿using Recipes.RepoDb.Models;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.RepoDb.Models;
 using Recipes.RowCount;
-using RepoDb;
 using RDB = RepoDb;
+using RepoDb;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 
 namespace Recipes.RepoDb.RowCount
 {

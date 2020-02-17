@@ -1,10 +1,10 @@
-﻿using Recipes.BulkInsert;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.BulkInsert;
 using Recipes.RepoDb.Models;
 using RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace Recipes.RepoDb.BulkInsert
 {

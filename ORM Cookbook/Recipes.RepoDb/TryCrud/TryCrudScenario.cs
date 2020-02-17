@@ -1,10 +1,10 @@
-﻿using Recipes.RepoDb.Models;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.RepoDb.Models;
 using Recipes.TryCrud;
-using RepoDb;
 using RDB = RepoDb;
+using RepoDb;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Recipes.RepoDb.TryCrud

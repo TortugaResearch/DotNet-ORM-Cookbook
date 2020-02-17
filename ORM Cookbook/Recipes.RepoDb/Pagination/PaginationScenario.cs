@@ -1,12 +1,12 @@
-﻿using Recipes.RepoDb.Models;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.RepoDb.Models;
 using Recipes.Pagination;
-using System;
-using System.Collections.Generic;
-using RepoDb;
 using RDB = RepoDb;
-using System.Data.SqlClient;
+using RepoDb;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace Recipes.RepoDb.Pagination
 {

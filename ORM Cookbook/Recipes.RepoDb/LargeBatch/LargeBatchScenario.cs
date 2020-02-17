@@ -1,9 +1,9 @@
-﻿using Recipes.LargeBatch;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.LargeBatch;
 using Recipes.RepoDb.Models;
 using RepoDb;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 
 using RDB = RepoDb;
