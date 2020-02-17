@@ -1,11 +1,11 @@
-﻿using Recipes.DynamicSorting;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.DynamicSorting;
 using Recipes.RepoDb.Models;
 using RepoDb;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 
 namespace Recipes.RepoDb.DynamicSorting
 {

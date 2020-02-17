@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb;
 using Recipes.RepoDb.Models;
 using Recipes.MultipleCrud;
 

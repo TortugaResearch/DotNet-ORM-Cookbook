@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RDB = RepoDb;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -29,6 +30,7 @@ namespace Recipes.RepoDb
 
             try
             {
+                RDB.SqlServerBootstrap.Initialize();
                 (new Setup()).Warmup();
             }
             catch { }
