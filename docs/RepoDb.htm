@@ -118,19 +118,108 @@
                 <div role="main">
                     <div class="section">
 <h1 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>TOOD: Overview </p>
+<p>A hybrid ORM library for .NET. It is an ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “basic” and “advance” operations during the development. </p>
 <h2 id="supported-databases">Supported Databases<a class="headerlink" href="#supported-databases" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Which databases are supported?</p>
+<p>Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statements and execute it against the database through the <em>Execute()</em> methods mentioned below.</p>
+<ul>
+<li><a href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executequery" target="_blank">ExecuteQuery</a></li>
+<li><a href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executenonquery" target="_blank">ExecuteNonQuery</a></li>
+<li><a href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executescalar" target="_blank">ExecuteScalar</a></li>
+<li><a href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executereader" target="_blank">ExecuteReader</a></li>
+<li><a href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executequerymultiple" target="_blank">ExecuteQueryMultiple</a></li>
+</ul>
+<h3 id="fully-supported-databases-for-fluent-methods">Fully supported databases for fluent-methods<a class="headerlink" href="#fully-supported-databases-for-fluent-methods" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Raw/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/SqLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/MySql.png" height="64px" title="MySql" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/PostgreSql.png" height="64px" title="PostgreSql" />
+<p>RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers (<em>please see the <a href="https://github.com/mikependon/RepoDb#operations" target="_blank">operations</a> section</em>). In this regards, RepoDb only fully supported the <em>SQL Server</em>, <em>SQLite</em>, <em>MySQL</em> and <em>PostgreSQL</em> RDBMS data providers.</p>
 <h2 id="libraries">Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: List of NuGet packages, tools, etc. needed</p>
+<ul>
+<li>
+<p>SQL Server</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/RepoDb.SqlServer" target="_blank">RepoDb.SqlServer</a></li>
+<li><a href="https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations" target="_blank">RepoDb.SqlServer.BulkOperations</a></li>
+</ul>
+</li>
+<li>
+<p>MySql</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/RepoDb.MySql" target="_blank">RepoDb.MySql</a></li>
+</ul>
+</li>
+<li>
+<p>PostgreSql</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/RepoDb.PostgreSql" target="_blank">RepoDb.PostgreSql</a></li>
+</ul>
+</li>
+<li>
+<p>SqLite</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/RepoDb.SqLite" target="_blank">RepoDb.SqLite</a></li>
+</ul>
+</li>
+</ul>
 <h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Quick overview for setting up the ORM for a project</p>
+<ul>
+<li>
+<p>SQL Server</p>
+<p>First, install the <a href="https://www.nuget.org/packages/RepoDb.SqlServer" target="_blank">RepoDb.SqlServer</a> package.</p>
+<pre><code class="csharp">&gt; Install-Package RepoDb.SqlServer
+</code></pre>
+
+<p>Then, call the bootstrapper once.</p>
+<pre><code class="csharp">SqlServerBootstrap.Initialize();
+</code></pre>
+
+</li>
+<li>
+<p>MySql</p>
+<p>First, install the <a href="https://www.nuget.org/packages/RepoDb.MySql" target="_blank">RepoDb.MySql</a> package.</p>
+<pre><code class="csharp">&gt; Install-Package RepoDb.MySql
+</code></pre>
+
+<p>Then, call the bootstrapper once.</p>
+<pre><code class="csharp">MySqlBootstrap.Initialize();
+</code></pre>
+
+</li>
+<li>
+<p>PostgreSql</p>
+<p>First, install the <a href="https://www.nuget.org/packages/RepoDb.PostgreSql" target="_blank">RepoDb.PostgreSql</a> package.</p>
+<pre><code class="csharp">&gt; Install-Package RepoDb.PostgreSql
+</code></pre>
+
+<p>Then, call the bootstrapper once.</p>
+<pre><code class="csharp">PostgreSqlBootstrap.Initialize();
+</code></pre>
+
+</li>
+<li>
+<p>SqLite</p>
+<p>First, install the <a href="https://www.nuget.org/packages/RepoDb.SqLite" target="_blank">RepoDb.SqLite</a> package.</p>
+<pre><code class="csharp">&gt; Install-Package RepoDb.SqLite
+</code></pre>
+
+<p>Then, call the bootstrapper once.</p>
+<pre><code class="csharp">SqLiteBootstrap.Initialize();
+</code></pre>
+
+</li>
+</ul>
 <h2 id="documentation-and-tutorials">Documentation and Tutorials<a class="headerlink" href="#documentation-and-tutorials" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Links to learning resource</p>
+<p>The library official documentation can be found at <a href="https://repodb.readthedocs.io/en/latest/" target="_blank">ReadTheDocs</a>.</p>
+<p>For the practical implementations and some other references, please refer to our <a href="https://github.com/mikependon/RepoDb/wiki" target="_blank">Wiki</a> page.</p>
 <h2 id="bug-reporting">Bug Reporting<a class="headerlink" href="#bug-reporting" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: Where are bugs reported to?</p>
+<p>Submit an issue into <a href="https://github.com/mikependon/RepoDb/issues" target="_blank">RepoDb &gt; Issues</a> tab at GitHub.</p>
+<p>We have some guidelines when filing an issue, pleasse see our <a href="https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md" target="_blank">Reporting an Issue</a> page.</p>
+<p>Otherwise, we also entertain via:</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/tagged/repodb" target="_blank">StackOverflow</a> - for any technical questions.</li>
+<li><a href="https://twitter.com/search?q=%23repodb" target="_blank">Twitter</a> - for the latest news.</li>
+<li><a href="https://gitter.im/RepoDb/community" target="_blank">Gitter Chat</a> - for direct and live Q&amp;A.</li>
+</ul>
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO: License information</p>
+<p>RepoDb is licensed under <a href="http://apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache-2.0</a>.</p>
 
                     </div>
                 </div>
