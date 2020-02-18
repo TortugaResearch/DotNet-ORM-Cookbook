@@ -22,11 +22,13 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	/// <summary>Entity class which represents the entity 'Department'.<br/><br/></summary>
 	[Serializable]
-	public partial class DepartmentEntity : CommonEntityBase
+	public partial class DepartmentEntity : CommonEntityBase, Recipes.IDepartment
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
 		private DivisionEntity _division;
+		private EmployeeEntity _createdByEmployee;
+		private EmployeeEntity _modifiedByEmployee;
 
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
@@ -38,6 +40,10 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 		{
 			/// <summary>Member name Division</summary>
 			public static readonly string Division = "Division";
+			/// <summary>Member name CreatedByEmployee</summary>
+			public static readonly string CreatedByEmployee = "CreatedByEmployee";
+			/// <summary>Member name ModifiedByEmployee</summary>
+			public static readonly string ModifiedByEmployee = "ModifiedByEmployee";
 		}
 
 		/// <summary>Static meta-data storage for navigator related information</summary>
@@ -47,6 +53,8 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			{
 				SetEntityCoreInfo("DepartmentEntity", InheritanceHierarchyType.None, false, (int)LLBLGenPro.OrmCookbook.EntityType.DepartmentEntity, typeof(DepartmentEntity), typeof(DepartmentEntityFactory), false);
 				AddNavigatorMetaData<DepartmentEntity, DivisionEntity>("Division", "Departments", (a, b) => a._division = b, a => a._division, (a, b) => a.Division = b, LLBLGenPro.OrmCookbook.RelationClasses.StaticDepartmentRelations.DivisionEntityUsingDivisionKeyStatic, ()=>new DepartmentRelations().DivisionEntityUsingDivisionKey, null, new int[] { (int)DepartmentFieldIndex.DivisionKey }, null, true, (int)LLBLGenPro.OrmCookbook.EntityType.DivisionEntity);
+				AddNavigatorMetaData<DepartmentEntity, EmployeeEntity>("CreatedByEmployee", "CreatedDepartments", (a, b) => a._createdByEmployee = b, a => a._createdByEmployee, (a, b) => a.CreatedByEmployee = b, LLBLGenPro.OrmCookbook.RelationClasses.StaticDepartmentRelations.EmployeeEntityUsingCreatedByEmployeeKeyStatic, ()=>new DepartmentRelations().EmployeeEntityUsingCreatedByEmployeeKey, null, new int[] { (int)DepartmentFieldIndex.CreatedByEmployeeKey }, null, true, (int)LLBLGenPro.OrmCookbook.EntityType.EmployeeEntity);
+				AddNavigatorMetaData<DepartmentEntity, EmployeeEntity>("ModifiedByEmployee", "ModifiedDepartments", (a, b) => a._modifiedByEmployee = b, a => a._modifiedByEmployee, (a, b) => a.ModifiedByEmployee = b, LLBLGenPro.OrmCookbook.RelationClasses.StaticDepartmentRelations.EmployeeEntityUsingModifiedByEmployeeKeyStatic, ()=>new DepartmentRelations().EmployeeEntityUsingModifiedByEmployeeKey, null, new int[] { (int)DepartmentFieldIndex.ModifiedByEmployeeKey }, null, true, (int)LLBLGenPro.OrmCookbook.EntityType.EmployeeEntity);
 			}
 		}
 
@@ -111,6 +119,14 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'Division' to this entity.</summary>
 		/// <returns></returns>
 		public virtual IRelationPredicateBucket GetRelationInfoDivision() { return CreateRelationInfoForNavigator("Division"); }
+
+		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'Employee' to this entity.</summary>
+		/// <returns></returns>
+		public virtual IRelationPredicateBucket GetRelationInfoCreatedByEmployee() { return CreateRelationInfoForNavigator("CreatedByEmployee"); }
+
+		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'Employee' to this entity.</summary>
+		/// <returns></returns>
+		public virtual IRelationPredicateBucket GetRelationInfoModifiedByEmployee() { return CreateRelationInfoForNavigator("ModifiedByEmployee"); }
 		
 		/// <inheritdoc/>
 		protected override EntityStaticMetaDataBase GetEntityStaticMetaData() {	return _staticMetaData; }
@@ -146,6 +162,30 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
 		public static IPrefetchPathElement2 PrefetchPathDivision { get { return _staticMetaData.GetPrefetchPathElement("Division", CommonEntityBase.CreateEntityCollection<DivisionEntity>()); } }
 
+		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'Employee' for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
+		public static IPrefetchPathElement2 PrefetchPathCreatedByEmployee { get { return _staticMetaData.GetPrefetchPathElement("CreatedByEmployee", CommonEntityBase.CreateEntityCollection<EmployeeEntity>()); } }
+
+		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'Employee' for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
+		public static IPrefetchPathElement2 PrefetchPathModifiedByEmployee { get { return _staticMetaData.GetPrefetchPathElement("ModifiedByEmployee", CommonEntityBase.CreateEntityCollection<EmployeeEntity>()); } }
+
+		/// <summary>The CreatedByEmployeeKey property of the Entity Department<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Department"."CreatedByEmployeeKey".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.Int32> CreatedByEmployeeKey
+		{
+			get { return (Nullable<System.Int32>)GetValue((int)DepartmentFieldIndex.CreatedByEmployeeKey, false); }
+			set	{ SetValue((int)DepartmentFieldIndex.CreatedByEmployeeKey, value); }
+		}
+
+		/// <summary>The CreatedDate property of the Entity Department<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Department"."CreatedDate".<br/>Table field type characteristics (type, precision, scale, length): DateTime2, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> CreatedDate
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)DepartmentFieldIndex.CreatedDate, false); }
+			set	{ SetValue((int)DepartmentFieldIndex.CreatedDate, value); }
+		}
+
 		/// <summary>The DepartmentKey property of the Entity Department<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Department"."DepartmentKey".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
 		public virtual System.Int32 DepartmentKey
@@ -169,6 +209,22 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			set	{ SetValue((int)DepartmentFieldIndex.DivisionKey, value); }
 		}
 
+		/// <summary>The ModifiedByEmployeeKey property of the Entity Department<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Department"."ModifiedByEmployeeKey".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.Int32> ModifiedByEmployeeKey
+		{
+			get { return (Nullable<System.Int32>)GetValue((int)DepartmentFieldIndex.ModifiedByEmployeeKey, false); }
+			set	{ SetValue((int)DepartmentFieldIndex.ModifiedByEmployeeKey, value); }
+		}
+
+		/// <summary>The ModifiedDate property of the Entity Department<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Department"."ModifiedDate".<br/>Table field type characteristics (type, precision, scale, length): DateTime2, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> ModifiedDate
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)DepartmentFieldIndex.ModifiedDate, false); }
+			set	{ SetValue((int)DepartmentFieldIndex.ModifiedDate, value); }
+		}
+
 		/// <summary>Gets / sets related entity of type 'DivisionEntity' which has to be set using a fetch action earlier. If no related entity is set for this property, null is returned..<br/><br/></summary>
 		[Browsable(false)]
 		public virtual DivisionEntity Division
@@ -177,7 +233,25 @@ namespace LLBLGenPro.OrmCookbook.EntityClasses
 			set { SetSingleRelatedEntityNavigator(value, "Division"); }
 		}
 
+		/// <summary>Gets / sets related entity of type 'EmployeeEntity' which has to be set using a fetch action earlier. If no related entity is set for this property, null is returned..<br/><br/></summary>
+		[Browsable(false)]
+		public virtual EmployeeEntity CreatedByEmployee
+		{
+			get { return _createdByEmployee; }
+			set { SetSingleRelatedEntityNavigator(value, "CreatedByEmployee"); }
+		}
+
+		/// <summary>Gets / sets related entity of type 'EmployeeEntity' which has to be set using a fetch action earlier. If no related entity is set for this property, null is returned..<br/><br/></summary>
+		[Browsable(false)]
+		public virtual EmployeeEntity ModifiedByEmployee
+		{
+			get { return _modifiedByEmployee; }
+			set { SetSingleRelatedEntityNavigator(value, "ModifiedByEmployee"); }
+		}
+
 		// __LLBLGENPRO_USER_CODE_REGION_START CustomEntityCode
+		public bool IsDeleted { get; set; }
+
 		// __LLBLGENPRO_USER_CODE_REGION_END
 
 	}
@@ -187,12 +261,20 @@ namespace LLBLGenPro.OrmCookbook
 {
 	public enum DepartmentFieldIndex
 	{
+		///<summary>CreatedByEmployeeKey. </summary>
+		CreatedByEmployeeKey,
+		///<summary>CreatedDate. </summary>
+		CreatedDate,
 		///<summary>DepartmentKey. </summary>
 		DepartmentKey,
 		///<summary>DepartmentName. </summary>
 		DepartmentName,
 		///<summary>DivisionKey. </summary>
 		DivisionKey,
+		///<summary>ModifiedByEmployeeKey. </summary>
+		ModifiedByEmployeeKey,
+		///<summary>ModifiedDate. </summary>
+		ModifiedDate,
 		/// <summary></summary>
 		AmountOfFields
 	}
@@ -210,12 +292,26 @@ namespace LLBLGenPro.OrmCookbook.RelationClasses
 			get	{ return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.ManyToOne, "Division", false, new[] { DivisionFields.DivisionKey, DepartmentFields.DivisionKey }); }
 		}
 
+		/// <summary>Returns a new IEntityRelation object, between DepartmentEntity and EmployeeEntity over the m:1 relation they have, using the relation between the fields: Department.CreatedByEmployeeKey - Employee.EmployeeKey</summary>
+		public virtual IEntityRelation EmployeeEntityUsingCreatedByEmployeeKey
+		{
+			get	{ return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.ManyToOne, "CreatedByEmployee", false, new[] { EmployeeFields.EmployeeKey, DepartmentFields.CreatedByEmployeeKey }); }
+		}
+
+		/// <summary>Returns a new IEntityRelation object, between DepartmentEntity and EmployeeEntity over the m:1 relation they have, using the relation between the fields: Department.ModifiedByEmployeeKey - Employee.EmployeeKey</summary>
+		public virtual IEntityRelation EmployeeEntityUsingModifiedByEmployeeKey
+		{
+			get	{ return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.ManyToOne, "ModifiedByEmployee", false, new[] { EmployeeFields.EmployeeKey, DepartmentFields.ModifiedByEmployeeKey }); }
+		}
+
 	}
 	
 	/// <summary>Static class which is used for providing relationship instances which are re-used internally for syncing</summary>
 	internal static class StaticDepartmentRelations
 	{
 		internal static readonly IEntityRelation DivisionEntityUsingDivisionKeyStatic = new DepartmentRelations().DivisionEntityUsingDivisionKey;
+		internal static readonly IEntityRelation EmployeeEntityUsingCreatedByEmployeeKeyStatic = new DepartmentRelations().EmployeeEntityUsingCreatedByEmployeeKey;
+		internal static readonly IEntityRelation EmployeeEntityUsingModifiedByEmployeeKeyStatic = new DepartmentRelations().EmployeeEntityUsingModifiedByEmployeeKey;
 
 		/// <summary>CTor</summary>
 		static StaticDepartmentRelations() { }

@@ -52,6 +52,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.EntityFramework", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSqlDb", "PostgreSqlDb\PostgreSqlDb.csproj", "{342984EC-0828-4B63-93D4-17D1B2C705FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Injectables", "Recipes.LLBLGenPro\Injectables\Injectables.csproj", "{8435E156-FBFD-4B47-8C36-8C6752F7E8F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,10 @@ Global
 		{342984EC-0828-4B63-93D4-17D1B2C705FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{342984EC-0828-4B63-93D4-17D1B2C705FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{342984EC-0828-4B63-93D4-17D1B2C705FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8435E156-FBFD-4B47-8C36-8C6752F7E8F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8435E156-FBFD-4B47-8C36-8C6752F7E8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8435E156-FBFD-4B47-8C36-8C6752F7E8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8435E156-FBFD-4B47-8C36-8C6752F7E8F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +144,7 @@ Global
 		{0718CD00-6656-4595-93A1-51572AE17462} = {72EA0402-E82D-4BE3-BF45-5F27062BDE33}
 		{412263F3-027B-4EB5-94C7-B7DE9D64D9FA} = {72EA0402-E82D-4BE3-BF45-5F27062BDE33}
 		{342984EC-0828-4B63-93D4-17D1B2C705FA} = {F0D99CDC-D310-419F-A1DA-0BBC2AE8E08B}
+		{8435E156-FBFD-4B47-8C36-8C6752F7E8F2} = {72EA0402-E82D-4BE3-BF45-5F27062BDE33}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85F9F409-0974-474E-A6DE-6DA611F17CE1}

@@ -526,7 +526,155 @@ WHERE DepartmentKey = @DepartmentKey;&quot;;
 </div><h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>LLBLGen Pro has a built-in auditing system that works with separated Auditor classes which are provided by 
+the developer and which are injected at runtime into the entity instances. These auditors act like recorders
+of auditing information on various actions and can provide new entity instances (or existing ones) which are
+then  persisted in the same transaction. </p>
+<p>The system is mainly designed to store auditing information separately from the audited entities, however it's
+also usable in the scenario at hand here: setting auditing information in the entity being audited. The following
+Auditor class is used for auditing on a DepartmentEntity instance:</p>
+<pre><code class="cs">/// &lt;summary&gt;
+/// Auditor class which is used for auditing on the DepartmentEntity.
+/// It's injected into the DepartmentEntity instances using the built-in
+/// DI feature of LLBLGen Pro.
+/// &lt;/summary&gt;
+[DependencyInjectionInfo(typeof(DepartmentEntity), &quot;AuditorToUse&quot;)]
+public class DepartmentAuditor : AuditorBase
+{
+    private List&lt;DepartmentEntity&gt; _toUpdate;
+
+    public DepartmentAuditor()
+    {
+        _toUpdate = new List&lt;DepartmentEntity&gt;();
+    }
+
+
+    public override void AuditInsertOfNewEntity(IEntityCore entity)
+    {
+        var auditedAsDepartment = entity as DepartmentEntity;
+        if(auditedAsDepartment == null)
+        {
+            return;
+        }
+
+        var createdDate = DateTime.Now;
+        auditedAsDepartment.CreatedDate = createdDate;
+        auditedAsDepartment.ModifiedDate = createdDate;
+        auditedAsDepartment.CreatedByEmployeeKey = ActiveEmployee;
+        auditedAsDepartment.ModifiedByEmployeeKey = ActiveEmployee;
+        _toUpdate.Add(auditedAsDepartment);
+    }
+
+
+    public override void AuditUpdateOfExistingEntity(IEntityCore entity)
+    {
+        var auditedAsDepartment = entity as DepartmentEntity;
+        if(auditedAsDepartment == null)
+        {
+            return;
+        }
+
+        auditedAsDepartment.ModifiedDate = DateTime.Now;
+        auditedAsDepartment.ModifiedByEmployeeKey = ActiveEmployee;
+        // as we've modified the department entity we have to pass it back 
+        // as an entity to the caller so it can be saved again. Typically
+        // a separated audit entity should be created here but for the 
+        // scenario here the information is updated inside the entity itself. 
+        _toUpdate.Add(auditedAsDepartment);
+    }
+
+
+    public override bool RequiresTransactionForAuditEntities(SingleStatementQueryAction actionToStart)
+    {
+        // if we have entities of our own, we have to tell the caller that so it can create a transaction 
+        return _toUpdate.Count &gt; 0 &amp;&amp; 
+               (actionToStart == SingleStatementQueryAction.ExistingEntityUpdate ||
+                actionToStart == SingleStatementQueryAction.NewEntityInsert);
+    }
+
+
+    public override void TransactionCommitted()
+    {
+        _toUpdate.Clear();
+    }
+
+
+    public override IList GetAuditEntitiesToSave()
+    {
+        // if we've modified entities (or created entities of our own), we have to pass them back
+        // so they can be included in the transaction. 
+        return _toUpdate;
+    }
+
+
+    /// &lt;summary&gt;
+    /// The pk of the employee entity to assign to any department audited by this auditor.
+    /// &lt;/summary&gt;
+    public int ActiveEmployee { get; set; }
+}
+</code></pre>
+
+<p>For every instance of a DepartmentEntity, an instance of this class is injected through the built-in Dependency Injection. This 
+is setup in the AssemblyInit method of the Recipes code: </p>
+<pre><code class="cs">RuntimeConfiguration.SetDependencyInjectionInfo(
+    new List&lt;Assembly&gt;() { typeof(DepartmentAuditor).Assembly}, null);
+</code></pre>
+
+<p>Usually, user info is passed through e.g. a ThreadPrinciple however for simplicity the user PK is passed directly to 
+the auditor instance of the entity in the scenario as is shown in the scenario code below:</p>
+<pre><code class="cs">public class AuditColumnsScenario : IAuditColumnsScenario&lt;DepartmentEntity&gt;
+{
+    public int CreateDepartment(DepartmentEntity department, User user)
+    {
+        if(department == null) 
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+        if(user == null) 
+            throw new ArgumentNullException(nameof(user), $&quot;{nameof(user)} is null.&quot;);
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            ConfigureAuditor(department, user);
+            adapter.SaveEntity(department);
+            return department.DepartmentKey;
+        }
+    }
+
+
+    public DepartmentEntity GetDepartment(int departmentKey, User user)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return adapter.FetchNewEntity&lt;DepartmentEntity&gt;(
+                                new RelationPredicateBucket(DepartmentFields.DepartmentKey
+                                                                            .Equal(departmentKey)));
+        }
+    }
+
+
+    public void UpdateDepartment(DepartmentEntity department, User user)
+    {
+        if(department == null) 
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+        if(user == null) 
+            throw new ArgumentNullException(nameof(user), $&quot;{nameof(user)} is null.&quot;);
+
+        using(var adapter = new DataAccessAdapter())
+        {
+            ConfigureAuditor(department, user);
+            adapter.SaveEntity(department);
+        }
+    }
+
+
+    private void ConfigureAuditor(DepartmentEntity department, User user)
+    {
+        ((DepartmentAuditor)department.AuditorToUse).ActiveEmployee = user.UserKey;
+    }
+}
+</code></pre>
+
+<p>For further information about the Auditing system in LLBLGen Pro: 
+<a href="https://www.llblgen.com/Documentation/5.6/LLBLGen%20Pro%20RTF/Using%20the%20generated%20code/gencode_auditing.htm" target="_blank">Auditing in the official docs</a></p>
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

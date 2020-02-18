@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading;
 
 namespace Recipes.AuditColumns
 {
@@ -33,6 +34,10 @@ namespace Recipes.AuditColumns
             Assert.AreEqual(user1.UserKey, version1.CreatedByEmployeeKey);
             Assert.AreEqual(user1.UserKey, version1.ModifiedByEmployeeKey);
 
+			// Wait 1 second as we're comparing datetime values which might be identical on fast
+			// machines
+			Thread.Sleep(500);
+			
             //Get a clean object so we don't mess up the comparisons between version1 and version2
             var updater1 = repository.GetDepartment(departmentKey, user1);
             updater1.DepartmentName = "Updated " + DateTime.Now.Ticks.ToString();
