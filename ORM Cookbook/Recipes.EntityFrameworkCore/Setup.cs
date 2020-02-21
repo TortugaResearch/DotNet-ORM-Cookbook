@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.EntityFrameworkCore.Entities;
+using Recipes.EntityFrameworkCore.Entities.Conventions;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Recipes.EntityFrameworkCore
 
             {
                 var options3 = new DbContextOptionsBuilder<OrmCookbookContext>().UseNpgsql(PostgreSqlConnectionString).Options;
-                PostgreSqlDBContextFactory = () => new OrmCookbookContext(options3);
+                PostgreSqlDBContextFactory = () => new OrmCookbookContext(options3, new LowerCaseConverter());
             }
 
             try

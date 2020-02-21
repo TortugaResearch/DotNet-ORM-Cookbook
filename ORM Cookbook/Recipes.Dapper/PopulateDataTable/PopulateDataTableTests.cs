@@ -8,7 +8,7 @@ namespace Recipes.Dapper.PopulateDataTable
     {
         protected override IPopulateDataTableScenario GetScenario()
         {
-            return new PopulateDataTableScenario(Setup.ConnectionString);
+            return new PopulateDataTableScenario(Setup.SqlServerConnectionString);
         }
     }
 }

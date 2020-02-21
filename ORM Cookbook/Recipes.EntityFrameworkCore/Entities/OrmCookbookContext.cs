@@ -1,18 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Recipes.EntityFrameworkCore.Entities.Conventions;
 using System;
 
 namespace Recipes.EntityFrameworkCore.Entities
 {
     public partial class OrmCookbookContext : DbContext
     {
-        public OrmCookbookContext()
+        public OrmCookbookContext(DbContextOptions<OrmCookbookContext> options, IDatabaseConventionConverter convention)
+    : base(options)
         {
+            m_Convention = convention;
         }
 
         public OrmCookbookContext(DbContextOptions<OrmCookbookContext> options)
             : base(options)
         {
         }
+
+        IDatabaseConventionConverter? m_Convention;
 
         //Using "= null!;" to remove the compiler warning.
         //Assume that the DbContext constructor will populate these properties
@@ -123,7 +128,11 @@ namespace Recipes.EntityFrameworkCore.Entities
 
 #nullable enable
 
+            //Allow subclasses to override conventions
             OnModelCreatingPartial(modelBuilder);
+
+            //Apply Conventions
+            m_Convention?.SetConvention(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

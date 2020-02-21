@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Ado.Models;
+using Recipes.Dapper.Models;
 using Recipes.MultipleDB;
 using System;
 
-namespace Recipes.Ado.MultipleDB
+namespace Recipes.Dapper.MultipleDB
 {
     [TestClass]
     public class MultipleDBTests : MultipleDBTests<EmployeeClassification>

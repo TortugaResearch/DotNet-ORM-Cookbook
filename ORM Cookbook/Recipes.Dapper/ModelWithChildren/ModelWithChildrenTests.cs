@@ -9,7 +9,7 @@ namespace Recipes.Dapper.ModelWithChildren
     {
         protected override IModelWithChildrenScenario<ProductLine, Product> GetScenario()
         {
-            return new ModelWithChildrenScenario(Setup.ConnectionString);
+            return new ModelWithChildrenScenario(Setup.SqlServerConnectionString);
         }
     }
 }

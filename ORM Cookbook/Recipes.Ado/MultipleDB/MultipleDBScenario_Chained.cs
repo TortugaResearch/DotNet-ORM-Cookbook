@@ -6,39 +6,36 @@ using System.Data.Common;
 
 namespace Recipes.Ado.MultipleDB
 {
-    public class MultipleDBScenario : IMultipleDBScenario<EmployeeClassification>
+    public class MultipleDBScenario_Chained : IMultipleDBScenario<EmployeeClassification>
     {
-        readonly DbProviderFactory m_ProviderFactory;
         readonly string m_ConnectionString;
         readonly DatabaseType m_DatabaseType;
 
-        public MultipleDBScenario(string connectionString, DatabaseType databaseType)
+        public MultipleDBScenario_Chained(string connectionString, DatabaseType databaseType)
         {
             m_ConnectionString = connectionString;
             m_DatabaseType = databaseType;
-
-            m_ProviderFactory = databaseType switch
-            {
-                DatabaseType.SqlServer => Microsoft.Data.SqlClient.SqlClientFactory.Instance,
-                DatabaseType.PostgreSql => Npgsql.NpgsqlFactory.Instance,
-                _ => throw new NotImplementedException()
-            };
         }
 
         DbConnection OpenConnection()
         {
-            var con = m_ProviderFactory.CreateConnection();
-            con.ConnectionString = m_ConnectionString;
+            DbConnection con = m_DatabaseType switch
+            {
+                DatabaseType.SqlServer => new Microsoft.Data.SqlClient.SqlConnection(m_ConnectionString),
+                DatabaseType.PostgreSql => new Npgsql.NpgsqlConnection(m_ConnectionString),
+                _ => throw new NotImplementedException()
+            };
+
             con.Open();
             return con;
         }
 
-        DbParameter CreateParameter(string parameterName, object? value)
+        void AddParameter(DbCommand command, string parameterName, object? value)
         {
-            var param = m_ProviderFactory.CreateParameter();
+            var param = command.CreateParameter();
             param.ParameterName = parameterName;
             param.Value = value;
-            return param;
+            command.Parameters.Add(param);
         }
 
         public int Create(EmployeeClassification classification)
@@ -60,11 +57,11 @@ namespace Recipes.Ado.MultipleDB
             };
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = con.CreateCommand())
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
-                cmd.Parameters.Add(CreateParameter("@EmployeeClassificationName", classification.EmployeeClassificationName));
+                AddParameter(cmd, "@EmployeeClassificationName", classification.EmployeeClassificationName);
                 return (int)cmd.ExecuteScalar();
             }
         }
@@ -77,12 +74,12 @@ namespace Recipes.Ado.MultipleDB
             const string sql = @"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = con.CreateCommand())
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
 
-                cmd.Parameters.Add(CreateParameter("@EmployeeClassificationKey", classification.EmployeeClassificationKey));
+                AddParameter(cmd, "@EmployeeClassificationKey", classification.EmployeeClassificationKey);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -92,12 +89,12 @@ namespace Recipes.Ado.MultipleDB
             const string sql = @"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = con.CreateCommand())
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
 
-                cmd.Parameters.Add(CreateParameter("@EmployeeClassificationKey", employeeClassificationKey));
+                AddParameter(cmd, "@EmployeeClassificationKey", employeeClassificationKey);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -109,12 +106,12 @@ namespace Recipes.Ado.MultipleDB
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = con.CreateCommand())
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
 
-                cmd.Parameters.Add(CreateParameter("@EmployeeClassificationName", employeeClassificationName));
+                AddParameter(cmd, "@EmployeeClassificationName", employeeClassificationName);
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (!reader.Read())
@@ -136,7 +133,7 @@ namespace Recipes.Ado.MultipleDB
             var result = new List<EmployeeClassification>();
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = con.CreateCommand())
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
@@ -163,12 +160,12 @@ namespace Recipes.Ado.MultipleDB
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = con.CreateCommand())
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
 
-                cmd.Parameters.Add(CreateParameter("@EmployeeClassificationKey", employeeClassificationKey));
+                AddParameter(cmd, "@EmployeeClassificationKey", employeeClassificationKey);
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (!reader.Read())
@@ -193,13 +190,13 @@ namespace Recipes.Ado.MultipleDB
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = con.CreateCommand())
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
 
-                cmd.Parameters.Add(CreateParameter("@EmployeeClassificationKey", classification.EmployeeClassificationKey));
-                cmd.Parameters.Add(CreateParameter("@EmployeeClassificationName", classification.EmployeeClassificationName));
+                AddParameter(cmd, "@EmployeeClassificationKey", classification.EmployeeClassificationKey);
+                AddParameter(cmd, "@EmployeeClassificationName", classification.EmployeeClassificationName);
                 cmd.ExecuteNonQuery();
             }
         }

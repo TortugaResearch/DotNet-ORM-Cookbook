@@ -9,7 +9,7 @@ namespace Recipes.Dapper.Pagination
     {
         protected override IPaginationScenario<EmployeeSimple> GetScenario()
         {
-            return new PaginationScenario(Setup.ConnectionString);
+            return new PaginationScenario(Setup.SqlServerConnectionString);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Recipes.Dapper.SingleModelCrudAsync
     {
         protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudAsyncScenarioContrib(Setup.ConnectionString);
+            return new SingleModelCrudAsyncScenarioContrib(Setup.SqlServerConnectionString);
         }
     }
 }
