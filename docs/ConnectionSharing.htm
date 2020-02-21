@@ -78,6 +78,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="MultipleDB.htm">Multiple Databases</a>
+</li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
 <li class="tocentry"><a href="Transactions.htm">Transactions</a>
@@ -374,8 +376,137 @@
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
-<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The DataAccessAdapter class needs some small adjustments to support this scenario as the scenario actively exposes
+objects owned by the adapter and by design this isn't directly supported. To adjust the DataAccessAdapter class we 
+create a small partial class of DataAccessAdapter and add the following code:</p>
+<pre><code class="cs">/// &lt;summary&gt;
+/// Extension of the generated adapter class which allows customization of the active connection / transaction.
+/// &lt;/summary&gt;
+public partial class DataAccessAdapter
+{
+    private DbConnection _connectionToUse;
+    private DbTransaction _transactionToUse;
+    
+    public void SetConnectionTransaction(DbConnection connectionToUse, DbTransaction transactionToUse=null)
+    {
+        _connectionToUse = connectionToUse;
+        _transactionToUse = transactionToUse;
+    }
+
+
+    protected override void Dispose(bool isDisposing)
+    {
+        if(_connectionToUse != null || _transactionToUse != null)
+        {
+            // don't dispose, leave them alive
+            return;
+        }
+        base.Dispose(isDisposing);
+    }
+
+
+    protected override DbConnection CreateNewPhysicalConnection(string connectionString)
+    {
+        return _connectionToUse ?? base.CreateNewPhysicalConnection(connectionString);
+    }
+
+
+    protected override DbTransaction CreateNewPhysicalTransaction()
+    {
+        return _transactionToUse ?? base.CreateNewPhysicalTransaction();
+    }
+
+
+    public DbConnection GetConnection()
+    {
+        return GetActiveConnection();
+    }
+
+    
+    public DbTransaction GetTransaction()
+    {
+        return this.PhysicalTransaction;
+    }
+}
+</code></pre>
+
+<p>The scenario: </p>
+<pre><code class="cs">public class ConnectionSharingScenario
+    : IConnectionSharingScenario&lt;EmployeeClassificationEntity,
+        DbConnection, DbTransaction, DataAccessAdapter&gt;
+{
+    public void CloseConnection(DataAccessAdapter adapter)
+    {
+        if(adapter == null)
+            throw new ArgumentNullException(nameof(adapter), $&quot;{nameof(adapter)} is null.&quot;);
+
+        adapter.CloseConnection();
+        adapter.Dispose();
+    }
+
+
+    public void CloseConnectionAndTransaction(DataAccessAdapter adapter)
+    {
+        if(adapter == null)
+            throw new ArgumentNullException(nameof(adapter), $&quot;{nameof(adapter)} is null.&quot;);
+
+        adapter.Commit();
+        adapter.Dispose();
+    }
+
+
+    public string GetConnectionString()
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return adapter.ConnectionString;
+        }
+    }
+
+
+    public ConnectionResult&lt;DbConnection, DataAccessAdapter&gt; OpenConnection()
+    {
+        var adapter = new DataAccessAdapter();
+        adapter.OpenConnection();
+        var connection = adapter.GetConnection();
+        adapter.KeepConnectionOpen = true;
+        return (connection, adapter);
+    }
+
+
+    public ConnectionTransactionResult&lt;DbConnection, DbTransaction, DataAccessAdapter&gt;
+        OpenConnectionAndTransaction()
+    {
+        var adapter = new DataAccessAdapter();
+        adapter.OpenConnection();
+        adapter.StartTransaction(IsolationLevel.ReadCommitted, &quot;OpenConTrans&quot;);
+        adapter.KeepConnectionOpen = true;
+        return (adapter.GetConnection(), adapter.GetTransaction(), adapter);
+    }
+
+
+    public EmployeeClassificationEntity UseOpenConnection(DbConnection connection, DbTransaction? transaction,
+                                                          int employeeClassificationKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            adapter.SetConnectionTransaction(connection, transaction);
+            adapter.StartTransaction(IsolationLevel.ReadCommitted, &quot;OpenConnection&quot;);
+            adapter.KeepConnectionOpen = true;
+            return adapter.FetchNewEntity&lt;EmployeeClassificationEntity&gt;(
+                                new RelationPredicateBucket(EmployeeClassificationFields.EmployeeClassificationKey
+                                            .Equal(employeeClassificationKey)));
+        }
+    }
+}
+</code></pre>
+
+<div class="alert alert-warning"><span class="alert-title"><i class="fa fa-warning"></i> Important!</span><p>With some simple adjustments this scenario is supported by LLBLGen Pro, but it's very important to realize that the 
+connection and transaction objects have to be managed by you as the controlling objects are out of scope. This means you
+have to take care of closing and disposing the connection and committing/rolling back the transaction. </p>
+<p>A better way to do this is by passing the DataAccessAdapter around or use a Unit of Work to collect all work for a transaction, 
+or use System.Transactions' TransactionScope for multi-connection transactions. </p>
+</div><h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>

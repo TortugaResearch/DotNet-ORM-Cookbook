@@ -46,6 +46,7 @@
       "Batch Inserts with Large Collections": "LargeBatch.md",
       "Bulk Inserts": "BulkInsert.md",
       "Connection Sharing": "ConnectionSharing.md",
+      "Multiple Databases": "MultipleDB.md",
       "Partial Updates": "PartialUpdate.md",
       "Transactions": "Transactions.md",
       "Upsert": "Upsert.md"

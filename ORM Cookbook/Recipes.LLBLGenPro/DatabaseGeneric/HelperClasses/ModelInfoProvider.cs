@@ -59,9 +59,13 @@ namespace LLBLGenPro.OrmCookbook.HelperClasses
 		private void InitDepartmentEntityInfo()
 		{
 			this.AddFieldIndexEnumForElementName(typeof(DepartmentFieldIndex), "DepartmentEntity");
+			this.AddElementFieldInfo("DepartmentEntity", "CreatedByEmployeeKey", typeof(Nullable<System.Int32>), false, true, false, true,  (int)DepartmentFieldIndex.CreatedByEmployeeKey, 0, 0, 10);
+			this.AddElementFieldInfo("DepartmentEntity", "CreatedDate", typeof(Nullable<System.DateTime>), false, false, false, true,  (int)DepartmentFieldIndex.CreatedDate, 0, 0, 0);
 			this.AddElementFieldInfo("DepartmentEntity", "DepartmentKey", typeof(System.Int32), true, false, true, false,  (int)DepartmentFieldIndex.DepartmentKey, 0, 0, 10);
 			this.AddElementFieldInfo("DepartmentEntity", "DepartmentName", typeof(System.String), false, false, false, false,  (int)DepartmentFieldIndex.DepartmentName, 30, 0, 0);
 			this.AddElementFieldInfo("DepartmentEntity", "DivisionKey", typeof(System.Int32), false, true, false, false,  (int)DepartmentFieldIndex.DivisionKey, 0, 0, 10);
+			this.AddElementFieldInfo("DepartmentEntity", "ModifiedByEmployeeKey", typeof(Nullable<System.Int32>), false, true, false, true,  (int)DepartmentFieldIndex.ModifiedByEmployeeKey, 0, 0, 10);
+			this.AddElementFieldInfo("DepartmentEntity", "ModifiedDate", typeof(Nullable<System.DateTime>), false, false, false, true,  (int)DepartmentFieldIndex.ModifiedDate, 0, 0, 0);
 		}
 
 		/// <summary>Inits DivisionEntity's info objects</summary>

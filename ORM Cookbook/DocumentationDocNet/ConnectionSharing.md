@@ -32,7 +32,24 @@ TODO
 
 ## LLBLGen Pro 
 
-TODO
+The DataAccessAdapter class needs some small adjustments to support this scenario as the scenario actively exposes
+objects owned by the adapter and by design this isn't directly supported. To adjust the DataAccessAdapter class we 
+create a small partial class of DataAccessAdapter and add the following code:
+
+@snippet cs [..\Recipes.LLBLGenPro\DatabaseSpecific\Extensions\DataAccessAdapter.cs] DataAccessAdapter
+
+The scenario: 
+
+@snippet cs [..\Recipes.LLBLGenPro\Recipes\ConnectionSharing\ConnectionSharingScenario.cs] ConnectionSharingScenario
+
+@alert Important
+With some simple adjustments this scenario is supported by LLBLGen Pro, but it's very important to realize that the 
+connection and transaction objects have to be managed by you as the controlling objects are out of scope. This means you
+have to take care of closing and disposing the connection and committing/rolling back the transaction. 
+
+A better way to do this is by passing the DataAccessAdapter around or use a Unit of Work to collect all work for a transaction, 
+or use System.Transactions' TransactionScope for multi-connection transactions. 
+@end
 
 ## NHibernate
 

@@ -88,6 +88,11 @@
   </Properties>
   <TypeShortcuts>
     <TypeShortcut Shortcut="CategoryType" Type="EnumTypes.CategoryType, EnumTypes" />
+    <TypeShortcut Shortcut="DateTime2" Type="System.DateTime">
+      <Defaults>
+        <Default DriverID="2D18D138-1DD2-467E-86CC-4838250611AE" Value="" PreferredDbType="29" />
+      </Defaults>
+    </TypeShortcut>
   </TypeShortcuts>
   <IgnoredWarnings />
   <SavedSearchQueries />
@@ -132,6 +137,22 @@
         <AdhocTemplateSets />
       </LastUsedPreferences>
     </OutputType>
+    <OutputType Value="2">
+      <LastUsedPreferences>
+        <DestinationRootFolder Value="c:\temp" />
+        <FrameworkName Value="DDL SQL" />
+        <LanguageName Value="SQL" />
+        <PlatformName Value="RDBMS" />
+        <PresetName Value="SD.Presets.DDLSQL.UpdateScript" />
+        <RootNamespace Value="" />
+        <TemplateGroup Value="Update DDL SQL" />
+        <TemplateBindings>
+          <Binding Name="SD.TemplateBindings.SqlServerSpecific.DDLSQL" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.DDLSQL" />
+        </TemplateBindings>
+        <AdhocTemplateSets />
+      </LastUsedPreferences>
+    </OutputType>
   </CodeGenerationCyclePreferences>
   <OutputSettingValues>
     <SettingValues>
@@ -168,15 +189,24 @@
     <EntityDefinitions>
       <EntityDefinition Name="Department" ObjectID="abab4610-ab93-4642-a2fa-390755630238">
         <Fields>
+          <Field Name="CreatedByEmployeeKey" Type="int" IsOptional="true" Precision="10" IsAutoCreated="true" />
+          <Field Name="CreatedDate" Type="DateTime2" IsOptional="true" />
           <Field Name="DepartmentKey" Type="int" IsReadOnly="true" Precision="10" IsPrimaryKey="true" />
           <Field Name="DepartmentName" Type="string" MaxLength="30" />
           <Field Name="DivisionKey" Type="int" Precision="10" />
+          <Field Name="ModifiedByEmployeeKey" Type="int" IsOptional="true" Precision="10" IsAutoCreated="true" />
+          <Field Name="ModifiedDate" Type="DateTime2" IsOptional="true" />
         </Fields>
         <UniqueConstraints>
           <UniqueConstraint Name="UxDepartmentDepartmentName">
             <Field Name="DepartmentName" />
           </UniqueConstraint>
         </UniqueConstraints>
+        <OutputSettingValues>
+          <Interfaces>
+            <Interface Name="Recipes.IDepartment" />
+          </Interfaces>
+        </OutputSettingValues>
       </EntityDefinition>
       <EntityDefinition Name="Division" ObjectID="4bd49434-34f6-4040-9db4-cf9f5c0ddcd6">
         <Fields>
@@ -294,9 +324,19 @@
       </EntityDefinition>
     </EntityDefinitions>
     <Relationships>
+      <NormalRelationship Name="Department.CreatedByEmployee-Employee.CreatedDepartments" Start=":Department" End=":Employee" StartNavigator="CreatedByEmployee" EndNavigator="CreatedDepartments" Type="4" EndIsOptional="true" DeleteRuleAction="1">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="CreatedByEmployeeKey" PkField="EmployeeKey" />
+        </FieldRelationships>
+      </NormalRelationship>
       <NormalRelationship Name="Department.Division-Division.Departments" Start=":Department" End=":Division" StartNavigator="Division" EndNavigator="Departments" Type="4">
         <FieldRelationships>
           <FieldFieldRelationship FkField="DivisionKey" PkField="DivisionKey" />
+        </FieldRelationships>
+      </NormalRelationship>
+      <NormalRelationship Name="Department.ModifiedByEmployee-Employee.ModifiedDepartments" Start=":Department" End=":Employee" StartNavigator="ModifiedByEmployee" EndNavigator="ModifiedDepartments" Type="4" EndIsOptional="true" DeleteRuleAction="1">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="ModifiedByEmployeeKey" PkField="EmployeeKey" />
         </FieldRelationships>
       </NormalRelationship>
       <NormalRelationship Name="Division.CreatedByEmployee-Employee.DivisionsCreatedByEmployee" Start=":Division" End=":Employee" StartNavigator="CreatedByEmployee" EndNavigator="DivisionsCreatedByEmployee" Type="4">
@@ -410,7 +450,7 @@
     </SPCallDefinition>
   </SPCallDefinitions>
   <TargetDatabases>
-    <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="2">
+    <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="1">
       <ConnectionElements>
         <ConnectionElement Name="ServerName" Value="ATHENA\SQLEXPRESS2017" />
         <ConnectionElement Name="CatalogName" Value="master" />
@@ -423,9 +463,9 @@
         <Sequence Name="@@IDENTITY" />
       </SystemSequences>
       <Catalogs>
-        <Catalog Name="ORMCookbook">
+        <Catalog Name="ORMCookbook" SyncSource="1">
           <Schemas>
-            <Schema Name="HR" SyncSource="2" LastSyncWithDatabase="2020-01-20T12:41:40.4548504Z">
+            <Schema Name="HR" SyncSource="1" LastSyncWithDatabase="2020-01-20T12:41:40.4548504Z" LastSyncWithModel="2020-02-17T10:17:31.334161Z">
               <Tables>
                 <Table Name="Department">
                   <PkConstraintName Name="PK_Department" />
@@ -433,6 +473,10 @@
                     <Field Name="DepartmentKey" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
                     <Field Name="DepartmentName" Ordinal="2" DbType="12" Length="30" />
                     <Field Name="DivisionKey" Ordinal="3" DbType="8" Precision="10" />
+                    <Field Name="CreatedByEmployeeKey" Ordinal="4" IsOptional="true" DbType="8" Precision="10" />
+                    <Field Name="CreatedDate" Ordinal="5" IsOptional="true" DbType="29" />
+                    <Field Name="ModifiedByEmployeeKey" Ordinal="6" IsOptional="true" DbType="8" Precision="10" />
+                    <Field Name="ModifiedDate" Ordinal="7" IsOptional="true" DbType="29" />
                   </Fields>
                   <UniqueConstraints>
                     <UniqueConstraint Name="UX_Department_DepartmentName">
@@ -560,7 +604,7 @@
                 </StoredProcedure>
               </StoredProcedures>
             </Schema>
-            <Schema Name="Production" SyncSource="2" LastSyncWithDatabase="2020-01-20T12:41:40.4803899Z">
+            <Schema Name="Production" SyncSource="1" LastSyncWithDatabase="2020-01-20T12:41:40.4803899Z" LastSyncWithModel="2020-02-17T10:17:31.334161Z">
               <Tables>
                 <Table Name="Product">
                   <PkConstraintName Name="PK_Product" />
@@ -588,6 +632,16 @@
             </Schema>
           </Schemas>
           <ForeignKeyConstraints>
+            <ForeignKeyConstraint Name="HR:Department:FK_25445b7468090d93431cd5951e3" DeleteRuleAction="1">
+              <FieldPairs>
+                <FieldPair PkField="HR:Employee:EmployeeKey" FkField="HR:Department:CreatedByEmployeeKey" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
+            <ForeignKeyConstraint Name="HR:Department:FK_6bbb99c4033a0778eb0f16a5095" DeleteRuleAction="1">
+              <FieldPairs>
+                <FieldPair PkField="HR:Employee:EmployeeKey" FkField="HR:Department:ModifiedByEmployeeKey" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
             <ForeignKeyConstraint Name="HR:Department:FK_Department_DivisionKey">
               <FieldPairs>
                 <FieldPair PkField="HR:Division:DivisionKey" FkField="HR:Department:DivisionKey" />
@@ -623,9 +677,13 @@
       <EntityMappings>
         <EntityMapping EntityName=":Department" TargetName="ORMCookbook:HR:Department">
           <FieldMappings>
+            <FieldMapping FieldName="CreatedByEmployeeKey" TargetFieldName="CreatedByEmployeeKey" />
+            <FieldMapping FieldName="CreatedDate" TargetFieldName="CreatedDate" />
             <FieldMapping FieldName="DepartmentKey" TargetFieldName="DepartmentKey" SequenceToUse="SCOPE_IDENTITY()" />
             <FieldMapping FieldName="DepartmentName" TargetFieldName="DepartmentName" />
             <FieldMapping FieldName="DivisionKey" TargetFieldName="DivisionKey" />
+            <FieldMapping FieldName="ModifiedByEmployeeKey" TargetFieldName="ModifiedByEmployeeKey" />
+            <FieldMapping FieldName="ModifiedDate" TargetFieldName="ModifiedDate" />
           </FieldMappings>
         </EntityMapping>
         <EntityMapping EntityName=":Division" TargetName="ORMCookbook:HR:Division">
