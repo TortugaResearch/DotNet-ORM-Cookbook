@@ -78,8 +78,6 @@
 
 
 </ul>
-<li class="tocentry"><a href="MultipleDB.htm">Multiple Databases</a>
-</li>
 <li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
 </li>
 <li class="tocentry"><a href="Transactions.htm">Transactions</a>
@@ -179,7 +177,6 @@
 {
     readonly SqlServerDataSource m_DataSource;
     readonly string m_ConnectionString;
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
 
     public ConnectionSharingScenario(SqlServerDataSource dataSource, string connectionString)
     {
@@ -229,7 +226,7 @@
         int employeeClassificationKey)
     {
         var openDataSource = m_DataSource.CreateOpenDataSource(connection, transaction);
-        return openDataSource.GetByKey(TableName, employeeClassificationKey)
+        return openDataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey)
             .ToObject&lt;EmployeeClassification&gt;().Execute();
     }
 }

@@ -44,7 +44,7 @@ namespace Recipes.Chain
         {
             //Preload all of the database metadata to warmup the data source
             PrimaryDataSource.DatabaseMetadata.Preload();
-            PrimaryDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
+            PrimaryDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObjectOrNull<EmployeeClassification>().Execute();
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace Recipes.Chain
         {
             //Preload all of the database metadata to warmup the data source
             PostgreSqlDataSource.DatabaseMetadata.Preload();
-            PostgreSqlDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObject<EmployeeClassification>(RowOptions.AllowEmptyResults).Execute();
+            PostgreSqlDataSource.From("HR.EmployeeClassification", "1=0").Compile().ToObjectOrNull<EmployeeClassification>().Execute();
         }
     }
 }

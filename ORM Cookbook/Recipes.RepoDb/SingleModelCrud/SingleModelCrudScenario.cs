@@ -1,11 +1,11 @@
-﻿using Recipes.RepoDb.Models;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.RepoDb.Models;
 using Recipes.SingleModelCrud;
+using RDB = RepoDb;
 using RepoDb;
 using RepoDb.Extensions;
-using RDB = RepoDb;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Recipes.RepoDb.SingleModelCrud

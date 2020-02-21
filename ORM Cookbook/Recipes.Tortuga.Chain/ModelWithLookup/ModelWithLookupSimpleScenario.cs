@@ -8,7 +8,6 @@ namespace Recipes.Chain.ModelWithLookup
 {
     public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario<EmployeeSimple>
     {
-        const string ClassificationTableName = "HR.EmployeeClassification";
         const string TableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
@@ -50,12 +49,12 @@ namespace Recipes.Chain.ModelWithLookup
 
         public EmployeeSimple? GetByKey(int employeeKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeKey).ToObjectOrNull<EmployeeSimple>().Execute();
+            return m_DataSource.GetByKey<EmployeeSimple>(employeeKey).ToObjectOrNull().Execute();
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(ClassificationTableName, employeeClassificationKey).ToObject<EmployeeClassification>().Execute();
+            return m_DataSource.GetByKey<EmployeeClassification>(employeeClassificationKey).ToObject().Execute();
         }
 
         public void Update(EmployeeSimple employee)

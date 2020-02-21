@@ -1,11 +1,9 @@
-﻿using Recipes.RepoDb.Models;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.RepoDb.Models;
 using Recipes.SingleColumn;
-using RepoDb;
-
 using RDB = RepoDb;
-
+using RepoDb;
 using System;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Collections.Generic;
 

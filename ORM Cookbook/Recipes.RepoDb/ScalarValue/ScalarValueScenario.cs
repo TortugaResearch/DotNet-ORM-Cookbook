@@ -1,8 +1,8 @@
-﻿using Recipes.ScalarValue;
-using RepoDb;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.ScalarValue;
 using RDB = RepoDb;
+using RepoDb;
 using System;
-using System.Data.SqlClient;
 
 namespace Recipes.RepoDb.ScalarValue
 {

@@ -239,7 +239,6 @@ WHERE DepartmentKey = @DepartmentKey;&quot;;
 <pre><code class="cs">public class AuditColumnsScenario :
     IAuditColumnsScenario&lt;Department&gt;
 {
-    private const string TableName = &quot;HR.Department&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public AuditColumnsScenario(SqlServerDataSource dataSource)
@@ -263,7 +262,7 @@ WHERE DepartmentKey = @DepartmentKey;&quot;;
 
     public Department GetDepartment(int departmentKey, User user)
     {
-        return m_DataSource.WithUser(user).GetByKey(TableName, departmentKey).ToObject&lt;Department&gt;().Execute();
+        return m_DataSource.WithUser(user).GetByKey&lt;Department&gt;(departmentKey).ToObject&lt;Department&gt;().Execute();
     }
 
     public void UpdateDepartment(Department department, User user)

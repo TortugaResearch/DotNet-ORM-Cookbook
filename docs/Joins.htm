@@ -270,50 +270,63 @@ VALUES
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain doesn't natively support joins, so raw SQL (or a view) has to be used as a fallback. </p>
-<pre><code class="cs">public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
-{
-    const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
-    readonly SqlServerDataSource m_DataSource;
-
-    public JoinsScenario(SqlServerDataSource dataSource)
+<pre><code class="cs">    public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
     {
-        m_DataSource = dataSource;
+        const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
+        readonly SqlServerDataSource m_DataSource;
+
+        public JoinsScenario(SqlServerDataSource dataSource)
+        {
+            m_DataSource = dataSource;
+        }
+
+        public int Create(EmployeeSimple employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+            return m_DataSource.Insert(employee).ToInt32().Execute();
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+        {
+            const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone,
+e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+FROM HR.Employee e
+INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey
+WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+            return m_DataSource.Sql(sql, new { employeeClassificationKey }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+&quot;e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee &quot; +
+&quot;FROM HR.Employee e &quot; +
+&quot;INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey &quot; +
+&quot;WHERE e.LastName = @LastName&quot;;
+
+            return m_DataSource.Sql(sql, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+        }
+
+        public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+        {
+            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+&quot;e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee &quot; +
+&quot;FROM HR.Employee e &quot; +
+&quot;INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey &quot; +
+&quot;WHERE e.EmployeeKey = @EmployeeKey&quot;;
+
+            return m_DataSource.Sql(sql, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
+        }
+
+        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+        {
+            return m_DataSource.From(ClassificationTableName, new { employeeClassificationKey })
+                .ToObject&lt;EmployeeClassification&gt;().Execute();
+        }
     }
-
-    public int Create(EmployeeSimple employee)
-    {
-        if (employee == null)
-            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-
-        return m_DataSource.Insert(employee).ToInt32().Execute();
-    }
-
-    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
-    {
-        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
-
-        return m_DataSource.Sql(sql, new { employeeClassificationKey }).ToCollection&lt;EmployeeDetail&gt;().Execute();
-    }
-
-    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
-    {
-        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
-
-        return m_DataSource.Sql(sql, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
-    }
-
-    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
-    {
-        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
-
-        return m_DataSource.Sql(sql, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
-    }
-
-    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
-    {
-        return m_DataSource.From(ClassificationTableName, new { employeeClassificationKey }).ToObject&lt;EmployeeClassification&gt;().Execute();
-    }
-}
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

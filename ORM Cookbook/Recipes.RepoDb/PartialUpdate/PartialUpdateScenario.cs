@@ -1,9 +1,9 @@
-﻿using Recipes.PartialUpdate;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.PartialUpdate;
 using Recipes.RepoDb.Models;
-using RepoDb;
 using RDB = RepoDb;
+using RepoDb;
 using System;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Recipes.RepoDb.PartialUpdate

@@ -491,7 +491,6 @@ public class EmployeeClassification : IEmployeeClassification
 <p>Other information such as primary keys are read from the database's metadata.</p>
 <pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt;
 {
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly SqlServerDataSource m_DataSource;
 
     public SingleModelCrudScenario(SqlServerDataSource dataSource)
@@ -517,7 +516,7 @@ public class EmployeeClassification : IEmployeeClassification
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+        m_DataSource.DeleteByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).Execute();
     }
 
     public EmployeeClassification FindByName(string employeeClassificationName)
@@ -533,8 +532,8 @@ public class EmployeeClassification : IEmployeeClassification
 
     public EmployeeClassification GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey)
-            .ToObject&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey)
+            .ToObject().Execute();
     }
 
     public void Update(EmployeeClassification classification)

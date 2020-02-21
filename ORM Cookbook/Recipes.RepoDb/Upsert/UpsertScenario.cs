@@ -1,10 +1,10 @@
-﻿using Recipes.RepoDb.Models;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.RepoDb.Models;
 using Recipes.Upsert;
-using RepoDb;
 using RDB = RepoDb;
+using RepoDb;
 using System;
 using System.Linq;
-using System.Data.SqlClient;
 
 namespace Recipes.RepoDb.Upsert
 {
