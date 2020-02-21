@@ -9,7 +9,7 @@ namespace Recipes.Dapper.TryCrud
     {
         protected override ITryCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new TryCrudScenario(Setup.ConnectionString);
+            return new TryCrudScenario(Setup.SqlServerConnectionString);
         }
     }
 }

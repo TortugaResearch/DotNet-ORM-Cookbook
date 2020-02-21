@@ -9,7 +9,7 @@ namespace Recipes.Dapper.ModelWithLookup
     {
         protected override IModelWithLookupComplexScenario<EmployeeComplex> GetScenario()
         {
-            return new ModelWithLookupComplexScenario(Setup.ConnectionString);
+            return new ModelWithLookupComplexScenario(Setup.SqlServerConnectionString);
         }
     }
 }

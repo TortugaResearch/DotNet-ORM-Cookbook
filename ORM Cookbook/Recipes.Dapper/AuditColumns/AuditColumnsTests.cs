@@ -9,7 +9,7 @@ namespace Recipes.Dapper.AuditColumns
     {
         protected override IAuditColumnsScenario<Department> GetScenario()
         {
-            return new AuditColumnsScenario(Setup.ConnectionString);
+            return new AuditColumnsScenario(Setup.SqlServerConnectionString);
         }
     }
 }

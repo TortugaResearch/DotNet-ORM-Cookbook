@@ -8,7 +8,7 @@ namespace Recipes.Dapper.ScalarValue
     {
         protected override IScalarValueScenario GetScenario()
         {
-            return new ScalarValueScenario(Setup.ConnectionString);
+            return new ScalarValueScenario(Setup.SqlServerConnectionString);
         }
     }
 }

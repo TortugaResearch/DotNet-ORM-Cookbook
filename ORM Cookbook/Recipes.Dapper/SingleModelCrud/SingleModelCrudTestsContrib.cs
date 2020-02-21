@@ -9,7 +9,7 @@ namespace Recipes.Dapper.SingleModelCrud
     {
         protected override ISingleModelCrudScenario<EmployeeClassification> GetScenario()
         {
-            return new SingleModelCrudScenarioContrib(Setup.ConnectionString);
+            return new SingleModelCrudScenarioContrib(Setup.SqlServerConnectionString);
         }
     }
 }

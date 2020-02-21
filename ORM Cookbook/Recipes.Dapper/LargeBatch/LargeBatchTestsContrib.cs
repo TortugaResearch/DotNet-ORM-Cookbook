@@ -9,7 +9,7 @@ namespace Recipes.Dapper.LargeBatch
     {
         protected override ILargeBatchScenario<EmployeeSimple> GetScenario()
         {
-            return new LargeBatchScenarioContrib(Setup.ConnectionString);
+            return new LargeBatchScenarioContrib(Setup.SqlServerConnectionString);
         }
     }
 }

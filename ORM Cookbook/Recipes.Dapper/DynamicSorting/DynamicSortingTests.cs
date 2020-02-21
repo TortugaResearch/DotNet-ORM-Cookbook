@@ -9,7 +9,7 @@ namespace Recipes.Dapper.DynamicSorting
     {
         protected override IDynamicSortingScenario<EmployeeSimple> GetScenario()
         {
-            return new DynamicSortingScenario(Setup.ConnectionString);
+            return new DynamicSortingScenario(Setup.SqlServerConnectionString);
         }
     }
 }

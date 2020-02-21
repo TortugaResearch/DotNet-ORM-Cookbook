@@ -9,7 +9,7 @@ namespace Recipes.Dapper.MultipleCrud
     {
         protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
         {
-            return new MultipleCrudScenarioContrib(Setup.ConnectionString);
+            return new MultipleCrudScenarioContrib(Setup.SqlServerConnectionString);
         }
     }
 }
