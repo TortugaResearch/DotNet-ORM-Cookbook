@@ -26,7 +26,7 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 ## Libraries
 
-- [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer)
+- [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer)
 - [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 - [RepoDb.MySql](https://www.nuget.org/packages/RepoDb.MySql)
 - [RepoDb.PostgreSql](https://www.nuget.org/packages/RepoDb.PostgreSql)
