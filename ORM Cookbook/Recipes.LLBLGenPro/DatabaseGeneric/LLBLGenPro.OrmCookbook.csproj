@@ -6,6 +6,7 @@
     <RootNamespace>LLBLGenPro.OrmCookbook</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.6.2" />
   </ItemGroup>
   <ItemGroup>

@@ -30,7 +30,6 @@ namespace Recipes.RepoDb
 
             try
             {
-                RDB.SqlServerBootstrap.Initialize();
                 (new Setup()).Warmup();
             }
             catch { }
@@ -39,6 +38,8 @@ namespace Recipes.RepoDb
         [TestMethod]
         public void Warmup()
         {
+            RDB.SqlServerBootstrap.Initialize();
+
             //Make sure we can connect to the database. This will also pool a connection for future use.
             using (var con = new SqlConnection(ConnectionString))
             using (var cmd = new SqlCommand("SELECT 1", con))
