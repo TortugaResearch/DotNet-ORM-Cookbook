@@ -26,6 +26,7 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 ## Libraries
 
+- [RepoDb.Core](https://www.nuget.org/packages/RepoDb)
 - [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer)
 - [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 - [RepoDb.MySql](https://www.nuget.org/packages/RepoDb.MySql)
@@ -36,10 +37,10 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 Please click any of the link below to let you get started with this library.
 
-- [SqlServer](/tutorial/get-started-sqlserver)
-- [SqLite](/tutorial/get-started-sqlite)
-- [MySql](/tutorial/get-started-mysql)
-- [PostgreSql](/tutorial/get-started-postgresql)
+- [SqlServer](http://repodb.net/tutorial/get-started-sqlserver)
+- [SqLite](http://repodb.net/tutorial/get-started-sqlite)
+- [MySql](http://repodb.net/tutorial/get-started-mysql)
+- [PostgreSql](http://repodb.net/tutorial/get-started-postgresql)
 
 ## Documentation and Tutorials 
 
