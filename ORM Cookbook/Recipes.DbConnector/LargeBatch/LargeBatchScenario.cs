@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 
 namespace Recipes.DbConnector.LargeBatch
 {
@@ -29,7 +30,7 @@ namespace Recipes.DbConnector.LargeBatch
 
         virtual public void InsertLargeBatch(IList<EmployeeSimple> employees, int batchSize)
         {
-            if (employees == null || employees.Count == 0)
+            if (employees == null || !employees.Any())
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
             //Best approach for unlimited inserts since SQL server has parameter amount restrictions
@@ -54,7 +55,7 @@ namespace Recipes.DbConnector.LargeBatch
                         @{nameof(EmployeeSimple.OfficePhone)},
                         @{nameof(EmployeeSimple.Title)}
                     )",
-                    param: employees[0],
+                    param: employees.First(),
                     onExecute: (int? result, IDbExecutionModel em) =>
                     {
                         //Set the command
@@ -64,10 +65,8 @@ namespace Recipes.DbConnector.LargeBatch
                         em.NumberOfRowsAffected = command.ExecuteNonQuery();
 
                         //Set and execute remaining rows.
-                        for (int i = 1; i < employees.Count; i++)
+                        foreach (var emp in employees.Skip(1))
                         {
-                            var emp = employees[i];
-
                             command.Parameters[nameof(EmployeeSimple.CellPhone)].Value = emp.CellPhone ?? (object)DBNull.Value;
                             command.Parameters[nameof(EmployeeSimple.EmployeeClassificationKey)].Value = emp.EmployeeClassificationKey;
                             command.Parameters[nameof(EmployeeSimple.FirstName)].Value = emp.FirstName ?? (object)DBNull.Value;

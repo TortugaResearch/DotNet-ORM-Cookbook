@@ -38,16 +38,7 @@ namespace Recipes.DbConnector.ModelWithChildren
             }
             else
             {
-                //Leverage DbConnector's Job Batching feature
-                List<IDbJob<int>> jobs = new List<IDbJob<int>>
-                {
-                    jobProductLine
-                };
-
-                foreach (var item in productLine.Products)
-                    jobs.Add(BuildInsertProduct(item));
-
-                DbJob.ExecuteAll(jobs);//Execute all jobs
+                DbJob.ExecuteAll(jobProductLine, BuildInsertOrUpdateProducts(productLine.Products));//Execute all jobs
 
                 return productLine.ProductLineKey;
             }
@@ -221,24 +212,7 @@ namespace Recipes.DbConnector.ModelWithChildren
             productLine.ApplyKeys();
 
             //Leverage DbConnector's Job Batching feature
-            List<IDbJob> jobs = new List<IDbJob>
-            {
-                BuildUpdateProductLine(productLine)
-            };
-
-            foreach (var item in productLine.Products)
-            {
-                if (item.ProductKey == 0)
-                {
-                    jobs.Add(BuildInsertProduct(item));
-                }
-                else
-                {
-                    jobs.Add(BuildUpdateProduct(item));
-                }
-            }
-
-            DbJob.ExecuteAll(jobs);//Execute all jobs
+            DbJob.ExecuteAll(BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products));
         }
 
         public void UpdateGraphWithChildDeletes(ProductLine productLine)
@@ -248,25 +222,18 @@ namespace Recipes.DbConnector.ModelWithChildren
 
             productLine.ApplyKeys();
 
-            //TODO: Maybe do everything in a single query
+            //Note: This could all be done in a single query transaction leveraging the MERGE feature
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction())
-            {                
+            {
                 //Find products
                 var originalProductKeys = BuildGetProductKeys(productLine.ProductLineKey).Execute(trans);
 
                 foreach (var item in productLine.Products)
                     originalProductKeys.Remove(item.ProductKey);
 
-                BuildUpdateProductLine(productLine).Execute(trans);
-
-                foreach (var item in productLine.Products)
-                {
-                    if (item.ProductKey == 0)
-                        BuildInsertProduct(item).Execute(trans);
-                    else
-                        BuildUpdateProduct(item).Execute(trans);
-                }
+                //Leverage DbConnector's Job Batching feature
+                DbJob.ExecuteAll(trans, BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products));
 
                 //Remove products
                 if (originalProductKeys.Count > 0)
@@ -283,28 +250,14 @@ namespace Recipes.DbConnector.ModelWithChildren
 
             productLine.ApplyKeys();
 
-            //Leverage DbConnector's Job Batching feature
-            List<IDbJob> jobs = new List<IDbJob>
+            if (productKeysToRemove == null || productKeysToRemove.Count == 0)
             {
-                BuildUpdateProductLine(productLine)
-            };
-
-            foreach (var item in productLine.Products)
-            {
-                if (item.ProductKey == 0)
-                {
-                    jobs.Add(BuildInsertProduct(item));
-                }
-                else
-                {
-                    jobs.Add(BuildUpdateProduct(item));
-                }
+                DbJob.ExecuteAll(BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products));
             }
-
-            if (productKeysToRemove != null && productKeysToRemove.Count > 0)
-                jobs.Add(BuildDeleteProducts(productKeysToRemove));
-
-            DbJob.ExecuteAll(jobs);//Execute all jobs
+            else
+            {
+                DbJob.ExecuteAll(BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products), BuildDeleteProducts(productKeysToRemove));
+            }
         }
 
         protected IDbJob<int?> BuildDeleteProduct(int productKey)
@@ -337,6 +290,87 @@ namespace Recipes.DbConnector.ModelWithChildren
             const string sql = "INSERT INTO Production.Product ( ProductName, ProductLineKey, ShippingWeight, ProductWeight ) OUTPUT Inserted.ProductKey VALUES ( @ProductName, @ProductLineKey, @ShippingWeight, @ProductWeight )";
 
             return DbConnector.Scalar<int>(sql, product).OnCompleted(result => { product.ProductKey = result; return result; });
+        }
+
+        protected IDbJob<int?> BuildInsertOrUpdateProducts(IEnumerable<Product> products)
+        {
+            if (products == null || !products.Any())
+                throw new ArgumentException($"{nameof(products)} is null or empty.", nameof(products));
+
+            string sql = $@"
+                MERGE INTO {Product.TableName} target
+                USING
+                (
+                    VALUES (
+                        @{nameof(Product.ProductKey)},
+                        @{nameof(Product.ProductName)},
+                        @{nameof(Product.ProductLineKey)},
+                        @{nameof(Product.ShippingWeight)},
+                        @{nameof(Product.ProductWeight)}
+                    )
+                ) source (
+                            {nameof(Product.ProductKey)},
+                            {nameof(Product.ProductName)},
+                            {nameof(Product.ProductLineKey)},
+                            {nameof(Product.ShippingWeight)},
+                            {nameof(Product.ProductWeight)}
+                         )
+                ON target.ProductKey = source.{nameof(Product.ProductKey)}
+                WHEN MATCHED THEN
+                    UPDATE SET ProductName = source.{nameof(Product.ProductName)},
+                               ProductLineKey = source.{nameof(Product.ProductLineKey)},
+                               ShippingWeight = source.{nameof(Product.ShippingWeight)},
+                               ProductWeight = source.{nameof(Product.ProductWeight)}
+                WHEN NOT MATCHED THEN
+                    INSERT
+                    (
+                        ProductName,
+                        ProductLineKey,
+                        ShippingWeight,
+                        ProductWeight
+                    )
+                    VALUES
+                    (
+                        source.{nameof(Product.ProductName)},
+                        source.{nameof(Product.ProductLineKey)},
+                        source.{nameof(Product.ShippingWeight)},
+                        source.{nameof(Product.ProductWeight)}
+                    )
+                OUTPUT Inserted.ProductKey;";
+
+            Product firstProd = products.First();
+
+            //Best approach for unlimited inserts since SQL server has parameter amount restrictions
+            //https://docs.microsoft.com/en-us/sql/sql-server/maximum-capacity-specifications-for-sql-server?redirectedfrom=MSDN&view=sql-server-ver15
+            return DbConnector.Build<int?>(
+                    sql: sql,
+                    param: firstProd,
+                    onExecute: (int? result, IDbExecutionModel em) =>
+                    {
+                        //Set the command
+                        DbCommand command = em.Command;
+
+                        //Execute first row.
+                        firstProd.ProductKey = (int)command.ExecuteScalar();
+                        em.NumberOfRowsAffected = 1;
+
+                        //Set and execute remaining rows.
+                        foreach (var prod in products.Skip(1))
+                        {
+                            command.Parameters[nameof(Product.ProductKey)].Value = prod.ProductKey;
+                            command.Parameters[nameof(Product.ProductName)].Value = prod.ProductName ?? (object)DBNull.Value;
+                            command.Parameters[nameof(Product.ProductLineKey)].Value = prod.ProductLineKey;
+                            command.Parameters[nameof(Product.ShippingWeight)].Value = prod.ShippingWeight ?? (object)DBNull.Value;
+                            command.Parameters[nameof(Product.ProductWeight)].Value = prod.ProductWeight ?? (object)DBNull.Value;
+
+                            prod.ProductKey = (int)command.ExecuteScalar();
+                            em.NumberOfRowsAffected += 1;
+                        }
+
+                        return em.NumberOfRowsAffected;
+                    }
+                )
+                .WithIsolationLevel(IsolationLevel.ReadCommitted);//Use a transaction
         }
 
         protected IDbJob<int?> BuildUpdateProduct(Product product)

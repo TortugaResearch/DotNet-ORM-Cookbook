@@ -46,7 +46,7 @@ namespace Recipes.DbConnector.MultipleCrud
 
         virtual public void InsertBatch(IList<EmployeeSimple> employees)
         {
-            if (employees == null || employees.Count == 0)
+            if (employees == null || !employees.Any())
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
             //Best approach for unlimited inserts since SQL server has parameter amount restrictions
@@ -71,7 +71,7 @@ namespace Recipes.DbConnector.MultipleCrud
                         @{nameof(EmployeeSimple.OfficePhone)},
                         @{nameof(EmployeeSimple.Title)}
                     )",
-                    param: employees[0],
+                    param: employees.First(),
                     onExecute: (int? result, IDbExecutionModel em) =>
                     {
                         //Set the command
@@ -81,10 +81,8 @@ namespace Recipes.DbConnector.MultipleCrud
                         em.NumberOfRowsAffected = command.ExecuteNonQuery();
 
                         //Set and execute remaining rows.
-                        for (int i = 1; i < employees.Count; i++)
+                        foreach (var emp in employees.Skip(1))
                         {
-                            var emp = employees[i];
-
                             command.Parameters[nameof(EmployeeSimple.CellPhone)].Value = emp.CellPhone ?? (object)DBNull.Value;
                             command.Parameters[nameof(EmployeeSimple.EmployeeClassificationKey)].Value = emp.EmployeeClassificationKey;
                             command.Parameters[nameof(EmployeeSimple.FirstName)].Value = emp.FirstName ?? (object)DBNull.Value;
@@ -266,7 +264,7 @@ namespace Recipes.DbConnector.MultipleCrud
 
         virtual public void UpdateBatch(IList<EmployeeSimple> employees)
         {
-            if (employees == null || employees.Count == 0)
+            if (employees == null || !employees.Any())
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
             //Best approach since SQL server has parameter amount restrictions
@@ -282,7 +280,7 @@ namespace Recipes.DbConnector.MultipleCrud
                         OfficePhone = @{nameof(EmployeeSimple.OfficePhone)},
                         Title = @{nameof(EmployeeSimple.Title)}
                     WHERE EmployeeKey = @{nameof(EmployeeSimple.EmployeeKey)}",
-                    param: employees[0],
+                    param: employees.First(),
                     onExecute: (int? result, IDbExecutionModel em) =>
                     {
                         //Set the command
@@ -292,10 +290,8 @@ namespace Recipes.DbConnector.MultipleCrud
                         em.NumberOfRowsAffected = command.ExecuteNonQuery();
 
                         //Set and execute remaining rows.
-                        for (int i = 1; i < employees.Count; i++)
+                        foreach (var emp in employees.Skip(1))
                         {
-                            var emp = employees[i];
-
                             command.Parameters[nameof(EmployeeSimple.EmployeeKey)].Value = emp.EmployeeKey;
                             command.Parameters[nameof(EmployeeSimple.CellPhone)].Value = emp.CellPhone ?? (object)DBNull.Value;
                             command.Parameters[nameof(EmployeeSimple.EmployeeClassificationKey)].Value = emp.EmployeeClassificationKey;
