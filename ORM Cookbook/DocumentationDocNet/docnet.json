@@ -12,6 +12,7 @@
       "ADO.NET": "ADO.md",
       "Chain": "Chain.md",
       "Dapper": "Dapper.md",
+      "DbConnector": "DbConnector.md",
       "Entity Framework 6": "EF6.md",
       "Entity Framework Core": "EFCore.md",
       "LINQ to DB": "LinqToDB.md",

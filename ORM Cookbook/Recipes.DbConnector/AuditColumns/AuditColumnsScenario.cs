@@ -17,8 +17,10 @@ namespace Recipes.DbConnector.AuditColumns
                 throw new ArgumentNullException(nameof(user), $"{nameof(user)} is null.");
 
             //Manually apply the audit columns
-            department.CreatedDate = DateTime.UtcNow;
-            department.ModifiedDate = DateTime.UtcNow;
+            var utcNow = DateTime.UtcNow;
+
+            department.CreatedDate = utcNow;
+            department.ModifiedDate = utcNow;
             department.CreatedByEmployeeKey = user.UserKey;
             department.ModifiedByEmployeeKey = user.UserKey;
 
@@ -40,15 +42,16 @@ namespace Recipes.DbConnector.AuditColumns
 
         public Department GetDepartment(int departmentKey, User user)
         {
-            const string sql = @"SELECT d.DepartmentKey,
-            d.DepartmentName,
-            d.DivisionKey,
-            d.CreatedDate,
-            d.ModifiedDate,
-            d.CreatedByEmployeeKey,
-            d.ModifiedByEmployeeKey 
+            const string sql = @"SELECT 
+                d.DepartmentKey,
+                d.DepartmentName,
+                d.DivisionKey,
+                d.CreatedDate,
+                d.ModifiedDate,
+                d.CreatedByEmployeeKey,
+                d.ModifiedByEmployeeKey 
             FROM HR.Department d 
-            WHERE d.DepartmentKey = @departmentKey";
+            WHERE d.DepartmentKey = @departmentKey;";
 
             return DbConnector.ReadSingle<Department>(sql, new { departmentKey }).Execute();
         }

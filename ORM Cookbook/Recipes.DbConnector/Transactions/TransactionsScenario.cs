@@ -24,6 +24,7 @@ namespace Recipes.DbConnector.Transactions
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction())
             {
+                //Set the custom transaction when invoking Execute
                 var result = DbConnector.Scalar<int>(sql, classification).Execute(trans);
 
                 if (shouldRollBack)
@@ -47,6 +48,7 @@ namespace Recipes.DbConnector.Transactions
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction(isolationLevel))
             {
+                //Set the custom transaction when invoking Execute
                 var result = DbConnector.Scalar<int>(sql, classification).Execute(trans);
 
                 if (shouldRollBack)
@@ -62,7 +64,9 @@ namespace Recipes.DbConnector.Transactions
         {
             string sql = "SELECT * FROM " + EmployeeClassification.TableName + " WHERE EmployeeClassificationKey = @employeeClassificationKey;";
 
-            return DbConnector.ReadFirstOrDefault<EmployeeClassification>(sql, new { employeeClassificationKey }).Execute();
+            return DbConnector.ReadFirstOrDefault<EmployeeClassification>(sql, new { employeeClassificationKey })
+                               .WithIsolationLevel(IsolationLevel.ReadCommitted) //Enable the use of a transaction
+                               .Execute();
         }
     }
 }

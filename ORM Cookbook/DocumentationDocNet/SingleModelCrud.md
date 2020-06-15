@@ -59,6 +59,12 @@ To enable it, models need to be decorated with `Table` and `Key` attributes.
 
 @snippet cs [../Recipes.Dapper/SingleModelCrud/SingleModelCrudScenarioContrib.cs] SingleModelCrudScenarioContrib
 
+## DbConnector
+
+The DbConnector library leverages ADO.NET and reduces the amount of boilerplate code required when projecting relational data into objects.
+
+@snippet cs [../Recipes.DbConnector/SingleModelCrud/SingleModelCrudScenario.cs] SingleModelCrudScenario
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario

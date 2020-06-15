@@ -66,6 +66,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
 <li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
@@ -674,6 +676,127 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
                 con.Execute(sql, employee);
         }
     }
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+{
+    public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        const string sql = @&quot;INSERT INTO HR.Employee
+        (FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+        OUTPUT Inserted.EmployeeKey
+        VALUES
+        (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+        return DbConnector.Scalar&lt;int&gt;(sql,
+            new
+            {
+                employee.FirstName,
+                employee.MiddleName,
+                employee.LastName,
+                employee.Title,
+                employee.OfficePhone,
+                employee.CellPhone,
+                employee.EmployeeClassificationKey
+            }).Execute();
+    }
+
+    public void Delete(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+        DbConnector.NonQuery(sql, new { employee.EmployeeKey }).Execute();
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @employeeKey;&quot;;
+
+        DbConnector.NonQuery(sql, new { employeeKey }).Execute();
+    }
+
+    public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
+    {
+        const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
+
+        var settings = new ColumnMapSetting().WithSplitOnFor&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationKey);
+
+        return DbConnector.ReadToList&lt;EmployeeComplex&gt;(settings, sql, new { LastName = lastName }).Execute();
+    }
+
+    public IList&lt;EmployeeComplex&gt; GetAll()
+    {
+        const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
+
+        //Configure Split map settings
+        var settings = new ColumnMapSetting().WithSplitOnFor&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationKey);
+
+        return DbConnector.ReadToList&lt;EmployeeComplex&gt;(settings, sql).Execute();
+    }
+
+    public EmployeeComplex? GetByKey(int employeeKey)
+    {
+        const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
+
+        //Configure Split map settings
+        var settings = new ColumnMapSetting().WithSplitOnFor&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationKey);
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeComplex&gt;(settings, sql, new { EmployeeKey = employeeKey }).Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+
+        return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public void Update(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        const string sql = @&quot;UPDATE HR.Employee
+        SET FirstName = @FirstName,
+            MiddleName = @MiddleName,
+            LastName = @LastName,
+            Title = @Title,
+            OfficePhone = @OfficePhone,
+            CellPhone = @CellPhone,
+            EmployeeClassificationKey = @EmployeeClassificationKey
+        WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+        DbConnector.NonQuery(sql,
+            new
+            {
+                employee.EmployeeKey,
+                employee.FirstName,
+                employee.MiddleName,
+                employee.LastName,
+                employee.Title,
+                employee.OfficePhone,
+                employee.CellPhone,
+                employee.EmployeeClassificationKey
+            }).Execute();
+    }
+}
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

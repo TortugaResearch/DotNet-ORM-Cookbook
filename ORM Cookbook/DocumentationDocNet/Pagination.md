@@ -24,6 +24,10 @@ Keyset pagination is a technique where the previous result is used to determine 
 
 @snippet cs [..\Recipes.Dapper\Pagination\PaginationScenario.cs] PaginationScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\Pagination\PaginationScenario.cs] PaginationScenario
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\Pagination\PaginationScenario.cs] PaginationScenario

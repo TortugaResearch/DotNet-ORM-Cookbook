@@ -25,6 +25,10 @@ Note: While writing to views is supported by some databases, that capability is 
 
 @snippet cs [..\Recipes.Dapper\Views\ViewsScenario.cs] ViewsScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\Views\ViewsScenario.cs] ViewsScenario
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\Views\ViewsScenario.cs] ViewsScenario

@@ -57,6 +57,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
 <li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
@@ -625,6 +627,142 @@
 
         using (var con = OpenConnection())
             return 1 == con.Execute(sql, classification);
+    }
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>DbConnector's <code>NonQuery</code> returns the number of affected rows, if the non-query ran successfully, from the ADO.NET <code>ExecuteNonQuery</code> command.</p>
+<pre><code class="cs">public class TryCrudScenario : ScenarioBase, ITryCrudScenario&lt;EmployeeClassification&gt;
+{
+    public TryCrudScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return DbConnector.Scalar&lt;int&gt;(
+        @&quot;INSERT INTO &quot; + EmployeeClassification.TableName
+        + @&quot;(
+                EmployeeClassificationName,
+                IsEmployee,
+                IsExempt
+            ) 
+            OUTPUT Inserted.EmployeeClassificationKey
+            VALUES (
+                @EmployeeClassificationName,
+                @IsEmployee,
+                @IsExempt
+            )&quot;
+        , classification)
+        .Execute();
+    }
+
+    public void DeleteByKeyOrException(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+
+        var rowCount = DbConnector.NonQuery(sql, new { employeeClassificationKey }).Execute();
+        if (rowCount != 1)
+            throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+    }
+
+    public bool DeleteByKeyWithStatus(int employeeClassificationKey)
+    {
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+
+        return 1 == DbConnector.NonQuery(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public void DeleteOrException(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        var rowCount = DbConnector.NonQuery(sql, classification).Execute();
+        if (rowCount != 1)
+            throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+    }
+
+    public bool DeleteWithStatus(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;DELETE HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        return 1 == DbConnector.NonQuery(sql, classification).Execute();
+    }
+
+    public EmployeeClassification FindByNameOrException(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
+
+
+        return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName }).Execute();
+    }
+
+    public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
+    {
+        var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
+
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName }).Execute();
+    }
+
+    public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+
+
+        return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public void UpdateOrException(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        var rowCount = DbConnector.NonQuery(sql, classification).Execute();
+        if (rowCount != 1)
+            throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+    }
+
+    public bool UpdateWithStatus(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var sql = @&quot;UPDATE HR.EmployeeClassification
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+        return 1 == DbConnector.NonQuery(sql, classification).Execute();
     }
 }
 </code></pre>

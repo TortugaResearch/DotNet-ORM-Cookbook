@@ -53,6 +53,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
 <li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
@@ -979,6 +981,388 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
             con.Execute(sql, productLine, transaction: trans);
         }
     }
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ModelWithChildrenScenario : ScenarioBase, IModelWithChildrenScenario&lt;ProductLine, Product&gt;
+{
+    public ModelWithChildrenScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        const string sql = &quot;INSERT INTO Production.ProductLine ( ProductLineName ) OUTPUT Inserted.ProductLineKey VALUES (@ProductLineName);&quot;;
+
+        //Build the main IDbJob.
+        IDbJob&lt;int&gt; jobProductLine = DbConnector
+            .Scalar&lt;int&gt;(sql, productLine)
+            .OnExecuted((int result, IDbExecutedModel im) =&gt;
+            {
+                productLine.ProductLineKey = result;
+                productLine.ApplyKeys();
+                return result;
+            });
+
+        if (productLine.Products.Count == 0)
+        {
+            return jobProductLine.Execute();
+        }
+        else
+        {
+            //Leverage DbConnector's Job Batching feature
+            DbJob.ExecuteAll(jobProductLine, BuildInsertOrUpdateProducts(productLine.Products));
+
+            return productLine.ProductLineKey;
+        }
+    }
+
+    public void Delete(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        const string sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
+        DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey&quot;;
+
+        DbConnector.NonQuery(sql, productLine).Execute();
+    }
+
+    public void DeleteByKey(int productLineKey)
+    {
+        const string sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
+        DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey&quot;;
+
+        DbConnector.NonQuery(sql, new { productLineKey }).Execute();
+    }
+
+    public IList&lt;ProductLine&gt; FindByName(string productLineName, bool includeProducts)
+    {
+        if (includeProducts)
+        {
+            const string sqlA = @&quot;
+            SELECT 
+                pl.ProductLineKey, 
+                pl.ProductLineName 
+            FROM Production.ProductLine pl 
+            WHERE pl.ProductLineName = @ProductLineName;
+            SELECT 
+                p.ProductKey, 
+                p.ProductName, 
+                p.ProductLineKey, 
+                p.ShippingWeight, 
+                p.ProductWeight 
+            FROM Production.Product p 
+            INNER JOIN Production.ProductLine pl ON p.ProductLineKey = pl.ProductLineKey 
+            WHERE pl.ProductLineName = @ProductLineName;&quot;;
+
+            var tupleResult = DbConnector.ReadToList&lt;ProductLine, Product&gt;(sqlA, new { productLineName }).Execute();
+
+            List&lt;ProductLine&gt; productLines = tupleResult.Item1;
+            List&lt;Product&gt; products = tupleResult.Item2;
+
+            productLines.ForEach(pl =&gt; pl.Products.AddRange(products.Where(p =&gt; p.ProductLineKey == pl.ProductLineKey)));
+
+            return productLines;
+        }
+        else
+        {
+            const string sqlB = @&quot;
+            SELECT 
+                pl.ProductLineKey, 
+                pl.ProductLineName 
+            FROM Production.ProductLine pl 
+            WHERE pl.ProductLineName = @ProductLineName;&quot;;
+
+            return DbConnector.ReadToList&lt;ProductLine&gt;(sqlB, new { productLineName }).Execute();
+        }
+    }
+
+    public IList&lt;ProductLine&gt; GetAll(bool includeProducts)
+    {
+        if (includeProducts)
+        {
+            const string sqlA = @&quot;
+            SELECT 
+                pl.ProductLineKey, 
+                pl.ProductLineName 
+            FROM Production.ProductLine pl;
+            SELECT 
+                p.ProductKey, 
+                p.ProductName, 
+                p.ProductLineKey, 
+                p.ShippingWeight, 
+                p.ProductWeight 
+            FROM Production.Product p 
+            INNER JOIN Production.ProductLine pl ON p.ProductLineKey = pl.ProductLineKey;&quot;;
+
+            var tupleResult = DbConnector.ReadToList&lt;ProductLine, Product&gt;(sqlA).Execute();
+
+            List&lt;ProductLine&gt; productLines = tupleResult.Item1;
+            List&lt;Product&gt; products = tupleResult.Item2;
+
+            productLines.ForEach(pl =&gt; pl.Products.AddRange(products.Where(p =&gt; p.ProductLineKey == pl.ProductLineKey)));
+
+            return productLines;
+        }
+        else
+        {
+            const string sqlB = @&quot;
+            SELECT 
+                pl.ProductLineKey, 
+                pl.ProductLineName 
+            FROM Production.ProductLine pl;&quot;;
+
+            return DbConnector.ReadToList&lt;ProductLine&gt;(sqlB).Execute();
+        }
+    }
+
+    public ProductLine? GetByKey(int productLineKey, bool includeProducts)
+    {
+        if (includeProducts)
+        {
+            const string sqlA = @&quot;
+            SELECT 
+                pl.ProductLineKey, 
+                pl.ProductLineName 
+            FROM Production.ProductLine pl
+            WHERE pl.ProductLineKey = @ProductLineKey;
+            SELECT 
+                p.ProductKey, 
+                p.ProductName, 
+                p.ProductLineKey, 
+                p.ShippingWeight, 
+                p.ProductWeight 
+            FROM Production.Product p 
+            INNER JOIN Production.ProductLine pl ON p.ProductLineKey = pl.ProductLineKey
+            WHERE p.ProductLineKey = @productLineKey;&quot;;
+
+            var tupleResult = DbConnector.ReadToList&lt;ProductLine, Product&gt;(sqlA, new { productLineKey }).Execute();
+
+            ProductLine productLine = tupleResult.Item1.FirstOrDefault();
+
+            if (productLine != null)
+            {
+                productLine.Products.AddRange(tupleResult.Item2);
+            }
+
+            return productLine;
+        }
+        else
+        {
+            const string sqlB = @&quot;
+            SELECT 
+                pl.ProductLineKey, 
+                pl.ProductLineName 
+            FROM Production.ProductLine pl
+            WHERE pl.ProductLineKey = @productLineKey;&quot;;
+
+            return DbConnector.ReadFirstOrDefault&lt;ProductLine&gt;(sqlB, new { productLineKey }).Execute();
+        }
+    }
+
+    public void Update(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        BuildUpdateProductLine(productLine).Execute();
+    }
+
+    public void Update(Product product)
+    {
+        if (product == null)
+            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+        BuildUpdateProduct(product).Execute();
+    }
+
+    public void UpdateGraph(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        productLine.ApplyKeys();
+
+        //Leverage DbConnector's Job Batching feature
+        DbJob.ExecuteAll(BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products));
+    }
+
+    public void UpdateGraphWithChildDeletes(ProductLine productLine)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        productLine.ApplyKeys();
+
+        //Note: This could all be done in a single query transaction leveraging the MERGE feature
+        using (var con = OpenConnection())
+        using (var trans = con.BeginTransaction())
+        {
+            //Find products
+            var originalProductKeys = BuildGetProductKeys(productLine.ProductLineKey).Execute(trans);
+
+            foreach (var item in productLine.Products)
+                originalProductKeys.Remove(item.ProductKey);
+
+            //Leverage DbConnector's Job Batching feature
+            DbJob.ExecuteAll(trans, BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products));
+
+            //Remove products
+            if (originalProductKeys.Count &gt; 0)
+                BuildDeleteProducts(originalProductKeys).Execute(trans);
+
+            trans.Commit();
+        }
+    }
+
+    public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
+    {
+        if (productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        productLine.ApplyKeys();
+
+        if (productKeysToRemove == null || productKeysToRemove.Count == 0)
+        {
+            DbJob.ExecuteAll(BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products));
+        }
+        else
+        {
+            DbJob.ExecuteAll(BuildUpdateProductLine(productLine), BuildInsertOrUpdateProducts(productLine.Products), BuildDeleteProducts(productKeysToRemove));
+        }
+    }
+
+    protected IDbJob&lt;int?&gt; BuildDeleteProduct(int productKey)
+    {
+        const string sql = &quot;DELETE Production.Product WHERE ProductKey = @productKey;&quot;;
+
+        return DbConnector.NonQuery(sql, new { productKey });
+    }
+
+    protected IDbJob&lt;int?&gt; BuildDeleteProducts(IEnumerable&lt;int&gt; productKeys)
+    {
+        if (productKeys == null || !productKeys.Any())
+            throw new ArgumentException($&quot;{nameof(productKeys)} is null or empty.&quot;, nameof(productKeys));
+
+        var keyList = string.Join(&quot;, &quot;, productKeys);
+        var sql = $&quot;DELETE Production.Product WHERE ProductKey IN ({keyList});&quot;;
+
+        return DbConnector.NonQuery(sql);
+    }
+
+    protected IDbJob&lt;HashSet&lt;int&gt;&gt; BuildGetProductKeys(int productLineKey)
+    {
+        const string sql = &quot;SELECT p.ProductKey FROM Production.Product p WHERE p.ProductLineKey = @productLineKey&quot;;
+
+        return DbConnector.ReadToHashSet&lt;int&gt;(sql, new { productLineKey });
+    }
+
+    protected IDbJob&lt;int&gt; BuildInsertProduct(Product product)
+    {
+        const string sql = &quot;INSERT INTO Production.Product ( ProductName, ProductLineKey, ShippingWeight, ProductWeight ) OUTPUT Inserted.ProductKey VALUES ( @ProductName, @ProductLineKey, @ShippingWeight, @ProductWeight )&quot;;
+
+        return DbConnector.Scalar&lt;int&gt;(sql, product).OnCompleted(result =&gt; { product.ProductKey = result; return result; });
+    }
+
+    protected IDbJob&lt;int?&gt; BuildInsertOrUpdateProducts(IEnumerable&lt;Product&gt; products)
+    {
+        if (products == null || !products.Any())
+            throw new ArgumentException($&quot;{nameof(products)} is null or empty.&quot;, nameof(products));
+
+        string sql = $@&quot;
+            MERGE INTO {Product.TableName} target
+            USING
+            (
+                VALUES (
+                    @{nameof(Product.ProductKey)},
+                    @{nameof(Product.ProductName)},
+                    @{nameof(Product.ProductLineKey)},
+                    @{nameof(Product.ShippingWeight)},
+                    @{nameof(Product.ProductWeight)}
+                )
+            ) source (
+                        {nameof(Product.ProductKey)},
+                        {nameof(Product.ProductName)},
+                        {nameof(Product.ProductLineKey)},
+                        {nameof(Product.ShippingWeight)},
+                        {nameof(Product.ProductWeight)}
+                     )
+            ON target.ProductKey = source.{nameof(Product.ProductKey)}
+            WHEN MATCHED THEN
+                UPDATE SET ProductName = source.{nameof(Product.ProductName)},
+                           ProductLineKey = source.{nameof(Product.ProductLineKey)},
+                           ShippingWeight = source.{nameof(Product.ShippingWeight)},
+                           ProductWeight = source.{nameof(Product.ProductWeight)}
+            WHEN NOT MATCHED THEN
+                INSERT
+                (
+                    ProductName,
+                    ProductLineKey,
+                    ShippingWeight,
+                    ProductWeight
+                )
+                VALUES
+                (
+                    source.{nameof(Product.ProductName)},
+                    source.{nameof(Product.ProductLineKey)},
+                    source.{nameof(Product.ShippingWeight)},
+                    source.{nameof(Product.ProductWeight)}
+                )
+            OUTPUT Inserted.ProductKey;&quot;;
+
+        Product firstProd = products.First();
+
+        //Best approach for unlimited inserts since SQL server has parameter amount restrictions
+        //https://docs.microsoft.com/en-us/sql/sql-server/maximum-capacity-specifications-for-sql-server?redirectedfrom=MSDN&amp;view=sql-server-ver15
+        return DbConnector.Build&lt;int?&gt;(
+                sql: sql,
+                param: firstProd,
+                onExecute: (int? result, IDbExecutionModel em) =&gt;
+                {
+                    //Set the command
+                    DbCommand command = em.Command;
+
+                    //Execute first row.
+                    firstProd.ProductKey = (int)command.ExecuteScalar();
+                    em.NumberOfRowsAffected = 1;
+
+                    //Set and execute remaining rows.
+                    foreach (var prod in products.Skip(1))
+                    {
+                        command.Parameters[nameof(Product.ProductKey)].Value = prod.ProductKey;
+                        command.Parameters[nameof(Product.ProductName)].Value = prod.ProductName ?? (object)DBNull.Value;
+                        command.Parameters[nameof(Product.ProductLineKey)].Value = prod.ProductLineKey;
+                        command.Parameters[nameof(Product.ShippingWeight)].Value = prod.ShippingWeight ?? (object)DBNull.Value;
+                        command.Parameters[nameof(Product.ProductWeight)].Value = prod.ProductWeight ?? (object)DBNull.Value;
+
+                        prod.ProductKey = (int)command.ExecuteScalar();
+                        em.NumberOfRowsAffected += 1;
+                    }
+
+                    return em.NumberOfRowsAffected;
+                }
+            )
+            .WithIsolationLevel(IsolationLevel.ReadCommitted);//Use a transaction
+    }
+
+    protected IDbJob&lt;int?&gt; BuildUpdateProduct(Product product)
+    {
+        const string sql = &quot;UPDATE Production.Product SET ProductName = @ProductName, ProductLineKey = @ProductLineKey, ShippingWeight = @ShippingWeight, ProductWeight = @ProductWeight WHERE ProductKey = @ProductKey;&quot;;
+
+        return DbConnector.NonQuery(sql, product);
+    }
+
+    protected IDbJob&lt;int?&gt; BuildUpdateProductLine(ProductLine productLine)
+    {
+        const string sql = &quot;UPDATE Production.ProductLine SET ProductLineName = @ProductLineName WHERE ProductLineKey = @ProductLineKey;&quot;;
+
+        return DbConnector.NonQuery(sql, productLine);
+    }
+}
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

@@ -62,6 +62,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
 <li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
@@ -583,6 +585,97 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
                 con.Execute(sql, employee);
         }
     }
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : ScenarioBase, IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
+{
+    public ModelWithLookupSimpleScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        const string sql = @&quot;INSERT INTO HR.Employee
+            (FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+            OUTPUT Inserted.EmployeeKey
+            VALUES
+            (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+
+        return DbConnector.Scalar&lt;int&gt;(sql, employee).Execute();
+    }
+
+    public void Delete(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+
+        DbConnector.NonQuery(sql, employee).Execute();
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @employeeKey;&quot;;
+
+
+        DbConnector.NonQuery(sql, new { employeeKey }).Execute();
+    }
+
+    public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @lastName&quot;;
+
+        return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { lastName }).Execute();
+    }
+
+    public IList&lt;EmployeeSimple&gt; GetAll()
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e&quot;;
+
+        return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql).Execute();
+    }
+
+    public EmployeeSimple? GetByKey(int employeeKey)
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.EmployeeKey = @employeeKey&quot;;
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeSimple&gt;(sql, new { employeeKey }).Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+
+        return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public void Update(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        const string sql = @&quot;UPDATE HR.Employee
+        SET FirstName = @FirstName,
+            MiddleName = @MiddleName,
+            LastName = @LastName,
+            Title = @Title,
+            OfficePhone = @OfficePhone,
+            CellPhone = @CellPhone,
+            EmployeeClassificationKey = @EmployeeClassificationKey
+        WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+        DbConnector.NonQuery(sql, employee).Execute();
+    }
+}
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

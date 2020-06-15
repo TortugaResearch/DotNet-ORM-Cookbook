@@ -68,6 +68,7 @@ namespace Recipes.DbConnector.ModelWithLookup
         {
             const string sql = @"SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed";
 
+            //Configure Split map settings
             var settings = new ColumnMapSetting().WithSplitOnFor<EmployeeClassification>(e => e.EmployeeClassificationKey);
 
             return DbConnector.ReadToList<EmployeeComplex>(settings, sql).Execute();
@@ -77,6 +78,7 @@ namespace Recipes.DbConnector.ModelWithLookup
         {
             const string sql = @"SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey";
 
+            //Configure Split map settings
             var settings = new ColumnMapSetting().WithSplitOnFor<EmployeeClassification>(e => e.EmployeeClassificationKey);
 
             return DbConnector.ReadSingleOrDefault<EmployeeComplex>(settings, sql, new { EmployeeKey = employeeKey }).Execute();

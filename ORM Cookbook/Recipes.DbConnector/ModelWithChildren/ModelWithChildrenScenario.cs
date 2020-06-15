@@ -23,6 +23,7 @@ namespace Recipes.DbConnector.ModelWithChildren
 
             const string sql = "INSERT INTO Production.ProductLine ( ProductLineName ) OUTPUT Inserted.ProductLineKey VALUES (@ProductLineName);";
 
+            //Build the main IDbJob.
             IDbJob<int> jobProductLine = DbConnector
                 .Scalar<int>(sql, productLine)
                 .OnExecuted((int result, IDbExecutedModel im) =>
@@ -38,7 +39,8 @@ namespace Recipes.DbConnector.ModelWithChildren
             }
             else
             {
-                DbJob.ExecuteAll(jobProductLine, BuildInsertOrUpdateProducts(productLine.Products));//Execute all jobs
+                //Leverage DbConnector's Job Batching feature
+                DbJob.ExecuteAll(jobProductLine, BuildInsertOrUpdateProducts(productLine.Products));
 
                 return productLine.ProductLineKey;
             }

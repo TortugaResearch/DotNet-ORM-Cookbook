@@ -35,6 +35,7 @@ namespace Recipes.DbConnector.LargeBatch
 
             //Best approach for unlimited inserts since SQL server has parameter amount restrictions
             //https://docs.microsoft.com/en-us/sql/sql-server/maximum-capacity-specifications-for-sql-server?redirectedfrom=MSDN&view=sql-server-ver15
+            //Also, notice the "batchSize" argument is not necessary.
             DbConnector.Build<int?>(
                     sql: @$"INSERT INTO {EmployeeSimple.TableName}
                     (

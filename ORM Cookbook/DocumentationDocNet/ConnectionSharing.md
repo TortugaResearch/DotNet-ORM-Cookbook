@@ -16,7 +16,11 @@ Not applicable, ADO.NET always works directly on raw connection/transaction obje
 
 ## Dapper
 
-Not applicable, Dapper always works directly on raw connection/transaction objecsts.
+Not applicable, Dapper always works directly on raw connection/transaction objects.
+
+## DbConnector
+
+Not applicable, DbConnector always works directly on either internally created or client provided raw connection/transaction objects.
 
 ## Entity Framework 6
 

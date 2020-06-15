@@ -26,6 +26,12 @@ These scenarios demonstrate how to perform partial updates on a row.
 
 @snippet cs [..\Recipes.Dapper\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
+
+@snippet cs [..\Recipes.DbConnector\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
+
 ## Entity Framework 6
 
 To perform a partial update, first fetch a record and then modify it.

@@ -20,6 +20,10 @@ Chain requires that soft delete be configured at the `DataSource` level.
 
 TODO
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\SoftDelete\SoftDeleteScenario.cs] SoftDeleteScenario
+
 ## Entity Framework 6
 
 To generalize soft delete support in EF 6, create an interface with the soft delete column(s). Then overide the `SaveChanges` method to provide the values.

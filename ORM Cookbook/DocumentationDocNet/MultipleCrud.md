@@ -24,6 +24,10 @@ If the ORM supports it, the operation should be performed with a single SQL stat
 The repository methods are not normally virtual. This was done so that they could be overridden with better implementations as shown below.
 @end
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
+
 ### Dapper.Contrib
 
 The Dapper.Contrib library can elimiante the boilerplate for some common scenarios. 

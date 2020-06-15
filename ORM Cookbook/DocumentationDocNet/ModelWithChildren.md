@@ -25,6 +25,10 @@ Chain requires operating on the parent and child objects separately.
 
 @snippet cs [..\Recipes.Dapper\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
+
 ## Entity Framework 6
 
 TODO

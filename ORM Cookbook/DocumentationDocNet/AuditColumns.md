@@ -28,6 +28,12 @@ Dapper requires that audit columns be manually merged into the object being inse
 
 @snippet cs [..\Recipes.Dapper\AuditColumns\AuditColumnsScenario.cs] AuditColumnsScenario
 
+## DbConnector
+
+DbConnector requires audit columns to be manually merged into the object being inserted/updated. 
+
+@snippet cs [..\Recipes.DbConnector\AuditColumns\AuditColumnsScenario.cs] AuditColumnsScenario
+
 ## Entity Framework 6
 
 To generalize audit column management in Entity Framework, create an interface with the list of audit columns. Then overide the `SaveChanges` method to provide the audit values.

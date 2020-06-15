@@ -31,6 +31,14 @@ No special handling is needed to call a non-default constructor.
 
 @snippet cs [..\Recipes.Dapper\Immutable\ImmutableScenario.cs] ImmutableScenario
 
+## DbConnector
+
+DbConnector currently does not support direct constructor mapping.
+
+Built-in functionality, including extensions, can simply be leveraged when working with immutable objects.
+
+@snippet cs [..\Recipes.DbConnector\Immutable\ImmutableScenario.cs] ImmutableScenario
+
 ## Entity Framework 6
 
 Entity Framework does not directly support immutable objects. You can overcome this by using a pair of conversions between the immutable object and the mutable entity.

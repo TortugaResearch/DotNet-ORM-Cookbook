@@ -22,6 +22,10 @@ This code demonstrates the MERGE syntax.
 
 @snippet cs [..\Recipes.Dapper\Upsert\UpsertScenario.cs] UpsertScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\Upsert\UpsertScenario.cs] UpsertScenario
+
 ## Entity Framework 6
 
 EF Core doesn't directly support an atomic upsert, so often a read must proceed the update.

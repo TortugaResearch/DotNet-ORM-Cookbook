@@ -24,6 +24,10 @@ Chain doesn't natively support joins, so raw SQL (or a view) has to be used as a
 
 @snippet cs [..\Recipes.Dapper\Joins\JoinsScenario.cs] JoinsScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\Joins\JoinsScenario.cs] JoinsScenario
+
 ## Entity Framework 6
 
 Entity Framework natively supports joins, but not implicit projections. Multiple objects need to be explicitly mapped.

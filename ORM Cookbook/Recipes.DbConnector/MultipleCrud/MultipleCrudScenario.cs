@@ -15,7 +15,7 @@ namespace Recipes.DbConnector.MultipleCrud
         public MultipleCrudScenario(string connectionString) : base(connectionString)
         { }
 
-        virtual public void DeleteBatch(IList<EmployeeSimple> employees)
+        public void DeleteBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
@@ -44,7 +44,7 @@ namespace Recipes.DbConnector.MultipleCrud
             return DbConnector.ReadToList<EmployeeSimple>(sql, new { lastName }).Execute();
         }
 
-        virtual public void InsertBatch(IList<EmployeeSimple> employees)
+        public void InsertBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || !employees.Any())
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
@@ -262,7 +262,7 @@ namespace Recipes.DbConnector.MultipleCrud
                 .Execute();
         }
 
-        virtual public void UpdateBatch(IList<EmployeeSimple> employees)
+        public void UpdateBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || !employees.Any())
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));

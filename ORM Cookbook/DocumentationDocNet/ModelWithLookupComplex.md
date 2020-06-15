@@ -42,6 +42,10 @@ Read operations must occur against a database view in order to get the propertie
 
 @snippet cs [..\Recipes.Dapper\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
+
 ## Entity Framework 6
 
 TODO

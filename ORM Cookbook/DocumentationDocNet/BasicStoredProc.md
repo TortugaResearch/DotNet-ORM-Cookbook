@@ -32,6 +32,10 @@ Future scenarios will cover topics such as:
 
 @snippet cs [..\Recipes.Dapper\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
+
 ## Entity Framework 6
 
 TODO

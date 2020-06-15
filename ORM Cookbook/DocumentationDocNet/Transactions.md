@@ -26,6 +26,14 @@ While there is an open transaction against a connection, all commands must be ex
 
 @snippet cs [..\Recipes.Dapper\Transactions\TransactionsScenario.cs] TransactionsScenario
 
+## DbConnector
+
+DbConnector will automatically create transactions for all `Non-Query` executions or when invoking `WithIsolationLevel` and setting a proper isolation level.
+
+Otherwise, a custom transaction can be used and configured via the `Execute` functions.
+
+@snippet cs [..\Recipes.DbConnector\Transactions\TransactionsScenario.cs] TransactionsScenario
+
 ## Entity Framework 6
 
 Entity Framework will automatically create and commit a transaction when you call `SaveChanges()`. To override this behavior, you can explicitly create a transaction. 

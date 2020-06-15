@@ -34,6 +34,13 @@ Columns to be sorted by are passed in as strings, but checked against the list o
 
 @snippet cs [..\Recipes.Dapper\Sorting\SortingScenario.cs] SortByMiddleNameFirstName
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\Sorting\SortingScenario.cs] SortByFirstName
+
+@snippet cs [..\Recipes.DbConnector\Sorting\SortingScenario.cs] SortByMiddleNameDescFirstName
+
+@snippet cs [..\Recipes.DbConnector\Sorting\SortingScenario.cs] SortByMiddleNameFirstName
 
 ## Entity Framework 6
 

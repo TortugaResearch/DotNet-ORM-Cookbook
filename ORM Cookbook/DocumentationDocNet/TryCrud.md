@@ -22,6 +22,12 @@ Like ADO.NET, this uses the row counts returned from the `Execute` command.
 
 @snippet cs [..\Recipes.Dapper\TryCrud\TryCrudScenario.cs] TryCrudScenario
 
+## DbConnector
+
+DbConnector's `NonQuery` returns the number of affected rows, if the non-query ran successfully, from the ADO.NET `ExecuteNonQuery` command.
+
+@snippet cs [..\Recipes.DbConnector\TryCrud\TryCrudScenario.cs] TryCrudScenario
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\TryCrud\TryCrudScenario.cs] TryCrudScenario

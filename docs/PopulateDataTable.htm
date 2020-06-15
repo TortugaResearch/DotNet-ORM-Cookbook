@@ -60,6 +60,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
 <li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
@@ -236,6 +238,29 @@
             result.Load(reader);
 
         return result;
+    }
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class PopulateDataTableScenario : ScenarioBase, IPopulateDataTableScenario
+{
+    public PopulateDataTableScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee)
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE ec.IsExempt = @isExempt AND ec.IsEmployee = @isEmployee;&quot;;
+
+        return DbConnector.ReadToDataTable(sql, new { isExempt, isEmployee }).Execute();
+    }
+
+    public DataTable GetAll()
+    {
+        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
+
+        return DbConnector.ReadToDataTable(sql).Execute();
     }
 }
 </code></pre>

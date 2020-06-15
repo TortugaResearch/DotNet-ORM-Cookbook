@@ -63,7 +63,7 @@ namespace Recipes.DbConnector.Immutable
                     if (row != null)
                         result = new ReadOnlyEmployeeClassification(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
 
-                    //Efficient Alternative: Extract values from the DbDataReader manually
+                    //Alternative: Extract values from the DbDataReader manually
                     //if (odr.HasRows && odr.Read())
                     //{
                     //    int employeeClassificationKey = odr.GetValue(nameof(ReadOnlyEmployeeClassification.EmployeeClassificationKey)) as int? ?? 0;
@@ -137,7 +137,7 @@ namespace Recipes.DbConnector.Immutable
                     if (row != null)
                         result = new ReadOnlyEmployeeClassification(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
 
-                    //Efficient Alternative: Extract values from the DbDataReader manually
+                    //Alternative: Extract values from the DbDataReader manually
                     //if (odr.HasRows && odr.Read())
                     //{
                     //    int employeeClassificationKey = odr.GetValue(nameof(ReadOnlyEmployeeClassification.EmployeeClassificationKey)) as int? ?? 0;

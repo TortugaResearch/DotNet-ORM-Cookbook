@@ -44,6 +44,10 @@ The Dapper.Contrib library removes the need to explicilty batch inserts.
 
 @snippet cs [../Recipes.Dapper/LargeBatch/LargeBatchScenarioContrib.cs] LargeBatchScenarioContrib
 
+## DbConnector
+
+@snippet cs [../Recipes.DbConnector/LargeBatch/LargeBatchScenario.cs] LargeBatchScenarioContrib
+
 ## Entity Framework 6
 
 Entity Framework can suffer severe performance degration as the number of objects it tracks increases. To mitigate this effect, a new `DBContext` after every batch is necessary. Start with a batch size of 100 and adjust as needed.

@@ -22,6 +22,10 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 @snippet cs [..\Recipes.Dapper\SingleColumn\SingleColumnScenario.cs] SingleColumnScenario
 
+## DbConnector
+
+@snippet cs [..\Recipes.DbConnector\SingleColumn\SingleColumnScenario.cs] SingleColumnScenario
+
 ## Entity Framework 6
 
 @snippet cs [..\Recipes.EntityFramework\SingleColumn\SingleColumnScenario.cs] SingleColumnScenario

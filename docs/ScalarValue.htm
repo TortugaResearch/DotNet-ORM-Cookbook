@@ -62,6 +62,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
 <li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
@@ -382,6 +384,70 @@
         var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
         using (var con = OpenConnection())
             return con.ExecuteScalar&lt;TimeSpan?&gt;(sql, new { divisionKey });
+    }
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : ScenarioBase, IScalarValueScenario
+{
+    public ScalarValueScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        var sql = &quot;SELECT DivisionKey FROM HR.Division WHERE DivisionName = @divisionName;&quot;;
+
+        return DbConnector.Scalar&lt;int?&gt;(sql, new { divisionName }).Execute();
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;string&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;string?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        var sql = &quot;SELECT LastReviewCycle FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;DateTimeOffset?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        var sql = &quot;SELECT MaxEmployees FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;int?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        var sql = &quot;SELECT ModifiedDate FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;DateTime&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        var sql = &quot;SELECT SalaryBudget FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;decimal?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;TimeSpan?&gt;(sql, new { divisionKey }).Execute();
     }
 }
 </code></pre>

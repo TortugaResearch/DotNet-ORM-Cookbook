@@ -34,6 +34,12 @@ Dapper requires validation of sort columns against a statically defined list.
 
 @snippet cs [..\Recipes.Dapper\DynamicSorting\DynamicSortingScenario.cs] SortBy
 
+## DbConnector
+
+DbConnector requires validation of sort columns against a statically defined list.
+
+@snippet cs [..\Recipes.DbConnector\DynamicSorting\DynamicSortingScenario.cs] SortBy
+
 ## Entity Framework 6
 
 Entity Framework does not natively support sorting by strings. However, this can be acomplished with `DynamicSortingExtensions`.

@@ -28,6 +28,12 @@ ADO only supports bulk inserts from a DataTable.
 
 Dapper does not have support for bulk inserts.
 
+## DbConnector
+
+Bulk inserts are an ADO.NET "data provider specific" implementation therefore DbConnector is not involved or necessary.
+
+@snippet cs [..\Recipes.DbConnector\BulkInsert\BulkInsertScenario.cs] BulkInsert
+
 ## Entity Framework 6
 
 Entity Framework does not have support for bulk inserts.

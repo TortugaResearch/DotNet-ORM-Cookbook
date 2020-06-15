@@ -49,6 +49,24 @@ The Dapper.Contrib library can elimiante the boilerplate for some common scenari
 
 @snippet cs [../Recipes.Dapper/SingleModelCrudAsync/SingleModelCrudAsyncScenarioContrib.cs] SingleModelCrudAsyncScenarioContrib
 
+## DbConnector
+
+For non-cancellable operation, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+If cancellation is required, then set the `CancellationToken` when invoking `Execute`. For example,
+
+Original:
+
+@snippet cs [../Recipes.DbConnector/SingleModelCrud/SingleModelCrudScenario.cs] GetByKey
+
+Async with cancellation:
+
+@snippet cs [../Recipes.DbConnector/SingleModelCrudAsync/SingleModelCrudAsyncScenario.cs] GetByKeyAsync
+
+Here is the full repository.
+
+@snippet cs [../Recipes.DbConnector/SingleModelCrudAsync/SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
+
 ## Entity Framework 6
 
 To make an Entity Framework repository asynchronous, you need to import the `System.Data.Entity` namespace. This exposes the async version of the LINQ extension methods needed. 

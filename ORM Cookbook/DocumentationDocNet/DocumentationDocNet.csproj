@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DbConnector.md" />
     <None Include="SoftDelete.md" />
     <None Include="ConnectionSharing.md" />
     <None Include="AuditColumns.md" />

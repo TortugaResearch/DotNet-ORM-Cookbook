@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipes.DbConnector.Models
 {
-    [Table("Department")]
+    [Table("HR.Department")]
     public class Department : IDepartment
     {
         public readonly static string TableName = typeof(Department).GetAttributeValue((TableAttribute ta) => ta?.Name) ?? typeof(Department).Name;

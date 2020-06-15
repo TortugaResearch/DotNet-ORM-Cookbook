@@ -56,6 +56,8 @@
 
 <li class="tocentry"><a href="#dapper">Dapper</a></li>
 
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
 <li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
 
 <li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
@@ -374,6 +376,81 @@ VALUES
 
         using (var con = OpenConnection())
             return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
+    }
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : ScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public ViewsScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return DbConnector.Scalar&lt;int&gt;(
+            @$&quot;INSERT INTO {EmployeeSimple.TableName}
+                (
+                    CellPhone,
+                    EmployeeClassificationKey,
+                    FirstName,
+                    LastName,
+                    MiddleName,
+                    OfficePhone,
+                    Title
+                ) 
+                OUTPUT Inserted.EmployeeKey
+                VALUES (
+                    @{nameof(EmployeeSimple.CellPhone)},
+                    @{nameof(EmployeeSimple.EmployeeClassificationKey)},
+                    @{nameof(EmployeeSimple.FirstName)},
+                    @{nameof(EmployeeSimple.LastName)},
+                    @{nameof(EmployeeSimple.MiddleName)},
+                    @{nameof(EmployeeSimple.OfficePhone)},
+                    @{nameof(EmployeeSimple.Title)}
+                )&quot;
+            , employee)
+            .Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT 
+                ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee 
+                FROM HR.EmployeeDetail ed WHERE ed.EmployeeClassificationKey = @employeeClassificationKey&quot;;
+
+        return DbConnector.ReadToList&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = @&quot;SELECT 
+        ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee 
+        FROM HR.EmployeeDetail ed WHERE ed.LastName = @lastName&quot;;
+
+        return DbConnector.ReadToList&lt;EmployeeDetail&gt;(sql, new { lastName }).Execute();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = @&quot;SELECT 
+        ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee 
+        FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @employeeKey&quot;;
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeDetail&gt;(sql, new { employeeKey }).Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT 
+        ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee 
+        FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @employeeClassificationKey&quot;;
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
     }
 }
 </code></pre>
