@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sorting by Dynamically Chosen Columns - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span></li>
+<li class="tocentry"><a href="Sorting.htm">Basic Sorting</a>
+</li>
+<li class="tocentry current"><a class="current" href="DynamicSorting.htm">Sorting by Dynamically Chosen Columns</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Sortingscenarios.htm">Sorting scenarios</a></li> / <li><a href="DynamicSorting.htm">Sorting by Dynamically Chosen Columns</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="sorting-by-dynamically-chosen-columns">Sorting by Dynamically Chosen Columns<a class="headerlink" href="#sorting-by-dynamically-chosen-columns" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to perform sorts where the column being sorted by is provided by a string parameter. </p>
+<p>See <a href="Sorting.htm">Basic Sorting</a> for examples of sorting by a fixed column name.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IDynamicSortingScenario&lt;TEmployeeSimple&gt;
+   where TEmployeeSimple : class, IEmployeeSimple, new()
+{
+    /// &lt;summary&gt;
+    /// Insert a collection of Employee rows.
+    /// &lt;/summary&gt;
+    void InsertBatch(IList&lt;TEmployeeSimple&gt; employees);
+
+    /// &lt;summary&gt;
+    /// Sorts by a single column
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;lastName&quot;&gt;The last name filter.&lt;/param&gt;
+    IList&lt;TEmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending);
+
+    /// &lt;summary&gt;
+    /// Sorts by a multiple columns
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;lastName&quot;&gt;The last name filter.&lt;/param&gt;
+    IList&lt;TEmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+        string sortByColumnB, bool isDescendingB);
+}
+</code></pre>
+
+<p>For ORMs that don't directly support checking column names, a statically defined list is provided.</p>
+<pre><code class="cs">public static class Utilities
+{
+    public static ImmutableHashSet&lt;string&gt; EmployeeColumnNames { get; } = ImmutableHashSet.Create
+        (&quot;EmployeeKey&quot;, &quot;FirstName&quot;, &quot;MiddleName&quot;, &quot;LastName&quot;, &quot;Title&quot;, &quot;OfficePhone&quot;,
+        &quot;CellPhone&quot;, &quot;EmployeeClassificationKey&quot;);
+}
+</code></pre>
+
+<p>For ORMs that use LINQ and <code>IQueryable</code>, these extensions are provided.</p>
+<pre><code class="cs">public static class DynamicSortingExtensions
+{
+    //Inspired by https://stackoverflow.com/a/31959568/5274
+
+    static readonly MethodInfo s_OrderBy = typeof(Queryable).GetMethods()
+        .Where(m =&gt; m.Name == &quot;OrderBy&quot; &amp;&amp; m.IsGenericMethodDefinition &amp;&amp; m.GetParameters().Length == 2)
+        .Single();
+
+    static readonly MethodInfo s_OrderByDescending = typeof(Queryable).GetMethods()
+        .Where(m =&gt; m.Name == &quot;OrderByDescending&quot; &amp;&amp; m.IsGenericMethodDefinition &amp;&amp; m.GetParameters().Length == 2)
+        .Single();
+
+    static readonly MethodInfo s_ThenBy = typeof(Queryable).GetMethods()
+        .Where(m =&gt; m.Name == &quot;ThenBy&quot; &amp;&amp; m.IsGenericMethodDefinition &amp;&amp; m.GetParameters().Length == 2)
+        .Single();
+
+    static readonly MethodInfo s_ThenByDescending = typeof(Queryable).GetMethods()
+        .Where(m =&gt; m.Name == &quot;ThenByDescending&quot; &amp;&amp; m.IsGenericMethodDefinition &amp;&amp; m.GetParameters().Length == 2)
+        .Single();
+
+    public static IOrderedQueryable&lt;TSource&gt; OrderBy&lt;TSource&gt;(this IQueryable&lt;TSource&gt; query, string propertyName)
+    {
+        return BuildQuery(s_OrderBy, query, propertyName);
+    }
+
+    public static IOrderedQueryable&lt;TSource&gt; OrderBy&lt;TSource&gt;(this IQueryable&lt;TSource&gt; query, string propertyName,
+        bool isDescending)
+    {
+        if (isDescending)
+            return BuildQuery(s_OrderByDescending, query, propertyName);
+        else
+            return BuildQuery(s_OrderBy, query, propertyName);
+    }
+
+    public static IOrderedQueryable&lt;TSource&gt; ThenBy&lt;TSource&gt;(this IQueryable&lt;TSource&gt; query, string propertyName,
+        bool isDescending)
+    {
+        if (isDescending)
+            return BuildQuery(s_ThenByDescending, query, propertyName);
+        else
+            return BuildQuery(s_ThenBy, query, propertyName);
+    }
+
+    public static IOrderedQueryable&lt;TSource&gt; OrderByDescending&lt;TSource&gt;(this IQueryable&lt;TSource&gt; query,
+        string propertyName)
+    {
+        return BuildQuery(s_OrderByDescending, query, propertyName);
+    }
+
+    public static IOrderedQueryable&lt;TSource&gt; ThenBy&lt;TSource&gt;(this IQueryable&lt;TSource&gt; query, string propertyName)
+    {
+        return BuildQuery(s_ThenBy, query, propertyName);
+    }
+
+    public static IOrderedQueryable&lt;TSource&gt; ThenByDescending&lt;TSource&gt;(this IQueryable&lt;TSource&gt; query,
+        string propertyName)
+    {
+        return BuildQuery(s_ThenByDescending, query, propertyName);
+    }
+
+    static IOrderedQueryable&lt;TSource&gt; BuildQuery&lt;TSource&gt;(MethodInfo method, IQueryable&lt;TSource&gt; query,
+        string propertyName)
+    {
+        var entityType = typeof(TSource);
+
+        var propertyInfo = entityType.GetProperty(propertyName);
+        if (propertyInfo == null)
+            throw new ArgumentOutOfRangeException(nameof(propertyName), &quot;Unknown column &quot; + propertyName);
+
+        var arg = Expression.Parameter(entityType, &quot;x&quot;);
+        var property = Expression.Property(arg, propertyName);
+        var selector = Expression.Lambda(property, new ParameterExpression[] { arg });
+
+        var genericMethod = method.MakeGenericMethod(entityType, propertyInfo.PropertyType);
+
+        return (IOrderedQueryable&lt;TSource&gt;)genericMethod.Invoke(genericMethod, new object[] { query, selector })!;
+    }
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>ADO requires validation of sort columns against a statically defined list.</p>
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumn))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumn), &quot;Unknown column &quot; + sortByColumn);
+
+    var sortDirection = isDescending ? &quot;DESC &quot; : &quot;&quot;;
+
+    var sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        $&quot;ORDER BY [{sortByColumn}] {sortDirection}&quot;;
+
+    using (var con = OpenConnection())
+    using (var cmd = new SqlCommand(sql, con))
+    {
+        cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+        var results = new List&lt;EmployeeSimple&gt;();
+
+        using (var reader = cmd.ExecuteReader())
+            while (reader.Read())
+                results.Add(new EmployeeSimple(reader));
+
+        return results;
+    }
+}
+
+public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnA))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnA), &quot;Unknown column &quot; + sortByColumnA);
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnB))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnB), &quot;Unknown column &quot; + sortByColumnB);
+
+    var sortDirectionA = isDescendingA ? &quot;DESC &quot; : &quot;&quot;;
+    var sortDirectionB = isDescendingB ? &quot;DESC &quot; : &quot;&quot;;
+
+    var sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        $&quot;ORDER BY [{sortByColumnA}] {sortDirectionA}, [{sortByColumnB}] {sortDirectionB}&quot;;
+
+    using (var con = OpenConnection())
+    using (var cmd = new SqlCommand(sql, con))
+    {
+        cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+        var results = new List&lt;EmployeeSimple&gt;();
+
+        using (var reader = cmd.ExecuteReader())
+            while (reader.Read())
+                results.Add(new EmployeeSimple(reader));
+
+        return results;
+    }
+}
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Columns to be sorted by are passed in as strings, but checked against the list of columns at runtime to prevent SQL injection attacks. A <code>SortExpression</code> object is needed for reverse sorting.</p>
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    var sortDirection = isDescending ? &quot; DESC&quot; : &quot;&quot;;
+
+    return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
+        .WithSorting(sortByColumn + sortDirection)
+        .ToCollection().Execute();
+}
+
+public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    var sortDirectionA = isDescendingA ? &quot; DESC&quot; : &quot;&quot;;
+    var sortDirectionB = isDescendingB ? &quot; DESC&quot; : &quot;&quot;;
+
+    return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
+        .WithSorting(
+            sortByColumnA + sortDirectionA,
+            sortByColumnB + sortDirectionB)
+        .ToCollection().Execute();
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Dapper requires validation of sort columns against a statically defined list.</p>
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumn))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumn), &quot;Unknown column &quot; + sortByColumn);
+
+    var sortDirection = isDescending ? &quot;DESC &quot; : &quot;&quot;;
+
+    var sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        $&quot;ORDER BY [{sortByColumn}] {sortDirection}&quot;;
+
+    using (var con = OpenConnection())
+        return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
+}
+
+public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnA))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnA), &quot;Unknown column &quot; + sortByColumnA);
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnB))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnB), &quot;Unknown column &quot; + sortByColumnB);
+
+    var sortDirectionA = isDescendingA ? &quot;DESC &quot; : &quot;&quot;;
+    var sortDirectionB = isDescendingB ? &quot;DESC &quot; : &quot;&quot;;
+
+    var sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+        &quot;e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @LastName &quot; +
+        $&quot;ORDER BY [{sortByColumnA}] {sortDirectionA}, [{sortByColumnB}] {sortDirectionB}&quot;;
+
+    using (var con = OpenConnection())
+        return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName }).ToList();
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>DbConnector requires validation of sort columns against a statically defined list.</p>
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumn))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumn), &quot;Unknown column &quot; + sortByColumn);
+
+    var sortDirection = isDescending ? &quot;DESC &quot; : &quot;&quot;;
+
+    var sql = @$&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey 
+        FROM HR.Employee e 
+        WHERE e.LastName = @lastName
+        ORDER BY [{sortByColumn}] {sortDirection}&quot;;
+
+    return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { lastName }).Execute();
+}
+
+public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnA))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnA), &quot;Unknown column &quot; + sortByColumnA);
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnB))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnB), &quot;Unknown column &quot; + sortByColumnB);
+
+    var sortDirectionA = isDescendingA ? &quot;DESC &quot; : &quot;&quot;;
+    var sortDirectionB = isDescendingB ? &quot;DESC &quot; : &quot;&quot;;
+
+    var sql = @$&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey 
+        FROM HR.Employee e 
+        WHERE e.LastName = @lastName
+        ORDER BY [{sortByColumnA}] {sortDirectionA}, 
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Entity Framework does not natively support sorting by strings. However, this can be acomplished with <code>DynamicSortingExtensions</code>.</p>
+<pre><code class="cs">public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumn, isDescending).ToList();
+}
+
+public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumnA, isDescendingA)
+            .ThenBy(sortByColumnB, isDescendingB)
+            .ToList();
+}
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>EF Core does not natively support sorting by strings. However, this can be acomplished with <code>DynamicSortingExtensions</code>.</p>
+<pre><code class="cs">public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumn, isDescending).ToList();
+}
+
+public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    using (var context = CreateDbContext())
+        return context.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumnA, isDescendingA)
+            .ThenBy(sortByColumnB, isDescendingB)
+            .ToList();
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LinqToDB does not natively support sorting by strings. However, this can be acomplished with <code>DynamicSortingExtensions</code>.</p>
+<pre><code class="cs">public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    using (var db = new OrmCookbook())
+        return db.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumn, isDescending).ToList();
+}
+
+public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    using (var db = new OrmCookbook())
+        return db.Employee.Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumnA, isDescendingA)
+            .ThenBy(sortByColumnB, isDescendingB)
+            .ToList();
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>LLBLGen Pro does natively support sorting by strings but it requires a little bit of verbose code using the low-level API of older versions. This
+is illustrated in the code below in the first method. The second method shows the alternative using the <code>DynamicSortingExtensions</code>.</p>
+<pre><code class="cs">public IList&lt;EmployeeEntity&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    using(var adapter = new DataAccessAdapter())
+    {
+        // We use queryspec here which can use the low-level API elements we need to use to accomplish sorting
+        // on a string. The low-level API uses entity fields and we obtain the field we need from a dummy entity instance
+        // we create. 
+        var fieldToSort = new EmployeeEntity().Fields[sortByColumn];
+        // fieldToSort will be null if sortByColumn isn't found. The query will therefore end in an exception if that's
+        // the case. For this particular test, it's the desired outcome so no null check is performed.
+        var q = new QueryFactory().Employee.Where(EmployeeFields.LastName.Equal(lastName))
+                                  .OrderBy(isDescending
+                                               ? fieldToSort.Descending()
+                                               : fieldToSort.Ascending());
+        return (IList&lt;EmployeeEntity&gt;)adapter.FetchQuery(q);
+
+        // Alternatively we could have used the DynamicSortingExtensions in a linq query:
+        // return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName)
+        //                              .OrderBy(sortByColumn, isDescending)
+        //                              .ToList();
+    }
+}
+
+public IList&lt;EmployeeEntity&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+                                    string sortByColumnB, bool isDescendingB)
+{
+    using(var adapter = new DataAccessAdapter())
+    {
+        return new LinqMetaData(adapter).Employee.Where(x =&gt; x.LastName == lastName)
+                                        .OrderBy(sortByColumnA, isDescendingA)
+                                        .ThenBy(sortByColumnB, isDescendingB)
+                                        .ToList();
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>NHibernate does not support sorting by strings.</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Columns to be sorted by are passed in as a collection of <code>OrderField</code> objects. They checked against the list of columns at runtime to prevent SQL injection attacks. </p>
+<pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    var sort = new[] { new OrderField(sortByColumn, isDescending ? Order.Descending : Order.Ascending) };
+    return Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+}
+
+public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA, string sortByColumnB, bool isDescendingB)
+{
+    var sort = new[] {
+        new OrderField(sortByColumnA, isDescendingA ? Order.Descending : Order.Ascending),
+        new OrderField(sortByColumnB, isDescendingB ? Order.Descending : Order.Ascending)
+    };
+    return Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>ServiceStack requires validation of sort columns against a statically defined list. ServiceStack will attempt to detect some instances of SQL injection, but potentially dangerous expressions are allowed.</p>
+<pre><code class="cs">public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumn))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumn), &quot;Unknown column &quot; + sortByColumn);
+
+    var sortDirection = isDescending ? &quot; DESC &quot; : &quot;&quot;;
+
+    using (var db = _dbConnectionFactory.OpenDbConnection())
+    {
+        return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumn + sortDirection)).ToList();
+    }
+}
+
+public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB)
+{
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnA))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnA), &quot;Unknown column &quot; + sortByColumnA);
+    if (!Utilities.EmployeeColumnNames.Contains(sortByColumnB))
+        throw new ArgumentOutOfRangeException(nameof(sortByColumnB), &quot;Unknown column &quot; + sortByColumnB);
+
+    var sortDirectionA = isDescendingA ? &quot; DESC &quot; : &quot;&quot;;
+    var sortDirectionB = isDescendingB ? &quot; DESC &quot; : &quot;&quot;;
+
+    using (var db = _dbConnectionFactory.OpenDbConnection())
+    {
+        return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+            .OrderBy(sortByColumnA + sortDirectionA + &quot;,&quot; + sortByColumnB + sortDirectionB)).ToList();
+    }
+}
+</code></pre>
+
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>
