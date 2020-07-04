@@ -30,6 +30,10 @@ In Chain, each named `DataSource` exposes database-specific functionality. For f
 
 TODO
 
+## DbConnector
+
+TODO
+
 ## Entity Framework 6
 
 TODO

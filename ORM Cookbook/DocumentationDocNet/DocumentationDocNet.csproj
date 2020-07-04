@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DbConnector.md" />
+    <None Include="MultipleDB.md" />
     <None Include="SoftDelete.md" />
     <None Include="ConnectionSharing.md" />
     <None Include="AuditColumns.md" />
