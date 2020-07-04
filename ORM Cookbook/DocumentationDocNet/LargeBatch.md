@@ -46,7 +46,7 @@ The Dapper.Contrib library removes the need to explicilty batch inserts.
 
 ## DbConnector
 
-@snippet cs [../Recipes.DbConnector/LargeBatch/LargeBatchScenario.cs] LargeBatchScenarioContrib
+@snippet cs [../Recipes.DbConnector/LargeBatch/LargeBatchScenario.cs] LargeBatchScenario
 
 ## Entity Framework 6
 

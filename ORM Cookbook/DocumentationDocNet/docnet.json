@@ -31,7 +31,7 @@
       "Operations with a Foreign Key based Lookup Table": {
         "FK Lookup table using an integer-based Foreign Key": "ModelWithLookupSimple.md",
         "FK Lookup table using an object-based Foreign Key": "ModelWithLookupComplex.md"
-      },
+      }
     },
     "Fetching data scenarios": {
       "Projecting with a Join": "Joins.md",
@@ -40,7 +40,7 @@
       "Paging Results": "Pagination.md",
       "Populate DataTable": "PopulateDataTable.md",
       "Reading a Salar Value from a Row": "ScalarValue.md",
-      "Reading a Single Column from a Table": "SingleColumn.md",
+      "Reading a Single Column from a Table": "SingleColumn.md"
     },
     "Advanced scenarios": {
       "Async Operations": "SingleModelCrudAsync.md",
