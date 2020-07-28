@@ -1,10 +1,9 @@
 ﻿namespace Recipes
 {
-    public interface IStudent
+    public interface IStudent : ISchool
     {
         public int StudentId { get; set; }
         public string Name { get; set; }
         public string Subject { get; set; }
-        public int SchoolId { get; set; }
     }
 }

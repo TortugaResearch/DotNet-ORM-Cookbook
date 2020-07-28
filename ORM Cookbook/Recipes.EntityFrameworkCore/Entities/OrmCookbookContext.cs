@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Recipes.EntityFrameworkCore.Entities.Conventions;
+using Recipes.EntityFrameworkCore.QueryFilter.Helpers;
 using System;
 
 namespace Recipes.EntityFrameworkCore.Entities
@@ -15,7 +16,6 @@ namespace Recipes.EntityFrameworkCore.Entities
         public OrmCookbookContext(DbContextOptions<OrmCookbookContext> options)
             : base(options)
         {
-
         }
 
         IDatabaseConventionConverter? m_Convention;
@@ -128,10 +128,7 @@ namespace Recipes.EntityFrameworkCore.Entities
                     .IsUnique();
             });
 
-            modelBuilder.Entity<Student>(entity =>
-            {
-                entity.HasQueryFilter(s => s.SchoolId == SchoolId);
-            });
+            modelBuilder.SetQueryFilterOnAllEntities<ISchool>(s => s.SchoolId == SchoolId);
 
             RegisterEntitiesForStoredProcedures(modelBuilder);
 
