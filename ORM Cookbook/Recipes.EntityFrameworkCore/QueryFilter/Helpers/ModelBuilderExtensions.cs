@@ -12,20 +12,18 @@ namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers
             .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
             .Single(t => t.IsGenericMethod && t.Name == nameof(SetQueryFilter));
 
-        public static void SetQueryFilterOnAllEntities<TEntityInterface>(this ModelBuilder builder,
+        public static void SetQueryFilterOnAllEntities<TEntityInterface>(this ModelBuilder modelBuilder,
             Expression<Func<TEntityInterface, bool>> filterExpression)
         {
-            if (builder == null)
-            {
-                throw new ArgumentNullException($"{builder} is null");
-            }
+            if (modelBuilder == null)
+                throw new ArgumentNullException(nameof(modelBuilder), $"{nameof(modelBuilder)} is null.");
 
-            foreach (var type in builder.Model.GetEntityTypes()
+            foreach (var type in modelBuilder.Model.GetEntityTypes()
                 .Where(t => t.BaseType == null)
                 .Select(t => t.ClrType)
                 .Where(t => typeof(TEntityInterface).IsAssignableFrom(t)))
             {
-                builder.SetEntityQueryFilter<TEntityInterface>(type, filterExpression);
+                modelBuilder.SetEntityQueryFilter<TEntityInterface>(type, filterExpression);
             }
         }
 
