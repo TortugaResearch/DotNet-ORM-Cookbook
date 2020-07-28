@@ -15,12 +15,15 @@ namespace Recipes.EntityFrameworkCore.Entities
         public OrmCookbookContext(DbContextOptions<OrmCookbookContext> options)
             : base(options)
         {
+
         }
 
         IDatabaseConventionConverter? m_Convention;
 
         //Using "= null!;" to remove the compiler warning.
         //Assume that the DbContext constructor will populate these properties
+
+        public int SchoolId { get; set; }
 
         public virtual DbSet<Department> Department { get; set; } = null!;
         public virtual DbSet<DepartmentDetail> DepartmentDetail { get; set; } = null!;
@@ -30,6 +33,7 @@ namespace Recipes.EntityFrameworkCore.Entities
         public virtual DbSet<EmployeeDetail> EmployeeDetail { get; set; } = null!;
         public virtual DbSet<Product> Product { get; set; } = null!;
         public virtual DbSet<ProductLine> ProductLine { get; set; } = null!;
+        public virtual DbSet<Student> Students { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -122,6 +126,11 @@ namespace Recipes.EntityFrameworkCore.Entities
                 entity.HasIndex(e => e.ProductLineName)
                     .HasName("UX_ProductLine_ProductLineName")
                     .IsUnique();
+            });
+
+            modelBuilder.Entity<Student>(entity =>
+            {
+                entity.HasQueryFilter(s => s.SchoolId == SchoolId);
             });
 
             RegisterEntitiesForStoredProcedures(modelBuilder);

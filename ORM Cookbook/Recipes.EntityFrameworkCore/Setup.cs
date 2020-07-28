@@ -99,6 +99,7 @@ namespace Recipes.EntityFrameworkCore
                 context.DepartmentDetail.FirstOrDefault();
                 context.Employee.FirstOrDefault();
                 context.EmployeeClassification.FirstOrDefault();
+                context.Students.FirstOrDefault();
             }
         }
 
