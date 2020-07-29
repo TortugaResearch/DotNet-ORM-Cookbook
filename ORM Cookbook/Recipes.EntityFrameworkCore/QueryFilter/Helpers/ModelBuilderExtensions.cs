@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -41,7 +44,35 @@ namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers
             where TEntity : class, TEntityInterface
         {
             var concreteExpression = filterExpression.Convert<TEntityInterface, TEntity>();
-            builder.Entity<TEntity>().HasQueryFilter(concreteExpression);
+            builder.Entity<TEntity>().AddQueryFilter(concreteExpression);
+        }
+
+        private static void AddQueryFilter<T>(this EntityTypeBuilder entityTypeBuilder, Expression<Func<T, bool>> expression)
+        {
+            var parameterType = Expression.Parameter(entityTypeBuilder.Metadata.ClrType);
+            var expressionFilter = ReplacingExpressionVisitor.Replace(
+                expression.Parameters.Single(), parameterType, expression.Body);
+
+            var internalEntityTypeBuilder = entityTypeBuilder.GetInternalEntityTypeBuilder();
+            var queryFilter = internalEntityTypeBuilder?.Metadata.GetQueryFilter();
+            if (queryFilter != null)
+            {
+                var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
+                    queryFilter.Parameters.Single(), parameterType, queryFilter.Body);
+                expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
+            }
+
+            var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
+            entityTypeBuilder.HasQueryFilter(lambdaExpression);
+        }
+
+        private static InternalEntityTypeBuilder? GetInternalEntityTypeBuilder(this EntityTypeBuilder entityTypeBuilder)
+        {
+            var internalEntityTypeBuilder = typeof(EntityTypeBuilder)
+                .GetProperty("Builder", BindingFlags.NonPublic | BindingFlags.Instance)?
+                .GetValue(entityTypeBuilder) as InternalEntityTypeBuilder;
+
+            return internalEntityTypeBuilder;
         }
     }
 }
