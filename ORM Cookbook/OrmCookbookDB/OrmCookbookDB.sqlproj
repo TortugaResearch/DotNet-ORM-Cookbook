@@ -67,6 +67,8 @@
     <Folder Include="Production\Views" />
     <Folder Include="Production\Tables" />
     <Folder Include="HR\Programability" />
+    <Folder Include="School" />
+    <Folder Include="School\Tables" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Division.sql" />
@@ -98,5 +100,8 @@
     <Build Include="HR\Programability\CountEmployeesByClassification.sql" />
     <None Include="Data\Employee.sql" />
     <None Include="OrmCookbookDB.publish.sql" />
+    <Build Include="School\Tables\Student.sql" />
+    <Build Include="School\School.sql" />
+    <None Include="Data\Student.sql" />
   </ItemGroup>
 </Project>

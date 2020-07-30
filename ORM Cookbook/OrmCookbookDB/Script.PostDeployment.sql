@@ -14,6 +14,7 @@ Post-Deployment Script Template
 :r ".\Data\EmployeeClassification.sql"
 :r ".\Data\Employee.sql"
 :r ".\Data\Division.sql"
+:r ".\Data\Student.sql"
 
 --Ensure all constraints are enabled
  
