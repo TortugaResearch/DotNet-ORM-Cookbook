@@ -62,6 +62,9 @@
     "Auditing and history scenarios": {
       "Audit Columns": "AuditColumns.md",
       "Soft Delete": "SoftDelete.md"
+    },
+    "Multi-Tenancy scenarios": {
+      "Query Filter": "QueryFilter.md"
     }
   }
 }
