@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Recipes.EntityFrameworkCore.Entities.Conventions;
-using Recipes.EntityFrameworkCore.QueryFilter.Helpers;
 using System;
 
 namespace Recipes.EntityFrameworkCore.Entities
@@ -22,8 +21,6 @@ namespace Recipes.EntityFrameworkCore.Entities
 
         //Using "= null!;" to remove the compiler warning.
         //Assume that the DbContext constructor will populate these properties
-
-        public int SchoolId { get; set; }
 
         public virtual DbSet<Department> Department { get; set; } = null!;
         public virtual DbSet<DepartmentDetail> DepartmentDetail { get; set; } = null!;
@@ -127,8 +124,6 @@ namespace Recipes.EntityFrameworkCore.Entities
                     .HasName("UX_ProductLine_ProductLineName")
                     .IsUnique();
             });
-
-            modelBuilder.SetQueryFilterOnAllEntities<ISchool>(s => s.SchoolId == SchoolId);
 
             RegisterEntitiesForStoredProcedures(modelBuilder);
 

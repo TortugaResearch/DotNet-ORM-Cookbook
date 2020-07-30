@@ -6,7 +6,5 @@ namespace Recipes.QueryFilter
         where TStudent : class, IStudent, new()
     {
         IList<TStudent> GetStudents(int schoolId);
-
-        void InsertBatch(IList<TStudent> students);
     }
 }

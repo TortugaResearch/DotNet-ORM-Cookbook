@@ -12,7 +12,7 @@ namespace Recipes.EntityFrameworkCore.QueryFilter
     {
         protected override IQueryFilterScenario<Student> GetScenario()
         {
-            return new QueryFilterScenario(Setup.DBContextFactory);
+            return new QueryFilterScenario(Setup.DBContextWithFilter);
         }
     }
 }
