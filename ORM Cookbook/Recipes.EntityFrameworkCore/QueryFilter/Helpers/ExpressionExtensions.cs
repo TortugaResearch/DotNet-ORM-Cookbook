@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2020 Phil Haack, GitHub: haacked
+// https://gist.github.com/haacked/febe9e88354fb2f4a4eb11ba88d64c24
+
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
