@@ -81,6 +81,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -637,6 +639,49 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         db.Update&lt;EmployeeClassificationPartial&gt;(
             new { isExempt, isEmployee },
             r =&gt; r.Id == employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To perform a partial update, first fetch a record and then modify it.</p>
+<pre><code class="cs">public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage) {
+    if(updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    //Get a fresh copy of the row from the database
+    var temp = Session.DefaultSession.GetObjectByKey&lt;EmployeeClassification&gt;(updateMessage.EmployeeClassificationKey);
+    if(temp != null) {
+        //Copy the changed fields
+        temp.EmployeeClassificationName = updateMessage.EmployeeClassificationName;
+        temp.Save();
+    }
+}
+
+public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage) {
+    if(updateMessage == null)
+        throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
+
+    //Get a fresh copy of the row from the database
+    var temp = Session.DefaultSession.GetObjectByKey&lt;EmployeeClassification&gt;(updateMessage.EmployeeClassificationKey);
+    if(temp != null) {
+        //Copy the changed fields
+        temp.IsExempt = updateMessage.IsExempt;
+        temp.IsEmployee = updateMessage.IsEmployee;
+        temp.Save();
+    }
+
+}
+</code></pre>
+
+<pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee) {
+    //Get a fresh copy of the row from the database
+    var temp = Session.DefaultSession.GetObjectByKey&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    if(temp != null) {
+        //Copy the changed fields
+        temp.IsExempt = isExempt;
+        temp.IsEmployee = isEmployee;
+        temp.Save();
     }
 }
 </code></pre>

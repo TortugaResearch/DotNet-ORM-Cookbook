@@ -79,6 +79,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -710,6 +712,48 @@ END;
             }
         }
     }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>To use stored procedures that return values, a class is needed to receive the results. This is true even if a scalar value is returned.</p>
+<p>The <a href="https://docs.devexpress.com/XPO/14810/design-time-features/data-model-wizard" target="_blank">Data Model Wizard</a> can generate </p>
+<ul>
+<li>a helper class to call the stored procedures;</li>
+<li>classes for getting the stored procedure results.</li>
+</ul>
+<p>In this recipe, we use the generated helper to call the stored procedures and get the stored procedures results.</p>
+<pre><code class="cs">public class BasicStoredProcScenario :
+    IBasicStoredProcScenario&lt;GetEmployeeClassificationsResult, CountEmployeesByClassificationResult&gt; {
+
+    public IList&lt;CountEmployeesByClassificationResult&gt; CountEmployeesByClassification() {
+            return SprocHelper.ExecHR_CountEmployeesByClassificationIntoObjects(Session.DefaultSession).ToList();
+    }
+
+    public int CreateEmployeeClassification(GetEmployeeClassificationsResult employeeClassification) {
+        if(employeeClassification == null)
+            throw new ArgumentNullException(nameof(employeeClassification),
+                $&quot;{nameof(employeeClassification)} is null.&quot;);
+
+        using(var uow = new UnitOfWork()) {
+            var temp = SprocHelper.ExecHR_CreateEmployeeClassificationIntoObjects(
+                    uow,
+                    employeeClassification.EmployeeClassificationName,
+                    employeeClassification.IsExempt,
+                    employeeClassification.IsEmployee
+                );
+            return temp.Single().EmployeeClassificationKey;
+        }
+    }
+
+    public IList&lt;GetEmployeeClassificationsResult&gt; GetEmployeeClassifications() {
+            return SprocHelper.ExecHR_GetEmployeeClassificationsIntoObjects(Session.DefaultSession, null).ToList();
+    }
+
+    public GetEmployeeClassificationsResult? GetEmployeeClassifications(int employeeClassificationKey) {
+            return SprocHelper.ExecHR_GetEmployeeClassificationsIntoObjects(Session.DefaultSession, employeeClassificationKey).SingleOrDefault();
+    }
+
 }
 </code></pre>
 

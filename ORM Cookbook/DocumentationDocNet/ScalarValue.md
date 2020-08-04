@@ -55,3 +55,7 @@ TODO
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\ScalarValue\ScalarValueScenario.cs] ScalarValueScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\ScalarValue\ScalarValueScenario.cs] ScalarValueScenario

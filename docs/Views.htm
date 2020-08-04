@@ -72,6 +72,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -81,7 +83,7 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Scalar Value from a Row</a>
 </li>
 <li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
 </li>
@@ -833,6 +835,52 @@ POCOs however these aren't able to participate in entity relationships.</p>
         {
             return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
         }
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>XPO supports using a class mapped to a database view as a persistent object. You need to select a property that contains unique values and decorate it with the <code>[Key]</code> attribute, and set <code>[Persistent]</code> attribute for this class.</p>
+<pre><code class="cs">using DevExpress.Xpo;
+
+namespace Recipes.Xpo.Entities {
+    [Persistent(&quot;HR.EmployeeDetail&quot;)]
+    public partial class EmployeeDetail : XPLiteObject {
+        int fEmployeeKey;
+        [Key]
+        public int EmployeeKey {
+            get { return fEmployeeKey; }
+            set { SetPropertyValue&lt;int&gt;(nameof(EmployeeKey), ref fEmployeeKey, value); }
+        }
+    // ...
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt; {
+
+    public int Create(Employee employee) {
+        if(employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        employee.Save();
+        return employee.EmployeeKey;
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey) {
+        return Session.DefaultSession.Query&lt;EmployeeDetail&gt;().Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName) {
+        return Session.DefaultSession.Query&lt;EmployeeDetail&gt;().Where(x =&gt; x.LastName == lastName).ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey) {
+            return Session.DefaultSession.Query&lt;EmployeeDetail&gt;().Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey) {
+            return Session.DefaultSession.GetObjectByKey&lt;EmployeeClassification&gt;(employeeClassificationKey);
     }
 }
 </code></pre>

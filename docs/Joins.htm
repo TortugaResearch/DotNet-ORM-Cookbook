@@ -68,6 +68,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -79,7 +81,7 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Scalar Value from a Row</a>
 </li>
 <li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
 </li>
@@ -124,7 +126,7 @@
                 <div role="main">
                     <div class="section">
 <h1 id="projecting-with-a-join">Projecting with a Join<a class="headerlink" href="#projecting-with-a-join" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
-<p>These scenarios demonstrate how to define a join and project the reults into a simple object. </p>
+<p>These scenarios demonstrate how to define a join and project the results into a simple object. </p>
 <p>See <a href="ModelWithLookupComplex.htm">CRUD Operations on Model with Object-Based Foreign Key</a> and <a href="ModelWithChildren.htm">CRUD Operations on Model with Child Records</a> for other examples of performing joins.</p>
 <h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>For the purpose of these examples, a database view may not be used.</p>
@@ -1180,6 +1182,86 @@ has been created which is the same projection as the one in the queries in the n
         {
             return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
         }
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, Employee&gt; {
+    public int Create(Employee employee) {
+        if(employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        employee.Save();
+        return employee.EmployeeKey;
+    }
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey) {
+            return Session.DefaultSession.Query&lt;Employee&gt;()
+                .Join(Session.DefaultSession.Query&lt;EmployeeClassification&gt;(),
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new EmployeeDetail() {
+                        EmployeeKey = e.EmployeeKey,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        CellPhone = e.CellPhone,
+                        OfficePhone = e.OfficePhone,
+                        Title = e.Title,
+                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ec.EmployeeClassificationName,
+                        IsEmployee = ec.IsEmployee,
+                        IsExempt = ec.IsExempt,
+                    })
+                .Where(ed =&gt; ed.EmployeeClassificationKey == employeeClassificationKey)
+                .ToList();
+    }
+
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName) {
+            return Session.DefaultSession.Query&lt;Employee&gt;()
+                .Join(Session.DefaultSession.Query&lt;EmployeeClassification&gt;(),
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new EmployeeDetail() {
+                        EmployeeKey = e.EmployeeKey,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        CellPhone = e.CellPhone,
+                        OfficePhone = e.OfficePhone,
+                        Title = e.Title,
+                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ec.EmployeeClassificationName,
+                        IsEmployee = ec.IsEmployee,
+                        IsExempt = ec.IsExempt,
+                    })
+                .Where(ed =&gt; ed.LastName == lastName)
+                .ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey) {
+            return Session.DefaultSession.Query&lt;Employee&gt;()
+                .Join(Session.DefaultSession.Query&lt;EmployeeClassification&gt;(),
+                    e =&gt; e.EmployeeClassificationKey,
+                    ec =&gt; ec.EmployeeClassificationKey,
+                    (e, ec) =&gt; new EmployeeDetail() {
+                        EmployeeKey = e.EmployeeKey,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        CellPhone = e.CellPhone,
+                        OfficePhone = e.OfficePhone,
+                        Title = e.Title,
+                        EmployeeClassificationKey = ec.EmployeeClassificationKey,
+                        EmployeeClassificationName = ec.EmployeeClassificationName,
+                        IsEmployee = ec.IsEmployee,
+                        IsExempt = ec.IsExempt,
+                    })
+                .Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey) {
+            return Session.DefaultSession.GetObjectByKey&lt;EmployeeClassification&gt;(employeeClassificationKey);
     }
 }
 </code></pre>

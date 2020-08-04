@@ -136,3 +136,13 @@ With RepoDb, the only changes are to add `await`, `Async`, and `.ConfigureAwait(
 With ServiceStack, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
 
 @snippet cs [..\Recipes.ServiceStack\SingleModelCrudAsync\SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
+
+## XPO
+
+With XPO, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 
+
+@snippet cs [..\Recipes.Xpo\SingleModelCrudAsync\SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
+
+@alert info
+Due to cookbook architecture limitations, here we have to use default Sessions instead of Units Of Work. For sessions, we call explicit async transactions.
+@end

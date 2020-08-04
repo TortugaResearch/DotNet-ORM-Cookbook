@@ -92,3 +92,7 @@ Read operations must occur against a database view in order to get the propertie
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\ModelWithLookup\ModelWithLookupComplexScenario.cs] ModelWithLookupComplexScenario

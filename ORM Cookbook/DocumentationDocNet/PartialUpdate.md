@@ -95,6 +95,13 @@ In ServiceStack, partial updates have to be 'unpacked'. Updated columns are pass
 @snippet cs [..\Recipes.ServiceStack\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 
+## XPO
+
+To perform a partial update, first fetch a record and then modify it.
+
+@snippet cs [..\Recipes.Xpo\PartialUpdate\PartialUpdateScenario.cs] UpdateWithObject
+
+@snippet cs [..\Recipes.Xpo\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
 
 

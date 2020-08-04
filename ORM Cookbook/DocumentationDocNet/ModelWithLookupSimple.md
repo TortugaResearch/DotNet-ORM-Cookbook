@@ -55,3 +55,7 @@ TODO
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario

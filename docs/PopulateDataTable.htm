@@ -76,10 +76,12 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Scalar Value from a Row</a>
 </li>
 <li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
 </li>
@@ -737,6 +739,89 @@ public class DataTableResultTransformer : IResultTransformer
                 dt.Rows.Add(row.Id, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
         }
 
+        return dt;
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>XPO does not support <code>DataTable</code>. </p>
+<pre><code class="cs">public class PopulateDataTableScenario : IPopulateDataTableScenario {
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee) {
+        var dt = new DataTable();
+        dt.Columns.Add(&quot;EmployeeClassificationKey&quot;, typeof(int));
+        dt.Columns.Add(&quot;EmployeeClassificationName&quot;, typeof(string));
+        dt.Columns.Add(&quot;IsExempt&quot;, typeof(bool));
+        dt.Columns.Add(&quot;IsEmployee&quot;, typeof(bool));
+
+        using(var uow = new UnitOfWork()) {
+            foreach(var row in uow.Query&lt;EmployeeClassification&gt;().Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee))
+                dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+        return dt;
+    }
+
+    public DataTable GetAll() {
+        var dt = new DataTable();
+        dt.Columns.Add(&quot;EmployeeClassificationKey&quot;, typeof(int));
+        dt.Columns.Add(&quot;EmployeeClassificationName&quot;, typeof(string));
+        dt.Columns.Add(&quot;IsExempt&quot;, typeof(bool));
+        dt.Columns.Add(&quot;IsEmployee&quot;, typeof(bool));
+
+        using(var uow = new UnitOfWork()) {
+            foreach(var row in uow.Query&lt;EmployeeClassification&gt;())
+                dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
+        }
+        return dt;
+    }
+}
+</code></pre>
+
+<p>You can generalize this using XPO's metadata API: <a href="https://docs.devexpress.com/XPO/DevExpress.Xpo.Metadata.XPClassInfo" target="_blank">XPClassInfo</a> and <a href="https://docs.devexpress.com/XPO/DevExpress.Xpo.Metadata.XPMemberInfo" target="_blank">XPMemberInfo</a></p>
+<pre><code class="cs">public class PopulateDataTableScenario2 : IPopulateDataTableScenario {
+
+    public DataTable FindByFlags(bool isExempt, bool isEmployee) {
+        var classInfo = Session.DefaultSession.GetClassInfo&lt;EmployeeClassification&gt;();
+
+        var dt = BuildGenericDataTable(classInfo);
+        using(var uow = new UnitOfWork()) {
+            var buffer = new object[classInfo.Table.Columns.Count];
+            foreach(var row in uow.Query&lt;EmployeeClassification&gt;().Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee)) {
+                for(var i = 0; i &lt; classInfo.Table.Columns.Count; i++)
+                    buffer[i] = row.GetMemberValue(classInfo.Table.Columns[i].Name);
+
+                dt.Rows.Add(buffer);
+            }
+        }
+        return dt;
+    }
+
+    public DataTable GetAll() {
+        var classInfo = Session.DefaultSession.GetClassInfo&lt;EmployeeClassification&gt;();
+
+        var dt = BuildGenericDataTable(classInfo);
+
+        using(var uow = new UnitOfWork()) {
+            var buffer = new object[classInfo.Table.Columns.Count];
+            foreach(var row in uow.Query&lt;EmployeeClassification&gt;()) {
+                for(var i = 0; i &lt; classInfo.Table.Columns.Count; i++)
+                    buffer[i] = row.GetMemberValue(classInfo.Table.Columns[i].Name);
+
+                dt.Rows.Add(buffer);
+            }
+        }
+        return dt;
+    }
+
+    static DataTable BuildGenericDataTable(XPClassInfo classInfo) {
+        var dt = new DataTable();
+        for(int i = 0; i &lt; classInfo.Table.Columns.Count; i++) {
+            var dbColumn = classInfo.Table.Columns[i];
+            var memberInfo = classInfo.GetPersistentMember(dbColumn.Name); 
+            var col = dt.Columns.Add(dbColumn.Name, memberInfo.MemberType);
+            col.AllowDBNull = dbColumn.IsNullable;
+        }
         return dt;
     }
 }

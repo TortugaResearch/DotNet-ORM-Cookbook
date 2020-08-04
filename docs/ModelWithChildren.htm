@@ -69,6 +69,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -2184,6 +2186,90 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.Update(product);
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>XPO Objects does lazy loading out of box, so you don't need to manually include or exclude linked objects and collections.</p>
+<p>Use the <a href="https://docs.devexpress.com/XPO/DevExpress.Xpo.AggregatedAttribute" target="_blank">AggregatedAttribute</a> to 
+- automatically remove child objects once the parent object is removed,
+- automatically update child rows when a parent row is updated.</p>
+<pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt; {
+
+    public int Create(ProductLine productLine) {
+        if(productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+        productLine.Save();
+        return productLine.ProductLineKey;
+    }
+
+    public void Delete(ProductLine productLine) {
+        if(productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        productLine.Delete();
+    }
+
+    public void DeleteByKey(int productLineKey) {
+        Session.DefaultSession.GetObjectByKey&lt;ProductLine&gt;(productLineKey).Delete();
+    }
+
+    public IList&lt;ProductLine&gt; FindByName(string productLineName, bool includeProducts) {
+        //Assert.Inconclusive(&quot;XPO Objects provide deferred loading out of box, so you don't need to manually include or exclude linked objects and collections&quot;);
+        return Session.DefaultSession.Query&lt;ProductLine&gt;().Where(x =&gt; x.ProductLineName == productLineName).ToList();
+    }
+
+    public IList&lt;ProductLine&gt; GetAll(bool includeProducts) {
+        //Assert.Inconclusive(&quot;XPO Objects provide deferred loading out of box, so you don't need to manually include or exclude linked objects and collections&quot;);
+
+        // XPO does not load objects until you access them
+        return Session.DefaultSession.Query&lt;ProductLine&gt;().ToList();
+    }
+
+    public ProductLine? GetByKey(int productLineKey, bool includeProducts) {
+        //Assert.Inconclusive(&quot;XPO Objects provide deferred loading out of box, so you don't need to manually include or exclude linked objects and collections&quot;);
+
+        return Session.DefaultSession.GetObjectByKey&lt;ProductLine&gt;(productLineKey);
+    }
+
+    public void Update(Product product) {
+        if(product == null)
+            throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
+
+        product.Save();
+    }
+
+    public void Update(ProductLine productLine) {
+        if(productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        productLine.Save();
+    }
+
+    public void UpdateGraph(ProductLine productLine) {
+        if(productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        productLine.Save();
+    }
+
+    public void UpdateGraphWithChildDeletes(ProductLine productLine) {
+        if(productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+        // https://docs.devexpress.com/XPO/DevExpress.Xpo.AggregatedAttribute does all the job
+        productLine.Save();
+    }
+
+
+    public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove) {
+        if(productLine == null)
+            throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
+
+        if(productKeysToRemove != null)
+            foreach(var key in productKeysToRemove)
+                Session.DefaultSession.GetObjectByKey&lt;Product&gt;(key).Delete();
+        productLine.Save();
     }
 }
 </code></pre>

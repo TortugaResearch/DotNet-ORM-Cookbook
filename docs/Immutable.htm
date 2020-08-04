@@ -71,6 +71,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -1456,6 +1458,71 @@ public class EmployeeClassification : IEmployeeClassification
                 classification.IsExempt,
                 classification.EmployeeClassificationName
             }, r =&gt; r.Id == classification.Id);
+        }
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt; {
+    public int Create(ReadOnlyEmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var temp = classification.ToEntity();
+        temp.Save();
+        return temp.EmployeeClassificationKey;
+    }
+
+    public virtual void Delete(ReadOnlyEmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using(var uow = new UnitOfWork()) {
+            uow.Delete(uow.GetObjectByKey&lt;EmployeeClassification&gt;(classification.EmployeeClassificationKey));
+            uow.CommitChanges();
+        }
+    }
+
+    public virtual void DeleteByKey(int employeeClassificationKey) {
+        using(var uow = new UnitOfWork()) {
+            uow.Delete(uow.GetObjectByKey&lt;EmployeeClassification&gt;(employeeClassificationKey));
+            uow.CommitChanges();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName) {
+        return Session.DefaultSession.Query&lt;EmployeeClassification&gt;()
+            .Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName)
+            .Select(x =&gt; new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll() {
+        using(var uow = new UnitOfWork()) {
+            return uow.Query&lt;EmployeeClassification&gt;().Select(x =&gt; new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
+        }
+    }
+
+    public ReadOnlyEmployeeClassification GetByKey(int employeeClassificationKey) {
+        using(var uow = new UnitOfWork()) {
+            var temp = uow.GetObjectByKey&lt;EmployeeClassification&gt;(employeeClassificationKey);
+            if(temp == null)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return new ReadOnlyEmployeeClassification(temp);
+        }
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        var temp = Session.DefaultSession.GetObjectByKey&lt;EmployeeClassification&gt;(classification.EmployeeClassificationKey);
+        if(temp != null) {
+            //Copy the changed fields
+            temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+            temp.IsEmployee = classification.IsEmployee;
+            temp.IsExempt = classification.IsExempt;
+            temp.Save();
         }
     }
 }

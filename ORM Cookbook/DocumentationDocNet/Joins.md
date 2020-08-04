@@ -1,6 +1,6 @@
 ﻿# Projecting with a Join
 
-These scenarios demonstrate how to define a join and project the reults into a simple object. 
+These scenarios demonstrate how to define a join and project the results into a simple object. 
 
 See [CRUD Operations on Model with Object-Based Foreign Key](ModelWithLookupComplex.htm) and [CRUD Operations on Model with Child Records](ModelWithChildren.htm) for other examples of performing joins.
 
@@ -73,3 +73,7 @@ RepoDb does not support joins by default, you have to right raw-SQLs to achieve 
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\Joins\JoinsScenario.cs] JoinsScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\Joins\JoinsScenario.cs] JoinsScenario

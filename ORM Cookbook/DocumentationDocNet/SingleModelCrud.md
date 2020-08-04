@@ -174,3 +174,14 @@ The repository resemebles Dapper, but with far less SQL.
 
 @snippet cs [..\Recipes.ServiceStack\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario
 
+## XPO
+
+XPO requires the use of annotations on its models. These are specific to XPO, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.
+
+XPO requires deriving data model objects from XPObjectBase (or its descendants). Once derived, you can use object's `Save()` and `Delete()` methods to add, update, and remove data objects.
+
+The data model can be generated using the [DevExpress Data Model Wizard](https://docs.devexpress.com/XPO/3334/concepts/generating-persistent-objects-for-existing-data-tables). 
+
+@snippet cs [..\Recipes.Xpo\Entities\EmployeeClassification.cs] EmployeeClassification
+
+@snippet cs [..\Recipes.Xpo\SingleModelCrud\SingleModelCrudScenario.cs] SingleModelCrudScenario

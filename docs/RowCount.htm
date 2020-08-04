@@ -72,6 +72,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -79,7 +81,7 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Scalar Value from a Row</a>
 </li>
 <li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
 </li>
@@ -583,6 +585,32 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
         {
             db.InsertAll(employees);
         }
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;Employee&gt; {
+    public int EmployeeCount(string lastName) {
+        using(var uow = new UnitOfWork())
+            // This approach works slower, because it loads matching objects from a data source:
+            //return uow.Query&lt;Employee&gt;().Where(e =&gt; e.LastName == lastName).Count();
+
+            // Get row count without loading data items from the server.
+            return (int)uow.Evaluate(typeof(Employee), CriteriaOperator.Parse(&quot;Count()&quot;), CriteriaOperator.Parse(&quot;[LastName] = ?&quot;, lastName)); 
+    }
+
+    public int EmployeeCount() {
+        using(var uow = new UnitOfWork())
+            // This approach works slower, because it loads all the objects from a data source:
+            // return uow.Query&lt;Employee&gt;().Count();
+
+            // Get row count without loading data items from the server.
+            return (int)uow.Evaluate(typeof(Employee), CriteriaOperator.Parse(&quot;Count()&quot;), null);
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees) {
+        Session.DefaultSession.Save(employees);
     }
 }
 </code></pre>

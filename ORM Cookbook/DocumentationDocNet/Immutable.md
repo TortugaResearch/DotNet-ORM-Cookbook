@@ -122,3 +122,7 @@ Below is the *immutable repository*.
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\Immutable\ImmutableScenario.cs] ImmutableScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\Immutable\ImmutableScenario.cs] ImmutableScenario

@@ -93,3 +93,9 @@ No changes are needed.
 No changes are needed. 
 
 @snippet cs [..\Recipes.ServiceStack\LargeBatch\LargeBatchScenario.cs] LargeBatchScenario
+
+## XPO
+
+No changes are needed. 
+
+@snippet cs [..\Recipes.Xpo\LargeBatch\LargeBatchScenario.cs] LargeBatchScenario

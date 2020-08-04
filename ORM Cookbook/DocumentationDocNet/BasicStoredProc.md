@@ -77,3 +77,16 @@ TODO
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario
+
+## XPO
+
+To use stored procedures that return values, a class is needed to receive the results. This is true even if a scalar value is returned.
+
+The [Data Model Wizard](https://docs.devexpress.com/XPO/14810/design-time-features/data-model-wizard) can generate 
+
+- a helper class to call the stored procedures;
+- classes for getting the stored procedure results.
+
+In this recipe, we use the generated helper to call the stored procedures and get the stored procedures results.
+
+@snippet cs [..\Recipes.Xpo\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario

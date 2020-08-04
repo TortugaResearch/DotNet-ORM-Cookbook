@@ -76,6 +76,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -536,6 +538,29 @@ public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumnA, bool 
         return db.Select(db.From&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
             .OrderBy(sortByColumnA + sortDirectionA + &quot;,&quot; + sortByColumnB + sortDirectionB)).ToList();
     }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>XPO natively supports sorting by strings. At the same time, this can be acomplished with <code>DynamicSortingExtensions</code> (see the commented code).</p>
+<pre><code class="cs">public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumn, bool isDescending) {
+    return Session.DefaultSession.Query&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+           .OrderBy(sortByColumn, isDescending).ToList();
+}
+
+public IList&lt;Employee&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA,
+    string sortByColumnB, bool isDescendingB) {
+
+    return new XPCollection&lt;Employee&gt;(
+        CriteriaOperator.Parse(&quot;[LastName] = ?&quot;, lastName),
+        new SortProperty(sortByColumnA, isDescendingA? DevExpress.Xpo.DB.SortingDirection.Descending: DevExpress.Xpo.DB.SortingDirection.Ascending),
+        new SortProperty(sortByColumnB, isDescendingB ? DevExpress.Xpo.DB.SortingDirection.Descending : DevExpress.Xpo.DB.SortingDirection.Ascending));
+
+    //// You can also use the DynamicSortingExtensions applied to Linq to XPO Query
+    //return Session.DefaultSession.Query&lt;Employee&gt;().Where(x =&gt; x.LastName == lastName)
+    //    .OrderBy(sortByColumnA, isDescendingA)
+    //    .ThenBy(sortByColumnB, isDescendingB)
+    //    .ToList();
 }
 </code></pre>
 

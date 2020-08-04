@@ -68,3 +68,26 @@ In NHibernate, views require a unique ID column. They must also be configured as
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\Views\ViewsScenario.cs] ViewsScenario
+
+## XPO
+
+XPO supports using a class mapped to a database view as a persistent object. You need to select a property that contains unique values and decorate it with the `[Key]` attribute, and set `[Persistent]` attribute for this class.
+
+```cs
+using DevExpress.Xpo;
+
+namespace Recipes.Xpo.Entities {
+    [Persistent("HR.EmployeeDetail")]
+    public partial class EmployeeDetail : XPLiteObject {
+        int fEmployeeKey;
+        [Key]
+        public int EmployeeKey {
+            get { return fEmployeeKey; }
+            set { SetPropertyValue<int>(nameof(EmployeeKey), ref fEmployeeKey, value); }
+        }
+    // ...
+    }
+}
+```
+
+@snippet cs [..\Recipes.Xpo\Views\ViewsScenario.cs] ViewsScenario

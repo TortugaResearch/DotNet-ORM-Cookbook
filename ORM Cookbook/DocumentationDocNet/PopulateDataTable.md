@@ -80,5 +80,12 @@ In RepoDb, the `DataTable.Load` can be provided with an `IDataReader` object fro
 
 @snippet cs [..\Recipes.ServiceStack\PopulateDataTable\PopulateDataTableScenario.cs] PopulateDataTableScenario
 
+## XPO
 
+XPO does not support `DataTable`. 
 
+@snippet cs [..\Recipes.Xpo\PopulateDataTable\PopulateDataTableScenario.cs] PopulateDataTableScenario
+
+You can generalize this using XPO's metadata API: [XPClassInfo](https://docs.devexpress.com/XPO/DevExpress.Xpo.Metadata.XPClassInfo) and [XPMemberInfo](https://docs.devexpress.com/XPO/DevExpress.Xpo.Metadata.XPMemberInfo)
+
+@snippet cs [..\Recipes.Xpo\PopulateDataTable\PopulateDataTableScenario2.cs] PopulateDataTableScenario2

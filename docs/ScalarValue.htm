@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Reading a Salar Value from a Row - The .NET Core ORM Cookbook</title>
+    <title>Reading a Scalar Value from a Row - The .NET Core ORM Cookbook</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="css/theme.css" type="text/css" />
     <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
@@ -52,7 +52,7 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
-<li class="tocentry current"><a class="current" href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+<li class="tocentry current"><a class="current" href="ScalarValue.htm">Reading a Scalar Value from a Row</a>
 <ul class="currentrelative">
 <li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
 
@@ -77,6 +77,8 @@
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+<li class="tocentry"><a href="#xpo">XPO</a></li>
 
 
 
@@ -116,7 +118,7 @@
             <div class="nav-content">
                 <div role="navigation" aria-label="breadcrumbs navigation">
                     <div class="breadcrumbs">
-<ul><li><a href="index.htm">Home</a></li> / <li><a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></li> / <li><a href="ScalarValue.htm">Reading a Salar Value from a Row</a></li></ul>
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></li> / <li><a href="ScalarValue.htm">Reading a Scalar Value from a Row</a></li></ul>
 					
                     </div>
                     <hr />
@@ -838,6 +840,51 @@
     {
         using (var db = _dbConnectionFactory.OpenDbConnection())
             return db.Scalar&lt;Division, TimeSpan?&gt;(d =&gt; d.StartTime, d =&gt; d.Id == divisionKey);
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario {
+
+    public int? GetDivisionKey(string divisionName) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionName == divisionName).Select(d =&gt; (int?)d.DivisionKey).SingleOrDefault();
+    }
+
+    public string GetDivisionName(int divisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).Single();
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).SingleOrDefault();
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.LastReviewCycle).SingleOrDefault();
+    }
+
+    public int? GetMaxEmployees(int divisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.MaxEmployees).SingleOrDefault();
+    }
+
+    public DateTime GetModifiedDate(int divisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.ModifiedDate).Single();
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.SalaryBudget).SingleOrDefault();
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.StartTime).SingleOrDefault();
     }
 }
 </code></pre>

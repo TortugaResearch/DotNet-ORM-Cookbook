@@ -53,3 +53,7 @@ TODO
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\SingleColumn\SingleColumnScenario.cs] SingleColumnScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\SingleColumn\SingleColumnScenario.cs] SingleColumnScenario

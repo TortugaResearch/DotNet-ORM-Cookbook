@@ -80,3 +80,9 @@ Columns to be sorted by are passed in as a collection of `OrderField` objects. T
 ServiceStack requires validation of sort columns against a statically defined list. ServiceStack will attempt to detect some instances of SQL injection, but potentially dangerous expressions are allowed.
 
 @snippet cs [..\Recipes.ServiceStack\DynamicSorting\DynamicSortingScenario.cs] SortBy
+
+## XPO
+
+XPO natively supports sorting by strings. At the same time, this can be acomplished with `DynamicSortingExtensions` (see the commented code).
+
+@snippet cs [..\Recipes.Xpo\DynamicSorting\DynamicSortingScenario.cs] SortBy

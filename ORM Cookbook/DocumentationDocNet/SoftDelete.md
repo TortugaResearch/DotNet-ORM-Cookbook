@@ -73,3 +73,9 @@ TODO
 ## ServiceStack
 
 TODO
+
+## XPO
+
+XPO does not support soft delete, but it can mimic the logic implemented in the Entity Framework recipe.
+
+@snippet cs [..\Recipes.Xpo\SoftDelete\SoftDeleteScenario.cs] SoftDeleteScenario

@@ -60,5 +60,9 @@ Like ADO.NET, this uses the row counts returned from the `Execute` command.
 
 @snippet cs [..\Recipes.ServiceStack\TryCrud\TryCrudScenario.cs] TryCrudScenario
 
+## XPO
+
+@snippet cs [..\Recipes.Xpo\TryCrud\TryCrudScenario.cs] TryCrudScenario
+
 
 

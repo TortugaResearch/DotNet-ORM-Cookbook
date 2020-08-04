@@ -100,3 +100,11 @@ Columns to be sorted by are passed in as strings, but checked against the list o
 
 @snippet cs [..\Recipes.ServiceStack\Sorting\SortingScenario.cs] SortByMiddleNameFirstName
 
+## XPO
+
+@snippet cs [..\Recipes.Xpo\Sorting\SortingScenario.cs] SortByFirstName
+
+@snippet cs [..\Recipes.Xpo\Sorting\SortingScenario.cs] SortByMiddleNameDescFirstName
+
+@snippet cs [..\Recipes.Xpo\Sorting\SortingScenario.cs] SortByMiddleNameFirstName
+

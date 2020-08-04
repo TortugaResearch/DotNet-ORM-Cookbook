@@ -54,7 +54,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgreSqlDb", "PostgreSqlD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Injectables", "Recipes.LLBLGenPro\Injectables\Injectables.csproj", "{8435E156-FBFD-4B47-8C36-8C6752F7E8F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.DbConnector", "Recipes.DbConnector\Recipes.DbConnector.csproj", "{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.DbConnector", "Recipes.DbConnector\Recipes.DbConnector.csproj", "{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Xpo", "Recipes.Xpo\Recipes.Xpo.csproj", "{D509DD74-3926-4C79-8CD2-61EE317A26A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -140,6 +142,10 @@ Global
 		{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D509DD74-3926-4C79-8CD2-61EE317A26A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D509DD74-3926-4C79-8CD2-61EE317A26A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D509DD74-3926-4C79-8CD2-61EE317A26A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D509DD74-3926-4C79-8CD2-61EE317A26A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

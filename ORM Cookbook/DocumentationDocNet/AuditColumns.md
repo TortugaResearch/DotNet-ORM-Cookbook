@@ -106,3 +106,28 @@ TODO
 ## ServiceStack
 
 TODO
+
+
+## XPO
+
+XPO's persistent objects expose the [AfterConstruction](https://docs.devexpress.com/XPO/DevExpress.Xpo.PersistentBase.AfterConstruction) and [OnSaving](https://docs.devexpress.com/XPO/DevExpress.Xpo.PersistentBase.OnSaving) methods. Override these methods to automatically fill audit columns:
+
+```cs
+static User? GetCurrentUser() {
+    return SecuritySystem.CurrentUser ?? null;
+}
+
+public override void AfterConstruction() {
+    base.AfterConstruction();
+    CreatedDate = DateTime.Now;
+    CreatedByEmployeeKey = GetCurrentUser()?.UserKey;
+}
+protected override void OnSaving() {
+    base.OnSaving();
+    ModifiedDate = DateTime.Now;
+    ModifiedByEmployeeKey = GetCurrentUser()?.UserKey;
+}
+```
+
+
+@snippet cs [..\Recipes.Xpo\AuditColumns\AuditColumnsScenario.cs] AuditColumnsScenario

@@ -81,3 +81,14 @@ For partial deletes, ensure that you are using `cascade="all-delete-orphan"`. Ot
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
+
+## XPO
+
+XPO Objects does lazy loading out of box, so you don't need to manually include or exclude linked objects and collections.
+
+Use the [AggregatedAttribute](https://docs.devexpress.com/XPO/DevExpress.Xpo.AggregatedAttribute) to 
+- automatically remove child objects once the parent object is removed,
+- automatically update child rows when a parent row is updated.
+
+
+@snippet cs [..\Recipes.Xpo\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario

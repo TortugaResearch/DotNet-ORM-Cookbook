@@ -77,3 +77,7 @@ Simply call the `BeginTransaction()` method of the `DbConnection` object and pas
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\Transactions\TransactionsScenario.cs] TransactionsScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\Transactions\TransactionsScenario.cs] TransactionsScenario

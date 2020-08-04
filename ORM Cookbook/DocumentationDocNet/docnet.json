@@ -19,7 +19,8 @@
       "LLBLGen Pro": "LLBLGenPro.md",
       "NHibernate": "NHibernate.md",
       "RepoDb": "RepoDb.md",
-      "ServiceStack": "ServiceStack.md"
+      "ServiceStack": "ServiceStack.md",
+      "XPO": "XPO.md"
     },
     "FAQ": "FAQ.md",
     "Standard CRUD scenarios": {
@@ -39,7 +40,7 @@
       "Row Counts": "RowCount.md",
       "Paging Results": "Pagination.md",
       "Populate DataTable": "PopulateDataTable.md",
-      "Reading a Salar Value from a Row": "ScalarValue.md",
+      "Reading a Scalar Value from a Row": "ScalarValue.md",
       "Reading a Single Column from a Table": "SingleColumn.md"
     },
     "Advanced scenarios": {

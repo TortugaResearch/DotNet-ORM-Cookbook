@@ -67,3 +67,7 @@ NHibernate does not have support for bulk inserts.
 ## ServiceStack
 
 ServiceStack does not have support for bulk inserts.
+
+## XPO
+
+XPO does not have support for bulk inserts.

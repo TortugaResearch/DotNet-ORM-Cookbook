@@ -82,6 +82,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -527,6 +529,53 @@
 <p>TODO</p>
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>XPO does not support soft delete, but it can mimic the logic implemented in the Entity Framework recipe.</p>
+<pre><code class="cs">public class SoftDeleteScenario : ISoftDeleteScenario&lt;Department&gt; {
+
+    public int CreateDepartment(Department department) {
+        if(department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        department.Save();
+        return department.DepartmentKey;
+    }
+
+    public void DeleteDepartment(Department department) {
+        if(department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+        department.IsDeleted1 = true;
+        department.Save();
+    }
+
+    public Department? GetDepartment(int departmentKey) {
+        var department = Session.DefaultSession.GetObjectByKey&lt;Department&gt;(departmentKey);
+        if(department.IsDeleted1) {
+            return null;
+        }
+        return department;
+    }
+
+    public Department? GetDepartmentIgnoringIsDeleted(int departmentKey) {
+        return Session.DefaultSession.GetObjectByKey&lt;Department&gt;(departmentKey);
+    }
+
+    public void UndeleteDepartment(int departmentKey) {
+        using(var uow = new UnitOfWork()) {
+            Session.DefaultSession.GetObjectByKey&lt;Department&gt;(departmentKey).IsDeleted1 = false;
+            uow.CommitChanges();
+        }
+    }
+
+    public void UpdateDepartment(Department department) {
+        if(department == null)
+            throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
+
+        department.Save();
+    }
+}
+</code></pre>
+
 
                     </div>
                 </div>

@@ -61,3 +61,7 @@ TODO
 ## ServiceStack
 
 @snippet cs [..\Recipes.ServiceStack\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
+
+## XPO
+
+@snippet cs [..\Recipes.Xpo\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario

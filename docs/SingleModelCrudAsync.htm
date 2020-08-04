@@ -71,6 +71,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -1268,7 +1270,64 @@
 }
 </code></pre>
 
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>With XPO, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt; {
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+        await Session.DefaultSession.ExplicitBeginTransactionAsync().ConfigureAwait(false);
+        classification.Save();
+        await Session.DefaultSession.ExplicitCommitTransactionAsync().ConfigureAwait(false);
+        return classification.EmployeeClassificationKey;
+    }
 
+    public async Task DeleteAsync(EmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        await Session.DefaultSession.ExplicitBeginTransactionAsync().ConfigureAwait(false);
+        classification.Delete();
+        await Session.DefaultSession.ExplicitCommitTransactionAsync().ConfigureAwait(false);
+    }
+
+    public async Task DeleteByKeyAsync(int employeeClassificationKey) {
+
+        using(var uow = new UnitOfWork()) {
+            var temp = await uow.GetObjectByKeyAsync&lt;EmployeeClassification&gt;(employeeClassificationKey).ConfigureAwait(false);
+            if(temp != null) {
+                uow.Delete(temp);
+                await uow.CommitChangesAsync().ConfigureAwait(false);
+            }
+        }
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default) {
+        return await Session.DefaultSession.Query&lt;EmployeeClassification&gt;().Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default) {
+        return await Session.DefaultSession.Query&lt;EmployeeClassification&gt;().ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default) {
+        return await Session.DefaultSession.GetObjectByKeyAsync&lt;EmployeeClassification&gt;(employeeClassificationKey, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task UpdateAsync(EmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        await Session.DefaultSession.ExplicitBeginTransactionAsync().ConfigureAwait(false);
+        classification.Save();
+
+        await Session.DefaultSession.ExplicitCommitTransactionAsync().ConfigureAwait(false);
+    }
+}
+</code></pre>
+
+<div class="alert alert-info"><span class="alert-title"><i class="fa fa-info-circle"></i> Info</span><p>Due to cookbook architecture limitations, here we have to use default Sessions instead of Units Of Work. For sessions, we call explicit async transactions.</p>
+</div>
                     </div>
                 </div>
                 <footer>

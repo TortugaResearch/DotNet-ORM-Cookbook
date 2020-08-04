@@ -52,7 +52,7 @@
 </li>
 <li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
 </li>
-<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Scalar Value from a Row</a>
 </li>
 <li class="tocentry current"><a class="current" href="SingleColumn.htm">Reading a Single Column from a Table</a>
 <ul class="currentrelative">
@@ -79,6 +79,8 @@
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+<li class="tocentry"><a href="#xpo">XPO</a></li>
 
 
 
@@ -793,6 +795,53 @@
     public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
     {
         throw new AssertInconclusiveException(&quot;TODO&quot;);
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class SingleColumnScenario : ISingleColumnScenario {
+
+    public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionKey).ToList();
+    }
+
+    public List&lt;string&gt; GetDivisionNames(int maxDivisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.DivisionName!).ToList();
+    }
+
+    public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.LastReviewCycle).ToList();
+    }
+
+    public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.MaxEmployees).ToList();
+    }
+
+    public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.ModifiedDate).ToList();
+    }
+
+    public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.SalaryBudget).ToList();
+    }
+
+    public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey) {
+        using(var uow = new UnitOfWork())
+            return uow.Query&lt;Division&gt;().Where(d =&gt; d.DivisionKey &lt;= maxDivisionKey)
+                .Select(d =&gt; d.StartTime).ToList();
     }
 }
 </code></pre>

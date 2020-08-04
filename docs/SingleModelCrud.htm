@@ -65,6 +65,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -1587,6 +1589,87 @@ public partial class EmployeeClassification
         {
             db.Update(classification);
         }
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>XPO requires the use of annotations on its models. These are specific to XPO, you cannot use the standard <code>Table</code>, <code>Column</code>, and <code>Key</code> attributes from .NET.</p>
+<p>XPO requires deriving data model objects from XPObjectBase (or its descendants). Once derived, you can use object's <code>Save()</code> and <code>Delete()</code> methods to add, update, and remove data objects.</p>
+<p>The data model can be generated using the <a href="https://docs.devexpress.com/XPO/3334/concepts/generating-persistent-objects-for-existing-data-tables" target="_blank">DevExpress Data Model Wizard</a>. </p>
+<pre><code class="cs">[Persistent(@&quot;HR.EmployeeClassification&quot;)]
+public partial class EmployeeClassification : XPLiteObject {
+    int fEmployeeClassificationKey;
+    [Key(true)]
+    public int EmployeeClassificationKey {
+        get { return fEmployeeClassificationKey; }
+        set { SetPropertyValue&lt;int&gt;(nameof(EmployeeClassificationKey), ref fEmployeeClassificationKey, value); }
+    }
+    string? fEmployeeClassificationName;
+    [Indexed(Name = @&quot;UX_EmployeeClassification_EmployeeClassificationName&quot;, Unique = true)]
+    [Size(30)]
+    public string? EmployeeClassificationName {
+        get { return fEmployeeClassificationName; }
+        set { SetPropertyValue&lt;string?&gt;(nameof(EmployeeClassificationName), ref fEmployeeClassificationName, value); }
+    }
+    bool fIsExempt;
+    [ColumnDbDefaultValue(&quot;((0))&quot;)]
+    public bool IsExempt {
+        get { return fIsExempt; }
+        set { SetPropertyValue&lt;bool&gt;(nameof(IsExempt), ref fIsExempt, value); }
+    }
+    bool fIsEmployee;
+    [ColumnDbDefaultValue(&quot;((1))&quot;)]
+    public bool IsEmployee {
+        get { return fIsEmployee; }
+        set { SetPropertyValue&lt;bool&gt;(nameof(IsEmployee), ref fIsEmployee, value); }
+    }
+    [Association(@&quot;EmployeeReferencesEmployeeClassification&quot;)]
+    public XPCollection&lt;Employee&gt; Employees { get { return GetCollection&lt;Employee&gt;(nameof(Employees)); } }
+    public EmployeeClassification(Session session) : base(session) { }
+}
+</code></pre>
+
+<pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt; {
+
+    public int Create(EmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        classification.Save();
+        return classification.EmployeeClassificationKey;
+    }
+
+    public void Delete(EmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        classification.Delete();
+    }
+
+    public void DeleteByKey(int employeeClassificationKey) {
+        using(var uow = new UnitOfWork()) {
+            uow.GetObjectByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).Delete();
+            uow.CommitChanges();
+        }
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName) {
+        return Session.DefaultSession.Query&lt;EmployeeClassification&gt;().Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll() {
+        return Session.DefaultSession.Query&lt;EmployeeClassification&gt;().ToList();
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey) {
+        return Session.DefaultSession.GetObjectByKey&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+
+    public void Update(EmployeeClassification classification) {
+        if(classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+        classification.Save();
     }
 }
 </code></pre>

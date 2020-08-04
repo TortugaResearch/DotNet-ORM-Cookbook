@@ -67,6 +67,8 @@
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
 
+<li class="tocentry"><a href="#xpo">XPO</a></li>
+
 
 
 </ul>
@@ -1718,6 +1720,72 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.UpdateAll(employees);
+    }
+}
+</code></pre>
+
+<h2 id="xpo">XPO<a class="headerlink" href="#xpo" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;Employee&gt; {
+
+    public void DeleteBatch(IList&lt;Employee&gt; employees) {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        Session.DefaultSession.Delete(employees);
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys) {
+        if(employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        using(var uow = new UnitOfWork()) {
+            foreach(var key in employeeKeys)
+                uow.GetObjectByKey&lt;Employee&gt;(key).Delete();
+            uow.CommitChanges();
+        }
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName) {
+        return Session.DefaultSession.Query&lt;Employee&gt;().Where(ec =&gt; ec.LastName == lastName).ToList();
+    }
+
+    public void InsertBatch(IList&lt;Employee&gt; employees) {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        Session.DefaultSession.Save(employees);
+
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;Employee&gt; employees) {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        Session.DefaultSession.Save(employees);
+
+        return employees.Select(e =&gt; e.EmployeeKey).ToList();
+    }
+
+    public IList&lt;Employee&gt; InsertBatchReturnRows(IList&lt;Employee&gt; employees) {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        Session.DefaultSession.Save(employees);
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;Employee&gt; employees) {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        Session.DefaultSession.Save(employees);
+    }
+
+    public void UpdateBatch(IList&lt;Employee&gt; employees) {
+        if(employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        Session.DefaultSession.Save(employees);
     }
 }
 </code></pre>

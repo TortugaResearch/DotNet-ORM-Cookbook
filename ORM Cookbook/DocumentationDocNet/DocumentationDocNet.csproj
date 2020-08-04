@@ -92,6 +92,7 @@
     <None Include="Transactions.md" />
     <None Include="Views.md" />
     <None Include="docnet.json" />
+    <None Include="XPO.md" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
