@@ -239,6 +239,12 @@
       "breadcrumbs": "Home / Auditing and history scenarios / Soft Delete",
       "keywords": "1 229 6 a add ADO alert also alternate an at be but can Chain column columns com configured Cookbook Core create cs Dapper DataSource DB DbConnector delete Delete deleted deletes demonstrate design does DotNet e each EF end Entities entity Entity EntityFramework EntityFrameworkCore filter flag for For Framework generalize github Grauenwolf hard HasQueryFilter how https i implementations implemented in including interface is IsDeleted ISoftDeletable ISoftDeleteScenario issues it level LINQ LLBLGen logic manually method mimic ModelBuilder need NET NHibernate not objects only OnModelCreating operations ORM OrmCookbookContextWithSoftDelete out overide partial pattern Pro Prototype provide rather recipe Recipes related RepoDb requires rows s SaveChanges Scenario scenarios See select ServiceStack snippet soft Soft SoftDelete SoftDeleteScenario solution support supported TDepartment than that the Then These This those to To TODO Tortuga use values warning When with Xpo XPO you",
       "title": "Soft Delete"
+    },
+    {
+      "location": "QueryFilter.htm",
+      "breadcrumbs": "Home / Multi-Tenancy scenarios / Query Filter",
+      "keywords": "a A all and applied automatically be being But by can case Context Core cs database DB demonstrate done each Entities Entity EntityFrameworkCore event example ExpressionExtensions feature filter for Framework from get helper Helpers how in interface IQueryFilterScenario is ISchool it marker methods ModelBuilderExtensions Multi Normally of OnModelCreating OrmCookbookContextWithQueryFilter placing Prototype query Query QueryFilter QueryFilterScenario Recipes rows scenario Scenario scenarios setup shows snippet some table tables Tenancy the this This to TStudent used with would",
+      "title": "Query Filter"
     }
   ]
 }

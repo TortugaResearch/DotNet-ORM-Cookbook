@@ -30,6 +30,7 @@ namespace Recipes.EntityFrameworkCore.Entities
         public virtual DbSet<EmployeeDetail> EmployeeDetail { get; set; } = null!;
         public virtual DbSet<Product> Product { get; set; } = null!;
         public virtual DbSet<ProductLine> ProductLine { get; set; } = null!;
+        public virtual DbSet<Student> Students { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

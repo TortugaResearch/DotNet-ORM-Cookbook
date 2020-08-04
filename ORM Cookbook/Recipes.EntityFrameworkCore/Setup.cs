@@ -13,6 +13,7 @@ namespace Recipes.EntityFrameworkCore
     public class Setup
     {
         internal static Func<OrmCookbookContext> DBContextFactory { get; private set; } = null!;
+        internal static Func<int, OrmCookbookContextWithQueryFilter> DBContextWithFilter { get; private set; } = null!;
         internal static Func<User, OrmCookbookContextWithUser> DBContextWithUserFactory { get; private set; } = null!;
         internal static Func<OrmCookbookContextWithSoftDelete> DBContextWithSoftDelete { get; private set; } = null!;
         internal static Func<OrmCookbookContext> LazyLoadingDBContextFactory { get; private set; } = null!;
@@ -37,6 +38,7 @@ namespace Recipes.EntityFrameworkCore
                 var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(SqlServerConnectionString).Options;
                 DBContextFactory = () => new OrmCookbookContext(options);
                 DBContextWithUserFactory = (User u) => new OrmCookbookContextWithUser(options, u);
+                DBContextWithFilter = (int schoolId) => new OrmCookbookContextWithQueryFilter(options, schoolId);
                 DBContextWithSoftDelete = () => new OrmCookbookContextWithSoftDelete(options);
             }
 
@@ -99,6 +101,7 @@ namespace Recipes.EntityFrameworkCore
                 context.DepartmentDetail.FirstOrDefault();
                 context.Employee.FirstOrDefault();
                 context.EmployeeClassification.FirstOrDefault();
+                context.Students.FirstOrDefault();
             }
         }
 
