@@ -1,4 +1,4 @@
-﻿/*
+﻿
 using DbConnector.Core;
 using Microsoft.Data.SqlClient;
 using Npgsql;
@@ -105,4 +105,4 @@ namespace Recipes.DbConnector.MultipleDB
         }
     }
 }
-*/
+

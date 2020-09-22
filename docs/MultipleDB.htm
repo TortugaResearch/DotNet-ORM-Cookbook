@@ -290,7 +290,48 @@
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
+{
+    IDbConnector DbConnector { get; }
+    readonly DatabaseType m_DatabaseType;
+
+    public MultipleDBScenario(string connectionString, DatabaseType databaseType)
+    {
+        if (databaseType == DatabaseType.SqlServer)
+        {
+            DbConnector = new DbConnector&lt;SqlConnection&gt;(connectionString);
+        }
+        else
+        {
+            DbConnector = new DbConnector&lt;NpgsqlConnection&gt;(connectionString);
+        }
+
+        //DbConnector.ConnectionType could also be used...
+        m_DatabaseType = databaseType;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        string sql = m_DatabaseType switch
+        {
+            DatabaseType.SqlServer =&gt;
+                @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+                    OUTPUT Inserted.EmployeeClassificationKey
+                    VALUES(@EmployeeClassificationName )&quot;,
+            DatabaseType.PostgreSql =&gt;
+                @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+                    VALUES(@EmployeeClassificationName )
+                    RETURNING EmployeeClassificationKey&quot;,
+            _ =&gt; throw new NotImplementedException()
+        };
+
+        return DbConnector.Scalar&lt;int&gt;(sql, classification).Execute();
+    }
+</code></pre>
+
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

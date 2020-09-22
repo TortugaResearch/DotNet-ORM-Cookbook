@@ -32,7 +32,7 @@ TODO
 
 ## DbConnector
 
-TODO
+@snippet cs [..\Recipes.DbConnector\MultipleDB\MultipleDBScenario.cs] MultipleDBScenario
 
 ## Entity Framework 6
 
