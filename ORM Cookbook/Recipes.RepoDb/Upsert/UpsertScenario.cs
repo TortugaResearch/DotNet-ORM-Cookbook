@@ -25,7 +25,7 @@ namespace Recipes.RepoDb.Upsert
             if (division == null)
                 throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-            return (int)Merge(division, Field.From("DivisionName"));
+            return Merge<int>(division, qualifiers: Field.From("DivisionName"));
         }
 
         public int UpsertByPrimaryKey(Division division)
@@ -33,7 +33,7 @@ namespace Recipes.RepoDb.Upsert
             if (division == null)
                 throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-            return (int)Merge(division, Field.From("DivisionKey"));
+            return Merge<int>(division, qualifiers: Field.From("DivisionKey"));
         }
     }
 }
