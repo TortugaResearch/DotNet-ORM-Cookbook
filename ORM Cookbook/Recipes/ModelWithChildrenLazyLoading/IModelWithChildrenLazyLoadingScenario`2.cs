@@ -43,18 +43,6 @@ namespace Recipes.ModelWithChildrenLazyLoading
         TProductLine? GetByKey(int productLineKey);
 
         /// <summary>
-        /// Update a ProductLine row only.
-        /// </summary>
-        /// <remarks>Behavior when row doesn't exist is not defined. This MUST not save any attached Product records.</remarks>
-        void Update(TProductLine productLine);
-
-        /// <summary>
-        /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be ignored.
-        /// </summary>
-        /// <remarks>Behavior when row doesn't exist is not defined. This MUST save any attached Product records. It MUST NOT delete any Product records that were removed from the collection.</remarks>
-        void UpdateGraph(TProductLine productLine);
-
-        /// <summary>
         /// Update a ProductLine row and all of its children rows. If any product rows were removed from the Products collection, they should be deleted.
         /// </summary>
         /// <remarks>Behavior when row doesn't exist is not defined. This MUST save any attached Product records. It MUST delete any Product records that were removed from the collection.</remarks>

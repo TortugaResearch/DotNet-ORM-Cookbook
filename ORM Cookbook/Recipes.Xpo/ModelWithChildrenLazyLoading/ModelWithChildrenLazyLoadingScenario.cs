@@ -55,22 +55,6 @@ namespace Recipes.Xpo.ModelWithChildrenLazyLoading
             product.Save();
         }
 
-        public void Update(ProductLine productLine)
-        {
-            if (productLine == null)
-                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
-
-            productLine.Save();
-        }
-
-        public void UpdateGraph(ProductLine productLine)
-        {
-            if (productLine == null)
-                throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
-
-            productLine.Save();
-        }
-
         public void UpdateGraphWithChildDeletes(ProductLine productLine)
         {
             if (productLine == null)
