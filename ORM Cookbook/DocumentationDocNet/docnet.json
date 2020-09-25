@@ -27,6 +27,7 @@
       "Operations on a single entity type": "SingleModelCrud.md",
       "Operations on sets": "MultipleCrud.md",
       "Operations on a graph of multiple entity types": "ModelWithChildren.md",
+      "Operations on a graph using lazy loading": "ModelWithChildrenLazyLoading.md",
       "Operations on immutable entities": "Immutable.md",
       "Handling failures and exceptions": "TryCrud.md",
       "Operations with a Foreign Key based Lookup Table": {
