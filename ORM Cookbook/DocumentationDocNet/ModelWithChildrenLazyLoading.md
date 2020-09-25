@@ -7,7 +7,7 @@ This scenario demonstrates performing Create, Read, Update, and Delete operation
 @snippet cs [..\Recipes.Interfaces\IProductLine`1.cs] IProductLine{TProduct}
 @snippet cs [..\Recipes.Interfaces\IProduct.cs] IProduct
 
-@snippet cs [..\Recipes\ModelWithChildren\IModelWithChildrenScenario`2.cs] IModelWithChildrenScenario{TProductLine, TProduct}
+@snippet cs [..\Recipes\ModelWithChildrenLazyLoading\IModelWithChildrenLazyLoadingScenario`2.cs] IModelWithChildrenLazyLoadingScenario{TProductLine, TProduct}
 
 ## ADO.NET
 
