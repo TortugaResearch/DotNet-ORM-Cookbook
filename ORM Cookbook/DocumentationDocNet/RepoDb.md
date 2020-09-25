@@ -1,6 +1,6 @@
-﻿# [RepoDb](http://repodb.net) - A hybrid ORM library for .NET.
+﻿# [RepoDB](http://repodb.net) - A hybrid ORM library for .NET.
 
-It is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+It is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 You can use the library to work with [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) Relational Database Management Systems (RDBMS).
 
@@ -30,6 +30,7 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 - [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer)
 - [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 - [RepoDb.MySql](https://www.nuget.org/packages/RepoDb.MySql)
+- [RepoDb.MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector)
 - [RepoDb.PostgreSql](https://www.nuget.org/packages/RepoDb.PostgreSql)
 - [RepoDb.SqLite](https://www.nuget.org/packages/RepoDb.SqLite)
 
@@ -48,16 +49,16 @@ Please visit our official documentation [here](http://repodb.net/docs).
 
 ## Bug Reporting
 
-Submit an issue into [RepoDb > Issues](https://github.com/mikependon/RepoDb/issues) tab at GitHub.
+Submit an issue into [RepoDB > Issues](https://github.com/mikependon/RepoDb/issues) tab at GitHub.
 
-We have some guidelines when filing an issue, pleasse see our [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md) page.
+We have some guidelines when filing an issue, please see our [Reporting an Issue](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/reporting-an-issue.md) page.
 
 Otherwise, we also entertain via:
 
-- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [StackOverflow](https://stackoverflow.com/search?tab=newest&q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## Licensing
 
-RepoDb is licensed under [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html).
+RepoDB is licensed under [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html).
