@@ -135,8 +135,16 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>The SQL needed to list tables, views, and columns is database-specific. This example shows SQL Server.</p>
-<pre><code class="cs">public class DiscoverTablesAndColumnsScenario : SqlServerScenarioBase, IDiscoverTablesAndColumnsScenario
+<p>The SQL needed to list tables, views, and columns is database-specific. </p>
+<ul>
+<li>DB2: <a href="https://www.ibm.com/support/knowledgecenter/en/SSEPEK_11.0.0/cattab/src/tpc/db2z_catalogtablesintro.html" target="_blank">Catalog Tables</a></li>
+<li>MySQL: <a href="https://dev.mysql.com/doc/refman/5.7/en/information-schema.html" target="_blank">Information Schema</a></li>
+<li>Oracle: <a href="https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/oracle-schema-collections" target="_blank">Information Schema</a></li>
+<li>PostgreSQL: <a href="https://www.postgresql.org/docs/9.1/information-schema.html" target="_blank">Information Schema</a></li>
+<li>SQL Server: <a href="">System Views</a> or <a href="https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-schema-collections" target="_blank">Information Schema</a></li>
+</ul>
+<div class="alert alert-warning"><span class="alert-title"><i class="fa fa-warning"></i> Warning!</span><p>While most databases expose Information Schema (e.g. <code>INFORMATION_SCHEMA.TABLES</code>), the column names may vary from vendor to vendor.</p>
+</div><pre><code class="cs">public class DiscoverTablesAndColumnsScenario : SqlServerScenarioBase, IDiscoverTablesAndColumnsScenario
 {
     public DiscoverTablesAndColumnsScenario(string connectionString) : base(connectionString)
     { }
@@ -266,7 +274,7 @@
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>The SQL needed to list tables, views, and columns is database-specific. This example shows SQL Server.</p>
+<p>The SQL needed to list tables, views, and columns is database-specific. See the ADO.NET example above for links to the documentation. </p>
 <pre><code class="cs">public class DiscoverTablesAndColumnsScenario : ScenarioBase, IDiscoverTablesAndColumnsScenario
 {
     public DiscoverTablesAndColumnsScenario(string connectionString) : base(connectionString)

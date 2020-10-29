@@ -8,7 +8,17 @@ These scenarios demonstrate how to list the tables and columns in an unknown dat
 
 ## ADO.NET
 
-The SQL needed to list tables, views, and columns is database-specific. This example shows SQL Server.
+The SQL needed to list tables, views, and columns is database-specific. 
+
+* DB2: [Catalog Tables](https://www.ibm.com/support/knowledgecenter/en/SSEPEK_11.0.0/cattab/src/tpc/db2z_catalogtablesintro.html)
+* MySQL: [Information Schema](https://dev.mysql.com/doc/refman/5.7/en/information-schema.html)
+* Oracle: [Information Schema](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/oracle-schema-collections)
+* PostgreSQL: [Information Schema](https://www.postgresql.org/docs/9.1/information-schema.html)
+* SQL Server: [System Views]() or [Information Schema](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-schema-collections)
+
+@alert warning
+While most databases expose Information Schema (e.g. `INFORMATION_SCHEMA.TABLES`), the column names may vary from vendor to vendor.
+@end
 
 @snippet cs [..\Recipes.Ado\DiscoverTablesAndColumns\DiscoverTablesAndColumnsScenario.cs] DiscoverTablesAndColumnsScenario
 
@@ -22,7 +32,7 @@ Then to supply the actual user data, use `dataSource.WithUser(user)`.
 
 ## Dapper
 
-The SQL needed to list tables, views, and columns is database-specific. This example shows SQL Server.
+The SQL needed to list tables, views, and columns is database-specific. See the ADO.NET example above for links to the documentation. 
 
 @snippet cs [..\Recipes.Dapper\DiscoverTablesAndColumns\DiscoverTablesAndColumnsScenario.cs] DiscoverTablesAndColumnsScenario
 
