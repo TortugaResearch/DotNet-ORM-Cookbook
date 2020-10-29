@@ -329,7 +329,110 @@
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>The SQL needed to list tables, views, and columns is database-specific. See the ADO.NET example above for links to the documentation.</p>
+<pre><code class="cs">public class DiscoverTablesAndColumnsScenario : IDiscoverTablesAndColumnsScenario
+{
+    private readonly Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public DiscoverTablesAndColumnsScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public IList&lt;string&gt; ListColumnsInTable(string schemaName, string tableName)
+    {
+        using OrmCookbookContext context = CreateDbContext();
+        using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
+        const string sql =
+            @&quot;SELECT c.name AS ColumnName
+            FROM sys.columns c
+            INNER JOIN sys.tables t ON c.object_id = t.object_id
+            INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
+            WHERE s.name = @SchemaName AND t.name = @TableName&quot;;
+        commnd.CommandText = sql;
+        commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;SchemaName&quot;, DbType = DbType.String, Value = schemaName });
+        commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;TableName&quot;, DbType = DbType.String, Value = tableName });
+        commnd.Connection.Open();
+        DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
+        var columnNames = new List&lt;string&gt;();
+        while (reader.Read())
+        {
+            int columnNameOrdinal = reader.GetOrdinal(&quot;ColumnName&quot;);
+            string columnName = reader.GetString(columnNameOrdinal);
+            columnNames.Add(columnName);
+        }
+        return columnNames;
+    }
+
+    public IList&lt;string&gt; ListColumnsInView(string schemaName, string viewName)
+    {
+        using OrmCookbookContext context = CreateDbContext();
+        using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
+        const string sql =
+            @&quot;SELECT c.name AS ColumnName
+            FROM sys.columns c
+            INNER JOIN sys.views v ON c.object_id = v.object_id
+            INNER JOIN sys.schemas s ON v.schema_id = s.schema_id
+            WHERE s.name = @SchemaName AND v.name = @ViewName&quot;;
+        commnd.CommandText = sql;
+        commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;SchemaName&quot;, DbType = DbType.String, Value = schemaName });
+        commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;ViewName&quot;, DbType = DbType.String, Value = viewName });
+        commnd.Connection.Open();
+        DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
+        var columnNames = new List&lt;string&gt;();
+        while (reader.Read())
+        {
+            int columnNameOrdinal = reader.GetOrdinal(&quot;ColumnName&quot;);
+            string columnName = reader.GetString(columnNameOrdinal);
+            columnNames.Add(columnName);
+        }
+        return columnNames;
+    }
+
+    public IList&lt;string&gt; ListTables()
+    {
+        using OrmCookbookContext context = CreateDbContext();
+        using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
+        const string sql =
+            @&quot;SELECT s.name + '.' + t.name AS TableName
+            FROM sys.tables t 
+            INNER JOIN sys.schemas s ON t.schema_id = s.schema_id&quot;;
+        commnd.CommandText = sql;
+        commnd.Connection.Open();
+        DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
+        var tableNames = new List&lt;string&gt;();
+        while (reader.Read())
+        {
+            int tableNameOrdinal = reader.GetOrdinal(&quot;TableName&quot;);
+            string tableName = reader.GetString(tableNameOrdinal);
+            tableNames.Add(tableName);
+        }
+        return tableNames;
+    }
+
+    public IList&lt;string&gt; ListViews()
+    {
+        using OrmCookbookContext context = CreateDbContext();
+        using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
+        const string sql =
+            @&quot;SELECT s.name + '.' + v.name AS ViewName 
+            FROM sys.views v 
+            INNER JOIN sys.schemas s ON v.schema_id = s.schema_id&quot;;
+        commnd.CommandText = sql;
+        commnd.Connection.Open();
+        DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
+        var tableNames = new List&lt;string&gt;();
+        while (reader.Read())
+        {
+            int tableNameOrdinal = reader.GetOrdinal(&quot;ViewName&quot;);
+            string tableName = reader.GetString(tableNameOrdinal);
+            tableNames.Add(tableName);
+        }
+        return tableNames;
+    }
+}
+</code></pre>
+
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

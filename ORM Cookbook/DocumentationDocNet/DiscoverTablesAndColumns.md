@@ -46,7 +46,9 @@ TODO
 
 ## Entity Framework Core
 
-TODO
+The SQL needed to list tables, views, and columns is database-specific. See the ADO.NET example above for links to the documentation.
+
+@snippet cs [..\Recipes.EntityFrameworkCore\DiscoverTablesAndColumns\DiscoverTablesAndColumnsScenario.cs] DiscoverTablesAndColumnsScenario
 
 ## LINQ to DB
 
