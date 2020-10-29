@@ -89,6 +89,8 @@
 
 
 </ul>
+<li class="tocentry"><a href="ArbitraryTableRead.htm">Read from an Arbitrary Table</a>
+</li>
 
 </ul>
 </li>
@@ -237,12 +239,14 @@
 
     public IList&lt;string&gt; ListColumnsInTable(string schemaName, string tableName)
     {
-        return m_DataSource.DatabaseMetadata.GetTableOrView(schemaName + &quot;.&quot; + tableName).Columns.Select(c =&gt; c.SqlName).ToList();
+        return m_DataSource.DatabaseMetadata.GetTableOrView(schemaName + &quot;.&quot; + tableName)
+            .Columns.Select(c =&gt; c.SqlName).ToList();
     }
 
     public IList&lt;string&gt; ListColumnsInView(string schemaName, string viewName)
     {
-        return m_DataSource.DatabaseMetadata.GetTableOrView(schemaName + &quot;.&quot; + viewName).Columns.Select(c =&gt; c.SqlName).ToList();
+        return m_DataSource.DatabaseMetadata.GetTableOrView(schemaName + &quot;.&quot; + viewName)
+            .Columns.Select(c =&gt; c.SqlName).ToList();
     }
 
     public IList&lt;string&gt; ListTables()
