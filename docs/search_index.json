@@ -57,7 +57,7 @@
     {
       "location": "RepoDb.htm",
       "breadcrumbs": "Home / ORMs / RepoDb",
-      "keywords": "0 2 20an 20Issue 23repodb A ADVANCE all also an and any apache Apache at BASIC below between bridge Bug BulkOperations can Chat click Click com community Core data Database Databases delete Delete developer development direct docs Docs documentation Documentation during entertain execute executenonquery ExecuteNonQuery executequery ExecuteQuery executequerymultiple ExecuteQueryMultiple executereader ExecuteReader executescalar ExecuteScalar filing fluent for full gaps get github GitHub gitter Gitter guidelines have helps here html http https hybrid im insert Insert into is issue Issue issues Issues It latest let Libraries library LICENSE licensed licenses Licensing link live Management master md merge Merge methods micro mikependon mysql MySql MySQL net NET news nuget of official only open operation operations org ORM ORMs Otherwise our over packages page Please pleasse postgresql PostgreSql PostgreSQL providers q Q query Query questions RDBMS Relational repodb RepoDb Reporting search see Server Setup simplify some source SQL sqlite SqLite SQLite sqlserver SqlServer stackoverflow StackOverflow started Submit Supported supports switch Systems tab tagged technical that the The this to tree tutorial Tutorials twitter Twitter under update Update use via visit we We when Whereas with work www you You",
+      "keywords": "0 2 23repodb A ADVANCE all also an and any apache Apache at BASIC below blob bridges Bug BulkOperations can Chat click Click com community Core data Database Databases delete Delete development direct docs Docs documentation Documentation during entertain execute executenonquery ExecuteNonQuery executequery ExecuteQuery executequerymultiple ExecuteQueryMultiple executereader ExecuteReader executescalar ExecuteScalar filing fluent for full gaps get github GitHub gitter Gitter guidelines have helps here html http https hybrid im insert Insert into is issue Issue issues Issues It latest let Libraries library LICENSE licensed licenses Licensing link live Management master md merge Merge methods micro mikependon mysql MySql MySQL MySqlConnector net NET newest news nuget of official only open operation operations org ORM ORMs Otherwise our over packages page please Please postgresql PostgreSql PostgreSQL providers q Q query Query questions RDBMS Relational repodb RepoDb RepoDB reporting Reporting search see Server Setup simplify some source SQL sqlite SqLite SQLite sqlserver SqlServer stackoverflow StackOverflow started Submit Supported supports switch Systems tab technical that the The this to tutorial Tutorials twitter Twitter under update Update use via visit we We when Whereas with work www you You",
       "title": "RepoDb"
     },
     {
@@ -239,6 +239,12 @@
       "breadcrumbs": "Home / Multi-Tenancy scenarios / Query Filter",
       "keywords": "a A all and applied automatically be being But by can case Context Core cs database DB demonstrate done each Entities Entity EntityFrameworkCore event example ExpressionExtensions feature filter for Framework from get helper Helpers how in interface IQueryFilterScenario is ISchool it marker methods ModelBuilderExtensions Multi Normally of OnModelCreating OrmCookbookContextWithQueryFilter placing Prototype query Query QueryFilter QueryFilterScenario Recipes rows scenario Scenario scenarios setup shows snippet some table tables Tenancy the this This to TStudent used with would",
       "title": "Query Filter"
+    },
+    {
+      "location": "DiscoverTablesAndColumns.htm",
+      "breadcrumbs": "Home / Unknown Database scenarios / Discover Tables and Columns",
+      "keywords": "6 about actual Ado ADO an and available be Chain columns Columns Core cs Dapper data database DatabaseMetadata dataSource DB DbConnector demonstrate Discover DiscoverTablesAndColumns DiscoverTablesAndColumnsScenario don Entity example exposes Framework how IDiscoverTablesAndColumnsScenario If in information is LINQ list LLBLGen method needed NET NHibernate only Preload previously Pro property Prototype Recipes RepoDb Scenario scenarios seen Server ServiceStack shows snippet specific SQL supply tables Tables the The Then These This to TODO Tortuga unknown use user via views will WithUser you",
+      "title": "Discover Tables and Columns"
     }
   ]
 }

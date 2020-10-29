@@ -100,6 +100,9 @@
 <li class="tocentry">
 <span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Multi-Tenancyscenarios.htm">Multi-Tenancy scenarios</a></span>
 </li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="UnknownDatabasescenarios.htm">Unknown Database scenarios</a></span>
+</li>
 </ul>
 				<div class="toc-footer">
 					<span class="text-small">
@@ -1311,7 +1314,7 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <p>Below is the <em>immutable repository</em>.</p>
-<pre><code class="cs">public class ImmutableScenario : BaseRepository&lt;EmployeeClassification, SqlConnection&gt;,
+<pre><code class="cs">public class ImmutableScenario : BaseRepository&lt;ReadOnlyEmployeeClassification, SqlConnection&gt;,
     IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
 {
     public ImmutableScenario(string connectionString)
@@ -1323,7 +1326,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        return Insert&lt;int&gt;(new EmployeeClassification(classification));
+        return Insert&lt;int&gt;(classification);
     }
 
     public void Delete(ReadOnlyEmployeeClassification classification)
@@ -1331,7 +1334,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        Delete(new EmployeeClassification(classification));
+        base.Delete(classification);
     }
 
     public void DeleteByKey(int employeeClassificationKey)
@@ -1342,22 +1345,19 @@ public class EmployeeClassification : IEmployeeClassification
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
         return Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
-            .FirstOrDefault()?
-            .ToImmutable();
+            .FirstOrDefault();
     }
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
         return QueryAll()
-            .Select(e =&gt; e.ToImmutable())
             .ToImmutableList();
     }
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
         return Query(employeeClassificationKey)
-            .FirstOrDefault()?
-            .ToImmutable();
+            .FirstOrDefault();
     }
 
     public void Update(ReadOnlyEmployeeClassification classification)
@@ -1365,7 +1365,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        base.Update(new EmployeeClassification(classification));
+        base.Update(classification);
     }
 }
 </code></pre>
