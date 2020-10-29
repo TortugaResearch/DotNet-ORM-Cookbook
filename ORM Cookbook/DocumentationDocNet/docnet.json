@@ -67,7 +67,8 @@
       "Query Filter": "QueryFilter.md"
     },
     "Unknown Database scenarios": {
-      "Discover Tables and Columns": "DiscoverTablesAndColumns.md"
+      "Discover Tables and Columns": "DiscoverTablesAndColumns.md",
+      "Read from an Arbitrary Table": "ArbitraryTableRead.md"
     }
   }
 }
