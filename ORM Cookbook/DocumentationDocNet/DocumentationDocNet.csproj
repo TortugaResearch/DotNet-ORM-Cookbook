@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DiscoverTablesAndColumns.md" />
     <None Include="DbConnector.md" />
     <None Include="MultipleDB.md" />
     <None Include="QueryFilter.md" />

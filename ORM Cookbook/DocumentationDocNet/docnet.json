@@ -65,6 +65,9 @@
     },
     "Multi-Tenancy scenarios": {
       "Query Filter": "QueryFilter.md"
+    },
+    "Unknown Database scenarios": {
+      "Discover Tables and Columns": "DiscoverTablesAndColumns.md"
     }
   }
 }
