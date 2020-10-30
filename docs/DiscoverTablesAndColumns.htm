@@ -433,16 +433,22 @@
 </code></pre>
 
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>C:\Source\DotNet-ORM-Cookbook\ORM Cookbook\Recipes.LinqToDB\DiscoverTablesAndColumns\BasicStoredProcScenario.cs</p>
 <pre><code class="cs">public class DiscoverTablesAndColumnsScenario : IDiscoverTablesAndColumnsScenario
 {
     public IList&lt;string&gt; ListColumnsInTable(string schemaName, string tableName)
     {
         using (var db = new OrmCookbook())
         {
-            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-            var table = dbSchema.Tables.Single(t =&gt; t.SchemaName == schemaName &amp;&amp; t.TableName == tableName);
-            return table.Columns.Select(c =&gt; c.ColumnName).ToList();
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                new GetSchemaOptions()
+                {
+                    IncludedSchemas = new[] { schemaName },
+                    GetForeignKeys = false,
+                    GetProcedures = false,
+                    GetTables = true,
+                    LoadTable = (t) =&gt; t.Schema == schemaName &amp;&amp; t.Name == tableName
+                });
+            return dbSchema.Tables.Single().Columns.Select(c =&gt; c.ColumnName).ToList();
         }
     }
 
@@ -450,9 +456,16 @@
     {
         using (var db = new OrmCookbook())
         {
-            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-            var view = dbSchema.Tables.Single(t =&gt; t.SchemaName == schemaName &amp;&amp; t.TableName == viewName);
-            return view.Columns.Select(c =&gt; c.ColumnName).ToList();
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                new GetSchemaOptions()
+                {
+                    IncludedSchemas = new[] { schemaName },
+                    GetForeignKeys = false,
+                    GetProcedures = false,
+                    GetTables = true,
+                    LoadTable = (t) =&gt; t.Schema == schemaName &amp;&amp; t.Name == viewName
+                });
+            return dbSchema.Tables.Single().Columns.Select(c =&gt; c.ColumnName).ToList();
         }
     }
 
@@ -460,8 +473,15 @@
     {
         using (var db = new OrmCookbook())
         {
-            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-            return dbSchema.Tables.Where(t =&gt; !t.IsView).Select(t =&gt; t.SchemaName + &quot;.&quot; + t.TableName).ToList();
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                new GetSchemaOptions()
+                {
+                    GetForeignKeys = false,
+                    GetProcedures = false,
+                    GetTables = true,
+                    LoadTable = (t) =&gt; !t.IsView
+                });
+            return dbSchema.Tables.Select(t =&gt; t.SchemaName + &quot;.&quot; + t.TableName).ToList();
         }
     }
 
@@ -469,8 +489,15 @@
     {
         using (var db = new OrmCookbook())
         {
-            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-            return dbSchema.Tables.Where(t =&gt; t.IsView).Select(t =&gt; t.SchemaName + &quot;.&quot; + t.TableName).ToList();
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                new GetSchemaOptions()
+                {
+                    GetForeignKeys = false,
+                    GetProcedures = false,
+                    GetTables = true,
+                    LoadTable = (t) =&gt; t.IsView
+                });
+            return dbSchema.Tables.Select(t =&gt; t.SchemaName + &quot;.&quot; + t.TableName).ToList();
         }
     }
 }
