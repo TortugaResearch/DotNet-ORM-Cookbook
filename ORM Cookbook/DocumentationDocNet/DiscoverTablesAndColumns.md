@@ -50,8 +50,6 @@ The SQL needed to list tables, views, and columns is database-specific. See the 
 
 ## LINQ to DB
 
-C:\Source\DotNet-ORM-Cookbook\ORM Cookbook\Recipes.LinqToDB\DiscoverTablesAndColumns\BasicStoredProcScenario.cs
-
 @snippet cs [..\Recipes.LinqToDB\DiscoverTablesAndColumns\DiscoverTablesAndColumnsScenario.cs] DiscoverTablesAndColumnsScenario
 
 ## LLBLGen Pro 
