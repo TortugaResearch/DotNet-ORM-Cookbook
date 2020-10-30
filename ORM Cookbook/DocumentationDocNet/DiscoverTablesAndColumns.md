@@ -26,8 +26,6 @@ While most databases expose Information Schema (e.g. `INFORMATION_SCHEMA.TABLES`
 
 Chain exposes information about the database via the `DatabaseMetadata` property. If you don't use the `Preload` method, only tables and views previously seen will be available.
 
-Then to supply the actual user data, use `dataSource.WithUser(user)`.
-
 @snippet cs [..\Recipes.Tortuga.Chain\DiscoverTablesAndColumns\DiscoverTablesAndColumnsScenario.cs] DiscoverTablesAndColumnsScenario
 
 ## Dapper
@@ -52,7 +50,9 @@ The SQL needed to list tables, views, and columns is database-specific. See the 
 
 ## LINQ to DB
 
-TODO
+C:\Source\DotNet-ORM-Cookbook\ORM Cookbook\Recipes.LinqToDB\DiscoverTablesAndColumns\BasicStoredProcScenario.cs
+
+@snippet cs [..\Recipes.LinqToDB\DiscoverTablesAndColumns\DiscoverTablesAndColumnsScenario.cs] DiscoverTablesAndColumnsScenario
 
 ## LLBLGen Pro 
 

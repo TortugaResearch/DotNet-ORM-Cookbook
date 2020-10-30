@@ -235,7 +235,6 @@
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain exposes information about the database via the <code>DatabaseMetadata</code> property. If you don't use the <code>Preload</code> method, only tables and views previously seen will be available.</p>
-<p>Then to supply the actual user data, use <code>dataSource.WithUser(user)</code>.</p>
 <pre><code class="cs">public class DiscoverTablesAndColumnsScenario : IDiscoverTablesAndColumnsScenario
 {
     readonly SqlServerDataSource m_DataSource;
@@ -434,7 +433,49 @@
 </code></pre>
 
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<p>C:\Source\DotNet-ORM-Cookbook\ORM Cookbook\Recipes.LinqToDB\DiscoverTablesAndColumns\BasicStoredProcScenario.cs</p>
+<pre><code class="cs">public class DiscoverTablesAndColumnsScenario : IDiscoverTablesAndColumnsScenario
+{
+    public IList&lt;string&gt; ListColumnsInTable(string schemaName, string tableName)
+    {
+        using (var db = new OrmCookbook())
+        {
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
+            var table = dbSchema.Tables.Single(t =&gt; t.SchemaName == schemaName &amp;&amp; t.TableName == tableName);
+            return table.Columns.Select(c =&gt; c.ColumnName).ToList();
+        }
+    }
+
+    public IList&lt;string&gt; ListColumnsInView(string schemaName, string viewName)
+    {
+        using (var db = new OrmCookbook())
+        {
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
+            var view = dbSchema.Tables.Single(t =&gt; t.SchemaName == schemaName &amp;&amp; t.TableName == viewName);
+            return view.Columns.Select(c =&gt; c.ColumnName).ToList();
+        }
+    }
+
+    public IList&lt;string&gt; ListTables()
+    {
+        using (var db = new OrmCookbook())
+        {
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
+            return dbSchema.Tables.Where(t =&gt; !t.IsView).Select(t =&gt; t.SchemaName + &quot;.&quot; + t.TableName).ToList();
+        }
+    }
+
+    public IList&lt;string&gt; ListViews()
+    {
+        using (var db = new OrmCookbook())
+        {
+            var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
+            return dbSchema.Tables.Where(t =&gt; t.IsView).Select(t =&gt; t.SchemaName + &quot;.&quot; + t.TableName).ToList();
+        }
+    }
+}
+</code></pre>
+
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
