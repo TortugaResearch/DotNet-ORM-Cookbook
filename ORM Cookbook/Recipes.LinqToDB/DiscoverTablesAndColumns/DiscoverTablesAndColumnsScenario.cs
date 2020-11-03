@@ -1,4 +1,5 @@
-﻿using Recipes.DiscoverTablesAndColumns;
+﻿using LinqToDB.SchemaProvider;
+using Recipes.DiscoverTablesAndColumns;
 using Recipes.LinqToDB.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,16 @@ namespace Recipes.LinqToDB.DiscoverTablesAndColumns
         {
             using (var db = new OrmCookbook())
             {
-                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-                var table = dbSchema.Tables.Single(t => t.SchemaName == schemaName && t.TableName == tableName);
-                return table.Columns.Select(c => c.ColumnName).ToList();
+                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                    new GetSchemaOptions()
+                    {
+                        IncludedSchemas = new[] { schemaName },
+                        GetForeignKeys = false,
+                        GetProcedures = false,
+                        GetTables = true,
+                        LoadTable = (t) => t.Schema == schemaName && t.Name == tableName
+                    });
+                return dbSchema.Tables.Single().Columns.Select(c => c.ColumnName).ToList();
             }
         }
 
@@ -21,9 +29,16 @@ namespace Recipes.LinqToDB.DiscoverTablesAndColumns
         {
             using (var db = new OrmCookbook())
             {
-                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-                var view = dbSchema.Tables.Single(t => t.SchemaName == schemaName && t.TableName == viewName);
-                return view.Columns.Select(c => c.ColumnName).ToList();
+                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                    new GetSchemaOptions()
+                    {
+                        IncludedSchemas = new[] { schemaName },
+                        GetForeignKeys = false,
+                        GetProcedures = false,
+                        GetTables = true,
+                        LoadTable = (t) => t.Schema == schemaName && t.Name == viewName
+                    });
+                return dbSchema.Tables.Single().Columns.Select(c => c.ColumnName).ToList();
             }
         }
 
@@ -31,8 +46,15 @@ namespace Recipes.LinqToDB.DiscoverTablesAndColumns
         {
             using (var db = new OrmCookbook())
             {
-                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-                return dbSchema.Tables.Where(t => !t.IsView).Select(t => t.SchemaName + "." + t.TableName).ToList();
+                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                    new GetSchemaOptions()
+                    {
+                        GetForeignKeys = false,
+                        GetProcedures = false,
+                        GetTables = true,
+                        LoadTable = (t) => !t.IsView
+                    });
+                return dbSchema.Tables.Select(t => t.SchemaName + "." + t.TableName).ToList();
             }
         }
 
@@ -40,8 +62,15 @@ namespace Recipes.LinqToDB.DiscoverTablesAndColumns
         {
             using (var db = new OrmCookbook())
             {
-                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db);
-                return dbSchema.Tables.Where(t => t.IsView).Select(t => t.SchemaName + "." + t.TableName).ToList();
+                var dbSchema = db.DataProvider.GetSchemaProvider().GetSchema(db,
+                    new GetSchemaOptions()
+                    {
+                        GetForeignKeys = false,
+                        GetProcedures = false,
+                        GetTables = true,
+                        LoadTable = (t) => t.IsView
+                    });
+                return dbSchema.Tables.Select(t => t.SchemaName + "." + t.TableName).ToList();
             }
         }
     }
