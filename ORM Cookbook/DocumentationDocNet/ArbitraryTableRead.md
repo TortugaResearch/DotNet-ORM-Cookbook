@@ -40,7 +40,11 @@ TODO
 
 ## Entity Framework Core
 
-TODO
+@alert danger
+Verify that the schema and table name exist to avoid SQL injection attacks.
+@end
+
+@snippet cs [..\Recipes.EntityFrameworkCore\ArbitraryTableRead\ArbitraryTableReadScenario.cs] ArbitraryTableReadScenario
 
 ## LINQ to DB
 

@@ -215,7 +215,31 @@
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>TODO</p>
+<div class="alert alert-danger"><span class="alert-title"><i class="fa fa-times-circle"></i> Danger!</span><p>Verify that the schema and table name exist to avoid SQL injection attacks.</p>
+</div><pre><code class="cs">public class ArbitraryTableReadScenario : IArbitraryTableReadScenario&lt;DataTable&gt;
+{
+    private readonly Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ArbitraryTableReadScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public DataTable GetAll(string schema, string tableName)
+    {
+        using OrmCookbookContext context = CreateDbContext();
+        using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
+        string sql = $&quot;SELECT * FROM [{schema}].[{tableName}];&quot;;
+        commnd.CommandText = sql;
+        commnd.Connection.Open();
+        using DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
+        var result = new DataTable();
+        result.Load(reader);
+        return result;
+    }
+}
+</code></pre>
+
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
