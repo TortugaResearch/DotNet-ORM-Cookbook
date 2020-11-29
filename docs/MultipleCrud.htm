@@ -1306,6 +1306,8 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 }
 </code></pre>
 
+<p>It should be noted that performance of the batch update and delete operations is pretty low, Entity Framework Core will Update or Delete every record one by one. </p>
+<p>There is a third-party library can implement high-performance batch operations, which is named Zack.EFCore.Batch. It can be obtained from https://github.com/yangzhongke/Zack.EFCore.Batch.</p>
 <h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

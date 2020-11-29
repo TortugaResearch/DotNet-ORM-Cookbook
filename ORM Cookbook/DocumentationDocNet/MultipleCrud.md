@@ -42,6 +42,10 @@ The Dapper.Contrib library can elimiante the boilerplate for some common scenari
 
 @snippet cs [..\Recipes.EntityFrameworkCore\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
+It should be noted that performance of the batch update and delete operations is pretty low, Entity Framework Core will Update or Delete every record one by one. 
+
+There is a third-party library can implement high-performance batch operations, which is named Zack.EFCore.Batch. It can be obtained from https://github.com/yangzhongke/Zack.EFCore.Batch.
+
 ## LINQ to DB
 
 TODO
