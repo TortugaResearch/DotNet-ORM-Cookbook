@@ -411,7 +411,7 @@
 
         using (var context = CreateDbContext())
         {
-            foreach (var row in context.EmployeeClassification.Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee))
+            foreach (var row in context.EmployeeClassifications.Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee))
                 dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
         }
         return dt;
@@ -427,7 +427,7 @@
 
         using (var context = CreateDbContext())
         {
-            foreach (var row in context.EmployeeClassification)
+            foreach (var row in context.EmployeeClassifications)
                 dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
         }
         return dt;
@@ -454,7 +454,7 @@
         using (var context = CreateDbContext())
         {
             var buffer = new object[propertyList.Count];
-            foreach (var row in context.EmployeeClassification.Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee))
+            foreach (var row in context.EmployeeClassifications.Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee))
             {
                 for (var i = 0; i &lt; propertyList.Count; i++)
                     buffer[i] = propertyList[i].InvokeGet(row) ?? DBNull.Value;
@@ -474,7 +474,7 @@
         using (var context = CreateDbContext())
         {
             var buffer = new object[propertyList.Count];
-            foreach (var row in context.EmployeeClassification)
+            foreach (var row in context.EmployeeClassifications)
             {
                 for (var i = 0; i &lt; propertyList.Count; i++)
                     buffer[i] = propertyList[i].InvokeGet(row) ?? DBNull.Value;
@@ -588,7 +588,7 @@ public class DataTableResultTransformer : IResultTransformer
             {
                 var col = m_DataTable.Columns.Add(aliases[i]);
                 if (i &lt; m_DataTypeOverrides.Length &amp;&amp; m_DataTypeOverrides[i] != null)
-                    col.DataType = m_DataTypeOverrides[i];
+                    col.DataType = m_DataTypeOverrides[i]!;
                 else if (tuple[i] != null &amp;&amp; tuple[i] != DBNull.Value)
                     col.DataType = tuple[i].GetType();
             }

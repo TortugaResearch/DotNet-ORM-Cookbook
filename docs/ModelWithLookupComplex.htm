@@ -831,7 +831,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
             //Prevent updates to the lookup table
             context.Entry(employee.EmployeeClassificationKeyNavigation).State = EntityState.Unchanged;
 
-            context.Employee.Add(employee);
+            context.Employees.Add(employee);
             context.SaveChanges();
             return employee.EmployeeKey;
         }
@@ -854,10 +854,10 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         using (var context = CreateDbContext())
         {
             //Find the row you wish to delete
-            var temp = context.Employee.Find(employeeKey);
+            var temp = context.Employees.Find(employeeKey);
             if (temp != null)
             {
-                context.Employee.Remove(temp);
+                context.Employees.Remove(temp);
                 context.SaveChanges();
             }
         }
@@ -866,7 +866,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     public IList&lt;Employee&gt; FindByLastName(string lastName)
     {
         using (var context = CreateDbContext())
-            return context.Employee
+            return context.Employees
                 .Where(ec =&gt; ec.LastName == lastName)
                 .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
                 .ToList();
@@ -875,7 +875,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     public IList&lt;Employee&gt; GetAll()
     {
         using (var context = CreateDbContext())
-            return context.Employee
+            return context.Employees
                 .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
                 .ToList();
     }
@@ -883,7 +883,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     public Employee? GetByKey(int employeeKey)
     {
         using (var context = CreateDbContext())
-            return context.Employee
+            return context.Employees
                 .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
                 .SingleOrDefault(e =&gt; e.EmployeeKey == employeeKey);
     }
@@ -891,7 +891,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
-            return context.EmployeeClassification.Find(employeeClassificationKey);
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
     }
 
     /// &lt;summary&gt;

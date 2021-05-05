@@ -20,7 +20,7 @@ namespace Recipes.EntityFrameworkCore.PartialUpdate
 
             using (var context = CreateDbContext())
             {
-                context.EmployeeClassification.Add(classification);
+                context.EmployeeClassifications.Add(classification);
                 context.SaveChanges();
                 return classification.EmployeeClassificationKey;
             }
@@ -30,7 +30,7 @@ namespace Recipes.EntityFrameworkCore.PartialUpdate
         {
             using (var context = CreateDbContext())
             {
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Recipes.EntityFrameworkCore.PartialUpdate
             using (var context = CreateDbContext())
             {
                 //Get a fresh copy of the row from the database
-                var temp = context.EmployeeClassification.Find(updateMessage.EmployeeClassificationKey);
+                var temp = context.EmployeeClassifications.Find(updateMessage.EmployeeClassificationKey);
                 if (temp != null)
                 {
                     //Copy the changed fields
@@ -86,7 +86,7 @@ namespace Recipes.EntityFrameworkCore.PartialUpdate
             using (var context = CreateDbContext())
             {
                 //Get a fresh copy of the row from the database
-                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+                var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
                 if (temp != null)
                 {
                     //Copy the changed fields

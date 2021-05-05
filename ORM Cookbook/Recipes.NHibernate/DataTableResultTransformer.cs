@@ -56,7 +56,7 @@ namespace Recipes.NHibernate
                 {
                     var col = m_DataTable.Columns.Add(aliases[i]);
                     if (i < m_DataTypeOverrides.Length && m_DataTypeOverrides[i] != null)
-                        col.DataType = m_DataTypeOverrides[i];
+                        col.DataType = m_DataTypeOverrides[i]!;
                     else if (tuple[i] != null && tuple[i] != DBNull.Value)
                         col.DataType = tuple[i].GetType();
                 }

@@ -532,7 +532,7 @@ VALUES
 
         using (var context = CreateDbContext())
         {
-            context.Employee.Add(employee);
+            context.Employees.Add(employee);
             context.SaveChanges();
             return employee.EmployeeKey;
         }
@@ -541,25 +541,25 @@ VALUES
     public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
-            return context.EmployeeDetail.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+            return context.EmployeeDetails.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
     }
 
     public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
     {
         using (var context = CreateDbContext())
-            return context.EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
+            return context.EmployeeDetails.Where(x =&gt; x.LastName == lastName).ToList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         using (var context = CreateDbContext())
-            return context.EmployeeDetail.Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+            return context.EmployeeDetails.Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
-            return context.EmployeeClassification.Find(employeeClassificationKey);
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
     }
 }
 </code></pre>

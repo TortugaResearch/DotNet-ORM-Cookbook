@@ -12,7 +12,7 @@ namespace Recipes.LLBLGenPro.Upsert
 {
 	public class UpsertScenario : IUpsertScenario<DivisionEntity>
 	{
-		public DivisionEntity GetByKey(int divisionKey)
+		public DivisionEntity? GetByKey(int divisionKey)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{

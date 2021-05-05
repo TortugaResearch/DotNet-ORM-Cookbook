@@ -21,7 +21,7 @@ namespace Recipes.EntityFrameworkCore.AuditColumns
 
             using (var context = CreateDbContext(user))
             {
-                context.Department.Add(department);
+                context.Departments.Add(department);
                 context.SaveChanges();
                 return department.DepartmentKey;
             }
@@ -31,7 +31,7 @@ namespace Recipes.EntityFrameworkCore.AuditColumns
         {
             using (var context = CreateDbContext(user))
             {
-                return context.Department.Find(departmentKey);
+                return context.Departments.Find(departmentKey);
             }
         }
 

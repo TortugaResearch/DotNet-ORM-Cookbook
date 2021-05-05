@@ -740,7 +740,7 @@ ORDER BY e.FirstName,
     {
         using (var context = CreateDbContext())
         {
-            context.Employee.AddRange(employees);
+            context.Employees.AddRange(employees);
             context.SaveChanges();
         }
     }
@@ -748,7 +748,7 @@ ORDER BY e.FirstName,
     public IList&lt;Employee&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
     {
         using (var context = CreateDbContext())
-            return context.Employee.Where(e =&gt; e.LastName == lastName)
+            return context.Employees.Where(e =&gt; e.LastName == lastName)
                 .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
                 .Skip(page * pageSize).Take(pageSize).ToList();
     }
@@ -760,13 +760,13 @@ ORDER BY e.FirstName,
         {
             if (skipPast == null)
             {
-                return context.Employee.Where(e =&gt; e.LastName == lastName)
+                return context.Employees.Where(e =&gt; e.LastName == lastName)
                     .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
                     .Take(take).ToList();
             }
             else
             {
-                return context.Employee
+                return context.Employees
                     .Where(e =&gt; (e.LastName == lastName) &amp;&amp; (
                         (string.Compare(e.FirstName, skipPast.FirstName) &gt; 0)
                             || (e.FirstName == skipPast.FirstName &amp;&amp; e.EmployeeKey &gt; skipPast.EmployeeKey))
@@ -780,7 +780,7 @@ ORDER BY e.FirstName,
     public IList&lt;Employee&gt; PaginateWithSkipTake(string lastName, int skip, int take)
     {
         using (var context = CreateDbContext())
-            return context.Employee.Where(e =&gt; e.LastName == lastName)
+            return context.Employees.Where(e =&gt; e.LastName == lastName)
                 .OrderBy(e =&gt; e.FirstName).ThenBy(e =&gt; e.EmployeeKey)
                 .Skip(skip).Take(take).ToList();
     }

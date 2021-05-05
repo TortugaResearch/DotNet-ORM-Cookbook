@@ -6,7 +6,7 @@
         /// <summary>
         /// Gets an Division row by its primary key.
         /// </summary>
-        TDivision GetByKey(int divisionKey);
+        TDivision? GetByKey(int divisionKey);
 
         /// <summary>
         /// Performs an upsert where it looks for a matching row by DivisionName instead of the primary key.

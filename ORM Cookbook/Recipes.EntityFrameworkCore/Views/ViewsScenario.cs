@@ -23,7 +23,7 @@ namespace Recipes.EntityFrameworkCore.Views
 
             using (var context = CreateDbContext())
             {
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
                 context.SaveChanges();
                 return employee.EmployeeKey;
             }
@@ -32,25 +32,25 @@ namespace Recipes.EntityFrameworkCore.Views
         public IList<EmployeeDetail> FindByEmployeeClassificationKey(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeDetail.Where(x => x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+                return context.EmployeeDetails.Where(x => x.EmployeeClassificationKey == employeeClassificationKey).ToList();
         }
 
         public IList<EmployeeDetail> FindByLastName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeDetail.Where(x => x.LastName == lastName).ToList();
+                return context.EmployeeDetails.Where(x => x.LastName == lastName).ToList();
         }
 
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeDetail.Where(x => x.EmployeeKey == employeeKey).SingleOrDefault();
+                return context.EmployeeDetails.Where(x => x.EmployeeKey == employeeKey).SingleOrDefault();
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
     }
 }

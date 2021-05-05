@@ -26,7 +26,7 @@ namespace Recipes.Ado.SingleModelCrudAsync
             using (var cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
-                return (int)(await cmd.ExecuteScalarAsync().ConfigureAwait(false));
+                return (int)(await cmd.ExecuteScalarAsync().ConfigureAwait(false))!;
             }
         }
 

@@ -351,7 +351,7 @@
         commnd.CommandText = sql;
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;SchemaName&quot;, DbType = DbType.String, Value = schemaName });
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;TableName&quot;, DbType = DbType.String, Value = tableName });
-        commnd.Connection.Open();
+        commnd.Connection!.Open();
         DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
         var columnNames = new List&lt;string&gt;();
         while (reader.Read())
@@ -376,7 +376,7 @@
         commnd.CommandText = sql;
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;SchemaName&quot;, DbType = DbType.String, Value = schemaName });
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;ViewName&quot;, DbType = DbType.String, Value = viewName });
-        commnd.Connection.Open();
+        commnd.Connection!.Open();
         DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
         var columnNames = new List&lt;string&gt;();
         while (reader.Read())
@@ -397,7 +397,7 @@
             FROM sys.tables t 
             INNER JOIN sys.schemas s ON t.schema_id = s.schema_id&quot;;
         commnd.CommandText = sql;
-        commnd.Connection.Open();
+        commnd.Connection!.Open();
         DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
         var tableNames = new List&lt;string&gt;();
         while (reader.Read())
@@ -418,7 +418,7 @@
             FROM sys.views v 
             INNER JOIN sys.schemas s ON v.schema_id = s.schema_id&quot;;
         commnd.CommandText = sql;
-        commnd.Connection.Open();
+        commnd.Connection!.Open();
         DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
         var tableNames = new List&lt;string&gt;();
         while (reader.Read())

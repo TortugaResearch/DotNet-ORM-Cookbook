@@ -28,7 +28,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
                 //Prevent updates to the lookup table
                 context.Entry(employee.EmployeeClassificationKeyNavigation).State = EntityState.Unchanged;
 
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
                 context.SaveChanges();
                 return employee.EmployeeKey;
             }
@@ -51,10 +51,10 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
             using (var context = CreateDbContext())
             {
                 //Find the row you wish to delete
-                var temp = context.Employee.Find(employeeKey);
+                var temp = context.Employees.Find(employeeKey);
                 if (temp != null)
                 {
-                    context.Employee.Remove(temp);
+                    context.Employees.Remove(temp);
                     context.SaveChanges();
                 }
             }
@@ -63,7 +63,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
         public IList<Employee> FindByLastName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee
+                return context.Employees
                     .Where(ec => ec.LastName == lastName)
                     .Include(e => e.EmployeeClassificationKeyNavigation)
                     .ToList();
@@ -72,7 +72,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
         public IList<Employee> GetAll()
         {
             using (var context = CreateDbContext())
-                return context.Employee
+                return context.Employees
                     .Include(e => e.EmployeeClassificationKeyNavigation)
                     .ToList();
         }
@@ -80,7 +80,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
         public Employee? GetByKey(int employeeKey)
         {
             using (var context = CreateDbContext())
-                return context.Employee
+                return context.Employees
                     .Include(e => e.EmployeeClassificationKeyNavigation)
                     .SingleOrDefault(e => e.EmployeeKey == employeeKey);
         }
@@ -88,7 +88,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
 
         /// <summary>

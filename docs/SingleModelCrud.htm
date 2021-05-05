@@ -362,7 +362,7 @@
         using (var cmd = new NpgsqlCommand(sql, con))
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
-            return (int)cmd.ExecuteScalar();
+            return (int)cmd.ExecuteScalar()!;
         }
     }
 
@@ -833,7 +833,7 @@ public class EmployeeClassification : IEmployeeClassification
         }
     }
 
-    public EmployeeClassification FindByName(string employeeClassificationName)
+    public EmployeeClassification? FindByName(string employeeClassificationName)
     {
         using (var context = CreateDbContext())
         {
@@ -969,7 +969,7 @@ public partial class EmployeeClassification
 
         using (var context = CreateDbContext())
         {
-            context.EmployeeClassification.Add(classification);
+            context.EmployeeClassifications.Add(classification);
             context.SaveChanges();
             return classification.EmployeeClassificationKey;
         }
@@ -983,10 +983,10 @@ public partial class EmployeeClassification
         using (var context = CreateDbContext())
         {
             //Find the row you wish to delete
-            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 context.SaveChanges();
             }
         }
@@ -997,20 +997,20 @@ public partial class EmployeeClassification
         using (var context = CreateDbContext())
         {
             //Find the row you wish to delete
-            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 context.SaveChanges();
             }
         }
     }
 
-    public EmployeeClassification FindByName(string employeeClassificationName)
+    public EmployeeClassification? FindByName(string employeeClassificationName)
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+            return context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
         }
     }
 
@@ -1018,7 +1018,7 @@ public partial class EmployeeClassification
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.ToList();
+            return context.EmployeeClassifications.ToList();
         }
     }
 
@@ -1026,7 +1026,7 @@ public partial class EmployeeClassification
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Find(employeeClassificationKey);
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
     }
 
@@ -1038,7 +1038,7 @@ public partial class EmployeeClassification
         using (var context = CreateDbContext())
         {
             //Get a fresh copy of the row from the database
-            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
             if (temp != null)
             {
                 //Copy the changed fields
@@ -1078,8 +1078,9 @@ public partial class EmployeeClassification
     {
         using (var context = CreateDbContext())
         {
-            var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
-            context.Entry(temp).State = EntityState.Deleted;
+            //var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
+            //context.Entry(temp).State = EntityState.Deleted;
+            context.EmployeeClassifications.Remove(new EmployeeClassification { EmployeeClassificationKey = employeeClassificationKey });
             context.SaveChanges();
         }
     }
@@ -1237,7 +1238,7 @@ public partial class EmployeeClassification
         }
     }
 
-    public EmployeeClassificationEntity GetByKey(int employeeClassificationKey)
+    public EmployeeClassificationEntity? GetByKey(int employeeClassificationKey)
     {
         using (var adapter = new DataAccessAdapter())
         {

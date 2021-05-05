@@ -24,7 +24,7 @@ namespace Recipes.Ado.SingleModelCrud
             using (var cmd = new NpgsqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
-                return (int)cmd.ExecuteScalar();
+                return (int)cmd.ExecuteScalar()!;
             }
         }
 

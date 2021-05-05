@@ -29,3 +29,12 @@ dotnet_diagnostic.CS8600.severity = none
 
 # CS8604: Possible null reference argument.
 dotnet_diagnostic.CS8604.severity = none
+
+# IDE0063: Use simple 'using' statement
+dotnet_diagnostic.IDE0063.severity = none
+
+# RCS1018: Add accessibility modifiers (or vice versa).
+dotnet_diagnostic.RCS1018.severity = none
+
+# RCS1036: Remove redundant empty line.
+dotnet_diagnostic.RCS1036.severity = none

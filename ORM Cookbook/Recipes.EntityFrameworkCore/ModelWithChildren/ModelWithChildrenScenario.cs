@@ -24,7 +24,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             //A transaction is automatically created when `SaveChanges()` is called.
             using (var context = CreateDbContext())
             {
-                context.ProductLine.Add(productLine);
+                context.ProductLines.Add(productLine);
                 context.SaveChanges();
                 return productLine.ProductLineKey;
             }
@@ -37,7 +37,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
 
             using (var context = CreateDbContext())
             {
-                context.ProductLine.Remove(productLine);
+                context.ProductLines.Remove(productLine);
                 context.SaveChanges();
             }
         }
@@ -47,8 +47,8 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             using (var context = CreateDbContext())
             {
                 //Need to explicitly fetch child records in order to delete them.
-                var temp = context.ProductLine.Where(x => x.ProductLineKey == productLineKey).Include(x => x.Product).Single();
-                context.ProductLine.Remove(temp);
+                var temp = context.ProductLines.Where(x => x.ProductLineKey == productLineKey).Include(x => x.Products).Single();
+                context.ProductLines.Remove(temp);
                 context.SaveChanges();
             }
         }
@@ -58,9 +58,9 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             using (var context = CreateDbContext())
             {
                 if (includeProducts)
-                    return context.ProductLine.Where(x => x.ProductLineName == productLineName).Include(x => x.Product).ToList();
+                    return context.ProductLines.Where(x => x.ProductLineName == productLineName).Include(x => x.Products).ToList();
                 else
-                    return context.ProductLine.Where(x => x.ProductLineName == productLineName).ToList();
+                    return context.ProductLines.Where(x => x.ProductLineName == productLineName).ToList();
             }
         }
 
@@ -69,9 +69,9 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             using (var context = CreateDbContext())
             {
                 if (includeProducts)
-                    return context.ProductLine.Include(x => x.Product).ToList();
+                    return context.ProductLines.Include(x => x.Products).ToList();
                 else
-                    return context.ProductLine.ToList();
+                    return context.ProductLines.ToList();
             }
         }
 
@@ -80,9 +80,9 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             using (var context = CreateDbContext())
             {
                 if (includeProducts)
-                    return context.ProductLine.Where(x => x.ProductLineKey == productLineKey).Include(x => x.Product).SingleOrDefault();
+                    return context.ProductLines.Where(x => x.ProductLineKey == productLineKey).Include(x => x.Products).SingleOrDefault();
                 else
-                    return context.ProductLine.Find(productLineKey);
+                    return context.ProductLines.Find(productLineKey);
             }
         }
 
@@ -114,7 +114,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             {
                 context.Entry(productLine).State = EntityState.Modified;
 
-                foreach (var item in productLine.Product)
+                foreach (var item in productLine.Products)
                     if (item.ProductKey == 0)
                         context.Entry(item).State = EntityState.Added;
                     else
@@ -133,17 +133,17 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             using (var context = CreateDbContext())
             using (var transaction = context.Database.BeginTransaction())
             {
-                var validKeys = productLine.Product.Select(x => x.ProductKey).ToList();
+                var validKeys = productLine.Products.Select(x => x.ProductKey).ToList();
 
                 //get rows to delete
-                var oldRows = context.Product.Where(x => x.ProductLineKey == productLine.ProductLineKey && !validKeys.Contains(x.ProductKey)).ToList();
+                var oldRows = context.Products.Where(x => x.ProductLineKey == productLine.ProductLineKey && !validKeys.Contains(x.ProductKey)).ToList();
 
                 //Remove the old records
                 foreach (var row in oldRows)
-                    context.Product.Remove(row);
+                    context.Products.Remove(row);
 
                 context.Entry(productLine).State = EntityState.Modified;
-                foreach (var item in productLine.Product)
+                foreach (var item in productLine.Products)
                     if (item.ProductKey == 0)
                         context.Entry(item).State = EntityState.Added;
                     else
@@ -160,7 +160,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithChildren
             using (var context = CreateDbContext())
             {
                 context.Entry(productLine).State = EntityState.Modified;
-                foreach (var item in productLine.Product)
+                foreach (var item in productLine.Products)
                     if (item.ProductKey == 0)
                         context.Entry(item).State = EntityState.Added;
                     else

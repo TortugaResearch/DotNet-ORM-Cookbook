@@ -23,7 +23,7 @@ namespace Recipes.EntityFrameworkCore.DynamicSorting
             using (var context = CreateDbContext())
             {
                 foreach (var employee in employees)
-                    context.Employee.Add(employee);
+                    context.Employees.Add(employee);
                 context.SaveChanges();
             }
         }
@@ -31,7 +31,7 @@ namespace Recipes.EntityFrameworkCore.DynamicSorting
         public IList<Employee> SortBy(string lastName, string sortByColumn, bool isDescending)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(x => x.LastName == lastName)
+                return context.Employees.Where(x => x.LastName == lastName)
                     .OrderBy(sortByColumn, isDescending).ToList();
         }
 
@@ -39,7 +39,7 @@ namespace Recipes.EntityFrameworkCore.DynamicSorting
             string sortByColumnB, bool isDescendingB)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(x => x.LastName == lastName)
+                return context.Employees.Where(x => x.LastName == lastName)
                     .OrderBy(sortByColumnA, isDescendingA)
                     .ThenBy(sortByColumnB, isDescendingB)
                     .ToList();
