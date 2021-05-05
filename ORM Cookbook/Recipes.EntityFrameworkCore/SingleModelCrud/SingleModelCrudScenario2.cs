@@ -29,8 +29,9 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
         {
             using (var context = CreateDbContext())
             {
-                var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
-                context.Entry(temp).State = EntityState.Deleted;
+                //var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
+                //context.Entry(temp).State = EntityState.Deleted;
+                context.EmployeeClassification.Remove(new EmployeeClassification { EmployeeClassificationKey = employeeClassificationKey });
                 context.SaveChanges();
             }
         }

@@ -59,6 +59,15 @@ namespace Recipes.EntityFrameworkCore.PartialUpdate
 
             using (var context = CreateDbContext())
             {
+                var temp = new EmployeeClassification();
+                temp.EmployeeClassificationKey = updateMessage.EmployeeClassificationKey;
+                temp.IsExempt = updateMessage.IsExempt;
+                temp.IsEmployee = updateMessage.IsEmployee;
+                context.Entry<EmployeeClassification>(temp).Property(x => x.IsExempt).IsModified = true;
+                context.Entry<EmployeeClassification>(temp).Property(x => x.IsEmployee).IsModified = true;
+                context.SaveChanges();
+
+                /*
                 //Get a fresh copy of the row from the database
                 var temp = context.EmployeeClassification.Find(updateMessage.EmployeeClassificationKey);
                 if (temp != null)
@@ -68,6 +77,7 @@ namespace Recipes.EntityFrameworkCore.PartialUpdate
                     temp.IsEmployee = updateMessage.IsEmployee;
                     context.SaveChanges();
                 }
+                */
             }
         }
 
