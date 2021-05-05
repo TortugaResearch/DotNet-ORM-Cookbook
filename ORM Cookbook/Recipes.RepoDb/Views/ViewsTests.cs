@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.Views;
 
-namespace Recipes.RepoDb.Views
+namespace Recipes.RepoDB.Views
 {
     [TestClass]
     public class ViewsTests : ViewsTests<EmployeeDetail, EmployeeSimple>

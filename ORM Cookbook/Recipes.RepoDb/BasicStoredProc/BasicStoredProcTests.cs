@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.BasicStoredProc;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.BasicStoredProc
+namespace Recipes.RepoDB.BasicStoredProc
 {
     [TestClass]
     public class BasicStoredProcTests : BasicStoredProcTests<EmployeeClassification, EmployeeClassificationWithCount>

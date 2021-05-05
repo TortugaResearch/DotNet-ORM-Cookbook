@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
 using Recipes.Joins;
+using Recipes.RepoDB.Models;
 using RDB = RepoDb;
 using RepoDb;
 using RepoDb.Extensions;
@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Recipes.RepoDb.Joins
+namespace Recipes.RepoDB.Joins
 {
     public class JoinsScenario : DbRepository<SqlConnection>,
         IJoinsScenario<EmployeeDetail, EmployeeSimple>

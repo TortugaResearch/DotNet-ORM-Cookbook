@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.SingleColumn;
 using RDB = RepoDb;
 using RepoDb;
@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Recipes.RepoDb.SingleColumn
+namespace Recipes.RepoDB.SingleColumn
 {
     public class SingleColumnScenario : BaseRepository<Division, SqlConnection>,
         ISingleColumnScenario

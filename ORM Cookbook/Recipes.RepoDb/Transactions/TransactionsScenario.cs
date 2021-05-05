@@ -1,13 +1,13 @@
-﻿using Recipes.RepoDb.Models;
-using Recipes.Transactions;
+﻿using Recipes.Transactions;
 using RDB = RepoDb;
 using RepoDb;
 using System;
 using System.Data;
 using System.Linq;
 using Microsoft.Data.SqlClient;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.Transactions
+namespace Recipes.RepoDB.Transactions
 {
     public class TransactionsScenario : BaseRepository<EmployeeClassification, SqlConnection>,
         ITransactionsScenario<EmployeeClassification>

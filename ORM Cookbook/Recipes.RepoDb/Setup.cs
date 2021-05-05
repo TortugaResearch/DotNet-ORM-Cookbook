@@ -5,7 +5,7 @@ using RDB = RepoDb;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Recipes.RepoDb
+namespace Recipes.RepoDB
 {
     [TestClass]
     public class Setup

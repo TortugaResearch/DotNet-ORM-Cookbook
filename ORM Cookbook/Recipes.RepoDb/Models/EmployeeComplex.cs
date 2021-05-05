@@ -1,4 +1,5 @@
-﻿using RepoDb.Attributes;
+﻿using Recipes.RepoDB.Models;
+using RepoDb.Attributes;
 
 namespace Recipes.RepoDb.Models
 {

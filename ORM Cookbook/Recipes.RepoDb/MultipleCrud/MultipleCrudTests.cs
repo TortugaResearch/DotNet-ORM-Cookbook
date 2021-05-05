@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
 using Recipes.MultipleCrud;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.MultipleCrud
+namespace Recipes.RepoDB.MultipleCrud
 {
     [TestClass]
     public class MultipleCrudTests : MultipleCrudTests<EmployeeSimple>

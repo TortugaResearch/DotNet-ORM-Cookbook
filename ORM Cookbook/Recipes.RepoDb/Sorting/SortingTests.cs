@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.Sorting;
 
-namespace Recipes.RepoDb.Sorting
+namespace Recipes.RepoDB.Sorting
 {
     [TestClass]
     public class SortingTests : SortingTests<EmployeeSimple>

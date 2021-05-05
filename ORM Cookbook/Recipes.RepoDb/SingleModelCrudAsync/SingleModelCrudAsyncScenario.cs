@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.SingleModelCrudAsync;
 using RDB = RepoDb;
 using RepoDb;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Recipes.RepoDb.SingleModelCrudAsync
+namespace Recipes.RepoDB.SingleModelCrudAsync
 {
     public class SingleModelCrudAsyncScenario : BaseRepository<EmployeeClassification, SqlConnection>,
         ISingleModelCrudAsyncScenario<EmployeeClassification>

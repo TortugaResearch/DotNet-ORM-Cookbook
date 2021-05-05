@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.Immutable;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using System;
 
-namespace Recipes.RepoDb.Immutable
+namespace Recipes.RepoDB.Immutable
 {
     [TestClass]
     public class ImmutableTests : ImmutableTests<ReadOnlyEmployeeClassification>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.BasicStoredProc;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RepoDb;
 using RepoDb.Extensions;
 using System;
@@ -10,7 +10,7 @@ using System.Linq;
 
 using RDB = RepoDb;
 
-namespace Recipes.RepoDb.BasicStoredProc
+namespace Recipes.RepoDB.BasicStoredProc
 {
     public class BasicStoredProcScenario : DbRepository<SqlConnection>,
         IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount>

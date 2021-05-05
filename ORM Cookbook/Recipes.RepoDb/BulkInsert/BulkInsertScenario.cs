@@ -1,12 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.BulkInsert;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RepoDb;
 using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Recipes.RepoDb.BulkInsert
+namespace Recipes.RepoDB.BulkInsert
 {
     public class BulkInsertScenario : DbRepository<SqlConnection>,
         IBulkInsertScenario<EmployeeSimple>

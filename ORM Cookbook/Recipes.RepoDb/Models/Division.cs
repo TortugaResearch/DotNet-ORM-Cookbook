@@ -1,7 +1,7 @@
 ﻿using RepoDb.Attributes;
 using System;
 
-namespace Recipes.RepoDb.Models
+namespace Recipes.RepoDB.Models
 {
     [Map("[HR].[Division]")]
     public class Division : IDivision

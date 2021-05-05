@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
 using Recipes.Pagination;
+using Recipes.RepoDB.Models;
 using RDB = RepoDb;
 using RepoDb;
 using RepoDb.Enumerations;
@@ -8,7 +8,7 @@ using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 
-namespace Recipes.RepoDb.Pagination
+namespace Recipes.RepoDB.Pagination
 {
     public class PaginationScenario : BaseRepository<EmployeeSimple, SqlConnection>,
         IPaginationScenario<EmployeeSimple>

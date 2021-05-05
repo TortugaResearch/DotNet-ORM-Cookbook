@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.SingleColumn;
 
-namespace Recipes.RepoDb.SingleColumn
+namespace Recipes.RepoDB.SingleColumn
 {
     [TestClass]
     public class SingleColumnTests : Recipes.SingleColumn.SingleColumnTests
