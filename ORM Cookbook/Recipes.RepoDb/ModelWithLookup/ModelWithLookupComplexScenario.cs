@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.ModelWithLookup;
 using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RDB = RepoDb;
 using RepoDb;
 using RepoDb.Extensions;
@@ -8,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Recipes.RepoDb.ModelWithLookup
+namespace Recipes.RepoDB.ModelWithLookup
 {
     public class ModelWithLookupComplexScenario : DbRepository<SqlConnection>,
         IModelWithLookupComplexScenario<EmployeeComplex>

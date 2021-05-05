@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.TryCrud;
 
-namespace Recipes.RepoDb.TryCrud
+namespace Recipes.RepoDB.TryCrud
 {
     [TestClass]
     public class TryCrudTests : TryCrudTests<EmployeeClassification>

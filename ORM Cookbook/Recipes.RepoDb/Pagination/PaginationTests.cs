@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
 using Recipes.Pagination;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.Pagination
+namespace Recipes.RepoDB.Pagination
 {
     [TestClass]
     public class PaginationTests : PaginationTests<EmployeeSimple>

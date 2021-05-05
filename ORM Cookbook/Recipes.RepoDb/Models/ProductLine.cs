@@ -1,7 +1,7 @@
 ﻿using RepoDb.Attributes;
 using System.Collections.Generic;
 
-namespace Recipes.RepoDb.Models
+namespace Recipes.RepoDB.Models
 {
     [Map("[Production].[ProductLine]")]
     public class ProductLine : IProductLine<Product>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.ModelWithChildren;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.ModelWithChildren
+namespace Recipes.RepoDB.ModelWithChildren
 {
     [TestClass]
     public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLine, Product>

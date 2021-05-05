@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.LargeBatch;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RepoDb;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 using RDB = RepoDb;
 
-namespace Recipes.RepoDb.LargeBatch
+namespace Recipes.RepoDB.LargeBatch
 {
     public class LargeBatchScenario : BaseRepository<EmployeeSimple, SqlConnection>, ILargeBatchScenario<EmployeeSimple>
     {

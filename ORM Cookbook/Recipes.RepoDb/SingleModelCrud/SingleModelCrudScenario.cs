@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.SingleModelCrud;
 using RDB = RepoDb;
 using RepoDb;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Recipes.RepoDb.SingleModelCrud
+namespace Recipes.RepoDB.SingleModelCrud
 {
     public class SingleModelCrudScenario : BaseRepository<EmployeeClassification, SqlConnection>,
         ISingleModelCrudScenario<EmployeeClassification>

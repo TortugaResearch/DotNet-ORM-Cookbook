@@ -3,7 +3,7 @@ using Recipes.PopulateDataTable;
 using RepoDb;
 using System.Data;
 
-namespace Recipes.RepoDb.PopulateDataTable
+namespace Recipes.RepoDB.PopulateDataTable
 {
     public class PopulateDataTableScenario : IPopulateDataTableScenario
     {

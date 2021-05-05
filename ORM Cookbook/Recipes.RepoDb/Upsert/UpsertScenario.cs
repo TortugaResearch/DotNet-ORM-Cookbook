@@ -1,12 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.Upsert;
 using RDB = RepoDb;
 using RepoDb;
 using System;
 using System.Linq;
 
-namespace Recipes.RepoDb.Upsert
+namespace Recipes.RepoDB.Upsert
 {
     public class UpsertScenario : BaseRepository<Division, SqlConnection>,
         IUpsertScenario<Division>

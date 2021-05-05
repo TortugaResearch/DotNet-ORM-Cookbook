@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Ado", "Recipes.Ado\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.Dapper", "Recipes.Dapper\Recipes.Dapper.csproj", "{3449965D-C692-452A-94EC-15A61BA822FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.RepoDb", "Recipes.RepoDb\Recipes.RepoDb.csproj", "{FD78E64B-84BE-4955-8307-5E739947E94F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.RepoDB", "Recipes.RepoDb\Recipes.RepoDB.csproj", "{FD78E64B-84BE-4955-8307-5E739947E94F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.NHibernate", "Recipes.NHibernate\Recipes.NHibernate.csproj", "{7D03BA33-36E3-4795-81B5-6AAAB5ADDCFF}"
 EndProject

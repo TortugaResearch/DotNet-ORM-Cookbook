@@ -1,6 +1,6 @@
 ﻿using RepoDb.Attributes;
 
-namespace Recipes.RepoDb.Models
+namespace Recipes.RepoDB.Models
 {
     [Map("[Production].[Product]")]
     public class Product : IProduct

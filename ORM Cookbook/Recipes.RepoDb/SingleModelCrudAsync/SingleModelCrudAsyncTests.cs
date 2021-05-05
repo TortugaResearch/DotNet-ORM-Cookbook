@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.SingleModelCrudAsync;
 
-namespace Recipes.RepoDb.SingleModelCrudAsync
+namespace Recipes.RepoDB.SingleModelCrudAsync
 {
     [TestClass]
     public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>

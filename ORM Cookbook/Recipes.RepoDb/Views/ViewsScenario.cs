@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.Views;
 using RDB = RepoDb;
 using RepoDb;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Recipes.RepoDb.Views
+namespace Recipes.RepoDB.Views
 {
     public class ViewsScenario : DbRepository<SqlConnection>,
         IViewsScenario<EmployeeDetail, EmployeeSimple>

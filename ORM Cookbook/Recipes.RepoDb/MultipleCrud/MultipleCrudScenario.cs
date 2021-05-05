@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.MultipleCrud;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RepoDb;
 using RepoDb.Extensions;
 using System;
@@ -9,7 +9,7 @@ using System.Linq;
 
 using RDB = RepoDb;
 
-namespace Recipes.RepoDb.MultipleCrud
+namespace Recipes.RepoDB.MultipleCrud
 {
     public class MultipleCrudScenario : BaseRepository<EmployeeSimple, SqlConnection>,
         IMultipleCrudScenario<EmployeeSimple>

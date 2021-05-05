@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.TryCrud;
 using RDB = RepoDb;
 using RepoDb;
@@ -7,7 +7,7 @@ using System;
 using System.Data;
 using System.Linq;
 
-namespace Recipes.RepoDb.TryCrud
+namespace Recipes.RepoDB.TryCrud
 {
     public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnection>,
         ITryCrudScenario<EmployeeClassification>
