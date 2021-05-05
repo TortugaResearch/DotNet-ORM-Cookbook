@@ -1,4 +1,4 @@
-# The .NET Core ORM Cookbook
+# The .NET 5 ORM Cookbook
 
 In October of 2016, InfoQ published a series of articles on the repository pattern in .NET. To illustrate the concepts, three ORMs were demonstrated:  Entity Framework, Dapper, and Chain. 
 
