@@ -59,7 +59,7 @@ namespace Recipes.EntityFramework.SingleModelCrud
             }
         }
 
-        public EmployeeClassification FindByName(string employeeClassificationName)
+        public EmployeeClassification? FindByName(string employeeClassificationName)
         {
             using (var context = CreateDbContext())
             {

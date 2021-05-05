@@ -960,7 +960,7 @@
 
         using (var context = CreateDbContext())
         {
-            context.EmployeeClassification.Add(classification);
+            context.EmployeeClassifications.Add(classification);
             context.SaveChanges();
             return classification.EmployeeClassificationKey;
         }
@@ -971,10 +971,10 @@
         using (var context = CreateDbContext())
         {
             //Find the row you wish to delete
-            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 context.SaveChanges();
             }
             else
@@ -987,10 +987,10 @@
         using (var context = CreateDbContext())
         {
             //Find the row you wish to delete
-            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 context.SaveChanges();
                 return true;
             }
@@ -1007,10 +1007,10 @@
         using (var context = CreateDbContext())
         {
             //Find the row you wish to delete
-            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 context.SaveChanges();
             }
             else
@@ -1026,10 +1026,10 @@
         using (var context = CreateDbContext())
         {
             //Find the row you wish to delete
-            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 context.SaveChanges();
                 return true;
             }
@@ -1042,7 +1042,7 @@
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).Single();
+            return context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).Single();
         }
     }
 
@@ -1050,7 +1050,7 @@
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+            return context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
         }
     }
 
@@ -1058,7 +1058,7 @@
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Find(employeeClassificationKey) ?? throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+            return context.EmployeeClassifications.Find(employeeClassificationKey) ?? throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
         }
     }
 
@@ -1066,7 +1066,7 @@
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Find(employeeClassificationKey);
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
     }
 
@@ -1078,7 +1078,7 @@
         using (var context = CreateDbContext())
         {
             //Get a fresh copy of the row from the database
-            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
             if (temp != null)
             {
                 //Copy the changed fields
@@ -1098,7 +1098,7 @@
         using (var context = CreateDbContext())
         {
             //Get a fresh copy of the row from the database
-            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
             if (temp != null)
             {
                 //Copy the changed fields

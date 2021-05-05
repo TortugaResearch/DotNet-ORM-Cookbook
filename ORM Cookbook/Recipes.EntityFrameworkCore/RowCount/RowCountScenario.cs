@@ -18,20 +18,20 @@ namespace Recipes.EntityFrameworkCore.RowCount
         public int EmployeeCount(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(e => e.LastName == lastName).Count();
+                return context.Employees.Where(e => e.LastName == lastName).Count();
         }
 
         public int EmployeeCount()
         {
             using (var context = CreateDbContext())
-                return context.Employee.Count();
+                return context.Employees.Count();
         }
 
         public void InsertBatch(IList<Employee> employees)
         {
             using (var context = CreateDbContext())
             {
-                context.Employee.AddRange(employees);
+                context.Employees.AddRange(employees);
                 context.SaveChanges();
             }
         }

@@ -23,7 +23,7 @@ namespace Recipes.LLBLGenPro.ScalarValue
 		}
 
 
-		public string GetDivisionName(int divisionKey)
+		public string? GetDivisionName(int divisionKey)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{

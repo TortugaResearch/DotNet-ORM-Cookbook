@@ -123,12 +123,12 @@ Multi-Tenancy scenarios.</p>
 </code></pre>
 
 <p>Normally this would be done for each table. But by placing a marker interface (<code>ISchool</code> in this case) and some helper methods, it can be automatically applied to all tables.</p>
-<pre><code class="cs">// Copyright (c) 2020 Phil Haack, GitHub: haacked
-// https://gist.github.com/haacked/febe9e88354fb2f4a4eb11ba88d64c24
-
+<pre><code class="cs">/*
+Copyright Phil Haack
+Licensed under the MIT license - https://github.com/haacked/CodeHaacks/blob/main/LICENSE.
+*/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Linq;
@@ -137,72 +137,74 @@ using System.Reflection;
 
 namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers
 {
+
+
     public static class ModelBuilderExtensions
     {
-        private static readonly MethodInfo SetQueryFilterMethod = typeof(ModelBuilderExtensions)
-            .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-            .Single(t =&gt; t.IsGenericMethod &amp;&amp; t.Name == nameof(SetQueryFilter));
+        static readonly MethodInfo SetQueryFilterMethod = typeof(ModelBuilderExtensions)
+                .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+                .Single(t =&gt; t.IsGenericMethod &amp;&amp; t.Name == nameof(SetQueryFilter));
 
-        public static void SetQueryFilterOnAllEntities&lt;TEntityInterface&gt;(this ModelBuilder modelBuilder,
+        public static void SetQueryFilterOnAllEntities&lt;TEntityInterface&gt;(
+            this ModelBuilder builder,
             Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
         {
-            if (modelBuilder == null)
-                throw new ArgumentNullException(nameof(modelBuilder), $&quot;{nameof(modelBuilder)} is null.&quot;);
-
-            foreach (var type in modelBuilder.Model.GetEntityTypes()
+            foreach (var type in builder.Model.GetEntityTypes()
                 .Where(t =&gt; t.BaseType == null)
                 .Select(t =&gt; t.ClrType)
                 .Where(t =&gt; typeof(TEntityInterface).IsAssignableFrom(t)))
             {
-                modelBuilder.SetEntityQueryFilter&lt;TEntityInterface&gt;(type, filterExpression);
+                builder.SetEntityQueryFilter(
+                    type,
+                    filterExpression);
             }
         }
 
-        private static void SetEntityQueryFilter&lt;TEntityInterface&gt;(this ModelBuilder builder,
-            Type entityType, Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
+        static void SetEntityQueryFilter&lt;TEntityInterface&gt;(
+            this ModelBuilder builder,
+            Type entityType,
+            Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
         {
             SetQueryFilterMethod
                 .MakeGenericMethod(entityType, typeof(TEntityInterface))
-                .Invoke(null, new object[] { builder, filterExpression });
+               .Invoke(null, new object[] { builder, filterExpression });
         }
 
-        private static void SetQueryFilter&lt;TEntity, TEntityInterface&gt;(this ModelBuilder builder,
+        static void SetQueryFilter&lt;TEntity, TEntityInterface&gt;(
+            this ModelBuilder builder,
             Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
-            where TEntityInterface : class
-            where TEntity : class, TEntityInterface
+                where TEntityInterface : class
+                where TEntity : class, TEntityInterface
         {
-            var concreteExpression = filterExpression.Convert&lt;TEntityInterface, TEntity&gt;();
-            builder.Entity&lt;TEntity&gt;().AddQueryFilter(concreteExpression);
+            var concreteExpression = filterExpression
+                .Convert&lt;TEntityInterface, TEntity&gt;();
+            builder.Entity&lt;TEntity&gt;()
+                .AppendQueryFilter(concreteExpression);
         }
 
-        private static void AddQueryFilter&lt;T&gt;(this EntityTypeBuilder entityTypeBuilder, Expression&lt;Func&lt;T, bool&gt;&gt; expression)
+        // CREDIT: This comment by magiak on GitHub https://github.com/dotnet/efcore/issues/10275#issuecomment-785916356
+        static void AppendQueryFilter&lt;T&gt;(this EntityTypeBuilder entityTypeBuilder, Expression&lt;Func&lt;T, bool&gt;&gt; expression)
+            where T : class
         {
             var parameterType = Expression.Parameter(entityTypeBuilder.Metadata.ClrType);
+
             var expressionFilter = ReplacingExpressionVisitor.Replace(
                 expression.Parameters.Single(), parameterType, expression.Body);
 
-            var internalEntityTypeBuilder = entityTypeBuilder.GetInternalEntityTypeBuilder();
-            var queryFilter = internalEntityTypeBuilder?.Metadata.GetQueryFilter();
-            if (queryFilter != null)
+            if (entityTypeBuilder.Metadata.GetQueryFilter() != null)
             {
+                var currentQueryFilter = entityTypeBuilder.Metadata.GetQueryFilter();
                 var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
-                    queryFilter.Parameters.Single(), parameterType, queryFilter.Body);
+                    currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
                 expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
             }
 
             var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
             entityTypeBuilder.HasQueryFilter(lambdaExpression);
         }
-
-        private static InternalEntityTypeBuilder? GetInternalEntityTypeBuilder(this EntityTypeBuilder entityTypeBuilder)
-        {
-            var internalEntityTypeBuilder = typeof(EntityTypeBuilder)
-                .GetProperty(&quot;Builder&quot;, BindingFlags.NonPublic | BindingFlags.Instance)?
-                .GetValue(entityTypeBuilder) as InternalEntityTypeBuilder;
-
-            return internalEntityTypeBuilder;
-        }
     }
+
+
 }
 
 </code></pre>
@@ -219,20 +221,24 @@ namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers
 {
     public static class ExpressionExtensions
     {
-        public static Expression&lt;Func&lt;TTarget, bool&gt;&gt; Convert&lt;TSource, TTarget&gt;(this Expression&lt;Func&lt;TSource, bool&gt;&gt; root)
+        // This magic is courtesy of this StackOverflow post.
+        // https://stackoverflow.com/questions/38316519/replace-parameter-type-in-lambda-expression
+        // I made some tweaks to adapt it to our needs - @haacked
+        public static Expression&lt;Func&lt;TTarget, bool&gt;&gt; Convert&lt;TSource, TTarget&gt;(
+            this Expression&lt;Func&lt;TSource, bool&gt;&gt; root)
         {
             var visitor = new ParameterTypeVisitor&lt;TSource, TTarget&gt;();
             return (Expression&lt;Func&lt;TTarget, bool&gt;&gt;)visitor.Visit(root);
         }
 
-        private class ParameterTypeVisitor&lt;TSource, TTarget&gt; : ExpressionVisitor
+        class ParameterTypeVisitor&lt;TSource, TTarget&gt; : ExpressionVisitor
         {
             private ReadOnlyCollection&lt;ParameterExpression&gt;? _parameters;
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
                 return _parameters?.FirstOrDefault(p =&gt; p.Name == node.Name)
-                    ?? (node.Type == typeof(TSource) ? Expression.Parameter(typeof(TTarget), node.Name) : node);
+                       ?? (node.Type == typeof(TSource) ? Expression.Parameter(typeof(TTarget), node.Name) : node);
             }
 
             protected override Expression VisitLambda&lt;T&gt;(Expression&lt;T&gt; node)

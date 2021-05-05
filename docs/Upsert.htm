@@ -141,7 +141,7 @@
     /// &lt;summary&gt;
     /// Gets an Division row by its primary key.
     /// &lt;/summary&gt;
-    TDivision GetByKey(int divisionKey);
+    TDivision? GetByKey(int divisionKey);
 
     /// &lt;summary&gt;
     /// Performs an upsert where it looks for a matching row by DivisionName instead of the primary key.
@@ -782,7 +782,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
     public Division GetByKey(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Find(divisionKey);
+            return context.Divisions.Find(divisionKey);
     }
 
     public int UpsertByName(Division division)
@@ -797,17 +797,17 @@ OUTPUT Inserted.DivisionKey;&quot;;
         using (var context = CreateDbContext())
         {
             //check to see if the row already exists
-            var actual = context.Division.Where(x =&gt; x.DivisionName == division.DivisionName).SingleOrDefault();
+            var actual = context.Divisions.Where(x =&gt; x.DivisionName == division.DivisionName).SingleOrDefault();
             if (actual == null) //Insert
             {
-                context.Division.Add(division);
+                context.Divisions.Add(division);
                 context.SaveChanges();
                 return division.DivisionKey;
             }
             else //Update
             {
                 //Copy manually so we don't overwrite CreatedBy/CreatedDate
-                actual.Department = division.Department;
+                actual.Departments = division.Departments;
                 actual.DivisionId = division.DivisionId;
                 actual.DivisionName = division.DivisionName;
                 actual.FloorSpaceBudget = division.FloorSpaceBudget;
@@ -839,17 +839,17 @@ OUTPUT Inserted.DivisionKey;&quot;;
             //If DivisionKey is zero, we know this is a new row
             if (division.DivisionKey == 0) //Insert
             {
-                context.Division.Add(division);
+                context.Divisions.Add(division);
                 context.SaveChanges();
                 return division.DivisionKey;
             }
             else //Update
             {
                 //This wouldn't be necessary if we were replacing all columns.
-                var actual = context.Division.Find(division.DivisionKey);
+                var actual = context.Divisions.Find(division.DivisionKey);
 
                 //Copy manually so we don't overwrite CreatedBy/CreatedDate
-                actual.Department = division.Department;
+                actual.Departments = division.Departments;
                 actual.DivisionId = division.DivisionId;
                 actual.DivisionName = division.DivisionName;
                 actual.FloorSpaceBudget = division.FloorSpaceBudget;
@@ -966,7 +966,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
 <p>LLBLGen Pro doesn't support an atomic upsert, so a read must proceed the update.</p>
 <pre><code class="cs">public class UpsertScenario : IUpsertScenario&lt;DivisionEntity&gt;
 {
-    public DivisionEntity GetByKey(int divisionKey)
+    public DivisionEntity? GetByKey(int divisionKey)
     {
         using(var adapter = new DataAccessAdapter())
         {
@@ -1165,7 +1165,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
         : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
     { }
 
-    public Division GetByKey(int divisionKey)
+    public Division? GetByKey(int divisionKey)
     {
         return Query(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
     }

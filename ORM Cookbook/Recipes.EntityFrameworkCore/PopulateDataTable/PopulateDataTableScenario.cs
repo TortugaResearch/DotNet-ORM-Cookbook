@@ -25,7 +25,7 @@ namespace Recipes.EntityFrameworkCore.PopulateDataTable
 
             using (var context = CreateDbContext())
             {
-                foreach (var row in context.EmployeeClassification.Where(x => x.IsExempt == isExempt && x.IsEmployee == isEmployee))
+                foreach (var row in context.EmployeeClassifications.Where(x => x.IsExempt == isExempt && x.IsEmployee == isEmployee))
                     dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
             }
             return dt;
@@ -41,7 +41,7 @@ namespace Recipes.EntityFrameworkCore.PopulateDataTable
 
             using (var context = CreateDbContext())
             {
-                foreach (var row in context.EmployeeClassification)
+                foreach (var row in context.EmployeeClassifications)
                     dt.Rows.Add(row.EmployeeClassificationKey, row.EmployeeClassificationName, row.IsExempt, row.IsEmployee);
             }
             return dt;

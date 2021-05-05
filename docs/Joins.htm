@@ -593,7 +593,7 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
 
         using (var context = CreateDbContext())
         {
-            context.Employee.Add(employee);
+            context.Employees.Add(employee);
             context.SaveChanges();
             return employee.EmployeeKey;
         }
@@ -602,8 +602,8 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
     public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
-            return context.Employee
-                .Join(context.EmployeeClassification,
+            return context.Employees
+                .Join(context.EmployeeClassifications,
                     e =&gt; e.EmployeeClassificationKey,
                     ec =&gt; ec.EmployeeClassificationKey,
                     (e, ec) =&gt; new EmployeeDetail()
@@ -627,8 +627,8 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
     public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
     {
         using (var context = CreateDbContext())
-            return context.Employee
-                .Join(context.EmployeeClassification,
+            return context.Employees
+                .Join(context.EmployeeClassifications,
                     e =&gt; e.EmployeeClassificationKey,
                     ec =&gt; ec.EmployeeClassificationKey,
                     (e, ec) =&gt; new EmployeeDetail()
@@ -652,8 +652,8 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         using (var context = CreateDbContext())
-            return context.Employee
-                .Join(context.EmployeeClassification,
+            return context.Employees
+                .Join(context.EmployeeClassifications,
                     e =&gt; e.EmployeeClassificationKey,
                     ec =&gt; ec.EmployeeClassificationKey,
                     (e, ec) =&gt; new EmployeeDetail()
@@ -676,7 +676,7 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
-            return context.EmployeeClassification.Find(employeeClassificationKey);
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
     }
 }
 </code></pre>

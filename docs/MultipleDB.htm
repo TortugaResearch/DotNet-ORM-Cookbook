@@ -353,13 +353,18 @@ public abstract class CaseConventionConverter : IDatabaseConventionConverter
 
         foreach (var entity in builder.Model.GetEntityTypes())
         {
+
             // Replace table names
             entity.SetTableName(ConvertName(entity.GetTableName()));
             entity.SetSchema(ConvertName(entity.GetSchema()));
 
+            var soi = StoreObjectIdentifier.Table(entity.GetTableName(), entity.GetSchema());
+            System.Diagnostics.Debug.WriteLine($&quot;Remapping table {entity.GetSchema()}.{entity.GetTableName()}&quot;);
+            System.Diagnostics.Debug.IndentLevel += 1;
+
             // Replace column names
             foreach (var property in entity.GetProperties())
-                property.SetColumnName(ConvertName(property.GetColumnName()));
+                property.SetColumnName(ConvertName(property.GetColumnName(soi)), soi);
 
             foreach (var key in entity.GetKeys())
                 key.SetName(ConvertName(key.GetName()));
@@ -368,7 +373,7 @@ public abstract class CaseConventionConverter : IDatabaseConventionConverter
                 key.SetConstraintName(ConvertName(key.GetConstraintName()));
 
             foreach (var key in entity.GetIndexes())
-                key.SetName(ConvertName(key.GetName()));
+                key.SetDatabaseName(ConvertName(key.GetDatabaseName()));
         }
     }
 
@@ -433,7 +438,7 @@ public sealed class LowerCaseConverter : CaseConventionConverter
 
         using (var context = CreateDbContext())
         {
-            context.EmployeeClassification.Add(classification);
+            context.EmployeeClassifications.Add(classification);
             context.SaveChanges();
             return classification.EmployeeClassificationKey;
         }
@@ -461,11 +466,11 @@ public sealed class LowerCaseConverter : CaseConventionConverter
         }
     }
 
-    public EmployeeClassification FindByName(string employeeClassificationName)
+    public EmployeeClassification? FindByName(string employeeClassificationName)
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+            return context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
         }
     }
 
@@ -473,7 +478,7 @@ public sealed class LowerCaseConverter : CaseConventionConverter
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.ToList();
+            return context.EmployeeClassifications.ToList();
         }
     }
 
@@ -481,7 +486,7 @@ public sealed class LowerCaseConverter : CaseConventionConverter
     {
         using (var context = CreateDbContext())
         {
-            return context.EmployeeClassification.Find(employeeClassificationKey);
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
     }
 

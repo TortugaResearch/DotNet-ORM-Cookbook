@@ -579,7 +579,7 @@ WHERE DepartmentKey = @DepartmentKey;&quot;;
 
         using (var context = CreateDbContext(user))
         {
-            context.Department.Add(department);
+            context.Departments.Add(department);
             context.SaveChanges();
             return department.DepartmentKey;
         }
@@ -589,7 +589,7 @@ WHERE DepartmentKey = @DepartmentKey;&quot;;
     {
         using (var context = CreateDbContext(user))
         {
-            return context.Department.Find(departmentKey);
+            return context.Departments.Find(departmentKey);
         }
     }
 

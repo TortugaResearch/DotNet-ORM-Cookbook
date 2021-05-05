@@ -6,7 +6,7 @@ namespace Recipes.ScalarValue
     {
         int? GetDivisionKey(string divisionName);
 
-        string GetDivisionName(int divisionKey);
+        string? GetDivisionName(int divisionKey);
 
         string? GetDivisionNameOrNull(int divisionKey);
 

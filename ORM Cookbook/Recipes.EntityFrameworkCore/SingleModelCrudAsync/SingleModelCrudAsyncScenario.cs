@@ -25,7 +25,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
 
             using (var context = CreateDbContext())
             {
-                context.EmployeeClassification.Add(classification);
+                context.EmployeeClassifications.Add(classification);
                 await context.SaveChangesAsync().ConfigureAwait(false);
                 return classification.EmployeeClassificationKey;
             }
@@ -38,10 +38,10 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
 
             using (var context = CreateDbContext())
             {
-                var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
+                var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey).ConfigureAwait(false);
                 if (temp != null)
                 {
-                    context.EmployeeClassification.Remove(temp);
+                    context.EmployeeClassifications.Remove(temp);
                     await context.SaveChangesAsync().ConfigureAwait(false);
                 }
             }
@@ -51,10 +51,10 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
         {
             using (var context = CreateDbContext())
             {
-                var temp = await context.EmployeeClassification.FindAsync(employeeClassificationKey);
+                var temp = await context.EmployeeClassifications.FindAsync(employeeClassificationKey).ConfigureAwait(false);
                 if (temp != null)
                 {
-                    context.EmployeeClassification.Remove(temp);
+                    context.EmployeeClassifications.Remove(temp);
                     await context.SaveChangesAsync().ConfigureAwait(false);
                 }
             }
@@ -64,7 +64,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+                return await context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -72,7 +72,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
+                return await context.EmployeeClassifications.ToListAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -80,7 +80,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
         {
             using (var context = CreateDbContext())
             {
-                return await context.EmployeeClassification.FindAsync(new object[] { employeeClassificationKey }, cancellationToken);
+                return await context.EmployeeClassifications.FindAsync(new object[] { employeeClassificationKey }, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrudAsync
 
             using (var context = CreateDbContext())
             {
-                var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
+                var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey).ConfigureAwait(false);
                 if (temp != null)
                 {
                     temp.EmployeeClassificationName = classification.EmployeeClassificationName;

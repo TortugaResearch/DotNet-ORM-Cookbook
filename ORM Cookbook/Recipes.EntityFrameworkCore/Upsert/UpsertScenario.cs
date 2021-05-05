@@ -17,7 +17,7 @@ namespace Recipes.EntityFrameworkCore.Upsert
         public Division GetByKey(int divisionKey)
         {
             using (var context = CreateDbContext())
-                return context.Division.Find(divisionKey);
+                return context.Divisions.Find(divisionKey);
         }
 
         public int UpsertByName(Division division)
@@ -32,17 +32,17 @@ namespace Recipes.EntityFrameworkCore.Upsert
             using (var context = CreateDbContext())
             {
                 //check to see if the row already exists
-                var actual = context.Division.Where(x => x.DivisionName == division.DivisionName).SingleOrDefault();
+                var actual = context.Divisions.Where(x => x.DivisionName == division.DivisionName).SingleOrDefault();
                 if (actual == null) //Insert
                 {
-                    context.Division.Add(division);
+                    context.Divisions.Add(division);
                     context.SaveChanges();
                     return division.DivisionKey;
                 }
                 else //Update
                 {
                     //Copy manually so we don't overwrite CreatedBy/CreatedDate
-                    actual.Department = division.Department;
+                    actual.Departments = division.Departments;
                     actual.DivisionId = division.DivisionId;
                     actual.DivisionName = division.DivisionName;
                     actual.FloorSpaceBudget = division.FloorSpaceBudget;
@@ -74,17 +74,17 @@ namespace Recipes.EntityFrameworkCore.Upsert
                 //If DivisionKey is zero, we know this is a new row
                 if (division.DivisionKey == 0) //Insert
                 {
-                    context.Division.Add(division);
+                    context.Divisions.Add(division);
                     context.SaveChanges();
                     return division.DivisionKey;
                 }
                 else //Update
                 {
                     //This wouldn't be necessary if we were replacing all columns.
-                    var actual = context.Division.Find(division.DivisionKey);
+                    var actual = context.Divisions.Find(division.DivisionKey);
 
                     //Copy manually so we don't overwrite CreatedBy/CreatedDate
-                    actual.Department = division.Department;
+                    actual.Departments = division.Departments;
                     actual.DivisionId = division.DivisionId;
                     actual.DivisionName = division.DivisionName;
                     actual.FloorSpaceBudget = division.FloorSpaceBudget;

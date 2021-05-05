@@ -27,8 +27,7 @@ namespace Recipes.EntityFrameworkCore
         }
 
         [AssemblyInitialize]
-        [SuppressMessage("Usage", "CA1801")]
-        public static void AssemblyInit(TestContext context)
+        public static void AssemblyInit()
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
             SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
@@ -58,11 +57,14 @@ namespace Recipes.EntityFrameworkCore
             }
             catch { }
 
-            try
+#if !EFCore5
+        //This relies on SetColumnName, which was broken in EF Core 5.
+          try
             {
                 (new Setup()).Warmup_PostgreSql();
             }
             catch { }
+#endif
         }
 
         [TestMethod]
@@ -76,18 +78,18 @@ namespace Recipes.EntityFrameworkCore
             };
             using (var context = DBContextFactory())
             {
-                context.Employee.Add(e);
+                context.Employees.Add(e);
                 context.SaveChanges();
             }
             using (var context = DBContextFactory())
             {
-                var cl = context.EmployeeClassification.Where(e => e.EmployeeClassificationKey == 2).Include(e => e.Employee).Single();
-                Assert.AreNotEqual(0, cl.Employee.Count);
+                var cl = context.EmployeeClassifications.Where(e => e.EmployeeClassificationKey == 2).Include(e => e.Employees).Single();
+                Assert.AreNotEqual(0, cl.Employees.Count);
             }
             using (var context = LazyLoadingDBContextFactory())
             {
-                var cl = context.EmployeeClassification.Where(e => e.EmployeeClassificationKey == 2).Single();
-                Assert.AreNotEqual(0, cl.Employee.Count);
+                var cl = context.EmployeeClassifications.Where(e => e.EmployeeClassificationKey == 2).Single();
+                Assert.AreNotEqual(0, cl.Employees.Count);
             }
         }
 
@@ -97,25 +99,29 @@ namespace Recipes.EntityFrameworkCore
             //Touch all of the models to warmup the DBContext.
             using (var context = DBContextFactory())
             {
-                context.Department.FirstOrDefault();
-                context.DepartmentDetail.FirstOrDefault();
-                context.Employee.FirstOrDefault();
-                context.EmployeeClassification.FirstOrDefault();
+                context.Departments.FirstOrDefault();
+                context.DepartmentDetails.FirstOrDefault();
+                context.Employees.FirstOrDefault();
+                context.EmployeeClassifications.FirstOrDefault();
                 context.Students.FirstOrDefault();
             }
         }
 
+#if !EFCore5
+        //This relies on SetColumnName, which was broken in EF Core 5.
         [TestMethod]
         public void Warmup_PostgreSql()
         {
             //Touch all of the models to warmup the DBContext.
             using (var context = PostgreSqlDBContextFactory())
             {
-                context.Department.FirstOrDefault();
-                context.DepartmentDetail.FirstOrDefault();
-                context.Employee.FirstOrDefault();
-                context.EmployeeClassification.FirstOrDefault();
+                context.Departments.FirstOrDefault();
+                context.DepartmentDetails.FirstOrDefault();
+                context.Employees.FirstOrDefault();
+                context.EmployeeClassifications.FirstOrDefault();
             }
         }
+#endif
+
     }
 }

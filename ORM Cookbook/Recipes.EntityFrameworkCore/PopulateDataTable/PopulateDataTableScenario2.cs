@@ -26,7 +26,7 @@ namespace Recipes.EntityFrameworkCore.PopulateDataTable
             using (var context = CreateDbContext())
             {
                 var buffer = new object[propertyList.Count];
-                foreach (var row in context.EmployeeClassification.Where(x => x.IsExempt == isExempt && x.IsEmployee == isEmployee))
+                foreach (var row in context.EmployeeClassifications.Where(x => x.IsExempt == isExempt && x.IsEmployee == isEmployee))
                 {
                     for (var i = 0; i < propertyList.Count; i++)
                         buffer[i] = propertyList[i].InvokeGet(row) ?? DBNull.Value;
@@ -46,7 +46,7 @@ namespace Recipes.EntityFrameworkCore.PopulateDataTable
             using (var context = CreateDbContext())
             {
                 var buffer = new object[propertyList.Count];
-                foreach (var row in context.EmployeeClassification)
+                foreach (var row in context.EmployeeClassifications)
                 {
                     for (var i = 0; i < propertyList.Count; i++)
                         buffer[i] = propertyList[i].InvokeGet(row) ?? DBNull.Value;

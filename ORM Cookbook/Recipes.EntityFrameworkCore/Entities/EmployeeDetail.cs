@@ -2,39 +2,34 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+#nullable disable
 
 namespace Recipes.EntityFrameworkCore.Entities
 {
+    [Keyless]
     public partial class EmployeeDetail
     {
         public int EmployeeKey { get; set; }
-
         [Required]
         [StringLength(50)]
-        public string? FirstName { get; set; }
-
+        public string FirstName { get; set; }
         [StringLength(50)]
-        public string? MiddleName { get; set; }
-
+        public string MiddleName { get; set; }
         [Required]
         [StringLength(50)]
-        public string? LastName { get; set; }
-
+        public string LastName { get; set; }
         [StringLength(100)]
-        public string? Title { get; set; }
-
+        public string Title { get; set; }
         [StringLength(15)]
-        public string? OfficePhone { get; set; }
-
+        public string OfficePhone { get; set; }
         [StringLength(15)]
-        public string? CellPhone { get; set; }
-
+        public string CellPhone { get; set; }
         public int EmployeeClassificationKey { get; set; }
-
         [Required]
         [StringLength(30)]
-        public string? EmployeeClassificationName { get; set; }
-
+        public string EmployeeClassificationName { get; set; }
         public bool IsExempt { get; set; }
         public bool IsEmployee { get; set; }
     }

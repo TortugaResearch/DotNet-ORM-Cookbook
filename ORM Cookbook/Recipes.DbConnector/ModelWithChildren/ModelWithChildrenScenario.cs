@@ -353,7 +353,7 @@ namespace Recipes.DbConnector.ModelWithChildren
                         DbCommand command = em.Command;
 
                         //Execute first row.
-                        firstProd.ProductKey = (int)command.ExecuteScalar();
+                        firstProd.ProductKey = (int)command.ExecuteScalar()!;
                         em.NumberOfRowsAffected = 1;
 
                         //Set and execute remaining rows.
@@ -365,7 +365,7 @@ namespace Recipes.DbConnector.ModelWithChildren
                             command.Parameters[nameof(Product.ShippingWeight)].Value = prod.ShippingWeight ?? (object)DBNull.Value;
                             command.Parameters[nameof(Product.ProductWeight)].Value = prod.ProductWeight ?? (object)DBNull.Value;
 
-                            prod.ProductKey = (int)command.ExecuteScalar();
+                            prod.ProductKey = (int)command.ExecuteScalar()!;
                             em.NumberOfRowsAffected += 1;
                         }
 

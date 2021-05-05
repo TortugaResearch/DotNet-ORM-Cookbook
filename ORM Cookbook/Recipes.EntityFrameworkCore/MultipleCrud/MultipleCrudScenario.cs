@@ -45,7 +45,7 @@ namespace Recipes.EntityFrameworkCore.MultipleCrud
         public IList<Employee> FindByLastName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(ec => ec.LastName == lastName).ToList();
+                return context.Employees.Where(ec => ec.LastName == lastName).ToList();
         }
 
         public void InsertBatch(IList<Employee> employees)
@@ -56,7 +56,7 @@ namespace Recipes.EntityFrameworkCore.MultipleCrud
             using (var context = CreateDbContext())
             {
                 foreach (var employee in employees)
-                    context.Employee.Add(employee);
+                    context.Employees.Add(employee);
                 context.SaveChanges();
             }
         }
@@ -69,7 +69,7 @@ namespace Recipes.EntityFrameworkCore.MultipleCrud
             using (var context = CreateDbContext())
             {
                 foreach (var employee in employees)
-                    context.Employee.Add(employee);
+                    context.Employees.Add(employee);
                 context.SaveChanges();
             }
 
@@ -84,7 +84,7 @@ namespace Recipes.EntityFrameworkCore.MultipleCrud
             using (var context = CreateDbContext())
             {
                 foreach (var employee in employees)
-                    context.Employee.Add(employee);
+                    context.Employees.Add(employee);
                 context.SaveChanges();
             }
 
@@ -99,7 +99,7 @@ namespace Recipes.EntityFrameworkCore.MultipleCrud
             using (var context = CreateDbContext())
             {
                 foreach (var employee in employees)
-                    context.Employee.Add(employee);
+                    context.Employees.Add(employee);
                 context.SaveChanges();
             }
         }

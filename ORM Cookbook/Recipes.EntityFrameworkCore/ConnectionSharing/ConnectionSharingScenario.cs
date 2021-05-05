@@ -68,7 +68,7 @@ namespace Recipes.EntityFrameworkCore.ConnectionSharing
                 if (transaction != null)
                     context.Database.UseTransaction(transaction);
 
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
             }
         }
     }

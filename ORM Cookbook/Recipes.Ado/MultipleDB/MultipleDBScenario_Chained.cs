@@ -62,7 +62,7 @@ namespace Recipes.Ado.MultipleDB
                 cmd.Connection = con;
                 cmd.CommandText = sql;
                 AddParameter(cmd, "@EmployeeClassificationName", classification.EmployeeClassificationName);
-                return (int)cmd.ExecuteScalar();
+                return (int)cmd.ExecuteScalar()!;
             }
         }
 

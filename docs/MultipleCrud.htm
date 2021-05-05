@@ -1232,7 +1232,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
     public IList&lt;Employee&gt; FindByLastName(string lastName)
     {
         using (var context = CreateDbContext())
-            return context.Employee.Where(ec =&gt; ec.LastName == lastName).ToList();
+            return context.Employees.Where(ec =&gt; ec.LastName == lastName).ToList();
     }
 
     public void InsertBatch(IList&lt;Employee&gt; employees)
@@ -1243,7 +1243,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         using (var context = CreateDbContext())
         {
             foreach (var employee in employees)
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
             context.SaveChanges();
         }
     }
@@ -1256,7 +1256,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         using (var context = CreateDbContext())
         {
             foreach (var employee in employees)
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
             context.SaveChanges();
         }
 
@@ -1271,7 +1271,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         using (var context = CreateDbContext())
         {
             foreach (var employee in employees)
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
             context.SaveChanges();
         }
 
@@ -1286,7 +1286,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         using (var context = CreateDbContext())
         {
             foreach (var employee in employees)
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
             context.SaveChanges();
         }
     }

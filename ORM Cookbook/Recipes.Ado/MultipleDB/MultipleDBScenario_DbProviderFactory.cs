@@ -27,7 +27,7 @@ namespace Recipes.Ado.MultipleDB
 
         DbConnection OpenConnection()
         {
-            var con = m_ProviderFactory.CreateConnection();
+            var con = m_ProviderFactory.CreateConnection()!;
             con.ConnectionString = m_ConnectionString;
             con.Open();
             return con;
@@ -35,7 +35,7 @@ namespace Recipes.Ado.MultipleDB
 
         DbParameter CreateParameter(string parameterName, object? value)
         {
-            var param = m_ProviderFactory.CreateParameter();
+            var param = m_ProviderFactory.CreateParameter()!;
             param.ParameterName = parameterName;
             param.Value = value;
             return param;
@@ -60,12 +60,12 @@ namespace Recipes.Ado.MultipleDB
             };
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = m_ProviderFactory.CreateCommand()!)
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
                 cmd.Parameters.Add(CreateParameter("@EmployeeClassificationName", classification.EmployeeClassificationName));
-                return (int)cmd.ExecuteScalar();
+                return (int)cmd.ExecuteScalar()!;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Recipes.Ado.MultipleDB
             const string sql = @"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = m_ProviderFactory.CreateCommand()!)
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
@@ -92,7 +92,7 @@ namespace Recipes.Ado.MultipleDB
             const string sql = @"DELETE FROM HR.EmployeeClassification WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = m_ProviderFactory.CreateCommand()!)
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
@@ -109,7 +109,7 @@ namespace Recipes.Ado.MultipleDB
                         WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = m_ProviderFactory.CreateCommand()!)
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
@@ -136,7 +136,7 @@ namespace Recipes.Ado.MultipleDB
             var result = new List<EmployeeClassification>();
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = m_ProviderFactory.CreateCommand()!)
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
@@ -163,7 +163,7 @@ namespace Recipes.Ado.MultipleDB
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = m_ProviderFactory.CreateCommand()!)
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;
@@ -193,7 +193,7 @@ namespace Recipes.Ado.MultipleDB
                         WHERE EmployeeClassificationKey = @EmployeeClassificationKey;";
 
             using (var con = OpenConnection())
-            using (var cmd = m_ProviderFactory.CreateCommand())
+            using (var cmd = m_ProviderFactory.CreateCommand()!)
             {
                 cmd.Connection = con;
                 cmd.CommandText = sql;

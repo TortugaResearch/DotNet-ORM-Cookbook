@@ -510,14 +510,14 @@ END;
     public IList&lt;EmployeeClassification&gt; GetEmployeeClassifications()
     {
         using (var context = CreateDbContext())
-            return context.EmployeeClassification.FromSqlRaw(&quot;EXEC HR.GetEmployeeClassifications;&quot;).ToList();
+            return context.EmployeeClassifications.FromSqlRaw(&quot;EXEC HR.GetEmployeeClassifications;&quot;).ToList();
     }
 
     public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
         {
-            var temp = context.EmployeeClassification.FromSqlRaw(&quot;EXEC HR.GetEmployeeClassifications {0};&quot;,
+            var temp = context.EmployeeClassifications.FromSqlRaw(&quot;EXEC HR.GetEmployeeClassifications {0};&quot;,
                 employeeClassificationKey).ToList();
             //Note that SingleOrDefault isn't allowed for stored procedures. Thus ToList must be called first.
             return temp.SingleOrDefault();

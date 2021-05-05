@@ -26,7 +26,7 @@ namespace Recipes.EntityFrameworkCore.Immutable
             using (var context = CreateDbContext())
             {
                 var temp = classification.ToEntity();
-                context.EmployeeClassification.Add(temp);
+                context.EmployeeClassifications.Add(temp);
                 context.SaveChanges();
                 return temp.EmployeeClassificationKey;
             }
@@ -40,10 +40,10 @@ namespace Recipes.EntityFrameworkCore.Immutable
             using (var context = CreateDbContext())
             {
                 //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+                var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
                 if (temp != null)
                 {
-                    context.EmployeeClassification.Remove(temp);
+                    context.EmployeeClassifications.Remove(temp);
                     context.SaveChanges();
                 }
             }
@@ -54,10 +54,10 @@ namespace Recipes.EntityFrameworkCore.Immutable
             using (var context = CreateDbContext())
             {
                 //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+                var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
                 if (temp != null)
                 {
-                    context.EmployeeClassification.Remove(temp);
+                    context.EmployeeClassifications.Remove(temp);
                     context.SaveChanges();
                 }
             }
@@ -67,7 +67,7 @@ namespace Recipes.EntityFrameworkCore.Immutable
         {
             using (var context = CreateDbContext())
             {
-                return context.EmployeeClassification
+                return context.EmployeeClassifications
                     .Where(ec => ec.EmployeeClassificationName == employeeClassificationName)
                     .Select(x => new ReadOnlyEmployeeClassification(x)).SingleOrDefault();
             }
@@ -77,7 +77,7 @@ namespace Recipes.EntityFrameworkCore.Immutable
         {
             using (var context = CreateDbContext())
             {
-                return context.EmployeeClassification.Select(x => new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
+                return context.EmployeeClassifications.Select(x => new ReadOnlyEmployeeClassification(x)).ToImmutableArray();
             }
         }
 
@@ -85,7 +85,7 @@ namespace Recipes.EntityFrameworkCore.Immutable
         {
             using (var context = CreateDbContext())
             {
-                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+                var temp = context.EmployeeClassifications.Find(employeeClassificationKey);
                 if (temp == null)
                     throw new DataException($"No row was found for key {employeeClassificationKey}.");
                 return new ReadOnlyEmployeeClassification(temp);
@@ -100,7 +100,7 @@ namespace Recipes.EntityFrameworkCore.Immutable
             using (var context = CreateDbContext())
             {
                 //Get a fresh copy of the row from the database
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+                var temp = context.EmployeeClassifications.Find(classification.EmployeeClassificationKey);
                 if (temp != null)
                 {
                     //Copy the changed fields

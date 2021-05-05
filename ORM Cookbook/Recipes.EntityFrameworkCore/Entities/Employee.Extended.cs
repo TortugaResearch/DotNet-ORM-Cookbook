@@ -5,7 +5,7 @@ namespace Recipes.EntityFrameworkCore.Entities
     {
         int IEmployeeSimple.EmployeeClassificationKey
         {
-            get => EmployeeClassificationKey ?? 0;
+            get => EmployeeClassificationKey;
             set => EmployeeClassificationKey = value;
         }
     }
