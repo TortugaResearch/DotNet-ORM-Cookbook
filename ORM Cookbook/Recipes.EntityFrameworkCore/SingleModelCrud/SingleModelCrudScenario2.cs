@@ -31,7 +31,7 @@ namespace Recipes.EntityFrameworkCore.SingleModelCrud
             {
                 //var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
                 //context.Entry(temp).State = EntityState.Deleted;
-                context.EmployeeClassification.Remove(new EmployeeClassification { EmployeeClassificationKey = employeeClassificationKey });
+                context.EmployeeClassifications.Remove(new EmployeeClassification { EmployeeClassificationKey = employeeClassificationKey });
                 context.SaveChanges();
             }
         }

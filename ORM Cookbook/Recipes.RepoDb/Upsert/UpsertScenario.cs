@@ -15,7 +15,7 @@ namespace Recipes.RepoDb.Upsert
             : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
         { }
 
-        public Division GetByKey(int divisionKey)
+        public Division? GetByKey(int divisionKey)
         {
             return Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
         }

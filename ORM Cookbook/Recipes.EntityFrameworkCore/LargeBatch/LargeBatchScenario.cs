@@ -20,7 +20,7 @@ namespace Recipes.EntityFrameworkCore.LargeBatch
         public int CountByLastName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(ec => ec.LastName == lastName).Count();
+                return context.Employees.Where(ec => ec.LastName == lastName).Count();
         }
 
         public void InsertLargeBatch(IList<Employee> employees)
@@ -31,7 +31,7 @@ namespace Recipes.EntityFrameworkCore.LargeBatch
             using (var context = CreateDbContext())
             {
                 foreach (var employee in employees)
-                    context.Employee.Add(employee);
+                    context.Employees.Add(employee);
                 context.SaveChanges();
             }
         }
@@ -43,7 +43,7 @@ namespace Recipes.EntityFrameworkCore.LargeBatch
                 using (var context = CreateDbContext())
                 {
                     foreach (var employee in batch)
-                        context.Employee.Add(employee);
+                        context.Employees.Add(employee);
                     context.SaveChanges();
                 }
             }

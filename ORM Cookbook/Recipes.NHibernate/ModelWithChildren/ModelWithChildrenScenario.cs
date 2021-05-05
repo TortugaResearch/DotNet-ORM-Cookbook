@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#pragma warning disable CA1806 // Do not ignore method results. We are intentionally ignoring results in some cases.
+
 namespace Recipes.NHibernate.ModelWithChildren
 {
     public class ModelWithChildrenScenario : IModelWithChildrenScenario<ProductLine, Product>

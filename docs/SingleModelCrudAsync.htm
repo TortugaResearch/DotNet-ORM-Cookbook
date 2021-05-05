@@ -174,7 +174,7 @@
         using (var cmd = new SqlCommand(sql, con))
         {
             cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationName&quot;, classification.EmployeeClassificationName);
-            return (int)(await cmd.ExecuteScalarAsync().ConfigureAwait(false));
+            return (int)(await cmd.ExecuteScalarAsync().ConfigureAwait(false))!;
         }
     }
 
@@ -766,7 +766,7 @@
 {
     using (var context = CreateDbContext())
     {
-        return context.EmployeeClassification.Find(employeeClassificationKey);
+        return context.EmployeeClassifications.Find(employeeClassificationKey);
     }
 }
 </code></pre>
@@ -776,7 +776,7 @@
 {
     using (var context = CreateDbContext())
     {
-        return await context.EmployeeClassification.FindAsync(new object[] { employeeClassificationKey }, cancellationToken);
+        return await context.EmployeeClassifications.FindAsync(new object[] { employeeClassificationKey }, cancellationToken).ConfigureAwait(false);
     }
 }
 </code></pre>
@@ -797,7 +797,7 @@
 
         using (var context = CreateDbContext())
         {
-            context.EmployeeClassification.Add(classification);
+            context.EmployeeClassifications.Add(classification);
             await context.SaveChangesAsync().ConfigureAwait(false);
             return classification.EmployeeClassificationKey;
         }
@@ -810,10 +810,10 @@
 
         using (var context = CreateDbContext())
         {
-            var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
+            var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey).ConfigureAwait(false);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
@@ -823,10 +823,10 @@
     {
         using (var context = CreateDbContext())
         {
-            var temp = await context.EmployeeClassification.FindAsync(employeeClassificationKey);
+            var temp = await context.EmployeeClassifications.FindAsync(employeeClassificationKey).ConfigureAwait(false);
             if (temp != null)
             {
-                context.EmployeeClassification.Remove(temp);
+                context.EmployeeClassifications.Remove(temp);
                 await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
@@ -836,7 +836,7 @@
     {
         using (var context = CreateDbContext())
         {
-            return await context.EmployeeClassification.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            return await context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -844,7 +844,7 @@
     {
         using (var context = CreateDbContext())
         {
-            return await context.EmployeeClassification.ToListAsync(cancellationToken).ConfigureAwait(false);
+            return await context.EmployeeClassifications.ToListAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -852,7 +852,7 @@
     {
         using (var context = CreateDbContext())
         {
-            return await context.EmployeeClassification.FindAsync(new object[] { employeeClassificationKey }, cancellationToken);
+            return await context.EmployeeClassifications.FindAsync(new object[] { employeeClassificationKey }, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -863,7 +863,7 @@
 
         using (var context = CreateDbContext())
         {
-            var temp = await context.EmployeeClassification.FindAsync(classification.EmployeeClassificationKey);
+            var temp = await context.EmployeeClassifications.FindAsync(classification.EmployeeClassificationKey).ConfigureAwait(false);
             if (temp != null)
             {
                 temp.EmployeeClassificationName = classification.EmployeeClassificationName;

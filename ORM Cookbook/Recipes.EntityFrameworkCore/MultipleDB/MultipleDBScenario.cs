@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#if !EFCore5
+//This relies on SetColumnName, which was broken in EF Core 5.
+
 namespace Recipes.EntityFrameworkCore.MultipleDB
 {
     public class MultipleDBScenario : IMultipleDBScenario<EmployeeClassification>
@@ -23,7 +26,7 @@ namespace Recipes.EntityFrameworkCore.MultipleDB
 
             using (var context = CreateDbContext())
             {
-                context.EmployeeClassification.Add(classification);
+                context.EmployeeClassifications.Add(classification);
                 context.SaveChanges();
                 return classification.EmployeeClassificationKey;
             }
@@ -51,11 +54,11 @@ namespace Recipes.EntityFrameworkCore.MultipleDB
             }
         }
 
-        public EmployeeClassification FindByName(string employeeClassificationName)
+        public EmployeeClassification? FindByName(string employeeClassificationName)
         {
             using (var context = CreateDbContext())
             {
-                return context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+                return context.EmployeeClassifications.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
             }
         }
 
@@ -63,7 +66,7 @@ namespace Recipes.EntityFrameworkCore.MultipleDB
         {
             using (var context = CreateDbContext())
             {
-                return context.EmployeeClassification.ToList();
+                return context.EmployeeClassifications.ToList();
             }
         }
 
@@ -71,7 +74,7 @@ namespace Recipes.EntityFrameworkCore.MultipleDB
         {
             using (var context = CreateDbContext())
             {
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
             }
         }
 
@@ -88,3 +91,4 @@ namespace Recipes.EntityFrameworkCore.MultipleDB
         }
     }
 }
+#endif

@@ -138,7 +138,7 @@
 {
     int? GetDivisionKey(string divisionName);
 
-    string GetDivisionName(int divisionKey);
+    string? GetDivisionName(int divisionKey);
 
     string? GetDivisionNameOrNull(int divisionKey);
 
@@ -531,49 +531,49 @@
     public int? GetDivisionKey(string divisionName)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionName == divisionName).Select(d =&gt; (int?)d.DivisionKey).SingleOrDefault();
+            return context.Divisions.Where(d =&gt; d.DivisionName == divisionName).Select(d =&gt; (int?)d.DivisionKey).SingleOrDefault();
     }
 
     public string GetDivisionName(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).Single();
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).Single();
     }
 
     public string? GetDivisionNameOrNull(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).SingleOrDefault();
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).SingleOrDefault();
     }
 
     public DateTimeOffset? GetLastReviewCycle(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.LastReviewCycle).SingleOrDefault();
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.LastReviewCycle).SingleOrDefault();
     }
 
     public int? GetMaxEmployees(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.MaxEmployees).SingleOrDefault();
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.MaxEmployees).SingleOrDefault();
     }
 
     public DateTime GetModifiedDate(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.ModifiedDate).Single();
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.ModifiedDate).Single();
     }
 
     public decimal? GetSalaryBudget(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.SalaryBudget).SingleOrDefault();
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.SalaryBudget).SingleOrDefault();
     }
 
     public TimeSpan? GetStartTime(int divisionKey)
     {
         using (var context = CreateDbContext())
-            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.StartTime).SingleOrDefault();
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.StartTime).SingleOrDefault();
     }
 }
 </code></pre>
@@ -649,7 +649,7 @@
     }
 
 
-    public string GetDivisionName(int divisionKey)
+    public string? GetDivisionName(int divisionKey)
     {
         using(var adapter = new DataAccessAdapter())
         {

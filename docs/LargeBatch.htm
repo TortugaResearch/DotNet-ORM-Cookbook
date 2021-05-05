@@ -549,7 +549,7 @@ VALUES &quot;);
     public int CountByLastName(string lastName)
     {
         using (var context = CreateDbContext())
-            return context.Employee.Where(ec =&gt; ec.LastName == lastName).Count();
+            return context.Employees.Where(ec =&gt; ec.LastName == lastName).Count();
     }
 
     public void InsertLargeBatch(IList&lt;Employee&gt; employees)
@@ -560,7 +560,7 @@ VALUES &quot;);
         using (var context = CreateDbContext())
         {
             foreach (var employee in employees)
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
             context.SaveChanges();
         }
     }
@@ -572,7 +572,7 @@ VALUES &quot;);
             using (var context = CreateDbContext())
             {
                 foreach (var employee in batch)
-                    context.Employee.Add(employee);
+                    context.Employees.Add(employee);
                 context.SaveChanges();
             }
         }

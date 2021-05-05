@@ -20,7 +20,7 @@ namespace Recipes.EntityFrameworkCore.Pagination
         {
             using (var context = CreateDbContext())
             {
-                context.Employee.AddRange(employees);
+                context.Employees.AddRange(employees);
                 context.SaveChanges();
             }
         }
@@ -28,7 +28,7 @@ namespace Recipes.EntityFrameworkCore.Pagination
         public IList<Employee> PaginateWithPageSize(string lastName, int page, int pageSize)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(e => e.LastName == lastName)
+                return context.Employees.Where(e => e.LastName == lastName)
                     .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
                     .Skip(page * pageSize).Take(pageSize).ToList();
         }
@@ -40,13 +40,13 @@ namespace Recipes.EntityFrameworkCore.Pagination
             {
                 if (skipPast == null)
                 {
-                    return context.Employee.Where(e => e.LastName == lastName)
+                    return context.Employees.Where(e => e.LastName == lastName)
                         .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
                         .Take(take).ToList();
                 }
                 else
                 {
-                    return context.Employee
+                    return context.Employees
                         .Where(e => (e.LastName == lastName) && (
                             (string.Compare(e.FirstName, skipPast.FirstName) > 0)
                                 || (e.FirstName == skipPast.FirstName && e.EmployeeKey > skipPast.EmployeeKey))
@@ -60,7 +60,7 @@ namespace Recipes.EntityFrameworkCore.Pagination
         public IList<Employee> PaginateWithSkipTake(string lastName, int skip, int take)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(e => e.LastName == lastName)
+                return context.Employees.Where(e => e.LastName == lastName)
                     .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
                     .Skip(skip).Take(take).ToList();
         }

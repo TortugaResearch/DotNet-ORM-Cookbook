@@ -23,7 +23,7 @@ namespace Recipes.EntityFrameworkCore.SoftDelete
 
             using (var context = CreateDbContext())
             {
-                context.Department.Add(department);
+                context.Departments.Add(department);
                 context.SaveChanges();
                 return department.DepartmentKey;
             }
@@ -41,13 +41,13 @@ namespace Recipes.EntityFrameworkCore.SoftDelete
         public Department? GetDepartment(int departmentKey)
         {
             using (var context = CreateDbContext())
-                return context.Department.Find(departmentKey);
+                return context.Departments.Find(departmentKey);
         }
 
         public Department? GetDepartmentIgnoringIsDeleted(int departmentKey)
         {
             using (var context = CreateBypassDbContext())
-                return context.Department.Find(departmentKey);
+                return context.Departments.Find(departmentKey);
         }
 
         public void UndeleteDepartment(int departmentKey)

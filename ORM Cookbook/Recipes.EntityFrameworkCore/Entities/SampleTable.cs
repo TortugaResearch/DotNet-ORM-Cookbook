@@ -8,17 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Recipes.EntityFrameworkCore.Entities
 {
-    [Table("Student", Schema = "School")]
-    public partial class Student
+    [Table("SampleTable")]
+    public partial class SampleTable
     {
         [Key]
-        public int StudentId { get; set; }
+        public int Id { get; set; }
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
-        [Required]
-        [StringLength(50)]
-        public string Subject { get; set; }
-        public int SchoolId { get; set; }
     }
 }

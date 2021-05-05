@@ -20,7 +20,7 @@ namespace Recipes.EntityFrameworkCore.Transactions
             using (var context = CreateDbContext())
             using (var trans = context.Database.BeginTransaction())
             {
-                context.EmployeeClassification.Add(classification);
+                context.EmployeeClassifications.Add(classification);
                 context.SaveChanges();
                 var result = classification.EmployeeClassificationKey;
 
@@ -41,7 +41,7 @@ namespace Recipes.EntityFrameworkCore.Transactions
             using (var context = CreateDbContext())
             using (var trans = context.Database.BeginTransaction(isolationLevel))
             {
-                context.EmployeeClassification.Add(classification);
+                context.EmployeeClassifications.Add(classification);
                 context.SaveChanges();
                 var result = classification.EmployeeClassificationKey;
 
@@ -57,7 +57,7 @@ namespace Recipes.EntityFrameworkCore.Transactions
         public EmployeeClassification GetByKey(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Recipes.EntityFrameworkCore.DiscoverTablesAndColumns
             commnd.CommandText = sql;
             commnd.Parameters.Add(new SqlParameter { ParameterName = "SchemaName", DbType = DbType.String, Value = schemaName });
             commnd.Parameters.Add(new SqlParameter { ParameterName = "TableName", DbType = DbType.String, Value = tableName });
-            commnd.Connection.Open();
+            commnd.Connection!.Open();
             DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
             var columnNames = new List<string>();
             while (reader.Read())
@@ -56,7 +56,7 @@ namespace Recipes.EntityFrameworkCore.DiscoverTablesAndColumns
             commnd.CommandText = sql;
             commnd.Parameters.Add(new SqlParameter { ParameterName = "SchemaName", DbType = DbType.String, Value = schemaName });
             commnd.Parameters.Add(new SqlParameter { ParameterName = "ViewName", DbType = DbType.String, Value = viewName });
-            commnd.Connection.Open();
+            commnd.Connection!.Open();
             DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
             var columnNames = new List<string>();
             while (reader.Read())
@@ -77,7 +77,7 @@ namespace Recipes.EntityFrameworkCore.DiscoverTablesAndColumns
                 FROM sys.tables t 
                 INNER JOIN sys.schemas s ON t.schema_id = s.schema_id";
             commnd.CommandText = sql;
-            commnd.Connection.Open();
+            commnd.Connection!.Open();
             DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
             var tableNames = new List<string>();
             while (reader.Read())
@@ -98,7 +98,7 @@ namespace Recipes.EntityFrameworkCore.DiscoverTablesAndColumns
                 FROM sys.views v 
                 INNER JOIN sys.schemas s ON v.schema_id = s.schema_id";
             commnd.CommandText = sql;
-            commnd.Connection.Open();
+            commnd.Connection!.Open();
             DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
             var tableNames = new List<string>();
             while (reader.Read())

@@ -73,7 +73,7 @@ namespace Recipes.LLBLGenPro.SingleModelCrud
             }
         }
 
-        public EmployeeClassificationEntity GetByKey(int employeeClassificationKey)
+        public EmployeeClassificationEntity? GetByKey(int employeeClassificationKey)
         {
             using (var adapter = new DataAccessAdapter())
             {

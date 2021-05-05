@@ -22,7 +22,7 @@ namespace Recipes.EntityFrameworkCore.ArbitraryTableRead
             using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
             string sql = $"SELECT * FROM [{schema}].[{tableName}];";
             commnd.CommandText = sql;
-            commnd.Connection.Open();
+            commnd.Connection!.Open();
             using DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
             var result = new DataTable();
             result.Load(reader);

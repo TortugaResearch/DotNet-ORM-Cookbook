@@ -23,7 +23,7 @@ namespace Recipes.EntityFrameworkCore.Joins
 
             using (var context = CreateDbContext())
             {
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
                 context.SaveChanges();
                 return employee.EmployeeKey;
             }
@@ -32,8 +32,8 @@ namespace Recipes.EntityFrameworkCore.Joins
         public IList<EmployeeDetail> FindByEmployeeClassificationKey(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-                return context.Employee
-                    .Join(context.EmployeeClassification,
+                return context.Employees
+                    .Join(context.EmployeeClassifications,
                         e => e.EmployeeClassificationKey,
                         ec => ec.EmployeeClassificationKey,
                         (e, ec) => new EmployeeDetail()
@@ -57,8 +57,8 @@ namespace Recipes.EntityFrameworkCore.Joins
         public IList<EmployeeDetail> FindByLastName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee
-                    .Join(context.EmployeeClassification,
+                return context.Employees
+                    .Join(context.EmployeeClassifications,
                         e => e.EmployeeClassificationKey,
                         ec => ec.EmployeeClassificationKey,
                         (e, ec) => new EmployeeDetail()
@@ -82,8 +82,8 @@ namespace Recipes.EntityFrameworkCore.Joins
         public EmployeeDetail? GetByEmployeeKey(int employeeKey)
         {
             using (var context = CreateDbContext())
-                return context.Employee
-                    .Join(context.EmployeeClassification,
+                return context.Employees
+                    .Join(context.EmployeeClassifications,
                         e => e.EmployeeClassificationKey,
                         ec => ec.EmployeeClassificationKey,
                         (e, ec) => new EmployeeDetail()
@@ -106,7 +106,7 @@ namespace Recipes.EntityFrameworkCore.Joins
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
     }
 }

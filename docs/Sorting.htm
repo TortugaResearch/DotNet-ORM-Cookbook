@@ -334,7 +334,7 @@
 <pre><code class="cs">public IList&lt;Employee&gt; SortByFirstName(string lastName)
 {
     using (var context = CreateDbContext())
-        return context.Employee.Where(x =&gt; x.LastName == lastName)
+        return context.Employees.Where(x =&gt; x.LastName == lastName)
             .OrderBy(x =&gt; x.FirstName).ToList();
 }
 </code></pre>
@@ -342,7 +342,7 @@
 <pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameDescFirstName(string lastName)
 {
     using (var context = CreateDbContext())
-        return context.Employee.Where(x =&gt; x.LastName == lastName)
+        return context.Employees.Where(x =&gt; x.LastName == lastName)
             .OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
 }
 </code></pre>
@@ -350,7 +350,7 @@
 <pre><code class="cs">public IList&lt;Employee&gt; SortByMiddleNameFirstName(string lastName)
 {
     using (var context = CreateDbContext())
-        return context.Employee.Where(x =&gt; x.LastName == lastName)
+        return context.Employees.Where(x =&gt; x.LastName == lastName)
             .OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).ToList();
 }
 </code></pre>

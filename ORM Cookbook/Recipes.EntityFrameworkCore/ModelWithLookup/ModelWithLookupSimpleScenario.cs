@@ -23,7 +23,7 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
 
             using (var context = CreateDbContext())
             {
-                context.Employee.Add(employee);
+                context.Employees.Add(employee);
                 context.SaveChanges();
                 return employee.EmployeeKey;
             }
@@ -46,10 +46,10 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
             using (var context = CreateDbContext())
             {
                 //Find the row you wish to delete
-                var temp = context.Employee.Find(employeeKey);
+                var temp = context.Employees.Find(employeeKey);
                 if (temp != null)
                 {
-                    context.Employee.Remove(temp);
+                    context.Employees.Remove(temp);
                     context.SaveChanges();
                 }
             }
@@ -58,25 +58,25 @@ namespace Recipes.EntityFrameworkCore.ModelWithLookup
         public IList<Employee> FindByLastName(string lastName)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Where(ec => ec.LastName == lastName).ToList();
+                return context.Employees.Where(ec => ec.LastName == lastName).ToList();
         }
 
         public IList<Employee> GetAll()
         {
             using (var context = CreateDbContext())
-                return context.Employee.ToList();
+                return context.Employees.ToList();
         }
 
         public Employee? GetByKey(int employeeKey)
         {
             using (var context = CreateDbContext())
-                return context.Employee.Find(employeeKey);
+                return context.Employees.Find(employeeKey);
         }
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                return context.EmployeeClassifications.Find(employeeClassificationKey);
         }
 
         /// <summary>

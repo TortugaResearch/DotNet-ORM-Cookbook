@@ -51,14 +51,14 @@ namespace Recipes.EntityFrameworkCore.BasicStoredProc
         public IList<EmployeeClassification> GetEmployeeClassifications()
         {
             using (var context = CreateDbContext())
-                return context.EmployeeClassification.FromSqlRaw("EXEC HR.GetEmployeeClassifications;").ToList();
+                return context.EmployeeClassifications.FromSqlRaw("EXEC HR.GetEmployeeClassifications;").ToList();
         }
 
         public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
         {
             using (var context = CreateDbContext())
             {
-                var temp = context.EmployeeClassification.FromSqlRaw("EXEC HR.GetEmployeeClassifications {0};",
+                var temp = context.EmployeeClassifications.FromSqlRaw("EXEC HR.GetEmployeeClassifications {0};",
                     employeeClassificationKey).ToList();
                 //Note that SingleOrDefault isn't allowed for stored procedures. Thus ToList must be called first.
                 return temp.SingleOrDefault();

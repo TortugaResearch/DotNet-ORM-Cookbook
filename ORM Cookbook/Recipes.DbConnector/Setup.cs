@@ -19,8 +19,7 @@ namespace Recipes.DbConnector
         }
 
         [AssemblyInitialize]
-        [SuppressMessage("Usage", "CA1801")]
-        public static void AssemblyInit(TestContext context)
+        public static void AssemblyInit()
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
 
