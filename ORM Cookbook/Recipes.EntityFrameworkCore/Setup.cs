@@ -27,7 +27,7 @@ namespace Recipes.EntityFrameworkCore
         }
 
         [AssemblyInitialize]
-        public static void AssemblyInit()
+        public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
             SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
