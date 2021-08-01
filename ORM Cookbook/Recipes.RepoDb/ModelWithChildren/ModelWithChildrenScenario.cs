@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.ModelWithChildren;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RDB = RepoDb;
 using RepoDb;
 using RepoDb.Extensions;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Recipes.RepoDb.ModelWithChildren
+namespace Recipes.RepoDB.ModelWithChildren
 {
     public class ModelWithChildrenScenario : DbRepository<SqlConnection>,
         IModelWithChildrenScenario<ProductLine, Product>

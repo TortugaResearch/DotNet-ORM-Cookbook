@@ -1,12 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.RowCount;
 using RDB = RepoDb;
 using RepoDb;
 using System;
 using System.Collections.Generic;
 
-namespace Recipes.RepoDb.RowCount
+namespace Recipes.RepoDB.RowCount
 {
     public class RowCountScenario : BaseRepository<EmployeeSimple, SqlConnection>,
         IRowCountScenario<EmployeeSimple>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
 using Recipes.DynamicSorting;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.DynamicSorting
+namespace Recipes.RepoDB.DynamicSorting
 {
     [TestClass]
     public class DynamicSortingTests : DynamicSortingTests<EmployeeSimple>

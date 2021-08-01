@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
 using Recipes.Joins;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.Joins
+namespace Recipes.RepoDB.Joins
 {
     [TestClass]
     public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>

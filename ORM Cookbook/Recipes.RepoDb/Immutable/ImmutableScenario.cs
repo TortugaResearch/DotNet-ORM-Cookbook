@@ -1,5 +1,5 @@
 ﻿using Recipes.Immutable;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RepoDb;
 using RDB = RepoDb;
 using System;
@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Data.SqlClient;
 
-namespace Recipes.RepoDb.Immutable
+namespace Recipes.RepoDB.Immutable
 {
     public class ImmutableScenario : BaseRepository<ReadOnlyEmployeeClassification, SqlConnection>,
         IImmutableScenario<ReadOnlyEmployeeClassification>

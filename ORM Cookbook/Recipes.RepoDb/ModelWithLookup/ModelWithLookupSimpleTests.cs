@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.ModelWithLookup;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.ModelWithLookup
+namespace Recipes.RepoDB.ModelWithLookup
 {
     [TestClass]
     public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<EmployeeSimple>

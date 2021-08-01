@@ -2,7 +2,7 @@
 using Recipes.ModelWithLookup;
 using Recipes.RepoDb.Models;
 
-namespace Recipes.RepoDb.ModelWithLookup
+namespace Recipes.RepoDB.ModelWithLookup
 {
     [TestClass]
     public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeComplex>

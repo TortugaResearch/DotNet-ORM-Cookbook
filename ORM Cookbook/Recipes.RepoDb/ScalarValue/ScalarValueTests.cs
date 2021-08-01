@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.ScalarValue;
 
-namespace Recipes.RepoDb.ScalarValue
+namespace Recipes.RepoDB.ScalarValue
 {
     [TestClass]
     public class ScalarValueTests : Recipes.ScalarValue.ScalarValueTests

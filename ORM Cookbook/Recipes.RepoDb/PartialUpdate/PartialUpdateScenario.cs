@@ -1,12 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.PartialUpdate;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using RDB = RepoDb;
 using RepoDb;
 using System;
 using System.Linq;
 
-namespace Recipes.RepoDb.PartialUpdate
+namespace Recipes.RepoDB.PartialUpdate
 {
     public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlConnection>,
         IPartialUpdateScenario<EmployeeClassification>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.Upsert;
 
-namespace Recipes.RepoDb.Upsert
+namespace Recipes.RepoDB.Upsert
 {
     [TestClass]
     public class UpsertTests : UpsertTests<Division>

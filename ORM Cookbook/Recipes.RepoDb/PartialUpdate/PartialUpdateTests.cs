@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.PartialUpdate;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDb.PartialUpdate
+namespace Recipes.RepoDB.PartialUpdate
 {
     [TestClass]
     public class PartialUpdateTests : PartialUpdateTests<EmployeeClassification>

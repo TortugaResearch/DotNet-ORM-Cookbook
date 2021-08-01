@@ -4,7 +4,7 @@ using RDB = RepoDb;
 using RepoDb;
 using System;
 
-namespace Recipes.RepoDb.ScalarValue
+namespace Recipes.RepoDB.ScalarValue
 {
     public class ScalarValueScenario : DbRepository<SqlConnection>,
         IScalarValueScenario

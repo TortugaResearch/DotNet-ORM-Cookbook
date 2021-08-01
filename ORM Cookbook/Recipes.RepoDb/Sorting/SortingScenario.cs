@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDb.Models;
+using Recipes.RepoDB.Models;
 using Recipes.Sorting;
 using RDB = RepoDb;
 using RepoDb;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Recipes.RepoDb.Sorting
+namespace Recipes.RepoDB.Sorting
 {
     public class SortingScenario : BaseRepository<EmployeeSimple, SqlConnection>,
         ISortingScenario<EmployeeSimple>

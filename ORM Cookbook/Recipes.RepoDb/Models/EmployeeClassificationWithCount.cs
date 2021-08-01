@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Recipes.RepoDb.Models
+namespace Recipes.RepoDB.Models
 {
     public class EmployeeClassificationWithCount : IEmployeeClassificationWithCount
     {
