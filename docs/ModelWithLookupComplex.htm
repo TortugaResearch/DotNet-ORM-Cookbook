@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FK Lookup table using an object-based Foreign Key - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span></li>
+<li class="tocentry"><a href="SingleModelCrud.htm">Operations on a single entity type</a>
+</li>
+<li class="tocentry"><a href="MultipleCrud.htm">Operations on sets</a>
+</li>
+<li class="tocentry"><a href="ModelWithChildren.htm">Operations on a graph of multiple entity types</a>
+</li>
+<li class="tocentry"><a href="Immutable.htm">Operations on immutable entities</a>
+</li>
+<li class="tocentry"><a href="TryCrud.htm">Handling failures and exceptions</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="OperationswithaForeignKeybasedLookupTable.htm">Operations with a Foreign Key based Lookup Table</a></span></li>
+<li class="tocentry"><a href="ModelWithLookupSimple.htm">FK Lookup table using an integer-based Foreign Key</a>
+</li>
+<li class="tocentry current"><a class="current" href="ModelWithLookupComplex.htm">FK Lookup table using an object-based Foreign Key</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#database-views">Database Views</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+
+</ul>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Multi-Tenancyscenarios.htm">Multi-Tenancy scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="UnknownDatabasescenarios.htm">Unknown Database scenarios</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></li> / <li><a href="OperationswithaForeignKeybasedLookupTable.htm">Operations with a Foreign Key based Lookup Table</a></li> / <li><a href="ModelWithLookupComplex.htm">FK Lookup table using an object-based Foreign Key</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="crud-operations-on-model-with-object-based-foreign-key">CRUD Operations on Model with Object-Based Foreign Key<a class="headerlink" href="#crud-operations-on-model-with-object-based-foreign-key" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>This scenario demonstrates performing Create, Read, Update, and Delete operations on an object that has a foreign key reference to a lookup table. The FK reference is represented as an object.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IEmployeeComplex
+{
+    string? CellPhone { get; set; }
+    IReadOnlyEmployeeClassification? EmployeeClassification { get; set; }
+    int EmployeeKey { get; set; }
+    string? FirstName { get; set; }
+    string? LastName { get; set; }
+    string? MiddleName { get; set; }
+    string? OfficePhone { get; set; }
+    string? Title { get; set; }
+}
+</code></pre>
+
+<pre><code class="cs">public interface IModelWithLookupComplexScenario&lt;TEmployee&gt;
+   where TEmployee : class, IEmployeeComplex, new()
+{
+    /// &lt;summary&gt;
+    /// Create a new Employee row, returning the new primary key.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;This may NOT modify the EmployeeClassification record.&lt;/remarks&gt;
+    int Create(TEmployee employee);
+
+    /// &lt;summary&gt;
+    /// Delete a Employee row using an object.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This may NOT modify or delete the EmployeeClassification record.&lt;/remarks&gt;
+    void Delete(TEmployee employee);
+
+    /// &lt;summary&gt;
+    /// Delete a Employee row using its primary key.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void DeleteByKey(int employeeKey);
+
+    /// &lt;summary&gt;
+    /// Gets an Employee row by its name.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployee&gt; FindByLastName(string lastName);
+
+    /// &lt;summary&gt;
+    /// Gets all Employee rows.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployee&gt; GetAll();
+
+    /// &lt;summary&gt;
+    /// Gets an Employee row by its primary key.
+    /// &lt;/summary&gt;
+    TEmployee? GetByKey(int employeeKey);
+
+    /// &lt;summary&gt;
+    /// Get an employee classification by key.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employeeClassificationKey&quot;&gt;The employee classification key.&lt;/param&gt;
+    IEmployeeClassification? GetClassification(int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Update a Employee row.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined. This may NOT modify the EmployeeClassification record.&lt;/remarks&gt;
+    void Update(TEmployee employee);
+}
+</code></pre>
+
+<h2 id="database-views">Database Views<a class="headerlink" href="#database-views" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre class="nocode">CREATE VIEW HR.EmployeeDetail
+WITH SCHEMABINDING
+AS
+SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey,
+       ec.EmployeeClassificationName,
+       ec.IsExempt,
+       ec.IsEmployee
+FROM HR.Employee e
+    INNER JOIN HR.EmployeeClassification ec
+        ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey;
+
+</pre><h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In order to promote code reuse, object population has been moved into the model's constructor.</p>
+<pre><code class="cs">public class EmployeeComplex : IEmployeeComplex
+{
+    public EmployeeComplex()
+    {
+    }
+
+    public EmployeeComplex(IDataReader reader)
+    {
+        if (reader == null)
+            throw new ArgumentNullException(nameof(reader), $&quot;{nameof(reader)} is null.&quot;);
+
+        EmployeeKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeKey&quot;));
+        FirstName = reader.GetString(reader.GetOrdinal(&quot;FirstName&quot;));
+        if (!reader.IsDBNull(reader.GetOrdinal(&quot;MiddleName&quot;)))
+            MiddleName = reader.GetString(reader.GetOrdinal(&quot;MiddleName&quot;));
+        LastName = reader.GetString(reader.GetOrdinal(&quot;LastName&quot;));
+        if (!reader.IsDBNull(reader.GetOrdinal(&quot;Title&quot;)))
+            Title = reader.GetString(reader.GetOrdinal(&quot;Title&quot;));
+        if (!reader.IsDBNull(reader.GetOrdinal(&quot;OfficePhone&quot;)))
+            OfficePhone = reader.GetString(reader.GetOrdinal(&quot;OfficePhone&quot;));
+        if (!reader.IsDBNull(reader.GetOrdinal(&quot;CellPhone&quot;)))
+            CellPhone = reader.GetString(reader.GetOrdinal(&quot;CellPhone&quot;));
+
+        EmployeeClassification = new EmployeeClassification(reader);
+    }
+
+    public string? CellPhone { get; set; }
+    public IReadOnlyEmployeeClassification? EmployeeClassification { get; set; }
+    public int EmployeeKey { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? MiddleName { get; set; }
+    public string? OfficePhone { get; set; }
+    public string? Title { get; set; }
+}
+</code></pre>
+
+<p>Likewise, a database view was used to join the Employee table with its lookup table(s).</p>
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : SqlServerScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+    {
+        public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
+        { }
+
+        public int Create(EmployeeComplex employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+            if (employee.EmployeeClassification == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+            const string sql = @&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES
+(@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, employee.FirstName);
+                cmd.Parameters.AddWithValue(&quot;@MiddleName&quot;, (object?)employee.MiddleName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, employee.LastName);
+                cmd.Parameters.AddWithValue(&quot;@Title&quot;, (object?)employee.Title ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@OfficePhone&quot;, (object?)employee.OfficePhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@CellPhone&quot;, (object?)employee.CellPhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employee.EmployeeClassification.EmployeeClassificationKey);
+
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        public void Delete(EmployeeComplex employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+            const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employee.EmployeeKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteByKey(int employeeKey)
+        {
+            const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employeeKey);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
+        {
+            const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
+
+            var result = new List&lt;EmployeeComplex&gt;();
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new EmployeeComplex(reader));
+                    }
+                    return result;
+                }
+            }
+        }
+
+        public IList&lt;EmployeeComplex&gt; GetAll()
+        {
+            const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
+
+            var result = new List&lt;EmployeeComplex&gt;();
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    result.Add(new EmployeeComplex(reader));
+                }
+                return result;
+            }
+        }
+
+        public EmployeeComplex? GetByKey(int employeeKey)
+        {
+            const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employeeKey);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        return null;
+
+                    return new EmployeeComplex(reader);
+                }
+            }
+        }
+
+        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+        {
+            const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        return null;
+
+                    return new EmployeeClassification()
+                    {
+                        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal(&quot;EmployeeClassificationKey&quot;)),
+                        EmployeeClassificationName = reader.GetString(reader.GetOrdinal(&quot;EmployeeClassificationName&quot;)),
+                        IsExempt = reader.GetBoolean(reader.GetOrdinal(&quot;IsExempt&quot;)),
+                        IsEmployee = reader.GetBoolean(reader.GetOrdinal(&quot;IsEmployee&quot;))
+                    };
+                }
+            }
+        }
+
+        public void Update(EmployeeComplex employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+            if (employee.EmployeeClassification == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+            const string sql = @&quot;UPDATE HR.Employee
+SET FirstName = @FirstName,
+    MiddleName = @MiddleName,
+    LastName = @LastName,
+    Title = @Title,
+    OfficePhone = @OfficePhone,
+    CellPhone = @CellPhone,
+    EmployeeClassificationKey = @EmployeeClassificationKey
+WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employee.EmployeeKey);
+
+                cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, employee.FirstName);
+                cmd.Parameters.AddWithValue(&quot;@MiddleName&quot;, (object?)employee.MiddleName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, employee.LastName);
+                cmd.Parameters.AddWithValue(&quot;@Title&quot;, (object?)employee.Title ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@OfficePhone&quot;, (object?)employee.OfficePhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@CellPhone&quot;, (object?)employee.CellPhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employee.EmployeeClassification.EmployeeClassificationKey);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.</p>
+<p>Read operations must occur against a database view in order to get the properties from the child object. The <code>Decompose</code> attribute indicates that the child should be populated from the same view.</p>
+<pre><code class="cs">[TableAndView(&quot;HR.Employee&quot;, ViewName = &quot;HR.EmployeeDetail&quot;)]
+public partial class EmployeeComplex
+{
+    public string? CellPhone { get; set; }
+
+    [Decompose] //Used for Read operations
+    public EmployeeClassification? EmployeeClassification { get; set; }
+
+    //Used for Insert/Update operations
+    public int EmployeeClassificationKey =&gt; EmployeeClassification?.EmployeeClassificationKey ?? 0;
+
+    public int EmployeeKey { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? MiddleName { get; set; }
+    public string? OfficePhone { get; set; }
+    public string? Title { get; set; }
+}
+
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class EmployeeComplex : IEmployeeComplex
+    {
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        {
+            get =&gt; EmployeeClassification;
+            set =&gt; EmployeeClassification = (EmployeeClassification?)value;
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+{
+    readonly SqlServerDataSource m_DataSource;
+
+    public ModelWithLookupComplexScenario(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int Create(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        //The object is mapped to the view, so we need to override the table we write to.
+        return m_DataSource.Insert(employee).ToInt32().Execute();
+    }
+
+    public void Delete(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        //The object is mapped to the view, so we need to override the table we write to.
+        m_DataSource.Delete(employee).Execute();
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        m_DataSource.DeleteByKey&lt;EmployeeComplex&gt;(employeeKey).Execute();
+    }
+
+    public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
+    {
+        return m_DataSource.From&lt;EmployeeComplex&gt;(new { LastName = lastName }).ToCollection().Execute();
+    }
+
+    public IList&lt;EmployeeComplex&gt; GetAll()
+    {
+        return m_DataSource.From&lt;EmployeeComplex&gt;().ToCollection().Execute();
+    }
+
+    public EmployeeComplex? GetByKey(int employeeKey)
+    {
+        return m_DataSource.From&lt;EmployeeComplex&gt;(new { employeeKey }).ToObjectOrNull().Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ToObject().Execute();
+    }
+
+    public void Update(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        //The object is mapped to the view, so we need to override the table we write to.
+        m_DataSource.Update(employee).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Dapper does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.</p>
+<p>Read operations must occur against a database view in order to get the properties from the child object. The <a href="https://github.com/StackExchange/Dapper#multi-mapping" target="_blank">Multi Mapping</a> overload indicates that the child should be populated from the same view. Use the <code>splitOn</code> parameter to indicate the primary key of the second object.</p>
+<pre><code class="cs">public partial class EmployeeComplex : IEmployeeComplex
+{
+    public string? CellPhone { get; set; }
+    public EmployeeClassification? EmployeeClassification { get; set; }
+
+    //Used for Insert/Update operations
+    public int EmployeeClassificationKey =&gt; EmployeeClassification?.EmployeeClassificationKey ?? 0;
+
+    public int EmployeeKey { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? MiddleName { get; set; }
+    public string? OfficePhone { get; set; }
+    public string? Title { get; set; }
+}
+
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class EmployeeComplex : IEmployeeComplex
+    {
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        {
+            get =&gt; EmployeeClassification;
+            set =&gt; EmployeeClassification = (EmployeeClassification?)value;
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="cs">    public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+    {
+        public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
+        {
+        }
+
+        public int Create(EmployeeComplex employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+            if (employee.EmployeeClassification == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+            const string sql = @&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES
+(@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+            using (var con = OpenConnection())
+                return (int)con.ExecuteScalar(sql, employee);
+        }
+
+        public void Delete(EmployeeComplex employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+            const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql, employee);
+        }
+
+        public void DeleteByKey(int employeeKey)
+        {
+            const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql, new { employeeKey });
+        }
+
+        public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
+        {
+            const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
+
+            var result = new List&lt;EmployeeComplex&gt;();
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeComplex, EmployeeClassification, EmployeeComplex&gt;(sql,
+                    (e, ec) =&gt; { e.EmployeeClassification = ec; return e; },
+                    new { LastName = lastName },
+                    splitOn: &quot;EmployeeClassificationKey&quot;)
+                    .ToList();
+        }
+
+        public IList&lt;EmployeeComplex&gt; GetAll()
+        {
+            const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
+
+            var result = new List&lt;EmployeeComplex&gt;();
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeComplex, EmployeeClassification, EmployeeComplex&gt;(sql,
+                    (e, ec) =&gt; { e.EmployeeClassification = ec; return e; },
+                    splitOn: &quot;EmployeeClassificationKey&quot;)
+                    .ToList();
+        }
+
+        public EmployeeComplex? GetByKey(int employeeKey)
+        {
+            const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
+
+            using (var con = OpenConnection())
+                return con.Query&lt;EmployeeComplex, EmployeeClassification, EmployeeComplex&gt;(sql,
+                    (e, ec) =&gt; { e.EmployeeClassification = ec; return e; },
+                    new { EmployeeKey = employeeKey },
+                    splitOn: &quot;EmployeeClassificationKey&quot;)
+                    .SingleOrDefault();
+        }
+
+        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+        {
+            const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+
+            using (var con = OpenConnection())
+                return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
+        }
+
+        public void Update(EmployeeComplex employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+            if (employee.EmployeeClassification == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+            const string sql = @&quot;UPDATE HR.Employee
+SET FirstName = @FirstName,
+    MiddleName = @MiddleName,
+    LastName = @LastName,
+    Title = @Title,
+    OfficePhone = @OfficePhone,
+    CellPhone = @CellPhone,
+    EmployeeClassificationKey = @EmployeeClassificationKey
+WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+            using (var con = OpenConnection())
+                con.Execute(sql, employee);
+        }
+    }
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ModelWithLookupComplexScenario : ScenarioBase, IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+{
+    public ModelWithLookupComplexScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        const string sql = @&quot;INSERT INTO HR.Employee
+        (FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+        OUTPUT Inserted.EmployeeKey
+        VALUES
+        (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+        return DbConnector.Scalar&lt;int&gt;(sql,
+            new
+            {
+                employee.FirstName,
+                employee.MiddleName,
+                employee.LastName,
+                employee.Title,
+                employee.OfficePhone,
+                employee.CellPhone,
+                employee.EmployeeClassificationKey
+            }).Execute();
+    }
+
+    public void Delete(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+        DbConnector.NonQuery(sql, new { employee.EmployeeKey }).Execute();
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        const string sql = @&quot;DELETE HR.Employee WHERE EmployeeKey = @employeeKey;&quot;;
+
+        DbConnector.NonQuery(sql, new { employeeKey }).Execute();
+    }
+
+    public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
+    {
+        const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
+
+        var settings = new ColumnMapSetting().WithSplitOnFor&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationKey);
+
+        return DbConnector.ReadToList&lt;EmployeeComplex&gt;(settings, sql, new { LastName = lastName }).Execute();
+    }
+
+    public IList&lt;EmployeeComplex&gt; GetAll()
+    {
+        const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed&quot;;
+
+        //Configure Split map settings
+        var settings = new ColumnMapSetting().WithSplitOnFor&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationKey);
+
+        return DbConnector.ReadToList&lt;EmployeeComplex&gt;(settings, sql).Execute();
+    }
+
+    public EmployeeComplex? GetByKey(int employeeKey)
+    {
+        const string sql = @&quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
+
+        //Configure Split map settings
+        var settings = new ColumnMapSetting().WithSplitOnFor&lt;EmployeeClassification&gt;(e =&gt; e.EmployeeClassificationKey);
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeComplex&gt;(settings, sql, new { EmployeeKey = employeeKey }).Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+
+        return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public void Update(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        const string sql = @&quot;UPDATE HR.Employee
+        SET FirstName = @FirstName,
+            MiddleName = @MiddleName,
+            LastName = @LastName,
+            Title = @Title,
+            OfficePhone = @OfficePhone,
+            CellPhone = @CellPhone,
+            EmployeeClassificationKey = @EmployeeClassificationKey
+        WHERE EmployeeKey = @EmployeeKey;&quot;;
+
+        DbConnector.NonQuery(sql,
+            new
+            {
+                employee.EmployeeKey,
+                employee.FirstName,
+                employee.MiddleName,
+                employee.LastName,
+                employee.Title,
+                employee.OfficePhone,
+                employee.CellPhone,
+                employee.EmployeeClassificationKey
+            }).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Child objects outside of the DBContext (e.g. from a REST call) need to be mapped to an object created by the DBContext.</p>
+<p>This provides a layer of safety, as otherwise clients could override data in the lookup table.</p>
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ModelWithLookupComplexScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassificationKeyNavigation == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassificationKeyNavigation)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Prevent updates to the lookup table
+            context.Entry(employee.EmployeeClassificationKeyNavigation).State = EntityState.Unchanged;
+
+            context.Employees.Add(employee);
+            context.SaveChanges();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public void Delete(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(employee).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            //Find the row you wish to delete
+            var temp = context.Employees.Find(employeeKey);
+            if (temp != null)
+            {
+                context.Employees.Remove(temp);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.Employees
+                .Where(ec =&gt; ec.LastName == lastName)
+                .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
+                .ToList();
+    }
+
+    public IList&lt;Employee&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+            return context.Employees
+                .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
+                .ToList();
+    }
+
+    public Employee? GetByKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Employees
+                .Include(e =&gt; e.EmployeeClassificationKeyNavigation)
+                .SingleOrDefault(e =&gt; e.EmployeeKey == employeeKey);
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
+    }
+
+    /// &lt;summary&gt;
+    /// Updates the specified employee.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employee&quot;&gt;The employee.&lt;/param&gt;
+    /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;employee&lt;/exception&gt;
+    public void Update(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassificationKeyNavigation == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassificationKeyNavigation)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            //Prevent updates to the lookup table
+            context.Entry(employee.EmployeeClassificationKeyNavigation).State = EntityState.Unchanged;
+
+            context.Entry(employee).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>As LLBLGen Pro supports change tracking in the entities it doesn't have to refetch an entity that's been updated. The repository code 
+illustrates this. As it also by default persists all reachable entities in a graph, recursive saves are disabled here to make sure only the
+entity that's passed in is persisted. </p>
+<p>Entity classes are always derived from a known base class so types created by the user aren't taken into account when traversing the graph, 
+only entity classes. </p>
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeEntity&gt;
+{
+    public int Create(EmployeeEntity employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            // the test FoulLookup will alter the associated lookup entity and if we persist things recursively we'll save this record too, so we don't use any
+            // recursive persistence here.
+            adapter.SaveEntity(employee, true, recurse: false);
+            return employee.EmployeeKey;
+        }
+    }
+
+    public void Delete(EmployeeEntity employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            employee.IsNew = false;
+            adapter.DeleteEntity(employee);
+        }
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.DeleteEntitiesDirectly(typeof(EmployeeEntity), new RelationPredicateBucket(EmployeeFields.EmployeeKey.Equal(employeeKey)));
+        }
+    }
+
+    public IList&lt;EmployeeEntity&gt; FindByLastName(string lastName)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee
+                                            .Where(ec =&gt; ec.LastName == lastName)
+                                            .WithPath(p =&gt; p.Prefetch(e =&gt; e.EmployeeClassification))
+                                            .ToList();
+        }
+    }
+
+    public IList&lt;EmployeeEntity&gt; GetAll()
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee
+                                            .WithPath(p =&gt; p.Prefetch(e =&gt; e.EmployeeClassification))
+                                            .ToList();
+        }
+    }
+
+    public EmployeeEntity? GetByKey(int employeeKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Employee
+                                            .WithPath(p =&gt; p.Prefetch(e =&gt; e.EmployeeClassification))
+                                            .SingleOrDefault(e =&gt; e.EmployeeKey == employeeKey);
+        }
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification.FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// Updates the specified employee.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employee&quot;&gt;The employee.&lt;/param&gt;
+    /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;employee&lt;/exception&gt;
+    public void Update(EmployeeEntity employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            EmployeeEntity toPersist = employee;
+            if (toPersist.IsNew)
+            {
+                toPersist = new EmployeeEntity(employee.EmployeeKey);
+                adapter.FetchEntity(toPersist);
+                //Copy the changed fields
+                toPersist.FirstName = employee.FirstName;
+                toPersist.MiddleName = employee.MiddleName;
+                toPersist.LastName = employee.LastName;
+                toPersist.CellPhone = employee.CellPhone;
+                toPersist.OfficePhone = employee.OfficePhone;
+                toPersist.Title = employee.Title;
+                toPersist.EmployeeClassificationKey = employee.EmployeeClassificationKey;
+            }
+            if (!toPersist.IsNew)
+            {
+                // By default the whole graph is persisted in-order, FKs are synced etc. but there's a test in this system
+                // which makes it fail if we do so, so we have to disable the recursive saves.
+                adapter.SaveEntity(toPersist, refetchAfterSave: false, recurse: false);
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>RepoDb does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.</p>
+<blockquote>
+<p>RepoDb supports <a href="https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple#executing-multiple-sql-statements" target="_blank"><em>ExecuteQueryMultiple</em></a> which can cater a much more optimal solution for fetching parent-children related data entities.</p>
+</blockquote>
+<p>Read operations must occur against a database view in order to get the properties from the child object. The <code>Decompose</code> attribute indicates that the child should be populated from the same view.</p>
+<pre><code class="cs">[Map(&quot;[HR].[Employee]&quot;)]
+public partial class EmployeeComplex : IEmployeeComplex
+{
+    public string? CellPhone { get; set; }
+
+    public EmployeeClassification? EmployeeClassification { get; set; }
+
+    public int EmployeeClassificationKey { get; set; }
+
+    public int EmployeeKey { get; set; }
+
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? MiddleName { get; set; }
+    public string? OfficePhone { get; set; }
+    public string? Title { get; set; }
+}
+
+    //Used for linking the entity to the test framework. Not part of the recipe.
+    partial class EmployeeComplex : IEmployeeComplex
+    {
+        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        {
+            get =&gt; EmployeeClassification;
+            set
+            {
+                EmployeeClassification = (EmployeeClassification?)value;
+                EmployeeClassificationKey = (value?.EmployeeClassificationKey).GetValueOrDefault();
+            }
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public class ModelWithLookupComplexScenario : DbRepository&lt;SqlConnection&gt;,
+    IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+{
+    public ModelWithLookupComplexScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int Create(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        return Insert&lt;EmployeeComplex, int&gt;(employee);
+    }
+
+    public void Delete(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        base.Delete(employee);
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        Delete&lt;EmployeeComplex&gt;(employeeKey);
+    }
+
+    public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
+    {
+        return Query&lt;EmployeeComplex&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public IList&lt;EmployeeComplex&gt; GetAll()
+    {
+        return QueryAll&lt;EmployeeComplex&gt;().AsList();
+    }
+
+    public EmployeeComplex? GetByKey(int employeeKey)
+    {
+        var employee = Query&lt;EmployeeComplex&gt;(employeeKey).FirstOrDefault();
+        if (employee != null)
+        {
+            employee.EmployeeClassification = Query&lt;EmployeeClassification&gt;(employee.EmployeeClassificationKey).FirstOrDefault();
+        }
+        return employee;
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+    }
+
+    public void Update(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        base.Update(employee);
+    }
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;Employee&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    public ModelWithLookupComplexScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+        
+        employee.EmployeeClassificationId = employee.EmployeeClassification.Id;
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            db.Save(employee);
+        }
+
+        return employee.Id;
+    }
+
+    public void Delete(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Delete(employee);
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.DeleteById&lt;Employee&gt;(employeeKey);
+    }
+
+    public IList&lt;Employee&gt; FindByLastName(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.LoadSelect&lt;Employee&gt;(e =&gt; e.LastName == lastName);
+    }
+
+    public IList&lt;Employee&gt; GetAll()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.LoadSelect&lt;Employee&gt;();
+    }
+
+    public Employee? GetByKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.LoadSingleById&lt;Employee&gt;(employeeKey);
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+
+    public void Update(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        if (employee.EmployeeClassification != null)
+            employee.EmployeeClassificationId = employee.EmployeeClassification.Id;
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            db.Update(employee);
+    }
+}
+</code></pre>
+
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

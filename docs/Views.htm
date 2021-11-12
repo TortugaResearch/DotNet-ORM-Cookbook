@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reading from Views - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span></li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry current"><a class="current" href="Views.htm">Reading from Views</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#database-views">Database Views</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry"><a href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+</li>
+<li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Multi-Tenancyscenarios.htm">Multi-Tenancy scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="UnknownDatabasescenarios.htm">Unknown Database scenarios</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></li> / <li><a href="Views.htm">Reading from Views</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="reading-from-views">Reading from Views<a class="headerlink" href="#reading-from-views" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to read from a view. </p>
+<p>Note: While writing to views is supported by some databases, that capability is outside the scope of this scenario.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IViewsScenario&lt;TEmployeeDetail, TEmployeeSimple&gt;
+   where TEmployeeDetail : class, IEmployeeDetail
+   where TEmployeeSimple : class, IEmployeeSimple, new()
+{
+    /// &lt;summary&gt;
+    /// Create a new Employee row, returning the new primary key.
+    /// &lt;/summary&gt;
+    int Create(TEmployeeSimple employee);
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeDetail row by its primary key.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Gets a collection of EmployeeDetail rows by their name. Assume the name is not unique.
+    /// &lt;/summary&gt;
+    IList&lt;TEmployeeDetail&gt; FindByLastName(string lastName);
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeDetail row by its primary key.
+    /// &lt;/summary&gt;
+    TEmployeeDetail? GetByEmployeeKey(int employeeKey);
+
+    /// &lt;summary&gt;
+    /// Get an EmployeeClassification by key.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;employeeClassificationKey&quot;&gt;The employee classification key.&lt;/param&gt;
+    IEmployeeClassification? GetClassification(int employeeClassificationKey);
+}
+</code></pre>
+
+<h2 id="database-views">Database Views<a class="headerlink" href="#database-views" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre class="nocode">CREATE VIEW HR.EmployeeDetail
+WITH SCHEMABINDING
+AS
+SELECT e.EmployeeKey,
+       e.FirstName,
+       e.MiddleName,
+       e.LastName,
+       e.Title,
+       e.OfficePhone,
+       e.CellPhone,
+       e.EmployeeClassificationKey,
+       ec.EmployeeClassificationName,
+       ec.IsExempt,
+       ec.IsEmployee
+FROM HR.Employee e
+    INNER JOIN HR.EmployeeClassification ec
+        ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey;
+
+</pre><h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">    public class ViewsScenario : SqlServerScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+    {
+        public ViewsScenario(string connectionString) : base(connectionString)
+        { }
+
+        public int Create(EmployeeSimple employee)
+        {
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+            const string sql = @&quot;INSERT INTO HR.Employee
+(FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
+OUTPUT Inserted.EmployeeKey
+VALUES
+(@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, employee.FirstName);
+                cmd.Parameters.AddWithValue(&quot;@MiddleName&quot;, (object?)employee.MiddleName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, employee.LastName);
+                cmd.Parameters.AddWithValue(&quot;@Title&quot;, (object?)employee.Title ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@OfficePhone&quot;, (object?)employee.OfficePhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@CellPhone&quot;, (object?)employee.CellPhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employee.EmployeeClassificationKey);
+
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+        {
+            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+
+                var results = new List&lt;EmployeeDetail&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeDetail(reader));
+
+                return results;
+            }
+        }
+
+        public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+        {
+            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+
+                var results = new List&lt;EmployeeDetail&gt;();
+
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                        results.Add(new EmployeeDetail(reader));
+
+                return results;
+            }
+        }
+
+        public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+        {
+            const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employeeKey);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return new EmployeeDetail(reader);
+                    else
+                        return null;
+                }
+            }
+        }
+
+        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+        {
+            const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+            using (var con = OpenConnection())
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return new EmployeeClassification(reader);
+                    else
+                        return null;
+                }
+            }
+        }
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    readonly SqlServerDataSource m_DataSource;
+
+    public ViewsScenario(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return m_DataSource.Insert(employee).ToInt32().Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        return m_DataSource.From&lt;EmployeeDetail&gt;(new { employeeClassificationKey }).ToCollection().Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        return m_DataSource.From&lt;EmployeeDetail&gt;(new { lastName }).ToCollection().Execute();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        return m_DataSource.From&lt;EmployeeDetail&gt;(new { employeeKey }).ToObjectOrNull().Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationKey }).ToObject().Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : ScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public ViewsScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var con = OpenConnection())
+            return (int)con.Insert(employee);
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.LastName = @LastName&quot;;
+
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeDetail&gt;(sql, new { lastName }).ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = &quot;SELECT ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @EmployeeKey&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingleOrDefault&lt;EmployeeDetail&gt;(sql, new { employeeKey });
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        using (var con = OpenConnection())
+            return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
+    }
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : ScenarioBase, IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public ViewsScenario(string connectionString) : base(connectionString)
+    {
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return DbConnector.Scalar&lt;int&gt;(
+            @$&quot;INSERT INTO {EmployeeSimple.TableName}
+                (
+                    CellPhone,
+                    EmployeeClassificationKey,
+                    FirstName,
+                    LastName,
+                    MiddleName,
+                    OfficePhone,
+                    Title
+                ) 
+                OUTPUT Inserted.EmployeeKey
+                VALUES (
+                    @{nameof(EmployeeSimple.CellPhone)},
+                    @{nameof(EmployeeSimple.EmployeeClassificationKey)},
+                    @{nameof(EmployeeSimple.FirstName)},
+                    @{nameof(EmployeeSimple.LastName)},
+                    @{nameof(EmployeeSimple.MiddleName)},
+                    @{nameof(EmployeeSimple.OfficePhone)},
+                    @{nameof(EmployeeSimple.Title)}
+                )&quot;
+            , employee)
+            .Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT 
+                ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee 
+                FROM HR.EmployeeDetail ed WHERE ed.EmployeeClassificationKey = @employeeClassificationKey&quot;;
+
+        return DbConnector.ReadToList&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = @&quot;SELECT 
+        ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee 
+        FROM HR.EmployeeDetail ed WHERE ed.LastName = @lastName&quot;;
+
+        return DbConnector.ReadToList&lt;EmployeeDetail&gt;(sql, new { lastName }).Execute();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = @&quot;SELECT 
+        ed.EmployeeKey, ed.FirstName, ed.MiddleName, ed.LastName, ed.Title, ed.OfficePhone, ed.CellPhone, ed.EmployeeClassificationKey, ed.EmployeeClassificationName, ed.IsExempt, ed.IsEmployee 
+        FROM HR.EmployeeDetail ed WHERE ed.EmployeeKey = @employeeKey&quot;;
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeDetail&gt;(sql, new { employeeKey }).Execute();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT 
+        ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee 
+        FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @employeeClassificationKey&quot;;
+
+        return DbConnector.ReadSingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ViewsScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Employee.Add(employee);
+            context.SaveChanges();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeDetail.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeDetail.Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassification.Find(employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Starting with EF Core 3.0, views are treated like tables, but with two additional requirements in the <code>modelBuilder</code> configuration:</p>
+<ul>
+<li><code>entity.HasNoKey();</code></li>
+<li><code>entity.ToView(name, schema);</code></li>
+</ul>
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ViewsScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Employees.Add(employee);
+            context.SaveChanges();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeDetails.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeDetails.Where(x =&gt; x.LastName == lastName).ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeDetails.Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var db = new OrmCookbook())
+        {
+            return db.InsertWithInt32Identity(employee);
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeDetail.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).ToList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeDetail.Where(x =&gt; x.LastName == lastName).ToList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeDetail.Where(x =&gt; x.EmployeeKey == employeeKey).SingleOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.EmployeeClassification.Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey).SingleOrDefault();
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The views are mapped as regular entities and marked as 'readonly' in the designer. Alternatively we could have mapped them as Typed View
+POCOs however these aren't able to participate in entity relationships.</p>
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetailEntity, EmployeeEntity&gt;
+{
+    public int Create(EmployeeEntity employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var adapter = new DataAccessAdapter())
+        {
+            adapter.SaveEntity(employee);
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;EmployeeDetailEntity&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeDetail
+                                            .Where(x =&gt; x.EmployeeClassificationKey == employeeClassificationKey)
+                                            .ToList();
+        }
+    }
+
+    public IList&lt;EmployeeDetailEntity&gt; FindByLastName(string lastName)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeDetail
+                                            .Where(x =&gt; x.LastName == lastName)
+                                            .ToList();
+        }
+    }
+
+    public EmployeeDetailEntity? GetByEmployeeKey(int employeeKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeDetail
+                                            .SingleOrDefault(x =&gt; x.EmployeeKey == employeeKey);
+        }
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).EmployeeClassification
+                                            .FirstOrDefault(ec =&gt; ec.EmployeeClassificationKey == employeeClassificationKey);
+        }
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In NHibernate, views require a unique ID column. They must also be configured as <code>mutable=&quot;false&quot;</code>.</p>
+<pre><code class="xml">&lt;hibernate-mapping
+  assembly=&quot;Recipes.NHibernate&quot;
+  namespace=&quot;Recipes.NHibernate.Entities&quot;&gt;
+  &lt;class
+    name=&quot;EmployeeDetail&quot;
+    table=&quot;EmployeeDetail&quot;
+    schema=&quot;HR&quot;
+    mutable=&quot;false&quot;&gt;
+    &lt;id
+      name=&quot;EmployeeKey&quot; /&gt;
+    &lt;property
+      name=&quot;FirstName&quot; /&gt;
+    &lt;property
+      name=&quot;MiddleName&quot; /&gt;
+    &lt;property
+      name=&quot;LastName&quot; /&gt;
+    &lt;property
+      name=&quot;Title&quot; /&gt;
+    &lt;property
+      name=&quot;OfficePhone&quot; /&gt;
+    &lt;property
+      name=&quot;CellPhone&quot; /&gt;
+    &lt;property
+      name=&quot;EmployeeClassificationKey&quot; /&gt;
+    &lt;property
+      name=&quot;EmployeeClassificationName&quot; /&gt;
+    &lt;property
+      name=&quot;IsExempt&quot; /&gt;
+    &lt;property
+      name=&quot;IsEmployee&quot; /&gt;
+  &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+</code></pre>
+
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    readonly ISessionFactory m_SessionFactory;
+
+    public ViewsScenario(ISessionFactory sessionFactory)
+    {
+        m_SessionFactory = sessionFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using (var session = m_SessionFactory.OpenSession())
+        {
+            session.Save(employee);
+            session.Flush();
+            return employee.EmployeeKey;
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session.QueryOver&lt;EmployeeDetail&gt;()
+                .Where(ed =&gt; ed.EmployeeClassificationKey == employeeClassificationKey)
+                .List();
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+        {
+            return session.QueryOver&lt;EmployeeDetail&gt;().Where(ed =&gt; ed.LastName == lastName).List();
+        }
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+            return session.Get&lt;EmployeeDetail&gt;(employeeKey);
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var session = m_SessionFactory.OpenStatelessSession())
+            return session.Get&lt;EmployeeClassification&gt;(employeeClassificationKey);
+    }
+}
+</code></pre>
+
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : DbRepository&lt;SqlConnection&gt;,
+    IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public ViewsScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        return Insert&lt;EmployeeSimple, int&gt;(employee);
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        return Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeClassificationKey == employeeClassificationKey).AsList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        return Query&lt;EmployeeDetail&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        return Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeKey == employeeKey).FirstOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+    }
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, Employee&gt;
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public ViewsScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int Create(Employee employee)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return (int)db.Insert(employee, true);
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.Select&lt;EmployeeDetail&gt;(
+                r =&gt; r.EmployeeClassificationKey == employeeClassificationKey);
+        }
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.Select&lt;EmployeeDetail&gt;(
+                r =&gt; r.LastName == lastName);
+        }
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.SingleById&lt;EmployeeDetail&gt;(employeeKey);
+        }
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+        {
+            return db.SingleById&lt;EmployeeClassification&gt;(employeeClassificationKey);
+        }
+    }
+}
+</code></pre>
+
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

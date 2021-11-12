@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reading a Salar Value from a Row - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span></li>
+<li class="tocentry"><a href="Joins.htm">Projecting with a Join</a>
+</li>
+<li class="tocentry"><a href="Views.htm">Reading from Views</a>
+</li>
+<li class="tocentry"><a href="RowCount.htm">Row Counts</a>
+</li>
+<li class="tocentry"><a href="Pagination.htm">Paging Results</a>
+</li>
+<li class="tocentry"><a href="PopulateDataTable.htm">Populate DataTable</a>
+</li>
+<li class="tocentry current"><a class="current" href="ScalarValue.htm">Reading a Salar Value from a Row</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="SingleColumn.htm">Reading a Single Column from a Table</a>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Multi-Tenancyscenarios.htm">Multi-Tenancy scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="UnknownDatabasescenarios.htm">Unknown Database scenarios</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></li> / <li><a href="ScalarValue.htm">Reading a Salar Value from a Row</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="reading-a-scalar-value-from-a-row">Reading a Scalar Value from a Row<a class="headerlink" href="#reading-a-scalar-value-from-a-row" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to read simple scalar values. For example, reading a single field from a row. </p>
+<p>For an example of reading a scalar value from a stored procedure, see <a href="BasicStoredProc.htm">Basic Stored Procedures</a>.</p>
+<p>For an example of reading a row count, see <a href="RowCount.htm">Row Counts</a>.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IScalarValueScenario
+{
+    int? GetDivisionKey(string divisionName);
+
+    string? GetDivisionName(int divisionKey);
+
+    string? GetDivisionNameOrNull(int divisionKey);
+
+    DateTimeOffset? GetLastReviewCycle(int divisionKey);
+
+    int? GetMaxEmployees(int divisionKey);
+
+    DateTime GetModifiedDate(int divisionKey);
+
+    decimal? GetSalaryBudget(int divisionKey);
+
+    TimeSpan? GetStartTime(int divisionKey);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In ADO.NET, <code>ExecuteScalar</code> returns the first column of the first row in the resultset. Everything else is discarded.</p>
+<pre><code class="cs">public class ScalarValueScenario : SqlServerScenarioBase, IScalarValueScenario
+{
+    public ScalarValueScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        var sql = &quot;SELECT DivisionKey FROM HR.Division WHERE DivisionName = @DivisionName;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionName&quot;, divisionName);
+
+            var result = cmd.ExecuteScalar();
+            //No results will return a `null`. A result containing a null will return a `DBNull.Value`
+            if (result == null || result == DBNull.Value)
+                return null;
+            return (int)result;
+        }
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+            return (string)cmd.ExecuteScalar();
+        }
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+
+            var result = cmd.ExecuteScalar();
+            if (result == null || result == DBNull.Value)
+                return null;
+            return (string)result;
+        }
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        var sql = &quot;SELECT LastReviewCycle FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+
+            var result = cmd.ExecuteScalar();
+            if (result == null || result == DBNull.Value)
+                return null;
+            return (DateTimeOffset)result;
+        }
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        var sql = &quot;SELECT MaxEmployees FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+
+            var result = cmd.ExecuteScalar();
+            if (result == null || result == DBNull.Value)
+                return null;
+            return (int)result;
+        }
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        var sql = &quot;SELECT ModifiedDate FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+
+            return (DateTime)cmd.ExecuteScalar();
+        }
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        var sql = &quot;SELECT SalaryBudget FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+
+            var result = cmd.ExecuteScalar();
+            if (result == null || result == DBNull.Value)
+                return null;
+            return (decimal)result;
+        }
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+
+            var result = cmd.ExecuteScalar();
+            if (result == null || result == DBNull.Value)
+                return null;
+            return (TimeSpan)result;
+        }
+    }
+}
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    const string TableName = &quot;HR.Division&quot;;
+    readonly SqlServerDataSource m_DataSource;
+
+    public ScalarValueScenario(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        return m_DataSource.From(TableName, new { divisionName }).ToInt32OrNull(&quot;DivisionKey&quot;).Execute();
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        return m_DataSource.From(TableName, new { divisionKey }).ToString(&quot;DivisionName&quot;).Execute();
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        return m_DataSource.From(TableName, new { divisionKey }).ToStringOrNull(&quot;DivisionName&quot;).Execute();
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        return m_DataSource.From(TableName, new { divisionKey }).ToDateTimeOffsetOrNull(&quot;LastReviewCycle&quot;).Execute();
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        return m_DataSource.From(TableName, new { divisionKey }).ToInt32OrNull(&quot;MaxEmployees&quot;).Execute();
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        return m_DataSource.From(TableName, new { divisionKey }).ToDateTime(&quot;ModifiedDate&quot;).Execute();
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        return m_DataSource.From(TableName, new { divisionKey }).ToDecimalOrNull(&quot;SalaryBudget&quot;).Execute();
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        return m_DataSource.From(TableName, new { divisionKey }).ToTimeSpanOrNull(&quot;StartTime&quot;).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : ScenarioBase, IScalarValueScenario
+{
+    public ScalarValueScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        var sql = &quot;SELECT DivisionKey FROM HR.Division WHERE DivisionName = @DivisionName;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int?&gt;(sql, new { divisionName });
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;string&gt;(sql, new { divisionKey });
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;string?&gt;(sql, new { divisionKey });
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        var sql = &quot;SELECT LastReviewCycle FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;DateTimeOffset?&gt;(sql, new { divisionKey });
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        var sql = &quot;SELECT MaxEmployees FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int?&gt;(sql, new { divisionKey });
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        var sql = &quot;SELECT ModifiedDate FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;DateTime&gt;(sql, new { divisionKey });
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        var sql = &quot;SELECT SalaryBudget FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;decimal?&gt;(sql, new { divisionKey });
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;TimeSpan?&gt;(sql, new { divisionKey });
+    }
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : ScenarioBase, IScalarValueScenario
+{
+    public ScalarValueScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        var sql = &quot;SELECT DivisionKey FROM HR.Division WHERE DivisionName = @divisionName;&quot;;
+
+        return DbConnector.Scalar&lt;int?&gt;(sql, new { divisionName }).Execute();
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;string&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;string?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        var sql = &quot;SELECT LastReviewCycle FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;DateTimeOffset?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        var sql = &quot;SELECT MaxEmployees FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;int?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        var sql = &quot;SELECT ModifiedDate FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;DateTime&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        var sql = &quot;SELECT SalaryBudget FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;decimal?&gt;(sql, new { divisionKey }).Execute();
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        var sql = &quot;SELECT StartTime FROM HR.Division WHERE DivisionKey = @divisionKey;&quot;;
+
+        return DbConnector.Scalar&lt;TimeSpan?&gt;(sql, new { divisionKey }).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ScalarValueScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionName == divisionName).Select(d =&gt; (int?)d.DivisionKey).SingleOrDefault();
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).Single();
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).SingleOrDefault();
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.LastReviewCycle).SingleOrDefault();
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.MaxEmployees).SingleOrDefault();
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.ModifiedDate).Single();
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.SalaryBudget).SingleOrDefault();
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Division.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.StartTime).SingleOrDefault();
+    }
+}
+</code></pre>
+
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ScalarValueScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionName == divisionName).Select(d =&gt; (int?)d.DivisionKey).SingleOrDefault();
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).Single();
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.DivisionName!).SingleOrDefault();
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.LastReviewCycle).SingleOrDefault();
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.MaxEmployees).SingleOrDefault();
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.ModifiedDate).Single();
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.SalaryBudget).SingleOrDefault();
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        using (var context = CreateDbContext())
+            return context.Divisions.Where(d =&gt; d.DivisionKey == divisionKey).Select(d =&gt; d.StartTime).SingleOrDefault();
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    public int? GetDivisionKey(string divisionName)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionName == divisionName).SingleOrDefault()?.DivisionKey;
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName!;
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.DivisionName;
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.LastReviewCycle;
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.MaxEmployees;
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).Single().ModifiedDate;
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.SalaryBudget;
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        using (var db = new OrmCookbook())
+            return db.Division.Where(d =&gt; d.DivisionKey == divisionKey).SingleOrDefault()?.StartTime;
+    }
+}
+</code></pre>
+
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    public int? GetDivisionKey(string divisionName)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            // As the field in the projection isn't nullable, LLBLGen Pro will normally return the default value
+            // for when the field is null. Here, however this gives a problem, so we have to
+            // cast the field to int? to make FirstOrDefault return a nullable type.  
+            // A workaround could have been to project to the type first and use that as a check, however that's 
+            // less efficient. 
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionName == divisionName)
+                                            .Select(d =&gt; d.DivisionKey as int?).FirstOrDefault();
+        }
+    }
+
+
+    public string? GetDivisionName(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey == divisionKey)
+                                            .Select(d =&gt; d.DivisionName).FirstOrDefault();
+        }
+    }
+
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey == divisionKey)
+                                            .Select(d =&gt; d.DivisionName).FirstOrDefault();
+        }
+    }
+
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey == divisionKey)
+                                            .Select(d =&gt; d.LastReviewCycle).FirstOrDefault();
+        }
+    }
+
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey == divisionKey)
+                                            .Select(d =&gt; d.MaxEmployees).FirstOrDefault();
+        }
+    }
+
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey == divisionKey)
+                                            .Select(d =&gt; d.ModifiedDate).FirstOrDefault();
+        }
+    }
+
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey == divisionKey)
+                                            .Select(d =&gt; d.SalaryBudget).FirstOrDefault();
+        }
+    }
+
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        using(var adapter = new DataAccessAdapter())
+        {
+            return new LinqMetaData(adapter).Division.Where(d =&gt; d.DivisionKey == divisionKey)
+                                            .Select(d =&gt; d.StartTime).FirstOrDefault();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : DbRepository&lt;SqlConnection&gt;,
+    IScalarValueScenario
+{
+    public ScalarValueScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        var sql = &quot;SELECT DivisionKey FROM [HR].[Division] WHERE (DivisionName = @DivisionName);&quot;;
+
+        return ExecuteScalar&lt;int?&gt;(sql, new { divisionName });
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
+
+        return ExecuteScalar&lt;string&gt;(sql, new { divisionKey });
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        var sql = &quot;SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
+
+        return ExecuteScalar&lt;string&gt;(sql, new { divisionKey });
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        var sql = &quot;SELECT LastReviewCycle FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
+
+        return ExecuteScalar&lt;DateTimeOffset?&gt;(sql, new { divisionKey });
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        var sql = &quot;SELECT MaxEmployees FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
+
+        return ExecuteScalar&lt;int?&gt;(sql, new { divisionKey });
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        var sql = &quot;SELECT ModifiedDate FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
+
+        return ExecuteScalar&lt;DateTime&gt;(sql, new { divisionKey });
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        var sql = &quot;SELECT SalaryBudget FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
+
+        return ExecuteScalar&lt;decimal?&gt;(sql, new { divisionKey });
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        var sql = &quot;SELECT StartTime FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
+
+        return ExecuteScalar&lt;TimeSpan?&gt;(sql, new { divisionKey });
+    }
+}
+</code></pre>
+
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class ScalarValueScenario : IScalarValueScenario
+{
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+    
+    public ScalarValueScenario(IDbConnectionFactory dbConnectionFactory)
+    {
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public int? GetDivisionKey(string divisionName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, int?&gt;(d =&gt; d.Id, d =&gt; d.DivisionName == divisionName);
+    }
+
+    public string GetDivisionName(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, string&gt;(d =&gt; d.DivisionName, d =&gt; d.Id == divisionKey);
+    }
+
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, string&gt;(d =&gt; d.DivisionName, d =&gt; d.Id == divisionKey);
+    }
+
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, DateTimeOffset?&gt;(d =&gt; d.LastReviewCycle, d =&gt; d.Id == divisionKey);
+    }
+
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, int?&gt;(d =&gt; d.MaxEmployees, d =&gt; d.Id == divisionKey);
+    }
+
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, DateTime&gt;(d =&gt; d.ModifiedDate, d =&gt; d.Id == divisionKey);
+    }
+
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, decimal?&gt;(d =&gt; d.SalaryBudget, d =&gt; d.Id == divisionKey);
+    }
+
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
+            return db.Scalar&lt;Division, TimeSpan?&gt;(d =&gt; d.StartTime, d =&gt; d.Id == divisionKey);
+    }
+}
+</code></pre>
+
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

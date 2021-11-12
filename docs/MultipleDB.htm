@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Multiple Databases - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span></li>
+<li class="tocentry"><a href="SingleModelCrudAsync.htm">Async Operations</a>
+</li>
+<li class="tocentry"><a href="LargeBatch.htm">Batch Inserts with Large Collections</a>
+</li>
+<li class="tocentry"><a href="BulkInsert.htm">Bulk Inserts</a>
+</li>
+<li class="tocentry"><a href="ConnectionSharing.htm">Connection Sharing</a>
+</li>
+<li class="tocentry current"><a class="current" href="MultipleDB.htm">Multiple Databases</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="PartialUpdate.htm">Partial Updates</a>
+</li>
+<li class="tocentry"><a href="Transactions.htm">Transactions</a>
+</li>
+<li class="tocentry"><a href="Upsert.htm">Upsert</a>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Multi-Tenancyscenarios.htm">Multi-Tenancy scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="UnknownDatabasescenarios.htm">Unknown Database scenarios</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="Advancedscenarios.htm">Advanced scenarios</a></li> / <li><a href="MultipleDB.htm">Multiple Databases</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="multiple-databases">Multiple Databases<a class="headerlink" href="#multiple-databases" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>These scenarios demonstrate how to support multiple databases with the same code. For demonstration purposes, SQL Server and PostgreSQL will be used.</p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IMultipleDBScenario&lt;TModel&gt;
+   where TModel : class, IEmployeeClassification, new()
+{
+    /// &lt;summary&gt;
+    /// Create a new EmployeeClassification row, returning the new primary key.
+    /// &lt;/summary&gt;
+    int Create(TModel classification);
+
+    /// &lt;summary&gt;
+    /// Delete a EmployeeClassification row using an object.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Delete(TModel classification);
+
+    /// &lt;summary&gt;
+    /// Delete a EmployeeClassification row using its primary key.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void DeleteByKey(int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its name. Assume the name is unique.
+    /// &lt;/summary&gt;
+    TModel? FindByName(string employeeClassificationName);
+
+    /// &lt;summary&gt;
+    /// Gets all EmployeeClassification rows.
+    /// &lt;/summary&gt;
+    IList&lt;TModel&gt; GetAll();
+
+    /// &lt;summary&gt;
+    /// Gets an EmployeeClassification row by its primary key.
+    /// &lt;/summary&gt;
+    TModel? GetByKey(int employeeClassificationKey);
+
+    /// &lt;summary&gt;
+    /// Update a EmployeeClassification row.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;Behavior when row doesn't exist is not defined.&lt;/remarks&gt;
+    void Update(TModel classification);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In order to support multiple databases with the same code, ADO.NET provides a <code>DbProviderFactory</code> implmentation for each database. This can be used to create the connection, command, and parameter objects.</p>
+<pre><code class="cs">public class MultipleDBScenario_DbProviderFactory : IMultipleDBScenario&lt;EmployeeClassification&gt;
+{
+    readonly DbProviderFactory m_ProviderFactory;
+    readonly string m_ConnectionString;
+    readonly DatabaseType m_DatabaseType;
+
+    public MultipleDBScenario_DbProviderFactory(string connectionString, DatabaseType databaseType)
+    {
+        m_ConnectionString = connectionString;
+        m_DatabaseType = databaseType;
+
+        m_ProviderFactory = databaseType switch
+        {
+            DatabaseType.SqlServer =&gt; Microsoft.Data.SqlClient.SqlClientFactory.Instance,
+            DatabaseType.PostgreSql =&gt; Npgsql.NpgsqlFactory.Instance,
+            _ =&gt; throw new NotImplementedException()
+        };
+    }
+</code></pre>
+
+<p>Alternately, commands can be created from connections and parameters from commands.</p>
+<pre><code class="cs">public class MultipleDBScenario_Chained : IMultipleDBScenario&lt;EmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+    readonly DatabaseType m_DatabaseType;
+
+    public MultipleDBScenario_Chained(string connectionString, DatabaseType databaseType)
+    {
+        m_ConnectionString = connectionString;
+        m_DatabaseType = databaseType;
+    }
+
+    DbConnection OpenConnection()
+    {
+        DbConnection con = m_DatabaseType switch
+        {
+            DatabaseType.SqlServer =&gt; new Microsoft.Data.SqlClient.SqlConnection(m_ConnectionString),
+            DatabaseType.PostgreSql =&gt; new Npgsql.NpgsqlConnection(m_ConnectionString),
+            _ =&gt; throw new NotImplementedException()
+        };
+
+        con.Open();
+        return con;
+    }
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>In Chain, each named <code>DataSource</code> exposes database-specific functionality. For functionality that's common across multiple databases, a set of interfaces are offered.</p>
+<ul>
+<li><code>IClass0DataSource</code>: Raw SQL only. </li>
+<li><code>IClass1DataSource</code>: CRUD operations. Database reflection.</li>
+<li><code>IClass2DataSource</code>: Functions and Stored procedures</li>
+</ul>
+<pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
+{
+    const string TableName = &quot;HR.EmployeeClassification&quot;;
+    readonly IClass1DataSource m_DataSource;
+
+    public MultipleDBScenario(IClass1DataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        return m_DataSource.Insert(classification).ToInt32().Execute();
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Delete(classification).Execute();
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+    }
+
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationName })
+            .ToObject().Execute();
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        return m_DataSource.From&lt;EmployeeClassification&gt;().ToCollection().Execute();
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        return m_DataSource.GetByKey(TableName, employeeClassificationKey)
+            .ToObjectOrNull&lt;EmployeeClassification&gt;().Execute();
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        m_DataSource.Update(classification).Execute();
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
+{
+    IDbConnector DbConnector { get; }
+    readonly DatabaseType m_DatabaseType;
+
+    public MultipleDBScenario(string connectionString, DatabaseType databaseType)
+    {
+        if (databaseType == DatabaseType.SqlServer)
+        {
+            DbConnector = new DbConnector&lt;SqlConnection&gt;(connectionString);
+        }
+        else
+        {
+            DbConnector = new DbConnector&lt;NpgsqlConnection&gt;(connectionString);
+        }
+
+        //DbConnector.ConnectionType could also be used...
+        m_DatabaseType = databaseType;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        string sql = m_DatabaseType switch
+        {
+            DatabaseType.SqlServer =&gt;
+                @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+                    OUTPUT Inserted.EmployeeClassificationKey
+                    VALUES(@EmployeeClassificationName )&quot;,
+            DatabaseType.PostgreSql =&gt;
+                @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+                    VALUES(@EmployeeClassificationName )
+                    RETURNING EmployeeClassificationKey&quot;,
+            _ =&gt; throw new NotImplementedException()
+        };
+
+        return DbConnector.Scalar&lt;int&gt;(sql, classification).Execute();
+    }
+</code></pre>
+
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Conceptually, you just replace <code>.UseSqlServer(SqlServerConnectionString)</code> with <code>.UseNpgsql(PostgreSqlConnectionString)</code> to change databases.</p>
+<p>Due to differences in naming conventions between the two, you may find that a naming converter is needed. </p>
+<pre><code class="cs">/// &lt;summary&gt;
+/// CaseConventionConverter allows one DBContext to connect to multiple databases that using
+/// differ only in naming conventions.
+/// &lt;/summary&gt;
+public abstract class CaseConventionConverter : IDatabaseConventionConverter
+{
+    public void SetConvention(ModelBuilder builder)
+    {
+        if (builder == null)
+            throw new ArgumentNullException(nameof(builder), $&quot;{nameof(builder)} is null.&quot;);
+
+        foreach (var entity in builder.Model.GetEntityTypes())
+        {
+
+            // Replace table names
+            entity.SetTableName(ConvertName(entity.GetTableName()));
+            entity.SetSchema(ConvertName(entity.GetSchema()));
+
+            var soi = StoreObjectIdentifier.Table(entity.GetTableName(), entity.GetSchema());
+            System.Diagnostics.Debug.WriteLine($&quot;Remapping table {entity.GetSchema()}.{entity.GetTableName()}&quot;);
+            System.Diagnostics.Debug.IndentLevel += 1;
+
+            // Replace column names
+            foreach (var property in entity.GetProperties())
+                property.SetColumnName(ConvertName(property.GetColumnName(soi)), soi);
+
+            foreach (var key in entity.GetKeys())
+                key.SetName(ConvertName(key.GetName()));
+
+            foreach (var key in entity.GetForeignKeys())
+                key.SetConstraintName(ConvertName(key.GetConstraintName()));
+
+            foreach (var key in entity.GetIndexes())
+                key.SetDatabaseName(ConvertName(key.GetDatabaseName()));
+        }
+    }
+
+    protected abstract string? ConvertName(string? input);
+}
+</code></pre>
+
+<p>The two most common conventions for PostgreSQL are snake_case and lowercase.</p>
+<pre><code class="cs">/// &lt;summary&gt;
+/// SnakeCaseConverter is used in database where table/columns use the &quot;table_name&quot; convention.
+/// &lt;/summary&gt;
+public sealed class SnakeCaseConverter : CaseConventionConverter
+{
+    //Based on: https://github.com/avi1989/DbContextForMultipleDatabases, Used with permission.
+    //Reference: https://andrewlock.net/customising-asp-net-core-identity-ef-core-naming-conventions-for-postgresql/
+
+    [SuppressMessage(&quot;Globalization&quot;, &quot;CA1308&quot;)]
+    [return: NotNullIfNotNull(&quot;input&quot;)]
+    protected override string? ConvertName(string? input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        var startUnderscores = Regex.Match(input, @&quot;^_+&quot;);
+        return startUnderscores + Regex.Replace(input, @&quot;([a-z0-9])([A-Z])&quot;, &quot;$1_$2&quot;).ToLowerInvariant();
+    }
+}
+</code></pre>
+
+<pre><code class="cs">/// &lt;summary&gt;
+/// LowerCaseConverter is used in database where table/columns use the &quot;tablename&quot; convention.
+/// &lt;/summary&gt;
+
+public sealed class LowerCaseConverter : CaseConventionConverter
+{
+    [SuppressMessage(&quot;Globalization&quot;, &quot;CA1308&quot;)]
+    [return: NotNullIfNotNull(&quot;input&quot;)]
+    protected override string? ConvertName(string? input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        return input.ToLowerInvariant();
+    }
+}
+</code></pre>
+
+<p>No changes were needed to the actual DB access code.</p>
+<pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
+{
+    private Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public MultipleDBScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.EmployeeClassifications.Add(classification);
+            context.SaveChanges();
+            return classification.EmployeeClassificationKey;
+        }
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(classification).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            var temp = new EmployeeClassification() { EmployeeClassificationKey = employeeClassificationKey };
+            context.Entry(temp).State = EntityState.Deleted;
+            context.SaveChanges();
+        }
+    }
+
+    public EmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassifications.Where(ec =&gt; ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
+        }
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassifications.ToList();
+        }
+    }
+
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+        {
+            return context.EmployeeClassifications.Find(employeeClassificationKey);
+        }
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using (var context = CreateDbContext())
+        {
+            context.Entry(classification).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>

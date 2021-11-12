@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Read from an Arbitrary Table - The .NET Core ORM Cookbook</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles/vs.css">
+    <link rel="stylesheet" href="css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="index.htm"><i class="fa fa-home"></i> The .NET Core ORM Cookbook</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="index.htm">Home</a>
+</li>
+
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="ORMs.htm">ORMs</a></span>
+</li>
+<li class="tocentry"><a href="FAQ.htm">FAQ</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="StandardCRUDscenarios.htm">Standard CRUD scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Fetchingdatascenarios.htm">Fetching data scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Advancedscenarios.htm">Advanced scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Sortingscenarios.htm">Sorting scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Storedprocedurescenarios.htm">Stored procedure scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Auditingandhistoryscenarios.htm">Auditing and history scenarios</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="Multi-Tenancyscenarios.htm">Multi-Tenancy scenarios</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="UnknownDatabasescenarios.htm">Unknown Database scenarios</a></span></li>
+<li class="tocentry"><a href="DiscoverTablesAndColumns.htm">Discover Tables and Columns</a>
+</li>
+<li class="tocentry current"><a class="current" href="ArbitraryTableRead.htm">Read from an Arbitrary Table</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#scenario-prototype">Scenario Prototype</a></li>
+
+<li class="tocentry"><a href="#ado.net">ADO.NET</a></li>
+
+<li class="tocentry"><a href="#chain">Chain</a></li>
+
+<li class="tocentry"><a href="#dapper">Dapper</a></li>
+
+<li class="tocentry"><a href="#dbconnector">DbConnector</a></li>
+
+<li class="tocentry"><a href="#entity-framework-6">Entity Framework 6</a></li>
+
+<li class="tocentry"><a href="#entity-framework-core">Entity Framework Core</a></li>
+
+<li class="tocentry"><a href="#linq-to-db">LINQ to DB</a></li>
+
+<li class="tocentry"><a href="#llblgen-pro">LLBLGen Pro</a></li>
+
+<li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
+
+<li class="tocentry"><a href="#repodb">RepoDb</a></li>
+
+<li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
+
+
+
+</ul>
+
+</ul>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="index.htm">The .NET Core ORM Cookbook</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="index.htm">Home</a></li> / <li><a href="UnknownDatabasescenarios.htm">Unknown Database scenarios</a></li> / <li><a href="ArbitraryTableRead.htm">Read from an Arbitrary Table</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="read-from-an-arbitrary-table">Read from an Arbitrary Table<a class="headerlink" href="#read-from-an-arbitrary-table" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<p>This scenario demonstrate how to read all of the rows/columns of a table when the table name is only known at run time. </p>
+<h2 id="scenario-prototype">Scenario Prototype<a class="headerlink" href="#scenario-prototype" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<pre><code class="cs">public interface IArbitraryTableReadScenario&lt;T&gt;
+{
+    T GetAll(string schema, string tableName);
+}
+</code></pre>
+
+<h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<div class="alert alert-danger"><span class="alert-title"><i class="fa fa-times-circle"></i> Danger!</span><p>Verify that the schema and table name exist to avoid SQL injection attacks.</p>
+</div><pre><code class="cs">public class ArbitraryTableReadScenario : SqlServerScenarioBase, IArbitraryTableReadScenario&lt;DataTable&gt;
+{
+    public ArbitraryTableReadScenario(string connectionString) : base(connectionString)
+    { }
+
+    public DataTable GetAll(string schema, string tableName)
+    {
+        //WARNING: Verify that the schema and table name exist to avoid SQL injection attacks.
+        string sql = $&quot;SELECT * FROM [{schema}].[{tableName}];&quot;;
+
+        var result = new DataTable();
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        using (var reader = cmd.ExecuteReader())
+            result.Load(reader);
+
+        return result;
+    }
+}
+</code></pre>
+
+<h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>Chain will verify the table exists before executing the query to ensure that SQL injection is not possible.</p>
+<pre><code class="cs">public class ArbitraryTableReadScenario : IArbitraryTableReadScenario&lt;DataTable&gt;
+{
+    readonly SqlServerDataSource m_DataSource;
+
+    public ArbitraryTableReadScenario(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    public DataTable GetAll(string schemaName, string tableName)
+    {
+        return m_DataSource.From(schemaName + &quot;.&quot; + tableName).ToDataTable().Execute();
+    }
+}
+</code></pre>
+
+<pre><code class="cs">public class ArbitraryTableReadScenario2 : IArbitraryTableReadScenario&lt;IReadOnlyList&lt;IReadOnlyDictionary&lt;string, object?&gt;&gt;&gt;
+{
+    readonly SqlServerDataSource m_DataSource;
+
+    public ArbitraryTableReadScenario2(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    //This version returns a lightweight object known as a &quot;Table&quot;. It is an alternative to .NET's DataTable.
+    public IReadOnlyList&lt;IReadOnlyDictionary&lt;string, object?&gt;&gt; GetAll(string schemaName, string tableName)
+    {
+        return m_DataSource.From(schemaName + &quot;.&quot; + tableName).ToTable().Execute().Rows;
+    }
+}
+</code></pre>
+
+<h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<div class="alert alert-danger"><span class="alert-title"><i class="fa fa-times-circle"></i> Danger!</span><p>Verify that the schema and table name exist to avoid SQL injection attacks.</p>
+</div><pre><code class="cs">public class ArbitraryTableReadScenario : ScenarioBase, IArbitraryTableReadScenario&lt;DataTable&gt;
+{
+    public ArbitraryTableReadScenario(string connectionString) : base(connectionString)
+    { }
+
+    public DataTable GetAll(string schema, string tableName)
+    {
+        //WARNING: Verify that the schema and table name exist to avoid SQL injection attacks.
+        string sql = $&quot;SELECT * FROM [{schema}].[{tableName}];&quot;;
+
+        var result = new DataTable();
+
+        using (var con = OpenConnection())
+        using (var reader = con.ExecuteReader(sql))
+            result.Load(reader);
+
+        return result;
+    }
+}
+</code></pre>
+
+<h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="entity-framework-core">Entity Framework Core<a class="headerlink" href="#entity-framework-core" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<div class="alert alert-danger"><span class="alert-title"><i class="fa fa-times-circle"></i> Danger!</span><p>Verify that the schema and table name exist to avoid SQL injection attacks.</p>
+</div><pre><code class="cs">public class ArbitraryTableReadScenario : IArbitraryTableReadScenario&lt;DataTable&gt;
+{
+    private readonly Func&lt;OrmCookbookContext&gt; CreateDbContext;
+
+    public ArbitraryTableReadScenario(Func&lt;OrmCookbookContext&gt; dBContextFactory)
+    {
+        CreateDbContext = dBContextFactory;
+    }
+
+    public DataTable GetAll(string schema, string tableName)
+    {
+        using OrmCookbookContext context = CreateDbContext();
+        using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
+        string sql = $&quot;SELECT * FROM [{schema}].[{tableName}];&quot;;
+        commnd.CommandText = sql;
+        commnd.Connection!.Open();
+        using DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
+        var result = new DataTable();
+        result.Load(reader);
+        return result;
+    }
+}
+</code></pre>
+
+<h2 id="linq-to-db">LINQ to DB<a class="headerlink" href="#linq-to-db" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="llblgen-pro">LLBLGen Pro<a class="headerlink" href="#llblgen-pro" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+The ORM Cookbook. <a href='https://github.com/Grauenwolf/DotNet-ORM-Cookbook' target='_blank'>Visit us at GitHub</a>.
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/modernizr-2.8.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/theme.js"></script>
+
+</body>
+</html>
