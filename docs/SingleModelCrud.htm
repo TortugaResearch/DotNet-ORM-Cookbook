@@ -1022,7 +1022,7 @@ public partial class EmployeeClassification
         }
     }
 
-    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
         using (var context = CreateDbContext())
         {

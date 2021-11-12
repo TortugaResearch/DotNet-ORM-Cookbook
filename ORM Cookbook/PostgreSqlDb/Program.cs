@@ -4,26 +4,27 @@ using System;
 
 namespace PostgreSqlDb
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
-            var postgreSqlConnectionString = configuration.GetSection("ConnectionStrings")["PostgreSqlTestDatabase"];
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
+			var postgreSqlConnectionString = configuration.GetSection("ConnectionStrings")["PostgreSqlTestDatabase"];
 
-            using (var con = new NpgsqlConnection(postgreSqlConnectionString))
-            {
-                con.Open();
+			using (var con = new NpgsqlConnection(postgreSqlConnectionString))
+			{
+				con.Open();
 
-                Execute("DROP SCHEMA IF Exists Sales Cascade;");
-                Execute("DROP SCHEMA IF Exists HR Cascade;");
-                Execute("DROP SCHEMA IF Exists Production Cascade;");
+				Execute("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";");
+				Execute("DROP SCHEMA IF Exists Sales Cascade;");
+				Execute("DROP SCHEMA IF Exists HR Cascade;");
+				Execute("DROP SCHEMA IF Exists Production Cascade;");
 
-                Execute("CREATE SCHEMA HR;");
-                Execute("CREATE SCHEMA Production;");
-                Execute("CREATE SCHEMA Sales;");
-                //Execute("CREATE EXTENSION IF NOT EXISTS \"uuid - ossp\";");
-                Execute(@"CREATE TABLE HR.EmployeeClassification
+				Execute("CREATE SCHEMA HR;");
+				Execute("CREATE SCHEMA Production;");
+				Execute("CREATE SCHEMA Sales;");
+
+				Execute(@"CREATE TABLE HR.EmployeeClassification
 (
     EmployeeClassificationKey INT NOT NULL GENERATED ALWAYS AS IDENTITY(START 1000)
         CONSTRAINT PK_EmployeeClassification PRIMARY KEY,
@@ -38,7 +39,7 @@ namespace PostgreSqlDb
             DEFAULT(true)
 );");
 
-                Execute(@"CREATE TABLE HR.Employee
+				Execute(@"CREATE TABLE HR.Employee
 (
     EmployeeKey INT NOT NULL GENERATED ALWAYS AS IDENTITY(START 1000)
         CONSTRAINT PK_Employee PRIMARY KEY,
@@ -53,7 +54,7 @@ namespace PostgreSqlDb
         REFERENCES HR.EmployeeClassification (EmployeeClassificationKey)
 );");
 
-                Execute(@"CREATE TABLE HR.Division
+				Execute(@"CREATE TABLE HR.Division
 (
     DivisionKey INT NOT NULL GENERATED ALWAYS AS IDENTITY(START 1000)
         CONSTRAINT PK_Division PRIMARY KEY,
@@ -84,7 +85,7 @@ namespace PostgreSqlDb
     StartTime TIME NULL
 );");
 
-                Execute(@"CREATE TABLE HR.Department
+				Execute(@"CREATE TABLE HR.Department
 (
     DepartmentKey INT NOT NULL GENERATED ALWAYS AS IDENTITY(START 1000)
         CONSTRAINT PK_Department PRIMARY KEY,
@@ -107,7 +108,7 @@ namespace PostgreSqlDb
             DEFAULT (false)
 );");
 
-                Execute(@"CREATE VIEW HR.DepartmentDetail
+				Execute(@"CREATE VIEW HR.DepartmentDetail
 AS
 	SELECT	d.DepartmentKey,
 			d.DepartmentName,
@@ -117,7 +118,7 @@ AS
 	LEFT JOIN HR.Division d2 ON d2.DivisionKey = d.DivisionKey;
 ");
 
-                Execute(@"CREATE VIEW HR.EmployeeDetail
+				Execute(@"CREATE VIEW HR.EmployeeDetail
 AS
 SELECT e.EmployeeKey,
        e.FirstName,
@@ -135,7 +136,7 @@ FROM HR.Employee e
         ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey;
 ");
 
-                Execute(@"CREATE TABLE Production.ProductLine
+				Execute(@"CREATE TABLE Production.ProductLine
 (
     ProductLineKey INT NOT NULL GENERATED ALWAYS AS IDENTITY(START 1000)
         CONSTRAINT PK_ProductLine PRIMARY KEY,
@@ -143,7 +144,7 @@ FROM HR.Employee e
         CONSTRAINT UX_ProductLine_ProductLineName
         UNIQUE
 );");
-                Execute(@"CREATE TABLE Production.Product
+				Execute(@"CREATE TABLE Production.Product
 (
     ProductKey INT NOT NULL GENERATED ALWAYS AS IDENTITY(START 1000)
         CONSTRAINT PK_Product PRIMARY KEY,
@@ -158,7 +159,7 @@ FROM HR.Employee e
                                        OR ShippingWeight >= ProductWeight
                                       )
 );");
-                Execute(@"INSERT	INTO HR.EmployeeClassification
+				Execute(@"INSERT	INTO HR.EmployeeClassification
 		(EmployeeClassificationKey, EmployeeClassificationName, IsExempt, IsEmployee)
 		OVERRIDING SYSTEM VALUE
 VALUES	(1, 'Full Time Salary', true, true),
@@ -169,7 +170,7 @@ VALUES	(1, 'Full Time Salary', true, true),
 		(6, 'Unpaid Intern', true, true),
 		(7, 'Consultant', true, false);");
 
-                Execute(@"INSERT INTO hr.Employee
+				Execute(@"INSERT INTO hr.Employee
 (
     EmployeeKey,
     FirstName,
@@ -186,7 +187,7 @@ VALUES
 (3, 'Tom', NULL, 'Jones', NULL, NULL, NULL, 3),
 (4, 'Chuck', NULL, 'Jones', NULL, NULL, NULL, 4);");
 
-                Execute(@"INSERT INTO HR.Division
+				Execute(@"INSERT INTO HR.Division
 (
     DivisionKey,
     DivisionName,
@@ -207,13 +208,13 @@ VALUES
 (5, 'Engineering', 23000, 4, 25000, 32000, 8, '11:00', 1, 1);
 ");
 
-                /************************/
-                void Execute(string sql)
-                {
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
-                        cmd.ExecuteNonQuery();
-                }
-            }
-        }
-    }
+				/************************/
+				void Execute(string sql)
+				{
+					using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
+						cmd.ExecuteNonQuery();
+				}
+			}
+		}
+	}
 }
