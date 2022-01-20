@@ -524,8 +524,7 @@ VALUES &quot;);
         {
             using (var context = CreateDbContext())
             {
-                foreach (var employee in batch)
-                    context.Employee.Add(employee);
+                context.Employee.AddRange(batch);
                 context.SaveChanges();
             }
         }
@@ -559,8 +558,7 @@ VALUES &quot;);
 
         using (var context = CreateDbContext())
         {
-            foreach (var employee in employees)
-                context.Employees.Add(employee);
+            context.Employees.AddRange(employees);
             context.SaveChanges();
         }
     }
@@ -571,8 +569,7 @@ VALUES &quot;);
         {
             using (var context = CreateDbContext())
             {
-                foreach (var employee in batch)
-                    context.Employees.Add(employee);
+                context.Employees.AddRange(batch);
                 context.SaveChanges();
             }
         }
