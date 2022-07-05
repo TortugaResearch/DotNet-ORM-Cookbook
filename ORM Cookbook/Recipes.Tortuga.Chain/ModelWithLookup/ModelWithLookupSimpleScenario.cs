@@ -8,7 +8,6 @@ namespace Recipes.Chain.ModelWithLookup
 {
     public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario<EmployeeSimple>
     {
-        const string TableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public ModelWithLookupSimpleScenario(SqlServerDataSource dataSource)
@@ -34,7 +33,7 @@ namespace Recipes.Chain.ModelWithLookup
 
         public void DeleteByKey(int employeeKey)
         {
-            m_DataSource.DeleteByKey(TableName, employeeKey).Execute();
+            m_DataSource.DeleteByKey<EmployeeSimple>(employeeKey).Execute();
         }
 
         public IList<EmployeeSimple> FindByLastName(string lastName)

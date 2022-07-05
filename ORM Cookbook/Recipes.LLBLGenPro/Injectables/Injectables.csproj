@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.8.3" />
+		<PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.8.3" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\DatabaseGeneric\LLBLGenPro.OrmCookbook.csproj" />

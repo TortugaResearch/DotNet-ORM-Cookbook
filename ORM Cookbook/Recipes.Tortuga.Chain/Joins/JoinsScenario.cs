@@ -8,7 +8,6 @@ namespace Recipes.Chain.Joins
 {
     public class JoinsScenario : IJoinsScenario<EmployeeDetail, EmployeeSimple>
     {
-        const string ClassificationTableName = "HR.EmployeeClassification";
         readonly SqlServerDataSource m_DataSource;
 
         public JoinsScenario(SqlServerDataSource dataSource)
@@ -59,7 +58,7 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey";
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
-            return m_DataSource.From(ClassificationTableName, new { employeeClassificationKey })
+            return m_DataSource.From<EmployeeClassification>(new { employeeClassificationKey })
                 .ToObject<EmployeeClassification>().Execute();
         }
     }

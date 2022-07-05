@@ -2,7 +2,7 @@
 using Recipes.Chain.Models;
 using Recipes.MultipleDB;
 using System;
-using Tortuga.Chain;
+using Tortuga.Chain.DataSources;
 
 namespace Recipes.Chain.MultipleDB
 {
@@ -11,7 +11,7 @@ namespace Recipes.Chain.MultipleDB
     {
         protected override IMultipleDBScenario<EmployeeClassification> GetScenario(DatabaseType databaseType)
         {
-            IClass1DataSource dataSource = databaseType switch
+            ICrudDataSource dataSource = databaseType switch
             {
                 DatabaseType.SqlServer => Setup.PrimaryDataSource,
                 DatabaseType.PostgreSql => Setup.PostgreSqlDataSource,

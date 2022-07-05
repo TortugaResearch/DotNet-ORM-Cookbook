@@ -33,7 +33,7 @@ namespace Recipes.Chain.PartialUpdate
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-            m_DataSource.Update(TableName, updateMessage).Execute();
+            m_DataSource.Update(updateMessage).Execute();
         }
 
         public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
@@ -41,7 +41,7 @@ namespace Recipes.Chain.PartialUpdate
             if (updateMessage == null)
                 throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-            m_DataSource.Update(TableName, updateMessage).Execute();
+            m_DataSource.Update(updateMessage).Execute();
         }
 
         public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)

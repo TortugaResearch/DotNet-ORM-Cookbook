@@ -2,16 +2,16 @@
 using Recipes.MultipleDB;
 using System;
 using System.Collections.Generic;
-using Tortuga.Chain;
+using Tortuga.Chain.DataSources;
 
 namespace Recipes.Chain.MultipleDB
 {
     public class MultipleDBScenario : IMultipleDBScenario<EmployeeClassification>
     {
         const string TableName = "HR.EmployeeClassification";
-        readonly IClass1DataSource m_DataSource;
+        readonly ICrudDataSource m_DataSource;
 
-        public MultipleDBScenario(IClass1DataSource dataSource)
+        public MultipleDBScenario(ICrudDataSource dataSource)
         {
             m_DataSource = dataSource;
         }

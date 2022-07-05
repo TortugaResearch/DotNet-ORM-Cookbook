@@ -15,12 +15,12 @@ namespace Recipes.Chain.LargeBatch
             m_DataSource = dataSource;
         }
 
+        public int MaximumBatchSize => 2100 / 7;
+
         public int CountByLastName(string lastName)
         {
             return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
         }
-
-        public int MaximumBatchSize => 2100 / 7;
 
         public void InsertLargeBatch(IList<EmployeeSimple> employees)
         {
@@ -40,7 +40,7 @@ namespace Recipes.Chain.LargeBatch
             {
                 //This is essentially what InsertMultipleBatch does
                 foreach (var batch in employees.BatchAsLists(batchSize))
-                    trans.InsertBatch((IReadOnlyList<EmployeeSimple>)batch).Execute();
+                    trans.InsertBatch(batch).Execute();
 
                 trans.Commit();
             }

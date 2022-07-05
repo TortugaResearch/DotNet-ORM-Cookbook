@@ -8,7 +8,6 @@ namespace Recipes.Chain.BulkInsert
 {
     public class BulkInsertScenario : IBulkInsertScenario<EmployeeSimple>
     {
-        const string EmployeeTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public BulkInsertScenario(SqlServerDataSource dataSource)
@@ -23,7 +22,7 @@ namespace Recipes.Chain.BulkInsert
 
         public void BulkInsert(DataTable employees)
         {
-            m_DataSource.InsertBulk(EmployeeTableName, employees).Execute();
+            m_DataSource.InsertBulk<EmployeeSimple>(employees).Execute();
         }
 
         public int CountByLastName(string lastName)

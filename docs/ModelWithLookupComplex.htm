@@ -445,7 +445,8 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.</p>
 <p>Read operations must occur against a database view in order to get the properties from the child object. The <code>Decompose</code> attribute indicates that the child should be populated from the same view.</p>
-<pre><code class="cs">[TableAndView(&quot;HR.Employee&quot;, ViewName = &quot;HR.EmployeeDetail&quot;)]
+<pre><code class="cs">[Table(&quot;HR.Employee&quot;)]
+[View(&quot;HR.EmployeeDetail&quot;)]
 public partial class EmployeeComplex
 {
     public string? CellPhone { get; set; }

@@ -1,8 +1,10 @@
-﻿using Tortuga.Anchor.Modeling;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Tortuga.Anchor.Modeling;
 
 namespace Recipes.Chain.Models
 {
-    [TableAndView("HR.Employee", ViewName = "HR.EmployeeDetail")]
+    [Table("HR.Employee")]
+    [View("HR.EmployeeDetail")]
     public partial class EmployeeComplex
     {
         public string? CellPhone { get; set; }

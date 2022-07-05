@@ -40,7 +40,7 @@ namespace Recipes.Chain.ModelWithChildren
 
             using (var trans = m_DataSource.BeginTransaction())
             {
-                trans.DeleteWithFilter<Product>(new { productLine.ProductLineKey }).Execute();
+                trans.DeleteSet<Product>(new { productLine.ProductLineKey }).Execute();
                 trans.Delete(productLine).Execute();
                 trans.Commit();
             }
@@ -50,7 +50,7 @@ namespace Recipes.Chain.ModelWithChildren
         {
             using (var trans = m_DataSource.BeginTransaction())
             {
-                trans.DeleteWithFilter<Product>(new { productLineKey }).Execute();
+                trans.DeleteSet<Product>(new { productLineKey }).Execute();
                 trans.DeleteByKey<ProductLine>(productLineKey).Execute();
                 trans.Commit();
             }
@@ -61,8 +61,8 @@ namespace Recipes.Chain.ModelWithChildren
             var results = m_DataSource.From<ProductLine>(new { productLineName }).ToCollection().Execute();
             if (results.Count > 0 && includeProducts)
             {
-                var children = m_DataSource.GetByKeyList(ProductTable, "ProductLineKey",
-                    results.Select(pl => pl.ProductLineKey)).ToCollection<Product>().Execute();
+                var children = m_DataSource.GetByColumnList<Product>("ProductLineKey",
+                    results.Select(pl => pl.ProductLineKey)).ToCollection().Execute();
                 foreach (var line in results)
                     line.Products.AddRange(children.Where(x => x.ProductLineKey == line.ProductLineKey));
             }
@@ -148,7 +148,7 @@ namespace Recipes.Chain.ModelWithChildren
 
                 //Remove the old records
                 foreach (var key in oldKeys)
-                    trans.DeleteByKey(ProductTable, key).Execute();
+                    trans.DeleteByKey<Product>(key).Execute();
 
                 //Ensure new child rows have their parent's key
                 productLine.ApplyKeys();

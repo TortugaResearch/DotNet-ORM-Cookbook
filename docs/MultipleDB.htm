@@ -235,9 +235,9 @@
 <pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
 {
     const string TableName = &quot;HR.EmployeeClassification&quot;;
-    readonly IClass1DataSource m_DataSource;
+    readonly ICrudDataSource m_DataSource;
 
-    public MultipleDBScenario(IClass1DataSource dataSource)
+    public MultipleDBScenario(ICrudDataSource dataSource)
     {
         m_DataSource = dataSource;
     }

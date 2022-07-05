@@ -15,4 +15,8 @@
 
 GO
 
-CREATE INDEX IX_Employee_LastName ON HR.Employee (LastName);
+CREATE INDEX IX_Employee_LastName ON HR.Employee (LastName) INCLUDE ([EmployeeClassificationKey]);
+GO
+CREATE INDEX IX_Employee_EmployeeClassificationKey ON HR.Employee (EmployeeClassificationKey)
+    INCLUDE ([FirstName],[MiddleName],[LastName],[Title],[OfficePhone],[CellPhone]);
+
