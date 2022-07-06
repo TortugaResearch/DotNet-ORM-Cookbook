@@ -55,7 +55,8 @@ It appears that a method has been replaced by an extension method.
 
 ### LLBLGen Pro
 
-No changes other than dependencies.
+* Update `SD.LLBLGen.Pro.*` to version 5.9.1.
+* Reran code generator.
 
 ### NHibernate
 
