@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--LLBLGen Pro v5.6 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
-<Project Version="5.6" TargetFrameworkName="LLBLGen Pro Runtime Framework" UseLegacyDefaults="false">
+<!--LLBLGen Pro v5.9 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
+<Project Version="5.9" TargetFrameworkName="LLBLGen Pro Runtime Framework" UseLegacyDefaults="false">
   <Properties>
     <Abbreviations />
     <Property Name="AdditionalTaskPerformerFolder" Value="" />
@@ -18,9 +18,13 @@
     <Property Name="AutoAssignTypeConverterToFieldMapping" Value="true" />
     <Property Name="AutomaticallyGenerateSourceCodeOnProjectSave" Value="true" />
     <Property Name="ConnectionStringKeyNamePattern" Value="ConnectionString.{$ProviderName}" />
+    <Property Name="DefaultDDLSQLScriptDestinationFolder" Value=".\DDLSQLScripts" />
     <Property Name="DefaultDeleteRuleAction" Value="1" />
+    <Property Name="DefaultSourceCodeDestinationFolder" Value=".\Code" />
     <Property Name="DefaultUpdateRuleAction" Value="0" />
     <Property Name="DeleteObsoleteFiles" Value="true" />
+    <Property Name="ElementNamePrefixPattern" Value="{$SchemaName}" />
+    <Property Name="ElementNamePrefixPatternIsAppliedWhen" Value="1" />
     <Property Name="EncodingToUse" Value="0" />
     <Property Name="EntityActionCombinationDefaultForTable" Value="0" />
     <Property Name="EntityActionCombinationDefaultForView" Value="4" />

@@ -204,7 +204,7 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
-    m_DataSource.Update(TableName, updateMessage).Execute();
+    m_DataSource.Update(updateMessage).Execute();
 }
 
 public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
@@ -212,7 +212,7 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
-    m_DataSource.Update(TableName, updateMessage).Execute();
+    m_DataSource.Update(updateMessage).Execute();
 }
 </code></pre>
 

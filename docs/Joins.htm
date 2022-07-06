@@ -280,7 +280,6 @@ VALUES
 <p>Chain doesn't natively support joins, so raw SQL (or a view) has to be used as a fallback. </p>
 <pre><code class="cs">    public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
     {
-        const string ClassificationTableName = &quot;HR.EmployeeClassification&quot;;
         readonly SqlServerDataSource m_DataSource;
 
         public JoinsScenario(SqlServerDataSource dataSource)
@@ -331,7 +330,7 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
 
         public IEmployeeClassification? GetClassification(int employeeClassificationKey)
         {
-            return m_DataSource.From(ClassificationTableName, new { employeeClassificationKey })
+            return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationKey })
                 .ToObject&lt;EmployeeClassification&gt;().Execute();
         }
     }

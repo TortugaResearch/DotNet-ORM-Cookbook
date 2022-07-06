@@ -253,3 +253,5 @@ paket-files/
 /ORM Cookbook/OrmCookbook/OrmCookbook.jfm
 *.jfm
 /ORM Cookbook/.cr/personal
+
+appsettingsLocal.json

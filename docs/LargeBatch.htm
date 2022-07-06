@@ -276,12 +276,12 @@ VALUES &quot;);
         m_DataSource = dataSource;
     }
 
+    public int MaximumBatchSize =&gt; 2100 / 7;
+
     public int CountByLastName(string lastName)
     {
         return (int)m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName }).AsCount().Execute();
     }
-
-    public int MaximumBatchSize =&gt; 2100 / 7;
 
     public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
     {
@@ -301,7 +301,7 @@ VALUES &quot;);
         {
             //This is essentially what InsertMultipleBatch does
             foreach (var batch in employees.BatchAsLists(batchSize))
-                trans.InsertBatch((IReadOnlyList&lt;EmployeeSimple&gt;)batch).Execute();
+                trans.InsertBatch(batch).Execute();
 
             trans.Commit();
         }
