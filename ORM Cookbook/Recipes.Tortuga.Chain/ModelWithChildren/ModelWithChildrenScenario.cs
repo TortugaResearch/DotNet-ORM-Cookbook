@@ -10,7 +10,6 @@ namespace Recipes.Chain.ModelWithChildren
     public class ModelWithChildrenScenario : IModelWithChildrenScenario<ProductLine, Product>
     {
         readonly SqlServerDataSource m_DataSource;
-        readonly string ProductTable = "Production.Product";
 
         public ModelWithChildrenScenario(SqlServerDataSource dataSource)
         {
@@ -179,7 +178,7 @@ namespace Recipes.Chain.ModelWithChildren
                     trans.Upsert(row).Execute();
 
                 if (productKeysToRemove?.Count > 0)
-                    trans.DeleteByKeyList(ProductTable, productKeysToRemove).Execute();
+                    trans.DeleteByKeyList<Product>(productKeysToRemove).Execute();
 
                 trans.Commit();
             }

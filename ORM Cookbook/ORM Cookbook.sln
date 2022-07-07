@@ -8,7 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6452D06A-3E2A-4918-97C9-9669F4E9E9BF}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Changelog.md = Changelog.md
+		..\Changelog.md = ..\Changelog.md
 		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
 		..\README.md = ..\README.md
 	EndProjectSection

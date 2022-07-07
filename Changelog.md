@@ -77,7 +77,7 @@ The `SortByNonExistentColum` test is failing. See bug report https://github.com/
 
 ### Tortuga Chain
 
-* Update `Tortuga.Chain.*` to version 4.1.0
+* Update `Tortuga.Chain.*` to version 4.2.0
 * Replace obsolete `TableAndView` attribute with separate `Table` and `View` attributes.
 * The `IClass1DataSource` interface no longer exists. Use feature interfaces such as `ICrudDataSource` instead. 
 * The `DeleteWithFilter` method is now called `DeleteSet`.

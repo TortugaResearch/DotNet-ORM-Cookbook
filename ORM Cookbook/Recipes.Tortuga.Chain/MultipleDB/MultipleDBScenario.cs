@@ -8,7 +8,6 @@ namespace Recipes.Chain.MultipleDB
 {
     public class MultipleDBScenario : IMultipleDBScenario<EmployeeClassification>
     {
-        const string TableName = "HR.EmployeeClassification";
         readonly ICrudDataSource m_DataSource;
 
         public MultipleDBScenario(ICrudDataSource dataSource)
@@ -34,7 +33,7 @@ namespace Recipes.Chain.MultipleDB
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+            m_DataSource.DeleteByKey<EmployeeClassification>(employeeClassificationKey).Execute();
         }
 
         public EmployeeClassification FindByName(string employeeClassificationName)
@@ -50,8 +49,7 @@ namespace Recipes.Chain.MultipleDB
 
         public EmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return m_DataSource.GetByKey(TableName, employeeClassificationKey)
-                .ToObjectOrNull<EmployeeClassification>().Execute();
+            return m_DataSource.GetByKey<EmployeeClassification>(employeeClassificationKey).ToObjectOrNull().Execute();
         }
 
         public void Update(EmployeeClassification classification)

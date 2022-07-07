@@ -9,7 +9,6 @@ namespace Recipes.Chain.MultipleCrud
 {
     public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
     {
-        const string EmployeeTableName = "HR.Employee";
         readonly SqlServerDataSource m_DataSource;
 
         public MultipleCrudScenario(SqlServerDataSource dataSource)
@@ -22,7 +21,7 @@ namespace Recipes.Chain.MultipleCrud
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            m_DataSource.DeleteByKeyList(EmployeeTableName, employees.Select(x => x.EmployeeKey)).Execute();
+            m_DataSource.DeleteByKeyList<EmployeeSimple>(employees.Select(x => x.EmployeeKey)).Execute();
         }
 
         public void DeleteBatchByKey(IList<int> employeeKeys)
@@ -30,7 +29,7 @@ namespace Recipes.Chain.MultipleCrud
             if (employeeKeys == null || employeeKeys.Count == 0)
                 throw new ArgumentException($"{nameof(employeeKeys)} is null or empty.", nameof(employeeKeys));
 
-            m_DataSource.DeleteByKeyList(EmployeeTableName, employeeKeys).Execute();
+            m_DataSource.DeleteByKeyList<EmployeeSimple>(employeeKeys).Execute();
         }
 
         public IList<EmployeeSimple> FindByLastName(string lastName)
