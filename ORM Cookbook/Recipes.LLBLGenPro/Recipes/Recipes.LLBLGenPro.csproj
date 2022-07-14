@@ -24,7 +24,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="SD.Tools.OrmProfiler.Interceptor.NetCore" Version="2.0.4" />
-    <PackageReference Include="Tortuga.Anchor" Version="4.0.0" />
+    <PackageReference Include="Tortuga.Anchor" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
   </ItemGroup>
 

@@ -30,9 +30,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Tortuga.Chain.CompiledMaterializers" Version="4.2.0" />
-    <PackageReference Include="Tortuga.Chain.PostgreSql" Version="4.2.0" />
-    <PackageReference Include="Tortuga.Chain.SqlServer" Version="4.2.0" />
+    <PackageReference Include="Tortuga.Chain.CompiledMaterializers" Version="4.3.0" />
+    <PackageReference Include="Tortuga.Chain.PostgreSql" Version="4.3.0" />
+    <PackageReference Include="Tortuga.Chain.SqlServer" Version="4.3.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>

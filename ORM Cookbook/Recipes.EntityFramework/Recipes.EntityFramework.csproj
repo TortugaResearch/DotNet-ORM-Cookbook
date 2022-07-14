@@ -27,7 +27,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="Tortuga.Anchor" Version="4.0.0" />
+    <PackageReference Include="Tortuga.Anchor" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Configuration\appsettings.json" Link="appsettings.json">
