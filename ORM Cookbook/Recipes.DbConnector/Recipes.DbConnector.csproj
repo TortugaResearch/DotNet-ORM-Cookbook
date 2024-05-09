@@ -22,7 +22,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Npgsql" Version="6.0.5" />
+		<PackageReference Include="Npgsql" Version="8.0.3" />
 		<PackageReference Include="SavantBuffer.DbConnector" Version="1.5.0" />
 	</ItemGroup>
 	<ItemGroup>
