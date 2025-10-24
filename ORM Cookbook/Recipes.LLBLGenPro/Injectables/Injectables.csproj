@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+	</PropertyGroup>
     <ItemGroup>
-		<PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.9.1" />
+		<PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.12.1" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\DatabaseGeneric\LLBLGenPro.OrmCookbook.csproj" />

@@ -17,7 +17,7 @@ namespace Recipes.QueryFilter
             var students = repository.GetStudents(schoolId);
 
             // Assert.
-            Assert.AreEqual(2, students.Count);
+            Assert.HasCount(2, students);
 
             Assert.AreEqual(3, students[0].StudentId);
             Assert.AreEqual(4, students[1].StudentId);

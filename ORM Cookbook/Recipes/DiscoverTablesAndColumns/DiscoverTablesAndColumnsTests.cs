@@ -14,9 +14,9 @@ namespace Recipes.DiscoverTablesAndColumns
         {
             var repository = GetScenario();
             var columnList = repository.ListColumnsInTable("Production", "ProductLine");
-            Assert.IsTrue(columnList.Contains("ProductLineKey"));
-            Assert.IsTrue(columnList.Contains("ProductLineName"));
-            Assert.AreEqual(2, columnList.Count);
+            Assert.Contains("ProductLineKey", columnList);
+            Assert.Contains("ProductLineName", columnList);
+            Assert.HasCount(2, columnList);
         }
 
         [TestMethod]
@@ -24,11 +24,11 @@ namespace Recipes.DiscoverTablesAndColumns
         {
             var repository = GetScenario();
             var columnList = repository.ListColumnsInView("HR", "DepartmentDetail");
-            Assert.IsTrue(columnList.Contains("DepartmentKey"));
-            Assert.IsTrue(columnList.Contains("DepartmentName"));
-            Assert.IsTrue(columnList.Contains("DivisionKey"));
-            Assert.IsTrue(columnList.Contains("DivisionName"));
-            Assert.AreEqual(4, columnList.Count);
+            Assert.Contains("DepartmentKey", columnList);
+            Assert.Contains("DepartmentName", columnList);
+            Assert.Contains("DivisionKey", columnList);
+            Assert.Contains("DivisionName", columnList);
+            Assert.HasCount(4, columnList);
         }
 
         [TestMethod]

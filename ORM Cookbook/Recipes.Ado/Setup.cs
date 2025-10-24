@@ -5,6 +5,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 
+[assembly: DoNotParallelize]
+
 namespace Recipes.Ado
 {
     [TestClass]
@@ -24,8 +26,8 @@ namespace Recipes.Ado
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
 
-            SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
-            PostgreSqlConnectionString = configuration.GetSection("ConnectionStrings")["PostgreSqlTestDatabase"];
+            SqlServerConnectionString = configuration.GetSection("ConnectionStrings")!["SqlServerTestDatabase"]!;
+            PostgreSqlConnectionString = configuration.GetSection("ConnectionStrings")!["PostgreSqlTestDatabase"]!;
 
             try
             {

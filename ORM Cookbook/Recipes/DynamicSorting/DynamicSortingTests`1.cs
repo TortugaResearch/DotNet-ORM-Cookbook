@@ -64,7 +64,7 @@ namespace Recipes.DynamicSorting
             var results = repository.SortBy(batchKey, "FirstName", false);
             for (var i = 1; i < results.Count; i++)
             {
-                Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+                Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase));
             }
         }
 
@@ -81,7 +81,7 @@ namespace Recipes.DynamicSorting
             var results = repository.SortBy(batchKey, "FirstName", true);
             for (var i = 1; i < results.Count; i++)
             {
-                Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) >= 0);
+                Assert.IsGreaterThanOrEqualTo(0, string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase));
             }
         }
 
@@ -98,10 +98,10 @@ namespace Recipes.DynamicSorting
             var results = repository.SortBy(batchKey, "MiddleName", true, "FirstName", false);
             for (var i = 1; i < results.Count; i++)
             {
-                Assert.IsTrue(string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase) >= 0);
+                Assert.IsGreaterThanOrEqualTo(0, string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase));
                 if (string.Equals(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+                    Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase));
                 }
             }
         }
@@ -119,10 +119,10 @@ namespace Recipes.DynamicSorting
             var results = repository.SortBy(batchKey, "MiddleName", false, "FirstName", false);
             for (var i = 1; i < results.Count; i++)
             {
-                Assert.IsTrue(string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase) <= 0);
+                Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase));
                 if (string.Equals(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+                    Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase));
                 }
             }
         }

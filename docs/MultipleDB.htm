@@ -234,7 +234,6 @@
 </ul>
 <pre><code class="cs">public class MultipleDBScenario : IMultipleDBScenario&lt;EmployeeClassification&gt;
 {
-    const string TableName = &quot;HR.EmployeeClassification&quot;;
     readonly ICrudDataSource m_DataSource;
 
     public MultipleDBScenario(ICrudDataSource dataSource)
@@ -260,7 +259,7 @@
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        m_DataSource.DeleteByKey(TableName, employeeClassificationKey).Execute();
+        m_DataSource.DeleteByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).Execute();
     }
 
     public EmployeeClassification FindByName(string employeeClassificationName)
@@ -276,8 +275,7 @@
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return m_DataSource.GetByKey(TableName, employeeClassificationKey)
-            .ToObjectOrNull&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.GetByKey&lt;EmployeeClassification&gt;(employeeClassificationKey).ToObjectOrNull().Execute();
     }
 
     public void Update(EmployeeClassification classification)

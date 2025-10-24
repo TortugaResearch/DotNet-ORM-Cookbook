@@ -25,21 +25,21 @@ namespace Recipes.ArbitraryTableRead
             switch (result)
             {
                 case DataTable dt:
-                    Assert.IsTrue(dt.Rows.Count >= MinimumRowCount, "Row count");
-                    Assert.AreEqual(ExpectedColumnCount, dt.Columns.Count, "Column count");
+                    Assert.IsGreaterThanOrEqualTo(MinimumRowCount, dt.Rows.Count, "Row count");
+                    Assert.HasCount(ExpectedColumnCount, dt.Columns, "Column count");
                     break;
 
                 case IList list:
-                    Assert.IsTrue(list.Count >= MinimumRowCount, "Row count");
+                    Assert.IsGreaterThanOrEqualTo(MinimumRowCount, list.Count, "Row count");
 
                     switch (list[0])
                     {
                         case IDictionary<string, object?> row:
-                            Assert.AreEqual(ExpectedColumnCount, row.Count, "Column count");
+                            Assert.HasCount(ExpectedColumnCount, row, "Column count");
                             break;
 
                         case IReadOnlyDictionary<string, object?> row2:
-                            Assert.AreEqual(ExpectedColumnCount, row2.Count, "Column count");
+                            Assert.HasCount(ExpectedColumnCount, row2, "Column count");
                             break;
 
                         default:

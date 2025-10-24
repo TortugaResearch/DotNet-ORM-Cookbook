@@ -27,7 +27,7 @@ namespace Recipes.Sorting
             var results = repository.SortByFirstName(batchKey);
             for (var i = 1; i < results.Count; i++)
             {
-                Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+                Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase));
             }
         }
 
@@ -44,10 +44,10 @@ namespace Recipes.Sorting
             var results = repository.SortByMiddleNameDescFirstName(batchKey);
             for (var i = 1; i < results.Count; i++)
             {
-                Assert.IsTrue(string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase) >= 0);
+                Assert.IsGreaterThanOrEqualTo(0, string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase));
                 if (string.Equals(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+                    Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase));
                 }
             }
         }
@@ -65,10 +65,10 @@ namespace Recipes.Sorting
             var results = repository.SortByMiddleNameFirstName(batchKey);
             for (var i = 1; i < results.Count; i++)
             {
-                Assert.IsTrue(string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase) <= 0);
+                Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase));
                 if (string.Equals(results[i - 1].MiddleName, results[i].MiddleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Assert.IsTrue(string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase) <= 0);
+                    Assert.IsLessThanOrEqualTo(0, string.Compare(results[i - 1].FirstName, results[i].FirstName, StringComparison.OrdinalIgnoreCase));
                 }
             }
         }

@@ -554,7 +554,6 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
 <pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     readonly SqlServerDataSource m_DataSource;
-    readonly string ProductTable = &quot;Production.Product&quot;;
 
     public ModelWithChildrenScenario(SqlServerDataSource dataSource)
     {
@@ -723,7 +722,7 @@ SELECT p.ProductKey, p.ProductName, p.ProductLineKey, p.ShippingWeight, p.Produc
                 trans.Upsert(row).Execute();
 
             if (productKeysToRemove?.Count &gt; 0)
-                trans.DeleteByKeyList(ProductTable, productKeysToRemove).Execute();
+                trans.DeleteByKeyList&lt;Product&gt;(productKeysToRemove).Execute();
 
             trans.Commit();
         }

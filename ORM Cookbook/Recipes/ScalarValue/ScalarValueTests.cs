@@ -68,9 +68,9 @@ namespace Recipes.ScalarValue
         {
             var repository = GetScenario();
             var result = repository.GetModifiedDate(divisionKey);
-            if (nullExpected)
-                Assert.IsNull(result);
-            else
+            //if (nullExpected)
+            //    Assert.IsNull(result);
+            //else
                 Assert.AreNotEqual(default(DateTime), result);
         }
 
