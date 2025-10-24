@@ -24,7 +24,7 @@ namespace Recipes.Dapper.ModelWithChildren
             using (var con = OpenConnection())
             using (var trans = con.BeginTransaction())
             {
-                productLine.ProductLineKey = (int)con.ExecuteScalar(sql, productLine, transaction: trans);
+                productLine.ProductLineKey = (int)con.ExecuteScalar(sql, productLine, transaction: trans)!;
                 productLine.ApplyKeys();
 
                 foreach (var item in productLine.Products)

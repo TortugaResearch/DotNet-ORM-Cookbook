@@ -27,7 +27,7 @@ VALUES
 (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);";
 
             using (var con = OpenConnection())
-                return (int)con.ExecuteScalar(sql, employee);
+                return (int)con.ExecuteScalar(sql, employee)!;
         }
 
         public void Delete(EmployeeComplex employee)

@@ -17,7 +17,7 @@ namespace Recipes.Dapper.ScalarValue
                 return con.ExecuteScalar<int?>(sql, new { divisionName });
         }
 
-        public string GetDivisionName(int divisionKey)
+        public string? GetDivisionName(int divisionKey)
         {
             var sql = "SELECT DivisionName FROM HR.Division WHERE DivisionKey = @DivisionKey;";
             using (var con = OpenConnection())
