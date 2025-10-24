@@ -571,7 +571,7 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
     {
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            return (int) db.Count&lt;Employee&gt;(e =&gt; e.LastName == lastName);
+            return (int)db.Count&lt;Employee&gt;(e =&gt; e.LastName == lastName);
         }
     }
 
@@ -579,7 +579,7 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
     {
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            return (int) db.Count&lt;Employee&gt;();
+            return (int)db.Count&lt;Employee&gt;();
         }
     }
 

@@ -685,12 +685,12 @@ END;
     {
         if (employeeClassification == null)
             throw new ArgumentNullException(nameof(employeeClassification), $&quot;{nameof(employeeClassification)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             using (var cmd = db.SqlProc(&quot;HR.CreateEmployeeClassification&quot;, new { employeeClassification.EmployeeClassificationName, employeeClassification.IsEmployee, employeeClassification.IsExempt }))
             {
-                return (int) cmd.Scalar();
+                return (int)cmd.Scalar();
             }
         }
     }

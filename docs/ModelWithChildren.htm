@@ -1937,7 +1937,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     private void ExecuteDelete(int productLineKey)
     {
         var sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
-            DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey;&quot;;
+                DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey;&quot;;
 
         using (var con = CreateConnection(true))
         {
@@ -2063,6 +2063,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
 <pre><code class="cs">public class ModelWithChildrenScenario : IModelWithChildrenScenario&lt;ProductLine, Product&gt;
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
+
     public ModelWithChildrenScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
@@ -2083,7 +2084,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             db.Delete&lt;Product&gt;(r =&gt; r.ProductLineId == productLine.Id);
@@ -2104,7 +2105,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     {
         if (string.IsNullOrWhiteSpace(productLineName))
             throw new ArgumentNullException(nameof(productLineName), $&quot;{nameof(productLineName)} is null or empty.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             return includeProducts
@@ -2138,7 +2139,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.Update(productLine);
     }
@@ -2147,7 +2148,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.Save(productLine, true);
     }
@@ -2156,7 +2157,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             db.Save(productLine, true);
@@ -2172,7 +2173,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             db.Save(productLine, true);
@@ -2186,7 +2187,7 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
     {
         if (product == null)
             throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.Update(product);
     }

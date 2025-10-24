@@ -330,8 +330,7 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationKey })
-            .ToObject&lt;EmployeeClassification&gt;().Execute();
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationKey }).ToObject().Execute();
     }
 }
 </code></pre>

@@ -56,7 +56,6 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey";
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return m_DataSource.From<EmployeeClassification>(new { employeeClassificationKey })
-            .ToObject<EmployeeClassification>().Execute();
+        return m_DataSource.From<EmployeeClassification>(new { employeeClassificationKey }).ToObject().Execute();
     }
 }

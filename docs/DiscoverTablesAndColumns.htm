@@ -344,10 +344,10 @@
         using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
         const string sql =
             @&quot;SELECT c.name AS ColumnName
-            FROM sys.columns c
-            INNER JOIN sys.tables t ON c.object_id = t.object_id
-            INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
-            WHERE s.name = @SchemaName AND t.name = @TableName&quot;;
+                FROM sys.columns c
+                INNER JOIN sys.tables t ON c.object_id = t.object_id
+                INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
+                WHERE s.name = @SchemaName AND t.name = @TableName&quot;;
         commnd.CommandText = sql;
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;SchemaName&quot;, DbType = DbType.String, Value = schemaName });
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;TableName&quot;, DbType = DbType.String, Value = tableName });
@@ -369,10 +369,10 @@
         using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
         const string sql =
             @&quot;SELECT c.name AS ColumnName
-            FROM sys.columns c
-            INNER JOIN sys.views v ON c.object_id = v.object_id
-            INNER JOIN sys.schemas s ON v.schema_id = s.schema_id
-            WHERE s.name = @SchemaName AND v.name = @ViewName&quot;;
+                FROM sys.columns c
+                INNER JOIN sys.views v ON c.object_id = v.object_id
+                INNER JOIN sys.schemas s ON v.schema_id = s.schema_id
+                WHERE s.name = @SchemaName AND v.name = @ViewName&quot;;
         commnd.CommandText = sql;
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;SchemaName&quot;, DbType = DbType.String, Value = schemaName });
         commnd.Parameters.Add(new SqlParameter { ParameterName = &quot;ViewName&quot;, DbType = DbType.String, Value = viewName });
@@ -394,8 +394,8 @@
         using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
         const string sql =
             @&quot;SELECT s.name + '.' + t.name AS TableName
-            FROM sys.tables t 
-            INNER JOIN sys.schemas s ON t.schema_id = s.schema_id&quot;;
+                FROM sys.tables t
+                INNER JOIN sys.schemas s ON t.schema_id = s.schema_id&quot;;
         commnd.CommandText = sql;
         commnd.Connection!.Open();
         DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -414,9 +414,9 @@
         using OrmCookbookContext context = CreateDbContext();
         using DbCommand commnd = context.Database.GetDbConnection().CreateCommand();
         const string sql =
-            @&quot;SELECT s.name + '.' + v.name AS ViewName 
-            FROM sys.views v 
-            INNER JOIN sys.schemas s ON v.schema_id = s.schema_id&quot;;
+            @&quot;SELECT s.name + '.' + v.name AS ViewName
+                FROM sys.views v
+                INNER JOIN sys.schemas s ON v.schema_id = s.schema_id&quot;;
         commnd.CommandText = sql;
         commnd.Connection!.Open();
         DbDataReader reader = commnd.ExecuteReader(CommandBehavior.CloseConnection);

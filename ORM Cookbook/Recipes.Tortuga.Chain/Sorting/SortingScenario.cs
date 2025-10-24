@@ -28,12 +28,12 @@ public class SortingScenario : ISortingScenario<EmployeeSimple>
     {
         return m_DataSource.From<EmployeeSimple>(new { lastName })
             .WithSorting(new SortExpression("MiddleName", SortDirection.Descending), "FirstName")
-            .ToCollection<EmployeeSimple>().Execute();
+            .ToCollection().Execute();
     }
 
     public IList<EmployeeSimple> SortByMiddleNameFirstName(string lastName)
     {
         return m_DataSource.From<EmployeeSimple>(new { lastName })
-            .WithSorting("MiddleName", "FirstName").ToCollection<EmployeeSimple>().Execute();
+            .WithSorting("MiddleName", "FirstName").ToCollection().Execute();
     }
 }

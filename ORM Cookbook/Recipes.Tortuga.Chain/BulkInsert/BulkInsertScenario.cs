@@ -26,6 +26,6 @@ public class BulkInsertScenario : IBulkInsertScenario<EmployeeSimple>
 
     public int CountByLastName(string lastName)
     {
-        return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
+        return m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
     }
 }

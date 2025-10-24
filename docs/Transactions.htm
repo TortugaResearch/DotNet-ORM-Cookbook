@@ -787,9 +787,9 @@
 
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            using(var tx = db.OpenTransaction())
+            using (var tx = db.OpenTransaction())
             {
-                var result = (int) db.Insert(classification, true);
+                var result = (int)db.Insert(classification, true);
 
                 if (shouldRollBack)
                     tx.Rollback();
@@ -808,9 +808,9 @@
 
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            using(var tx = db.OpenTransaction(isolationLevel))
+            using (var tx = db.OpenTransaction(isolationLevel))
             {
-                var result = (int) db.Insert(classification, true);
+                var result = (int)db.Insert(classification, true);
 
                 if (shouldRollBack)
                     tx.Rollback();

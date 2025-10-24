@@ -127,129 +127,118 @@ Multi-Tenancy scenarios.</p>
 Copyright Phil Haack
 Licensed under the MIT license - https://github.com/haacked/CodeHaacks/blob/main/LICENSE.
 */
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Query;
-using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers
+namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers;
+
+public static class ModelBuilderExtensions
 {
+    static readonly MethodInfo SetQueryFilterMethod = typeof(ModelBuilderExtensions)
+            .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(t =&gt; t.IsGenericMethod &amp;&amp; t.Name == nameof(SetQueryFilter));
 
-
-    public static class ModelBuilderExtensions
+    public static void SetQueryFilterOnAllEntities&lt;TEntityInterface&gt;(
+        this ModelBuilder builder,
+        Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
     {
-        static readonly MethodInfo SetQueryFilterMethod = typeof(ModelBuilderExtensions)
-                .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-                .Single(t =&gt; t.IsGenericMethod &amp;&amp; t.Name == nameof(SetQueryFilter));
-
-        public static void SetQueryFilterOnAllEntities&lt;TEntityInterface&gt;(
-            this ModelBuilder builder,
-            Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
+        foreach (var type in builder.Model.GetEntityTypes()
+            .Where(t =&gt; t.BaseType == null)
+            .Select(t =&gt; t.ClrType)
+            .Where(t =&gt; typeof(TEntityInterface).IsAssignableFrom(t)))
         {
-            foreach (var type in builder.Model.GetEntityTypes()
-                .Where(t =&gt; t.BaseType == null)
-                .Select(t =&gt; t.ClrType)
-                .Where(t =&gt; typeof(TEntityInterface).IsAssignableFrom(t)))
-            {
-                builder.SetEntityQueryFilter(
-                    type,
-                    filterExpression);
-            }
-        }
-
-        static void SetEntityQueryFilter&lt;TEntityInterface&gt;(
-            this ModelBuilder builder,
-            Type entityType,
-            Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
-        {
-            SetQueryFilterMethod
-                .MakeGenericMethod(entityType, typeof(TEntityInterface))
-               .Invoke(null, new object[] { builder, filterExpression });
-        }
-
-        static void SetQueryFilter&lt;TEntity, TEntityInterface&gt;(
-            this ModelBuilder builder,
-            Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
-                where TEntityInterface : class
-                where TEntity : class, TEntityInterface
-        {
-            var concreteExpression = filterExpression
-                .Convert&lt;TEntityInterface, TEntity&gt;();
-            builder.Entity&lt;TEntity&gt;()
-                .AppendQueryFilter(concreteExpression);
-        }
-
-        // CREDIT: This comment by magiak on GitHub https://github.com/dotnet/efcore/issues/10275#issuecomment-785916356
-        static void AppendQueryFilter&lt;T&gt;(this EntityTypeBuilder entityTypeBuilder, Expression&lt;Func&lt;T, bool&gt;&gt; expression)
-            where T : class
-        {
-            var parameterType = Expression.Parameter(entityTypeBuilder.Metadata.ClrType);
-
-            var expressionFilter = ReplacingExpressionVisitor.Replace(
-                expression.Parameters.Single(), parameterType, expression.Body);
-
-            var currentQueryFilter = entityTypeBuilder.Metadata.GetQueryFilter();
-            if (currentQueryFilter != null)
-            {
-                var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
-                    currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
-                expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
-            }
-
-            var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
-            entityTypeBuilder.HasQueryFilter(lambdaExpression);
+            builder.SetEntityQueryFilter(
+                type,
+                filterExpression);
         }
     }
 
+    static void SetEntityQueryFilter&lt;TEntityInterface&gt;(
+        this ModelBuilder builder,
+        Type entityType,
+        Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
+    {
+        SetQueryFilterMethod
+            .MakeGenericMethod(entityType, typeof(TEntityInterface))
+           .Invoke(null, new object[] { builder, filterExpression });
+    }
 
+    static void SetQueryFilter&lt;TEntity, TEntityInterface&gt;(
+        this ModelBuilder builder,
+        Expression&lt;Func&lt;TEntityInterface, bool&gt;&gt; filterExpression)
+            where TEntityInterface : class
+            where TEntity : class, TEntityInterface
+    {
+        var concreteExpression = filterExpression
+            .Convert&lt;TEntityInterface, TEntity&gt;();
+        builder.Entity&lt;TEntity&gt;()
+            .AppendQueryFilter(concreteExpression);
+    }
+
+    // CREDIT: This comment by magiak on GitHub https://github.com/dotnet/efcore/issues/10275#issuecomment-785916356
+    static void AppendQueryFilter&lt;T&gt;(this EntityTypeBuilder entityTypeBuilder, Expression&lt;Func&lt;T, bool&gt;&gt; expression)
+        where T : class
+    {
+        var parameterType = Expression.Parameter(entityTypeBuilder.Metadata.ClrType);
+
+        var expressionFilter = ReplacingExpressionVisitor.Replace(
+            expression.Parameters.Single(), parameterType, expression.Body);
+
+        var currentQueryFilter = entityTypeBuilder.Metadata.GetQueryFilter();
+        if (currentQueryFilter != null)
+        {
+            var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
+                currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
+            expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
+        }
+
+        var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
+        entityTypeBuilder.HasQueryFilter(lambdaExpression);
+    }
 }
-
 </code></pre>
 
 <pre><code class="cs">// Copyright (c) 2020 Phil Haack, GitHub: haacked
 // https://gist.github.com/haacked/febe9e88354fb2f4a4eb11ba88d64c24
 
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
 
-namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers
+namespace Recipes.EntityFrameworkCore.QueryFilter.Helpers;
+
+public static class ExpressionExtensions
 {
-    public static class ExpressionExtensions
+    // This magic is courtesy of this StackOverflow post.
+    // https://stackoverflow.com/questions/38316519/replace-parameter-type-in-lambda-expression
+    // I made some tweaks to adapt it to our needs - @haacked
+    public static Expression&lt;Func&lt;TTarget, bool&gt;&gt; Convert&lt;TSource, TTarget&gt;(
+        this Expression&lt;Func&lt;TSource, bool&gt;&gt; root)
     {
-        // This magic is courtesy of this StackOverflow post.
-        // https://stackoverflow.com/questions/38316519/replace-parameter-type-in-lambda-expression
-        // I made some tweaks to adapt it to our needs - @haacked
-        public static Expression&lt;Func&lt;TTarget, bool&gt;&gt; Convert&lt;TSource, TTarget&gt;(
-            this Expression&lt;Func&lt;TSource, bool&gt;&gt; root)
+        var visitor = new ParameterTypeVisitor&lt;TSource, TTarget&gt;();
+        return (Expression&lt;Func&lt;TTarget, bool&gt;&gt;)visitor.Visit(root);
+    }
+
+    class ParameterTypeVisitor&lt;TSource, TTarget&gt; : ExpressionVisitor
+    {
+        private ReadOnlyCollection&lt;ParameterExpression&gt;? _parameters;
+
+        protected override Expression VisitParameter(ParameterExpression node)
         {
-            var visitor = new ParameterTypeVisitor&lt;TSource, TTarget&gt;();
-            return (Expression&lt;Func&lt;TTarget, bool&gt;&gt;)visitor.Visit(root);
+            return _parameters?.FirstOrDefault(p =&gt; p.Name == node.Name)
+                   ?? (node.Type == typeof(TSource) ? Expression.Parameter(typeof(TTarget), node.Name) : node);
         }
 
-        class ParameterTypeVisitor&lt;TSource, TTarget&gt; : ExpressionVisitor
+        protected override Expression VisitLambda&lt;T&gt;(Expression&lt;T&gt; node)
         {
-            private ReadOnlyCollection&lt;ParameterExpression&gt;? _parameters;
-
-            protected override Expression VisitParameter(ParameterExpression node)
-            {
-                return _parameters?.FirstOrDefault(p =&gt; p.Name == node.Name)
-                       ?? (node.Type == typeof(TSource) ? Expression.Parameter(typeof(TTarget), node.Name) : node);
-            }
-
-            protected override Expression VisitLambda&lt;T&gt;(Expression&lt;T&gt; node)
-            {
-                _parameters = VisitAndConvert(node.Parameters, &quot;VisitLambda&quot;);
-                return Expression.Lambda(Visit(node.Body), _parameters);
-            }
+            _parameters = VisitAndConvert(node.Parameters, &quot;VisitLambda&quot;);
+            return Expression.Lambda(Visit(node.Body), _parameters);
         }
     }
 }
-
 </code></pre>
 
 <p>This example shows it being used.</p>

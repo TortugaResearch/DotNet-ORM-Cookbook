@@ -17,7 +17,7 @@ public class LargeBatchScenario : ILargeBatchScenario<EmployeeSimple>
 
     public int CountByLastName(string lastName)
     {
-        return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
+        return m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
     }
 
     public void InsertLargeBatch(IList<EmployeeSimple> employees)

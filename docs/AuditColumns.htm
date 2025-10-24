@@ -270,7 +270,7 @@ WHERE DepartmentKey = @DepartmentKey;&quot;;
 
     public Department GetDepartment(int departmentKey, User user)
     {
-        return m_DataSource.WithUser(user).GetByKey&lt;Department&gt;(departmentKey).ToObject&lt;Department&gt;().Execute();
+        return m_DataSource.WithUser(user).GetByKey&lt;Department&gt;(departmentKey).ToObject().Execute();
     }
 
     public void UpdateDepartment(Department department, User user)

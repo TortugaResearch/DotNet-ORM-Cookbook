@@ -1652,6 +1652,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 <pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;Employee&gt;
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
+
     public MultipleCrudScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
@@ -1670,7 +1671,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
     {
         if (employeeKeys == null || employeeKeys.Count == 0)
             throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.DeleteByIds&lt;Employee&gt;(employeeKeys);
     }
@@ -1691,7 +1692,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
     {
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.SaveAll(employees);
 
@@ -1702,7 +1703,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
     {
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.SaveAll(employees);
 
@@ -1713,7 +1714,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
     {
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.SaveAll(employees);
     }
@@ -1722,7 +1723,7 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
     {
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.UpdateAll(employees);
     }

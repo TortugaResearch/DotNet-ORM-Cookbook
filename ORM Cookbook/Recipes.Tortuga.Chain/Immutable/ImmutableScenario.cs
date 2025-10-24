@@ -44,7 +44,7 @@ public class ImmutableScenario : IImmutableScenario<ReadOnlyEmployeeClassificati
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
         return m_DataSource.GetByKey<ReadOnlyEmployeeClassification>(employeeClassificationKey)
-            .ToObjectOrNull<ReadOnlyEmployeeClassification>(RowOptions.InferConstructor).Execute();
+            .ToObjectOrNull(RowOptions.InferConstructor).Execute();
     }
 
     public void Update(ReadOnlyEmployeeClassification classification)

@@ -31,7 +31,7 @@ public class AuditColumnsScenario :
 
     public Department GetDepartment(int departmentKey, User user)
     {
-        return m_DataSource.WithUser(user).GetByKey<Department>(departmentKey).ToObject<Department>().Execute();
+        return m_DataSource.WithUser(user).GetByKey<Department>(departmentKey).ToObject().Execute();
     }
 
     public void UpdateDepartment(Department department, User user)

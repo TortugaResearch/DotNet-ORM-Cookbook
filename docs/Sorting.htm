@@ -227,14 +227,14 @@
 {
     return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
         .WithSorting(new SortExpression(&quot;MiddleName&quot;, SortDirection.Descending), &quot;FirstName&quot;)
-        .ToCollection&lt;EmployeeSimple&gt;().Execute();
+        .ToCollection().Execute();
 }
 </code></pre>
 
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
 {
     return m_DataSource.From&lt;EmployeeSimple&gt;(new { lastName })
-        .WithSorting(&quot;MiddleName&quot;, &quot;FirstName&quot;).ToCollection&lt;EmployeeSimple&gt;().Execute();
+        .WithSorting(&quot;MiddleName&quot;, &quot;FirstName&quot;).ToCollection().Execute();
 }
 </code></pre>
 

@@ -1216,7 +1216,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
         if (division.CreatedDate == default(DateTime))
             division.CreatedDate = DateTime.UtcNow;
         division.ModifiedDate = DateTime.UtcNow;
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             var existing = db.Single&lt;Division&gt;(c =&gt; c.DivisionName == division.DivisionName);
@@ -1226,7 +1226,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
             }
             db.Save(division);
         }
-        
+
         return division.Id;
     }
 
@@ -1238,7 +1238,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
         if (division.CreatedDate == default(DateTime))
             division.CreatedDate = DateTime.UtcNow;
         division.ModifiedDate = DateTime.UtcNow;
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             db.Save(division);

@@ -371,7 +371,7 @@
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
         return m_DataSource.GetByKey&lt;ReadOnlyEmployeeClassification&gt;(employeeClassificationKey)
-            .ToObjectOrNull&lt;ReadOnlyEmployeeClassification&gt;(RowOptions.InferConstructor).Execute();
+            .ToObjectOrNull(RowOptions.InferConstructor).Execute();
     }
 
     public void Update(ReadOnlyEmployeeClassification classification)

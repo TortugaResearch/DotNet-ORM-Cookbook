@@ -709,7 +709,7 @@ public class DataTableResultTransformer : IResultTransformer
 <pre><code class="cs">public class PopulateDataTableScenario : IPopulateDataTableScenario
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
-    
+
     public PopulateDataTableScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
@@ -718,9 +718,9 @@ public class DataTableResultTransformer : IResultTransformer
     public DataTable FindByFlags(bool isExempt, bool isEmployee)
     {
         var dt = new DataTable();
-        dt.Columns.AddRange( ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
+        dt.Columns.AddRange(ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
             new DataColumn(k.FieldName, k.FieldType)).ToArray());
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
             var sql = db.From&lt;EmployeeClassification&gt;().Where(x =&gt; x.IsExempt == isExempt &amp;&amp; x.IsEmployee == isEmployee);
@@ -734,7 +734,7 @@ public class DataTableResultTransformer : IResultTransformer
     public DataTable GetAll()
     {
         var dt = new DataTable();
-        dt.Columns.AddRange( ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
+        dt.Columns.AddRange(ModelDefinition&lt;EmployeeClassification&gt;.Definition.FieldDefinitions.Select(k =&gt;
             new DataColumn(k.FieldName, k.FieldType)).ToArray());
 
         using (var db = _dbConnectionFactory.OpenDbConnection())

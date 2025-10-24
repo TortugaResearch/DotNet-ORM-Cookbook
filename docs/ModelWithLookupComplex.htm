@@ -1067,17 +1067,16 @@ public partial class EmployeeComplex : IEmployeeComplex
     public string? Title { get; set; }
 }
 
-    //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class EmployeeComplex : IEmployeeComplex
+//Used for linking the entity to the test framework. Not part of the recipe.
+partial class EmployeeComplex : IEmployeeComplex
+{
+    IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
     {
-        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
+        get =&gt; EmployeeClassification;
+        set
         {
-            get =&gt; EmployeeClassification;
-            set
-            {
-                EmployeeClassification = (EmployeeClassification?)value;
-                EmployeeClassificationKey = (value?.EmployeeClassificationKey).GetValueOrDefault();
-            }
+            EmployeeClassification = (EmployeeClassification?)value;
+            EmployeeClassificationKey = (value?.EmployeeClassificationKey).GetValueOrDefault();
         }
     }
 }
@@ -1154,6 +1153,7 @@ public partial class EmployeeComplex : IEmployeeComplex
 <pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;Employee&gt;
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
+
     public ModelWithLookupComplexScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
@@ -1165,7 +1165,7 @@ public partial class EmployeeComplex : IEmployeeComplex
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
         if (employee.EmployeeClassification == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
-        
+
         employee.EmployeeClassificationId = employee.EmployeeClassification.Id;
         using (var db = _dbConnectionFactory.OpenDbConnection())
         {
@@ -1179,7 +1179,7 @@ public partial class EmployeeComplex : IEmployeeComplex
     {
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.Delete(employee);
     }

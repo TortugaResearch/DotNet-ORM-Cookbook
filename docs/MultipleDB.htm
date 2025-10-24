@@ -351,7 +351,6 @@ public abstract class CaseConventionConverter : IDatabaseConventionConverter
 
         foreach (var entity in builder.Model.GetEntityTypes())
         {
-
             // Replace table names
             entity.SetTableName(ConvertName(entity.GetTableName()));
             entity.SetSchema(ConvertName(entity.GetSchema()));

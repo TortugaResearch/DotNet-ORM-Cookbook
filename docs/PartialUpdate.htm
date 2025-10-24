@@ -390,16 +390,16 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         context.SaveChanges();
 
         /*
-              //Get a fresh copy of the row from the database
-              var temp = context.EmployeeClassification.Find(updateMessage.EmployeeClassificationKey);
-              if (temp != null)
-              {
-                  //Copy the changed fields
-                  temp.IsExempt = updateMessage.IsExempt;
-                  temp.IsEmployee = updateMessage.IsEmployee;
-                  context.SaveChanges();
-              }
-              */
+        //Get a fresh copy of the row from the database
+        var temp = context.EmployeeClassification.Find(updateMessage.EmployeeClassificationKey);
+        if (temp != null)
+        {
+            //Copy the changed fields
+            temp.IsExempt = updateMessage.IsExempt;
+            temp.IsEmployee = updateMessage.IsEmployee;
+            context.SaveChanges();
+        }
+        */
     }
 }
 </code></pre>

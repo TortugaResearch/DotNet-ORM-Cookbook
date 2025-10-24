@@ -1033,6 +1033,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;Employee&gt;
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
+
     public ModelWithLookupSimpleScenario(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
@@ -1042,16 +1043,16 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
     {
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
-            return (int) db.Insert(employee, true);
+            return (int)db.Insert(employee, true);
     }
 
     public void Delete(Employee employee)
     {
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-        
+
         using (var db = _dbConnectionFactory.OpenDbConnection())
             db.Delete(employee);
     }
