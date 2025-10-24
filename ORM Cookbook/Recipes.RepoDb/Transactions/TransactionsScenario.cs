@@ -1,60 +1,58 @@
-﻿using Recipes.Transactions;
-using RDB = RepoDb;
-using RepoDb;
-using System;
-using System.Data;
-using System.Linq;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Recipes.RepoDB.Models;
+using Recipes.Transactions;
+using RepoDb;
+using System.Data;
 
-namespace Recipes.RepoDB.Transactions
+using RDB = RepoDb;
+
+namespace Recipes.RepoDB.Transactions;
+
+public class TransactionsScenario : BaseRepository<EmployeeClassification, SqlConnection>,
+    ITransactionsScenario<EmployeeClassification>
 {
-    public class TransactionsScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-        ITransactionsScenario<EmployeeClassification>
+    public TransactionsScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int Create(EmployeeClassification classification, bool shouldRollBack)
     {
-        public TransactionsScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        public int Create(EmployeeClassification classification, bool shouldRollBack)
+        using (var transaction = CreateConnection().EnsureOpen().BeginTransaction())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+            var result = Insert<int>(classification, transaction: transaction);
 
-            using (var transaction = CreateConnection().EnsureOpen().BeginTransaction())
-            {
-                var result = Insert<int>(classification, transaction: transaction);
+            if (shouldRollBack)
+                transaction.Rollback();
+            else
+                transaction.Commit();
 
-                if (shouldRollBack)
-                    transaction.Rollback();
-                else
-                    transaction.Commit();
-
-                return result;
-            }
+            return result;
         }
+    }
 
-        public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+    public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var transaction = CreateConnection().EnsureOpen().BeginTransaction(isolationLevel))
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+            var result = Insert<int>(classification, transaction: transaction);
 
-            using (var transaction = CreateConnection().EnsureOpen().BeginTransaction(isolationLevel))
-            {
-                var result = Insert<int>(classification, transaction: transaction);
+            if (shouldRollBack)
+                transaction.Rollback();
+            else
+                transaction.Commit();
 
-                if (shouldRollBack)
-                    transaction.Rollback();
-                else
-                    transaction.Commit();
-
-                return result;
-            }
+            return result;
         }
+    }
 
-        public EmployeeClassification? GetByKey(int employeeClassificationKey)
-        {
-            return Query(e => e.EmployeeClassificationKey == employeeClassificationKey).FirstOrDefault();
-        }
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        return Query(e => e.EmployeeClassificationKey == employeeClassificationKey).FirstOrDefault();
     }
 }

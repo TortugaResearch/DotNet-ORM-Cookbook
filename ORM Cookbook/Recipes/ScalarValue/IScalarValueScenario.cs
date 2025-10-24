@@ -1,23 +1,20 @@
-﻿using System;
+﻿namespace Recipes.ScalarValue;
 
-namespace Recipes.ScalarValue
+public interface IScalarValueScenario
 {
-    public interface IScalarValueScenario
-    {
-        int? GetDivisionKey(string divisionName);
+    int? GetDivisionKey(string divisionName);
 
-        string? GetDivisionName(int divisionKey);
+    string? GetDivisionName(int divisionKey);
 
-        string? GetDivisionNameOrNull(int divisionKey);
+    string? GetDivisionNameOrNull(int divisionKey);
 
-        DateTimeOffset? GetLastReviewCycle(int divisionKey);
+    DateTimeOffset? GetLastReviewCycle(int divisionKey);
 
-        int? GetMaxEmployees(int divisionKey);
+    int? GetMaxEmployees(int divisionKey);
 
-        DateTime GetModifiedDate(int divisionKey);
+    DateTime GetModifiedDate(int divisionKey);
 
-        decimal? GetSalaryBudget(int divisionKey);
+    decimal? GetSalaryBudget(int divisionKey);
 
-        TimeSpan? GetStartTime(int divisionKey);
-    }
+    TimeSpan? GetStartTime(int divisionKey);
 }

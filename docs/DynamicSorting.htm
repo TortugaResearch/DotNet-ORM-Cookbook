@@ -366,10 +366,10 @@ public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA,
 
     var sortDirection = isDescending ? &quot;DESC &quot; : &quot;&quot;;
 
-    var sql = @$&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey 
-        FROM HR.Employee e 
-        WHERE e.LastName = @lastName
-        ORDER BY [{sortByColumn}] {sortDirection}&quot;;
+    var sql = @$&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey
+            FROM HR.Employee e
+            WHERE e.LastName = @lastName
+            ORDER BY [{sortByColumn}] {sortDirection}&quot;;
 
     return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { lastName }).Execute();
 }
@@ -385,10 +385,10 @@ public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA,
     var sortDirectionA = isDescendingA ? &quot;DESC &quot; : &quot;&quot;;
     var sortDirectionB = isDescendingB ? &quot;DESC &quot; : &quot;&quot;;
 
-    var sql = @$&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey 
-        FROM HR.Employee e 
-        WHERE e.LastName = @lastName
-        ORDER BY [{sortByColumnA}] {sortDirectionA}, 
+    var sql = @$&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey
+            FROM HR.Employee e
+            WHERE e.LastName = @lastName
+            ORDER BY [{sortByColumnA}] {sortDirectionA}, 
 </code></pre>
 
 <h2 id="entity-framework-6">Entity Framework 6<a class="headerlink" href="#entity-framework-6" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

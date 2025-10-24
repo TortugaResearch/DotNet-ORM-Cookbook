@@ -1,14 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.SingleColumn;
+﻿using Recipes.SingleColumn;
 
-namespace Recipes.ServiceStack.SingleColumn
+namespace Recipes.ServiceStack.SingleColumn;
+
+[TestClass]
+public class SingleColumnTests : Recipes.SingleColumn.SingleColumnTests
 {
-    [TestClass]
-    public class SingleColumnTests : Recipes.SingleColumn.SingleColumnTests
+    protected override ISingleColumnScenario GetScenario()
     {
-        protected override ISingleColumnScenario GetScenario()
-        {
-            return new SingleColumnScenario(Setup.DbConnectionFactory);
-        }
+        return new SingleColumnScenario(Setup.DbConnectionFactory);
     }
 }

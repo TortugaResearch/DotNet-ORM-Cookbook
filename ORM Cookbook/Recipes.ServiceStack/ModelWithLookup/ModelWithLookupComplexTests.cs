@@ -1,15 +1,13 @@
-﻿using Recipes.ServiceStack.Entities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ModelWithLookup;
+﻿using Recipes.ModelWithLookup;
+using Recipes.ServiceStack.Entities;
 
-namespace Recipes.ServiceStack.ModelWithLookup
+namespace Recipes.ServiceStack.ModelWithLookup;
+
+[TestClass]
+public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<Employee>
 {
-    [TestClass]
-    public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<Employee>
+    protected override IModelWithLookupComplexScenario<Employee> GetScenario()
     {
-        protected override IModelWithLookupComplexScenario<Employee> GetScenario()
-        {
-            return new ModelWithLookupComplexScenario(Setup.DbConnectionFactory);
-        }
+        return new ModelWithLookupComplexScenario(Setup.DbConnectionFactory);
     }
 }

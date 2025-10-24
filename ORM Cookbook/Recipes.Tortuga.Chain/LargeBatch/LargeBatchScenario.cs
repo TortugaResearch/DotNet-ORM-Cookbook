@@ -1,49 +1,46 @@
 ﻿using Recipes.Chain.Models;
 using Recipes.LargeBatch;
-using System;
-using System.Collections.Generic;
 using Tortuga.Chain;
 
-namespace Recipes.Chain.LargeBatch
+namespace Recipes.Chain.LargeBatch;
+
+public class LargeBatchScenario : ILargeBatchScenario<EmployeeSimple>
 {
-    public class LargeBatchScenario : ILargeBatchScenario<EmployeeSimple>
+    readonly SqlServerDataSource m_DataSource;
+
+    public LargeBatchScenario(SqlServerDataSource dataSource)
     {
-        readonly SqlServerDataSource m_DataSource;
+        m_DataSource = dataSource;
+    }
 
-        public LargeBatchScenario(SqlServerDataSource dataSource)
+    public int MaximumBatchSize => 2100 / 7;
+
+    public int CountByLastName(string lastName)
+    {
+        return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
+    }
+
+    public void InsertLargeBatch(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+
+        using (var trans = m_DataSource.BeginTransaction())
         {
-            m_DataSource = dataSource;
+            trans.InsertMultipleBatch((IReadOnlyList<EmployeeSimple>)employees).Execute();
+            trans.Commit();
         }
+    }
 
-        public int MaximumBatchSize => 2100 / 7;
-
-        public int CountByLastName(string lastName)
+    public void InsertLargeBatch(IList<EmployeeSimple> employees, int batchSize)
+    {
+        using (var trans = m_DataSource.BeginTransaction())
         {
-            return (int)m_DataSource.From<EmployeeSimple>(new { lastName }).AsCount().Execute();
-        }
+            //This is essentially what InsertMultipleBatch does
+            foreach (var batch in employees.BatchAsLists(batchSize))
+                trans.InsertBatch(batch).Execute();
 
-        public void InsertLargeBatch(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
-
-            using (var trans = m_DataSource.BeginTransaction())
-            {
-                trans.InsertMultipleBatch((IReadOnlyList<EmployeeSimple>)employees).Execute();
-                trans.Commit();
-            }
-        }
-
-        public void InsertLargeBatch(IList<EmployeeSimple> employees, int batchSize)
-        {
-            using (var trans = m_DataSource.BeginTransaction())
-            {
-                //This is essentially what InsertMultipleBatch does
-                foreach (var batch in employees.BatchAsLists(batchSize))
-                    trans.InsertBatch(batch).Execute();
-
-                trans.Commit();
-            }
+            trans.Commit();
         }
     }
 }

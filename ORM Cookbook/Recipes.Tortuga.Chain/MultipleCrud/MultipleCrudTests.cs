@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.Models;
+﻿using Recipes.Chain.Models;
 using Recipes.MultipleCrud;
 
-namespace Recipes.Chain.MultipleCrud
+namespace Recipes.Chain.MultipleCrud;
+
+[TestClass]
+public class MultipleCrudTests : MultipleCrudTests<EmployeeSimple>
 {
-    [TestClass]
-    public class MultipleCrudTests : MultipleCrudTests<EmployeeSimple>
+    protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
     {
-        protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
-        {
-            return new MultipleCrudScenario(Setup.PrimaryDataSource);
-        }
+        return new MultipleCrudScenario(Setup.PrimaryDataSource);
     }
 }

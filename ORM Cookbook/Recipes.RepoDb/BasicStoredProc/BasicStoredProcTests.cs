@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.BasicStoredProc;
+﻿using Recipes.BasicStoredProc;
 using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDB.BasicStoredProc
+namespace Recipes.RepoDB.BasicStoredProc;
+
+[TestClass]
+public class BasicStoredProcTests : BasicStoredProcTests<EmployeeClassification, EmployeeClassificationWithCount>
 {
-    [TestClass]
-    public class BasicStoredProcTests : BasicStoredProcTests<EmployeeClassification, EmployeeClassificationWithCount>
+    protected override IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount> GetScenario()
     {
-        protected override IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount> GetScenario()
-        {
-            return new BasicStoredProcScenario(Setup.ConnectionString);
-        }
+        return new BasicStoredProcScenario(Setup.ConnectionString);
     }
 }

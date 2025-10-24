@@ -1,17 +1,14 @@
-using System;
+namespace Recipes;
 
-namespace Recipes
+public interface IDepartment
 {
-    public interface IDepartment
-    {
-        int DepartmentKey { get; set; }
-        string? DepartmentName { get; set; }
-        int DivisionKey { get; set; }
+    int DepartmentKey { get; set; }
+    string? DepartmentName { get; set; }
+    int DivisionKey { get; set; }
 
-        DateTime? CreatedDate { get; set; }
-        DateTime? ModifiedDate { get; set; }
-        int? CreatedByEmployeeKey { get; set; }
-        int? ModifiedByEmployeeKey { get; set; }
-        bool IsDeleted { get; set; }
-    }
+    DateTime? CreatedDate { get; set; }
+    DateTime? ModifiedDate { get; set; }
+    int? CreatedByEmployeeKey { get; set; }
+    int? ModifiedByEmployeeKey { get; set; }
+    bool IsDeleted { get; set; }
 }

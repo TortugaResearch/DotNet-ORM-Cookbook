@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ServiceStack.Entities;
+﻿using Recipes.ServiceStack.Entities;
 using Recipes.Upsert;
 
-namespace Recipes.ServiceStack.Upsert
+namespace Recipes.ServiceStack.Upsert;
+
+[TestClass]
+public class UpsertTests : UpsertTests<Division>
 {
-    [TestClass]
-    public class UpsertTests : UpsertTests<Division>
+    protected override IUpsertScenario<Division> GetScenario()
     {
-        protected override IUpsertScenario<Division> GetScenario()
-        {
-            return new UpsertScenario(Setup.DbConnectionFactory);
-        }
+        return new UpsertScenario(Setup.DbConnectionFactory);
     }
 }

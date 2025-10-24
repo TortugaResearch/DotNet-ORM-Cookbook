@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Recipes.EntityFramework.Entities;
 using Recipes.SoftDelete;
-using Recipes.EntityFramework.Entities;
 
-namespace Recipes.EntityFramework.SoftDelete
+namespace Recipes.EntityFramework.SoftDelete;
+
+[TestClass]
+public class SoftDeleteTests : SoftDeleteTests<Department>
 {
-    [TestClass]
-    public class SoftDeleteTests : SoftDeleteTests<Department>
+    protected override ISoftDeleteScenario<Department> GetScenario()
     {
-        protected override ISoftDeleteScenario<Department> GetScenario()
-        {
-            return new SoftDeleteScenario(Setup.DBContextWithSoftDelete, Setup.DBContextFactory);
-        }
+        return new SoftDeleteScenario(Setup.DBContextWithSoftDelete, Setup.DBContextFactory);
     }
 }

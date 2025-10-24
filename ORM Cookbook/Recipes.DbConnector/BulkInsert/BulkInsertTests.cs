@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.BulkInsert;
+﻿using Recipes.BulkInsert;
 using Recipes.DbConnector.Models;
 
-namespace Recipes.DbConnector.BulkInsert
+namespace Recipes.DbConnector.BulkInsert;
+
+[TestClass]
+public class BulkInsertTests : BulkInsertTests<EmployeeSimple>
 {
-    [TestClass]
-    public class BulkInsertTests : BulkInsertTests<EmployeeSimple>
+    protected override IBulkInsertScenario<EmployeeSimple> GetScenario()
     {
-        protected override IBulkInsertScenario<EmployeeSimple> GetScenario()
-        {
-            return new BulkInsertScenario(Setup.SqlServerConnectionString);
-        }
+        return new BulkInsertScenario(Setup.SqlServerConnectionString);
     }
 }

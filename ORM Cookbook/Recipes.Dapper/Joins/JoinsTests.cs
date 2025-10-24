@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Dapper.Models;
+﻿using Recipes.Dapper.Models;
 using Recipes.Joins;
 
-namespace Recipes.Dapper.Joins
+namespace Recipes.Dapper.Joins;
+
+[TestClass]
+public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
 {
-    [TestClass]
-    public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
+    protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
     {
-        protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
-        {
-            return new JoinsScenario(Setup.SqlServerConnectionString);
-        }
+        return new JoinsScenario(Setup.SqlServerConnectionString);
     }
 }

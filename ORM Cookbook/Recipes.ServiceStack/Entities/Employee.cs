@@ -1,5 +1,6 @@
 ﻿using ServiceStack;
 using ServiceStack.DataAnnotations;
+using Ignore = ServiceStack.DataAnnotations.IgnoreAttribute;
 
 namespace Recipes.ServiceStack.Entities
 {
@@ -43,6 +44,7 @@ namespace Recipes.ServiceStack.Entities
     {
         [Ignore]
         int IEmployeeSimple.EmployeeKey { get => Id; set => Id = value; }
+
         [Ignore]
         int IEmployeeSimple.EmployeeClassificationKey { get => EmployeeClassificationId; set => EmployeeClassificationId = value; }
     }

@@ -1,97 +1,95 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.RepoDB.Models;
 using Recipes.TryCrud;
-using RDB = RepoDb;
 using RepoDb;
-using System;
 using System.Data;
-using System.Linq;
 
-namespace Recipes.RepoDB.TryCrud
+using RDB = RepoDb;
+
+namespace Recipes.RepoDB.TryCrud;
+
+public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnection>,
+    ITryCrudScenario<EmployeeClassification>
 {
-    public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-        ITryCrudScenario<EmployeeClassification>
+    public TryCrudScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int Create(EmployeeClassification classification)
     {
-        public TryCrudScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        public int Create(EmployeeClassification classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+        return Insert<int>(classification);
+    }
 
-            return Insert<int>(classification);
-        }
+    public void DeleteByKeyOrException(int employeeClassificationKey)
+    {
+        var rowCount = Delete(employeeClassificationKey);
+        if (rowCount != 1)
+            throw new DataException($"No row was found for key {employeeClassificationKey}.");
+    }
 
-        public void DeleteByKeyOrException(int employeeClassificationKey)
-        {
-            var rowCount = Delete(employeeClassificationKey);
-            if (rowCount != 1)
-                throw new DataException($"No row was found for key {employeeClassificationKey}.");
-        }
+    public bool DeleteByKeyWithStatus(int employeeClassificationKey)
+    {
+        return 1 == Delete(employeeClassificationKey);
+    }
 
-        public bool DeleteByKeyWithStatus(int employeeClassificationKey)
-        {
-            return 1 == Delete(employeeClassificationKey);
-        }
+    public void DeleteOrException(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        public void DeleteOrException(EmployeeClassification classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+        var rowCount = Delete(classification);
+        if (rowCount != 1)
+            throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
+    }
 
-            var rowCount = Delete(classification);
-            if (rowCount != 1)
-                throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
-        }
+    public bool DeleteWithStatus(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        public bool DeleteWithStatus(EmployeeClassification classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+        return 1 == Delete(classification);
+    }
 
-            return 1 == Delete(classification);
-        }
+    public EmployeeClassification FindByNameOrException(string employeeClassificationName)
+    {
+        var entity = Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+        if (null == entity)
+            throw new DataException($"Message");
 
-        public EmployeeClassification FindByNameOrException(string employeeClassificationName)
-        {
-            var entity = Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
-            if (null == entity)
-                throw new DataException($"Message");
+        return entity;
+    }
 
-            return entity;
-        }
+    public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
+    {
+        return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+    }
 
-        public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
-        {
-            return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
-        }
+    public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
+    {
+        var entity = Query(employeeClassificationKey).FirstOrDefault();
+        if (null == entity)
+            throw new DataException($"Message");
 
-        public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
-        {
-            var entity = Query(employeeClassificationKey).FirstOrDefault();
-            if (null == entity)
-                throw new DataException($"Message");
+        return entity;
+    }
 
-            return entity;
-        }
+    public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
+    {
+        return Query(employeeClassificationKey).FirstOrDefault();
+    }
 
-        public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
-        {
-            return Query(employeeClassificationKey).FirstOrDefault();
-        }
+    public void UpdateOrException(EmployeeClassification classification)
+    {
+        var rowCount = Update(classification);
+        if (rowCount != 1)
+            throw new DataException($"Message");
+    }
 
-        public void UpdateOrException(EmployeeClassification classification)
-        {
-            var rowCount = Update(classification);
-            if (rowCount != 1)
-                throw new DataException($"Message");
-        }
-
-        public bool UpdateWithStatus(EmployeeClassification classification)
-        {
-            return 1 == Update(classification);
-        }
+    public bool UpdateWithStatus(EmployeeClassification classification)
+    {
+        return 1 == Update(classification);
     }
 }

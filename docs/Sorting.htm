@@ -276,9 +276,8 @@
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
 {
     const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone,
-        e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @lastName
-        ORDER BY e.FirstName;&quot;;
-
+            e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @lastName
+            ORDER BY e.FirstName;&quot;;
 
     return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { lastName }).Execute();
 }
@@ -287,8 +286,8 @@
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
 {
     const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone,
-        e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @lastName
-        ORDER BY e.MiddleName DESC, e.FirstName;&quot;;
+            e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @lastName
+            ORDER BY e.MiddleName DESC, e.FirstName;&quot;;
 
     return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { lastName }).Execute();
 }
@@ -297,9 +296,9 @@
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
 {
     const string sql = @&quot;
-        SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone,
-        e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @lastName
-        ORDER BY e.MiddleName, e.FirstName;&quot;;
+            SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone,
+            e.CellPhone, e.EmployeeClassificationKey FROM HR.Employee e WHERE e.LastName = @lastName
+            ORDER BY e.MiddleName, e.FirstName;&quot;;
 
     return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { lastName }).Execute();
 }

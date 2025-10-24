@@ -1,8 +1,6 @@
 ﻿using Dapper;
 using Recipes.Dapper.Models;
 using Recipes.Immutable;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Recipes.Dapper.Immutable

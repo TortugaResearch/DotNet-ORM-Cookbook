@@ -175,8 +175,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = OpenConnection())
         using (var trans = con.BeginTransaction())
@@ -200,8 +200,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = OpenConnection())
         using (var trans = con.BeginTransaction(isolationLevel))
@@ -222,8 +222,8 @@
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -316,8 +316,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = OpenConnection())
         using (var trans = con.BeginTransaction())
@@ -339,8 +339,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = OpenConnection())
         using (var trans = con.BeginTransaction(isolationLevel))
@@ -379,8 +379,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = OpenConnection())
         using (var trans = con.BeginTransaction())
@@ -403,8 +403,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = OpenConnection())
         using (var trans = con.BeginTransaction(isolationLevel))

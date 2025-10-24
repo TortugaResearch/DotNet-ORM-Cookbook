@@ -2,84 +2,81 @@
 using Recipes.SingleModelCrud;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
-using System;
-using System.Collections.Generic;
 
-namespace Recipes.ServiceStack.SingleModelCrud
+namespace Recipes.ServiceStack.SingleModelCrud;
+
+public class SingleModelCrudScenario : ISingleModelCrudScenario<EmployeeClassification>
 {
-    public class SingleModelCrudScenario : ISingleModelCrudScenario<EmployeeClassification>
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public SingleModelCrudScenario(IDbConnectionFactory dbConnectionFactory)
     {
-        private readonly IDbConnectionFactory _dbConnectionFactory;
+        _dbConnectionFactory = dbConnectionFactory;
+    }
 
-        public SingleModelCrudScenario(IDbConnectionFactory dbConnectionFactory)
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            _dbConnectionFactory = dbConnectionFactory;
+            return (int)db.Insert(classification, true);
         }
+    }
 
-        public int Create(EmployeeClassification classification)
+    public virtual void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return (int)db.Insert(classification, true);
-            }
+            db.Delete(classification);
         }
+    }
 
-        public virtual void Delete(EmployeeClassification classification)
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                db.Delete(classification);
-            }
+            db.DeleteById<EmployeeClassification>(employeeClassificationKey);
         }
+    }
 
-        public virtual void DeleteByKey(int employeeClassificationKey)
+    public EmployeeClassification FindByName(string employeeClassificationName)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                db.DeleteById<EmployeeClassification>(employeeClassificationKey);
-            }
+            return db.Single<EmployeeClassification>(
+                r => r.EmployeeClassificationName == employeeClassificationName);
         }
+    }
 
-        public EmployeeClassification FindByName(string employeeClassificationName)
+    public IList<EmployeeClassification> GetAll()
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return db.Single<EmployeeClassification>(
-                    r => r.EmployeeClassificationName == employeeClassificationName);
-            }
+            return db.Select<EmployeeClassification>();
         }
+    }
 
-        public IList<EmployeeClassification> GetAll()
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return db.Select<EmployeeClassification>();
-            }
+            return db.SingleById<EmployeeClassification>(employeeClassificationKey);
         }
+    }
 
-        public EmployeeClassification GetByKey(int employeeClassificationKey)
+    public virtual void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var db = _dbConnectionFactory.OpenDbConnection())
         {
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                return db.SingleById<EmployeeClassification>(employeeClassificationKey);
-            }
-        }
-
-        public virtual void Update(EmployeeClassification classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var db = _dbConnectionFactory.OpenDbConnection())
-            {
-                db.Update(classification);
-            }
+            db.Update(classification);
         }
     }
 }

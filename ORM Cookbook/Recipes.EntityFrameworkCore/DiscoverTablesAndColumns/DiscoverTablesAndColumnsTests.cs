@@ -1,14 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.DiscoverTablesAndColumns;
+﻿using Recipes.DiscoverTablesAndColumns;
 
-namespace Recipes.EntityFrameworkCore.DiscoverTablesAndColumns
+namespace Recipes.EntityFrameworkCore.DiscoverTablesAndColumns;
+
+[TestClass]
+public class DiscoverTablesAndColumnsTests : Recipes.DiscoverTablesAndColumns.DiscoverTablesAndColumnsTests
 {
-    [TestClass]
-    public class DiscoverTablesAndColumnsTests : Recipes.DiscoverTablesAndColumns.DiscoverTablesAndColumnsTests
+    protected override IDiscoverTablesAndColumnsScenario GetScenario()
     {
-        protected override IDiscoverTablesAndColumnsScenario GetScenario()
-        {
-            return new DiscoverTablesAndColumnsScenario(Setup.DBContextFactory);
-        }
+        return new DiscoverTablesAndColumnsScenario(Setup.DBContextFactory);
     }
 }

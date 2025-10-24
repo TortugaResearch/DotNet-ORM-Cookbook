@@ -1,9 +1,8 @@
-﻿namespace Recipes
+﻿namespace Recipes;
+
+public interface IEmployeeClassificationWithCount
 {
-    public interface IEmployeeClassificationWithCount
-    {
-        int EmployeeClassificationKey { get; set; }
-        string? EmployeeClassificationName { get; set; }
-        int EmployeeCount { get; set; }
-    }
+    int EmployeeClassificationKey { get; set; }
+    string? EmployeeClassificationName { get; set; }
+    int EmployeeCount { get; set; }
 }

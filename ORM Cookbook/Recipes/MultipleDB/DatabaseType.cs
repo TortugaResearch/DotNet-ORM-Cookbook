@@ -1,8 +1,7 @@
-﻿namespace Recipes.MultipleDB
+﻿namespace Recipes.MultipleDB;
+
+public enum DatabaseType
 {
-    public enum DatabaseType
-    {
-        SqlServer = 0,
-        PostgreSql = 1
-    }
+    SqlServer = 0,
+    PostgreSql = 1
 }

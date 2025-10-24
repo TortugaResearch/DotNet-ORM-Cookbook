@@ -1,8 +1,6 @@
 ﻿using Recipes.EntityFrameworkCore.Entities;
 using Recipes.TryCrud;
-using System;
 using System.Data;
-using System.Linq;
 
 namespace Recipes.EntityFrameworkCore.TryCrud
 {

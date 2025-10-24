@@ -1,14 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.PopulateDataTable;
+﻿using Recipes.PopulateDataTable;
 
-namespace Recipes.RepoDB.PopulateDataTable
+namespace Recipes.RepoDB.PopulateDataTable;
+
+[TestClass]
+public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
 {
-    [TestClass]
-    public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
+    protected override IPopulateDataTableScenario GetScenario()
     {
-        protected override IPopulateDataTableScenario GetScenario()
-        {
-            return new PopulateDataTableScenario(Setup.ConnectionString);
-        }
+        return new PopulateDataTableScenario(Setup.ConnectionString);
     }
 }

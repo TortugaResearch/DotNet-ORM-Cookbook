@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.DbConnector.Models;
+﻿using Recipes.DbConnector.Models;
 using Recipes.Sorting;
 
-namespace Recipes.DbConnector.Sorting
+namespace Recipes.DbConnector.Sorting;
+
+[TestClass]
+public class SortingTests : SortingTests<EmployeeSimple>
 {
-    [TestClass]
-    public class SortingTests : SortingTests<EmployeeSimple>
+    protected override ISortingScenario<EmployeeSimple> GetScenario()
     {
-        protected override ISortingScenario<EmployeeSimple> GetScenario()
-        {
-            return new SortingScenario(Setup.SqlServerConnectionString);
-        }
+        return new SortingScenario(Setup.SqlServerConnectionString);
     }
 }

@@ -1,48 +1,45 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 
-namespace Recipes.EntityFrameworkCore.Entities
+namespace Recipes.EntityFrameworkCore.Entities;
+
+public class OrmCookbookContextWithUser : OrmCookbookContext
 {
-    public class OrmCookbookContextWithUser : OrmCookbookContext
+    readonly User m_User;
+
+    public OrmCookbookContextWithUser(DbContextOptions<OrmCookbookContext> options, User user)
+: base(options)
     {
-        readonly User m_User;
+        m_User = user;
+    }
 
-        public OrmCookbookContextWithUser(DbContextOptions<OrmCookbookContext> options, User user)
-    : base(options)
+    public override int SaveChanges()
+    {
+        // Get added entries
+        var addedEntryCollection = ChangeTracker.Entries<IAuditableEntity>()
+           .Where(p => p.State == EntityState.Added)
+           .Select(p => p.Entity);
+
+        // Get modified entries
+        var modifiedEntryCollection = ChangeTracker.Entries<IAuditableEntity>()
+          .Where(p => p.State == EntityState.Modified)
+          .Select(p => p.Entity);
+
+        // Set audit fields of added entries
+        foreach (var addedEntity in addedEntryCollection)
         {
-            m_User = user;
+            addedEntity.CreatedDate = DateTime.UtcNow;
+            addedEntity.CreatedByEmployeeKey = m_User.UserKey;
+            addedEntity.ModifiedDate = DateTime.UtcNow;
+            addedEntity.ModifiedByEmployeeKey = m_User.UserKey;
         }
 
-        public override int SaveChanges()
+        // Set audit fields of modified entries
+        foreach (var modifiedEntity in modifiedEntryCollection)
         {
-            // Get added entries
-            var addedEntryCollection = ChangeTracker.Entries<IAuditableEntity>()
-               .Where(p => p.State == EntityState.Added)
-               .Select(p => p.Entity);
-
-            // Get modified entries
-            var modifiedEntryCollection = ChangeTracker.Entries<IAuditableEntity>()
-              .Where(p => p.State == EntityState.Modified)
-              .Select(p => p.Entity);
-
-            // Set audit fields of added entries
-            foreach (var addedEntity in addedEntryCollection)
-            {
-                addedEntity.CreatedDate = DateTime.UtcNow;
-                addedEntity.CreatedByEmployeeKey = m_User.UserKey;
-                addedEntity.ModifiedDate = DateTime.UtcNow;
-                addedEntity.ModifiedByEmployeeKey = m_User.UserKey;
-            }
-
-            // Set audit fields of modified entries
-            foreach (var modifiedEntity in modifiedEntryCollection)
-            {
-                modifiedEntity.ModifiedDate = DateTime.UtcNow;
-                modifiedEntity.ModifiedByEmployeeKey = m_User.UserKey;
-            }
-
-            return base.SaveChanges();
+            modifiedEntity.ModifiedDate = DateTime.UtcNow;
+            modifiedEntity.ModifiedByEmployeeKey = m_User.UserKey;
         }
+
+        return base.SaveChanges();
     }
 }

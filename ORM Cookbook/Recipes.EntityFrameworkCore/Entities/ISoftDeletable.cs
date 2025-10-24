@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Recipes.EntityFrameworkCore.Entities;
 
-namespace Recipes.EntityFrameworkCore.Entities
+public interface ISoftDeletable
 {
-    public interface ISoftDeletable
-    {
-        bool IsDeleted { get; set; }
-    }
+    bool IsDeleted { get; set; }
 }

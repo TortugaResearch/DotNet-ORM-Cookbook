@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.Models;
+﻿using Recipes.Chain.Models;
 using Recipes.SingleModelCrudAsync;
 
-namespace Recipes.Chain.SingleModelCrudAsync
+namespace Recipes.Chain.SingleModelCrudAsync;
+
+[TestClass]
+public class SingleModelCrudAsyncCompiledTests : SingleModelCrudAsyncTests<EmployeeClassification>
 {
-    [TestClass]
-    public class SingleModelCrudAsyncCompiledTests : SingleModelCrudAsyncTests<EmployeeClassification>
+    protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
     {
-        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
-        {
-            return new SingleModelCrudAsyncCompiledScenario(Setup.PrimaryDataSource);
-        }
+        return new SingleModelCrudAsyncCompiledScenario(Setup.PrimaryDataSource);
     }
 }

@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
+[assembly: DoNotParallelize]
+
 namespace Recipes.LinqToDB
 {
     public class ConnectionStringSettings : IConnectionStringSettings

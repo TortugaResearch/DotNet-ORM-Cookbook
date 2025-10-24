@@ -1,6 +1,5 @@
-namespace Recipes.EntityFramework.Entities
+namespace Recipes.EntityFramework.Entities;
+
+partial class Department : IDepartment, IAuditableEntity, ISoftDeletable
 {
-    partial class Department : IDepartment, IAuditableEntity, ISoftDeletable
-    {
-    }
 }

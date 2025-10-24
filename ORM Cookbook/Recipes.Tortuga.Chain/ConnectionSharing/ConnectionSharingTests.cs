@@ -1,7 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.SqlClient;
 using Recipes.Chain.Models;
 using Recipes.ConnectionSharing;
-using System.Data.SqlClient;
 using Tortuga.Chain.DataSources;
 
 namespace Recipes.Chain.ConnectionSharing

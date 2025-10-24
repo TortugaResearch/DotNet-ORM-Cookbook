@@ -1,7 +1,6 @@
-﻿namespace Recipes.ArbitraryTableRead
+﻿namespace Recipes.ArbitraryTableRead;
+
+public interface IArbitraryTableReadScenario<T>
 {
-    public interface IArbitraryTableReadScenario<T>
-    {
-        T GetAll(string schema, string tableName);
-    }
+    T GetAll(string schema, string tableName);
 }

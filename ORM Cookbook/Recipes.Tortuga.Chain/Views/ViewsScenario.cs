@@ -1,7 +1,5 @@
 ﻿using Recipes.Chain.Models;
 using Recipes.Views;
-using System;
-using System.Collections.Generic;
 using Tortuga.Chain;
 
 namespace Recipes.Chain.Views

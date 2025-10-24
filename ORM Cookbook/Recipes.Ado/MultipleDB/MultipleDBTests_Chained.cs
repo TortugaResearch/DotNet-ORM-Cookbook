@@ -1,22 +1,19 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Ado.Models;
+﻿using Recipes.Ado.Models;
 using Recipes.MultipleDB;
-using System;
 
-namespace Recipes.Ado.MultipleDB
+namespace Recipes.Ado.MultipleDB;
+
+[TestClass]
+public class MultipleDBTests_Chained : MultipleDBTests<EmployeeClassification>
 {
-    [TestClass]
-    public class MultipleDBTests_Chained : MultipleDBTests<EmployeeClassification>
+    protected override IMultipleDBScenario<EmployeeClassification> GetScenario(DatabaseType databaseType)
     {
-        protected override IMultipleDBScenario<EmployeeClassification> GetScenario(DatabaseType databaseType)
+        var connectionString = databaseType switch
         {
-            var connectionString = databaseType switch
-            {
-                DatabaseType.SqlServer => Setup.SqlServerConnectionString,
-                DatabaseType.PostgreSql => Setup.PostgreSqlConnectionString,
-                _ => throw new NotImplementedException()
-            };
-            return new MultipleDBScenario_Chained(connectionString, databaseType);
-        }
+            DatabaseType.SqlServer => Setup.SqlServerConnectionString,
+            DatabaseType.PostgreSql => Setup.PostgreSqlConnectionString,
+            _ => throw new NotImplementedException()
+        };
+        return new MultipleDBScenario_Chained(connectionString, databaseType);
     }
 }

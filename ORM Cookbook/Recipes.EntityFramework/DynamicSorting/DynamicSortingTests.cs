@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Recipes.DynamicSorting;
 using Recipes.EntityFramework.Entities;
-using Recipes.DynamicSorting;
 
-namespace Recipes.EntityFramework.DynamicSorting
+namespace Recipes.EntityFramework.DynamicSorting;
+
+[TestClass]
+public class DynamicSortingTests : DynamicSortingTests<Employee>
 {
-    [TestClass]
-    public class DynamicSortingTests : DynamicSortingTests<Employee>
+    protected override IDynamicSortingScenario<Employee> GetScenario()
     {
-        protected override IDynamicSortingScenario<Employee> GetScenario()
-        {
-            return new DynamicSortingScenario(Setup.DBContextFactory);
-        }
+        return new DynamicSortingScenario(Setup.DBContextFactory);
     }
 }

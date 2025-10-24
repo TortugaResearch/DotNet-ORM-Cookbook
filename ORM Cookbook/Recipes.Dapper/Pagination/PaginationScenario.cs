@@ -2,29 +2,26 @@
 using Dapper.Contrib.Extensions;
 using Recipes.Dapper.Models;
 using Recipes.Pagination;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Recipes.Dapper.Pagination
+namespace Recipes.Dapper.Pagination;
+
+public class PaginationScenario : ScenarioBase, IPaginationScenario<EmployeeSimple>
 {
-    public class PaginationScenario : ScenarioBase, IPaginationScenario<EmployeeSimple>
+    public PaginationScenario(string connectionString) : base(connectionString)
+    { }
+
+    public void InsertBatch(IList<EmployeeSimple> employees)
     {
-        public PaginationScenario(string connectionString) : base(connectionString)
-        { }
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void InsertBatch(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+        using (var con = OpenConnection())
+            con.Insert(employees);
+    }
 
-            using (var con = OpenConnection())
-                con.Insert(employees);
-        }
-
-        public IList<EmployeeSimple> PaginateWithPageSize(string lastName, int page, int pageSize)
-        {
-            const string sql = @"SELECT e.EmployeeKey,
+    public IList<EmployeeSimple> PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        const string sql = @"SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -37,13 +34,13 @@ WHERE e.LastName = @LastName
 ORDER BY e.FirstName,
          e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;";
 
-            using (var con = OpenConnection())
-                return con.Query<EmployeeSimple>(sql, new { lastName, Skip = page * pageSize, Take = pageSize }).ToList();
-        }
+        using (var con = OpenConnection())
+            return con.Query<EmployeeSimple>(sql, new { lastName, Skip = page * pageSize, Take = pageSize }).ToList();
+    }
 
-        public IList<EmployeeSimple> PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
-        {
-            const string sqlA = @"SELECT e.EmployeeKey,
+    public IList<EmployeeSimple> PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+    {
+        const string sqlA = @"SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -57,7 +54,7 @@ ORDER BY e.FirstName,
          e.EmployeeKey
 OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;";
 
-            const string sqlB = @"SELECT e.EmployeeKey,
+        const string sqlB = @"SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -80,26 +77,26 @@ ORDER BY e.FirstName,
          e.EmployeeKey
 OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;";
 
-            string sql;
-            object param;
-            if (skipPast == null)
-            {
-                sql = sqlA;
-                param = new { lastName, take };
-            }
-            else
-            {
-                sql = sqlB;
-                param = new { lastName, take, skipPast.FirstName, skipPast.EmployeeKey };
-            }
-
-            using (var con = OpenConnection())
-                return con.Query<EmployeeSimple>(sql, param).ToList();
+        string sql;
+        object param;
+        if (skipPast == null)
+        {
+            sql = sqlA;
+            param = new { lastName, take };
+        }
+        else
+        {
+            sql = sqlB;
+            param = new { lastName, take, skipPast.FirstName, skipPast.EmployeeKey };
         }
 
-        public IList<EmployeeSimple> PaginateWithSkipTake(string lastName, int skip, int take)
-        {
-            const string sql = @"SELECT e.EmployeeKey,
+        using (var con = OpenConnection())
+            return con.Query<EmployeeSimple>(sql, param).ToList();
+    }
+
+    public IList<EmployeeSimple> PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        const string sql = @"SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -112,8 +109,7 @@ WHERE e.LastName = @LastName
 ORDER BY e.FirstName,
          e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;";
 
-            using (var con = OpenConnection())
-                return con.Query<EmployeeSimple>(sql, new { lastName, skip, take }).ToList();
-        }
+        using (var con = OpenConnection())
+            return con.Query<EmployeeSimple>(sql, new { lastName, skip, take }).ToList();
     }
 }

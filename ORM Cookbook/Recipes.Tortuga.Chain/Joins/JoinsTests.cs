@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.Models;
+﻿using Recipes.Chain.Models;
 using Recipes.Joins;
 
-namespace Recipes.Chain.Joins
+namespace Recipes.Chain.Joins;
+
+[TestClass]
+public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
 {
-    [TestClass]
-    public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
+    protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
     {
-        protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
-        {
-            return new JoinsScenario(Setup.PrimaryDataSource);
-        }
+        return new JoinsScenario(Setup.PrimaryDataSource);
     }
 }

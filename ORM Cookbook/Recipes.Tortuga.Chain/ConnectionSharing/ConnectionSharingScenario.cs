@@ -1,7 +1,6 @@
-﻿using Recipes.Chain.Models;
+﻿using Microsoft.Data.SqlClient;
+using Recipes.Chain.Models;
 using Recipes.ConnectionSharing;
-using System;
-using System.Data.SqlClient;
 using Tortuga.Chain;
 using Tortuga.Chain.DataSources;
 

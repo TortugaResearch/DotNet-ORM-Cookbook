@@ -244,27 +244,27 @@
         if (department == null)
             throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
 
-        string sql = $@&quot;INSERT INTO {Department.TableName} 
-                    (   
-                        DepartmentName, 
-                        DivisionKey, 
-                        CreatedDate,
-                        ModifiedDate,
-                        CreatedByEmployeeKey, 
-                        ModifiedByEmployeeKey, 
-                        IsDeleted
-                    )
-                    OUTPUT Inserted.DepartmentKey
-                    VALUES
-                    (
-                        @{nameof(Department.DepartmentName)},
-                        @{nameof(Department.DivisionKey)},
-                        @{nameof(Department.CreatedDate)},
-                        @{nameof(Department.ModifiedDate)},
-                        @{nameof(Department.CreatedByEmployeeKey)},
-                        @{nameof(Department.ModifiedByEmployeeKey)},
-                        @{nameof(Department.IsDeleted)}
-                    )&quot;;
+        string sql = $@&quot;INSERT INTO {Department.TableName}
+                        (
+                            DepartmentName,
+                            DivisionKey,
+                            CreatedDate,
+                            ModifiedDate,
+                            CreatedByEmployeeKey,
+                            ModifiedByEmployeeKey,
+                            IsDeleted
+                        )
+                        OUTPUT Inserted.DepartmentKey
+                        VALUES
+                        (
+                            @{nameof(Department.DepartmentName)},
+                            @{nameof(Department.DivisionKey)},
+                            @{nameof(Department.CreatedDate)},
+                            @{nameof(Department.ModifiedDate)},
+                            @{nameof(Department.CreatedByEmployeeKey)},
+                            @{nameof(Department.ModifiedByEmployeeKey)},
+                            @{nameof(Department.IsDeleted)}
+                        )&quot;;
 
         return DbConnector.Scalar&lt;int&gt;(sql, department).Execute();
     }
@@ -275,10 +275,10 @@
             throw new ArgumentNullException(nameof(department), $&quot;{nameof(department)} is null.&quot;);
 
         string sql = $@&quot;
-                        UPDATE {Department.TableName} 
-                        SET
-                            IsDeleted = @isDeleted
-                        WHERE DepartmentKey = @DepartmentKey;&quot;;
+                            UPDATE {Department.TableName}
+                            SET
+                                IsDeleted = @isDeleted
+                            WHERE DepartmentKey = @DepartmentKey;&quot;;
 
         DbConnector.NonQuery(sql, new { department.DepartmentKey, isDeleted = true }).Execute();
     }
@@ -300,10 +300,10 @@
     public void UndeleteDepartment(int departmentKey)
     {
         string sql = $@&quot;
-                        UPDATE {Department.TableName} 
-                        SET
-                            IsDeleted = @isDeleted
-                        WHERE DepartmentKey = @departmentKey;&quot;;
+                            UPDATE {Department.TableName}
+                            SET
+                                IsDeleted = @isDeleted
+                            WHERE DepartmentKey = @departmentKey;&quot;;
 
         DbConnector.NonQuery(sql, new { departmentKey, isDeleted = false }).Execute();
     }
@@ -311,16 +311,16 @@
     public void UpdateDepartment(Department department)
     {
         string sql = $@&quot;
-                        UPDATE {Department.TableName} 
-                        SET 
-                            DepartmentName = @{nameof(Department.DepartmentName)},
-                            DivisionKey = @{nameof(Department.DivisionKey)},
-                            CreatedDate = @{nameof(Department.CreatedDate)},
-                            ModifiedDate = @{nameof(Department.ModifiedDate)},
-                            CreatedByEmployeeKey = @{nameof(Department.CreatedByEmployeeKey)},
-                            ModifiedByEmployeeKey = @{nameof(Department.ModifiedByEmployeeKey)},
-                            IsDeleted = @{nameof(Department.IsDeleted)}
-                        WHERE DepartmentKey = @{nameof(Department.DepartmentKey)};&quot;;
+                            UPDATE {Department.TableName}
+                            SET
+                                DepartmentName = @{nameof(Department.DepartmentName)},
+                                DivisionKey = @{nameof(Department.DivisionKey)},
+                                CreatedDate = @{nameof(Department.CreatedDate)},
+                                ModifiedDate = @{nameof(Department.ModifiedDate)},
+                                CreatedByEmployeeKey = @{nameof(Department.CreatedByEmployeeKey)},
+                                ModifiedByEmployeeKey = @{nameof(Department.ModifiedByEmployeeKey)},
+                                IsDeleted = @{nameof(Department.IsDeleted)}
+                            WHERE DepartmentKey = @{nameof(Department.DepartmentKey)};&quot;;
 
         DbConnector.NonQuery(sql, department).Execute();
     }

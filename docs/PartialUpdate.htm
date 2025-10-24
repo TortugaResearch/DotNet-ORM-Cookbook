@@ -149,8 +149,8 @@ void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage);
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
     const string sql = @&quot;UPDATE HR.EmployeeClassification
-                SET EmployeeClassificationName = @EmployeeClassificationName
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = OpenConnection())
     using (var cmd = new SqlCommand(sql, con))
@@ -167,8 +167,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
     const string sql = @&quot;UPDATE HR.EmployeeClassification
-                SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = OpenConnection())
     using (var cmd = new SqlCommand(sql, con))
@@ -184,8 +184,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 <pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
 {
     const string sql = @&quot;UPDATE HR.EmployeeClassification
-                SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = OpenConnection())
     using (var cmd = new SqlCommand(sql, con))
@@ -229,8 +229,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
     var sql = @&quot;UPDATE HR.EmployeeClassification
-                SET EmployeeClassificationName = @EmployeeClassificationName
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = OpenConnection())
         con.Execute(sql, updateMessage);
@@ -242,8 +242,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
     var sql = @&quot;UPDATE HR.EmployeeClassification
-                SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = OpenConnection())
         con.Execute(sql, updateMessage);
@@ -253,8 +253,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 <pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
 {
     var sql = @&quot;UPDATE HR.EmployeeClassification
-                SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = OpenConnection())
         con.Execute(sql, new { employeeClassificationKey, isExempt, isEmployee });
@@ -268,8 +268,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
     const string sql = @&quot;UPDATE HR.EmployeeClassification
-                SET EmployeeClassificationName = @EmployeeClassificationName
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET EmployeeClassificationName = @EmployeeClassificationName
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     DbConnector.NonQuery(sql, updateMessage).Execute();
 }
@@ -280,8 +280,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
     const string sql = @&quot;UPDATE HR.EmployeeClassification
-                SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
-                WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    SET IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     DbConnector.NonQuery(sql, updateMessage).Execute();
 }
@@ -290,8 +290,8 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 <pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
 {
     const string sql = @&quot;UPDATE HR.EmployeeClassification
-                SET IsExempt = @isExempt, IsEmployee = @isEmployee
-                WHERE EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+                    SET IsExempt = @isExempt, IsEmployee = @isEmployee
+                    WHERE EmployeeClassificationKey = @employeeClassificationKey;&quot;;
 
     DbConnector.NonQuery(sql, new { employeeClassificationKey, isExempt, isEmployee }).Execute();
 }

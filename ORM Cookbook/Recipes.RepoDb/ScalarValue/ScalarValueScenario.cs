@@ -1,72 +1,71 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.ScalarValue;
-using RDB = RepoDb;
 using RepoDb;
-using System;
 
-namespace Recipes.RepoDB.ScalarValue
+using RDB = RepoDb;
+
+namespace Recipes.RepoDB.ScalarValue;
+
+public class ScalarValueScenario : DbRepository<SqlConnection>,
+    IScalarValueScenario
 {
-    public class ScalarValueScenario : DbRepository<SqlConnection>,
-        IScalarValueScenario
+    public ScalarValueScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int? GetDivisionKey(string divisionName)
     {
-        public ScalarValueScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
+        var sql = "SELECT DivisionKey FROM [HR].[Division] WHERE (DivisionName = @DivisionName);";
 
-        public int? GetDivisionKey(string divisionName)
-        {
-            var sql = "SELECT DivisionKey FROM [HR].[Division] WHERE (DivisionName = @DivisionName);";
+        return ExecuteScalar<int?>(sql, new { divisionName });
+    }
 
-            return ExecuteScalar<int?>(sql, new { divisionName });
-        }
+    public string GetDivisionName(int divisionKey)
+    {
+        var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        public string GetDivisionName(int divisionKey)
-        {
-            var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+        return ExecuteScalar<string>(sql, new { divisionKey });
+    }
 
-            return ExecuteScalar<string>(sql, new { divisionKey });
-        }
+    public string? GetDivisionNameOrNull(int divisionKey)
+    {
+        var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        public string? GetDivisionNameOrNull(int divisionKey)
-        {
-            var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+        return ExecuteScalar<string>(sql, new { divisionKey });
+    }
 
-            return ExecuteScalar<string>(sql, new { divisionKey });
-        }
+    public DateTimeOffset? GetLastReviewCycle(int divisionKey)
+    {
+        var sql = "SELECT LastReviewCycle FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        public DateTimeOffset? GetLastReviewCycle(int divisionKey)
-        {
-            var sql = "SELECT LastReviewCycle FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+        return ExecuteScalar<DateTimeOffset?>(sql, new { divisionKey });
+    }
 
-            return ExecuteScalar<DateTimeOffset?>(sql, new { divisionKey });
-        }
+    public int? GetMaxEmployees(int divisionKey)
+    {
+        var sql = "SELECT MaxEmployees FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        public int? GetMaxEmployees(int divisionKey)
-        {
-            var sql = "SELECT MaxEmployees FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+        return ExecuteScalar<int?>(sql, new { divisionKey });
+    }
 
-            return ExecuteScalar<int?>(sql, new { divisionKey });
-        }
+    public DateTime GetModifiedDate(int divisionKey)
+    {
+        var sql = "SELECT ModifiedDate FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        public DateTime GetModifiedDate(int divisionKey)
-        {
-            var sql = "SELECT ModifiedDate FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+        return ExecuteScalar<DateTime>(sql, new { divisionKey });
+    }
 
-            return ExecuteScalar<DateTime>(sql, new { divisionKey });
-        }
+    public decimal? GetSalaryBudget(int divisionKey)
+    {
+        var sql = "SELECT SalaryBudget FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        public decimal? GetSalaryBudget(int divisionKey)
-        {
-            var sql = "SELECT SalaryBudget FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
+        return ExecuteScalar<decimal?>(sql, new { divisionKey });
+    }
 
-            return ExecuteScalar<decimal?>(sql, new { divisionKey });
-        }
+    public TimeSpan? GetStartTime(int divisionKey)
+    {
+        var sql = "SELECT StartTime FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        public TimeSpan? GetStartTime(int divisionKey)
-        {
-            var sql = "SELECT StartTime FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
-
-            return ExecuteScalar<TimeSpan?>(sql, new { divisionKey });
-        }
+        return ExecuteScalar<TimeSpan?>(sql, new { divisionKey });
     }
 }

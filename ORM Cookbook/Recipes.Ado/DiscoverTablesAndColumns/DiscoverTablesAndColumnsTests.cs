@@ -1,15 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Ado.Models;
-using Recipes.DiscoverTablesAndColumns;
+﻿using Recipes.DiscoverTablesAndColumns;
 
-namespace Recipes.Ado.DiscoverTablesAndColumns
+namespace Recipes.Ado.DiscoverTablesAndColumns;
+
+[TestClass]
+public class DiscoverTablesAndColumnsTests : Recipes.DiscoverTablesAndColumns.DiscoverTablesAndColumnsTests
 {
-    [TestClass]
-    public class DiscoverTablesAndColumnsTests : Recipes.DiscoverTablesAndColumns.DiscoverTablesAndColumnsTests
+    protected override IDiscoverTablesAndColumnsScenario GetScenario()
     {
-        protected override IDiscoverTablesAndColumnsScenario GetScenario()
-        {
-            return new DiscoverTablesAndColumnsScenario(Setup.SqlServerConnectionString);
-        }
+        return new DiscoverTablesAndColumnsScenario(Setup.SqlServerConnectionString);
     }
 }

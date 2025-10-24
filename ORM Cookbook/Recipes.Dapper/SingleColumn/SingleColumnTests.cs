@@ -1,14 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.SingleColumn;
+﻿using Recipes.SingleColumn;
 
-namespace Recipes.Dapper.SingleColumn
+namespace Recipes.Dapper.SingleColumn;
+
+[TestClass]
+public class SingleColumnTests : Recipes.SingleColumn.SingleColumnTests
 {
-    [TestClass]
-    public class SingleColumnTests : Recipes.SingleColumn.SingleColumnTests
+    protected override ISingleColumnScenario GetScenario()
     {
-        protected override ISingleColumnScenario GetScenario()
-        {
-            return new SingleColumnScenario(Setup.SqlServerConnectionString);
-        }
+        return new SingleColumnScenario(Setup.SqlServerConnectionString);
     }
 }

@@ -192,8 +192,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee )&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -235,8 +235,8 @@
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -284,8 +284,8 @@
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -312,8 +312,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -483,8 +483,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName, IsExempt, IsEmployee)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee);&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName, @IsExempt, @IsEmployee);&quot;;
 
         return DbConnector.Scalar&lt;int&gt;(sql, classification).Execute();
     }
@@ -509,8 +509,8 @@
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
 
         //DbConnector currently does not support direct constructor mapping (v1.2.1)
         return DbConnector.ReadTo&lt;ReadOnlyEmployeeClassification&gt;(
@@ -583,8 +583,8 @@
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
 
         //DbConnector currently does not support direct constructor mapping (v1.2.1)
         return DbConnector.ReadTo&lt;ReadOnlyEmployeeClassification&gt;(
@@ -630,8 +630,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName, IsExempt = @IsExempt, IsEmployee = @IsEmployee
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         DbConnector.NonQuery(sql, classification).Execute();
     }

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ServiceStack.Entities;
+﻿using Recipes.ServiceStack.Entities;
 using Recipes.Sorting;
 
-namespace Recipes.ServiceStack.Sorting
+namespace Recipes.ServiceStack.Sorting;
+
+[TestClass]
+public class SortingTests : SortingTests<Employee>
 {
-    [TestClass]
-    public class SortingTests : SortingTests<Employee>
+    protected override ISortingScenario<Employee> GetScenario()
     {
-        protected override ISortingScenario<Employee> GetScenario()
-        {
-            return new SortingScenario(Setup.DbConnectionFactory);
-        }
+        return new SortingScenario(Setup.DbConnectionFactory);
     }
 }

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Dapper.Models;
+﻿using Recipes.Dapper.Models;
 using Recipes.MultipleCrud;
 
-namespace Recipes.Dapper.MultipleCrud
+namespace Recipes.Dapper.MultipleCrud;
+
+[TestClass]
+public class MultipleCrudTestsContrib : MultipleCrudTests<EmployeeSimple>
 {
-    [TestClass]
-    public class MultipleCrudTestsContrib : MultipleCrudTests<EmployeeSimple>
+    protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
     {
-        protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
-        {
-            return new MultipleCrudScenarioContrib(Setup.SqlServerConnectionString);
-        }
+        return new MultipleCrudScenarioContrib(Setup.SqlServerConnectionString);
     }
 }

@@ -1,176 +1,173 @@
 ﻿using Recipes.EntityFramework.Entities;
 using Recipes.TryCrud;
-using System;
 using System.Data;
-using System.Linq;
 
-namespace Recipes.EntityFramework.TryCrud
+namespace Recipes.EntityFramework.TryCrud;
+
+public class TryCrudScenario : ITryCrudScenario<EmployeeClassification>
 {
-    public class TryCrudScenario : ITryCrudScenario<EmployeeClassification>
+    private Func<OrmCookbookContext> CreateDbContext;
+
+    public TryCrudScenario(Func<OrmCookbookContext> dBContextFactory)
     {
-        private Func<OrmCookbookContext> CreateDbContext;
+        CreateDbContext = dBContextFactory;
+    }
 
-        public TryCrudScenario(Func<OrmCookbookContext> dBContextFactory)
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            CreateDbContext = dBContextFactory;
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            return classification.EmployeeClassificationKey;
         }
+    }
 
-        public int Create(EmployeeClassification classification)
+    public void DeleteByKeyOrException(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
             {
-                context.EmployeeClassification.Add(classification);
+                context.EmployeeClassification.Remove(temp);
                 context.SaveChanges();
-                return classification.EmployeeClassificationKey;
             }
+            else
+                throw new DataException($"No row was found for key {employeeClassificationKey}.");
         }
+    }
 
-        public void DeleteByKeyOrException(int employeeClassificationKey)
+    public bool DeleteByKeyWithStatus(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
             {
-                //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
-                if (temp != null)
-                {
-                    context.EmployeeClassification.Remove(temp);
-                    context.SaveChanges();
-                }
-                else
-                    throw new DataException($"No row was found for key {employeeClassificationKey}.");
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+                return true;
             }
+            else
+                return false;
         }
+    }
 
-        public bool DeleteByKeyWithStatus(int employeeClassificationKey)
+    public void DeleteOrException(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
             {
-                //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
-                if (temp != null)
-                {
-                    context.EmployeeClassification.Remove(temp);
-                    context.SaveChanges();
-                    return true;
-                }
-                else
-                    return false;
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
             }
+            else
+                throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
         }
+    }
 
-        public void DeleteOrException(EmployeeClassification classification)
+    public bool DeleteWithStatus(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
             {
-                //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                if (temp != null)
-                {
-                    context.EmployeeClassification.Remove(temp);
-                    context.SaveChanges();
-                }
-                else
-                    throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
+                return true;
             }
+            else
+                return false;
         }
+    }
 
-        public bool DeleteWithStatus(EmployeeClassification classification)
+    public EmployeeClassification FindByNameOrException(string employeeClassificationName)
+    {
+        using (var context = CreateDbContext())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
-            {
-                //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                if (temp != null)
-                {
-                    context.EmployeeClassification.Remove(temp);
-                    context.SaveChanges();
-                    return true;
-                }
-                else
-                    return false;
-            }
+            return context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).Single();
         }
+    }
 
-        public EmployeeClassification FindByNameOrException(string employeeClassificationName)
+    public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
-            {
-                return context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).Single();
-            }
+            return context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
         }
+    }
 
-        public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
+    public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
-            {
-                return context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
-            }
+            return context.EmployeeClassification.Find(employeeClassificationKey) ?? throw new DataException($"No row was found for key {employeeClassificationKey}.");
         }
+    }
 
-        public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
+    public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
-            {
-                return context.EmployeeClassification.Find(employeeClassificationKey) ?? throw new DataException($"No row was found for key {employeeClassificationKey}.");
-            }
+            return context.EmployeeClassification.Find(employeeClassificationKey);
         }
+    }
 
-        public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
+    public void UpdateOrException(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
             {
-                return context.EmployeeClassification.Find(employeeClassificationKey);
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.SaveChanges();
             }
+            else
+                throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
         }
+    }
 
-        public void UpdateOrException(EmployeeClassification classification)
+    public bool UpdateWithStatus(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
             {
-                //Get a fresh copy of the row from the database
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                if (temp != null)
-                {
-                    //Copy the changed fields
-                    temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-                    context.SaveChanges();
-                }
-                else
-                    throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.SaveChanges();
+                return true;
             }
-        }
-
-        public bool UpdateWithStatus(EmployeeClassification classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
-            {
-                //Get a fresh copy of the row from the database
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                if (temp != null)
-                {
-                    //Copy the changed fields
-                    temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-                    context.SaveChanges();
-                    return true;
-                }
-                else
-                    return false;
-            }
+            else
+                return false;
         }
     }
 }

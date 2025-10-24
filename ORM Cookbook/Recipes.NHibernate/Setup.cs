@@ -7,6 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 
 using NHibernateCfg = NHibernate.Cfg;
 
+[assembly: DoNotParallelize]
+
 namespace Recipes.NHibernate
 {
     [TestClass]

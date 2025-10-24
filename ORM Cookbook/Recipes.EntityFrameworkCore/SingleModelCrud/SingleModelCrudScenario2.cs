@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Recipes.EntityFrameworkCore.Entities;
-using System;
 
 namespace Recipes.EntityFrameworkCore.SingleModelCrud
 {

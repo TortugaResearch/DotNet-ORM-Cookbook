@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.DbConnector.Models;
+﻿using Recipes.DbConnector.Models;
 using Recipes.Upsert;
 
-namespace Recipes.DbConnector.Upsert
+namespace Recipes.DbConnector.Upsert;
+
+[TestClass]
+public class UpsertTests : UpsertTests<Division>
 {
-    [TestClass]
-    public class UpsertTests : UpsertTests<Division>
+    protected override IUpsertScenario<Division> GetScenario()
     {
-        protected override IUpsertScenario<Division> GetScenario()
-        {
-            return new UpsertScenario(Setup.SqlServerConnectionString);
-        }
+        return new UpsertScenario(Setup.SqlServerConnectionString);
     }
 }

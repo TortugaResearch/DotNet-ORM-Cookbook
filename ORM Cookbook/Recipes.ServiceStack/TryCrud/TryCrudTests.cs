@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ServiceStack.Entities;
+﻿using Recipes.ServiceStack.Entities;
 using Recipes.TryCrud;
 
-namespace Recipes.ServiceStack.TryCrud
+namespace Recipes.ServiceStack.TryCrud;
+
+[TestClass]
+public class TryCrudTests : TryCrudTests<EmployeeClassification>
 {
-    [TestClass]
-    public class TryCrudTests : TryCrudTests<EmployeeClassification>
+    protected override ITryCrudScenario<EmployeeClassification> GetScenario()
     {
-        protected override ITryCrudScenario<EmployeeClassification> GetScenario()
-        {
-            return new TryCrudScenario(Setup.DbConnectionFactory);
-        }
+        return new TryCrudScenario(Setup.DbConnectionFactory);
     }
 }

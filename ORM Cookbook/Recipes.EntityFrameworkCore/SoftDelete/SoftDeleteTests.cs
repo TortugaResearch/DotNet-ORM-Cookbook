@@ -1,6 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Recipes.EntityFrameworkCore.Entities;
 using Recipes.SoftDelete;
-using Recipes.EntityFrameworkCore.Entities;
 
 namespace Recipes.EntityFrameworkCore.SoftDelete
 {

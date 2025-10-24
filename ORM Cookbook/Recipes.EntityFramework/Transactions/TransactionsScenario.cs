@@ -1,62 +1,60 @@
 ﻿using Recipes.EntityFramework.Entities;
 using Recipes.Transactions;
-using System;
 using System.Data;
 
-namespace Recipes.EntityFramework.Transactions
+namespace Recipes.EntityFramework.Transactions;
+
+public class TransactionsScenario : ITransactionsScenario<EmployeeClassification>
 {
-    public class TransactionsScenario : ITransactionsScenario<EmployeeClassification>
+    private Func<OrmCookbookContext> CreateDbContext;
+
+    public TransactionsScenario(Func<OrmCookbookContext> dBContextFactory)
     {
-        private Func<OrmCookbookContext> CreateDbContext;
+        CreateDbContext = dBContextFactory;
+    }
 
-        public TransactionsScenario(Func<OrmCookbookContext> dBContextFactory)
+    public int Create(EmployeeClassification classification, bool shouldRollBack)
+    {
+        using (var context = CreateDbContext())
+        using (var trans = context.Database.BeginTransaction())
         {
-            CreateDbContext = dBContextFactory;
-        }
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            var result = classification.EmployeeClassificationKey;
 
-        public int Create(EmployeeClassification classification, bool shouldRollBack)
+            if (shouldRollBack)
+                trans.Rollback();
+            else
+                trans.Commit();
+
+            return result;
+        }
+    }
+
+    public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
+        using (var trans = context.Database.BeginTransaction(isolationLevel))
         {
-            using (var context = CreateDbContext())
-            using (var trans = context.Database.BeginTransaction())
-            {
-                context.EmployeeClassification.Add(classification);
-                context.SaveChanges();
-                var result = classification.EmployeeClassificationKey;
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            var result = classification.EmployeeClassificationKey;
 
-                if (shouldRollBack)
-                    trans.Rollback();
-                else
-                    trans.Commit();
+            if (shouldRollBack)
+                trans.Rollback();
+            else
+                trans.Commit();
 
-                return result;
-            }
+            return result;
         }
+    }
 
-        public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
-            using (var trans = context.Database.BeginTransaction(isolationLevel))
-            {
-                context.EmployeeClassification.Add(classification);
-                context.SaveChanges();
-                var result = classification.EmployeeClassificationKey;
-
-                if (shouldRollBack)
-                    trans.Rollback();
-                else
-                    trans.Commit();
-
-                return result;
-            }
-        }
-
-        public EmployeeClassification GetByKey(int employeeClassificationKey)
-        {
-            using (var context = CreateDbContext())
-                return context.EmployeeClassification.Find(employeeClassificationKey);
-        }
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
+            return context.EmployeeClassification.Find(employeeClassificationKey);
     }
 }

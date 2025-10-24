@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.SingleColumn;
+﻿using Recipes.SingleColumn;
 
 namespace Recipes.EntityFrameworkCore.SingleColumn
 {

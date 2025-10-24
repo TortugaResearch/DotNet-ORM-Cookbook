@@ -155,64 +155,64 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>In ADO.NET, <code>ExecuteScalar</code> returns the first column of the first row in the resultset. Everything else is discarded.</p>
-<pre><code class="cs">    public class RowCountScenario : SqlServerScenarioBase, IRowCountScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class RowCountScenario : SqlServerScenarioBase, IRowCountScenario&lt;EmployeeSimple&gt;
+{
+    public RowCountScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int EmployeeCount(string lastName)
     {
-        public RowCountScenario(string connectionString) : base(connectionString)
-        { }
-
-        public int EmployeeCount(string lastName)
+        const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e WHERE e.LastName = @LastName&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e WHERE e.LastName = @LastName&quot;;
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
-                return (int)cmd.ExecuteScalar();
-            }
+            cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+            return (int)cmd.ExecuteScalar();
         }
+    }
 
-        public int EmployeeCount()
-        {
-            const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e&quot;;
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-                return (int)cmd.ExecuteScalar();
-        }
+    public int EmployeeCount()
+    {
+        const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e&quot;;
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+            return (int)cmd.ExecuteScalar();
+    }
 
-        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+        var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
 (FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
 VALUES &quot;);
 
+        for (var i = 0; i &lt; employees.Count; i++)
+        {
+            if (i != 0)
+                sql.AppendLine(&quot;,&quot;);
+            sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+        }
+        sql.AppendLine(&quot;;&quot;);
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql.ToString(), con))
+        {
             for (var i = 0; i &lt; employees.Count; i++)
             {
-                if (i != 0)
-                    sql.AppendLine(&quot;,&quot;);
-                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+                cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
             }
-            sql.AppendLine(&quot;;&quot;);
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql.ToString(), con))
-            {
-                for (var i = 0; i &lt; employees.Count; i++)
-                {
-                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
-                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
-                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
-                }
-                cmd.ExecuteNonQuery();
-            }
+            cmd.ExecuteNonQuery();
         }
     }
+}
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
@@ -246,37 +246,37 @@ VALUES &quot;);
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class RowCountScenario : ScenarioBase, IRowCountScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class RowCountScenario : ScenarioBase, IRowCountScenario&lt;EmployeeSimple&gt;
+{
+    public RowCountScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int EmployeeCount(string lastName)
     {
-        public RowCountScenario(string connectionString) : base(connectionString)
-        { }
+        const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e WHERE e.LastName = @LastName&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int&gt;(sql, new { lastName });
+    }
 
-        public int EmployeeCount(string lastName)
-        {
-            const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e WHERE e.LastName = @LastName&quot;;
-            using (var con = OpenConnection())
-                return con.ExecuteScalar&lt;int&gt;(sql, new { lastName });
-        }
+    public int EmployeeCount()
+    {
+        const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e&quot;;
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int&gt;(sql);
+    }
 
-        public int EmployeeCount()
-        {
-            const string sql = &quot;SELECT COUNT(*) FROM HR.Employee e&quot;;
-            using (var con = OpenConnection())
-                return con.ExecuteScalar&lt;int&gt;(sql);
-        }
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-            const string sql = @&quot;INSERT INTO HR.Employee
+        const string sql = @&quot;INSERT INTO HR.Employee
 (FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
 VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey)&quot;;
-            using (var con = OpenConnection())
-                con.Execute(sql, employees);
-        }
+        using (var con = OpenConnection())
+            con.Execute(sql, employees);
     }
+}
 </code></pre>
 
 <h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
@@ -308,24 +308,24 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
         //https://docs.microsoft.com/en-us/sql/sql-server/maximum-capacity-specifications-for-sql-server?redirectedfrom=MSDN&amp;view=sql-server-ver15
         DbConnector.Build&lt;int?&gt;(
                 sql: @$&quot;INSERT INTO {EmployeeSimple.TableName}
-                (
-                    CellPhone,
-                    EmployeeClassificationKey,
-                    FirstName,
-                    LastName,
-                    MiddleName,
-                    OfficePhone,
-                    Title
-                ) 
-                VALUES (
-                    @{nameof(EmployeeSimple.CellPhone)},
-                    @{nameof(EmployeeSimple.EmployeeClassificationKey)},
-                    @{nameof(EmployeeSimple.FirstName)},
-                    @{nameof(EmployeeSimple.LastName)},
-                    @{nameof(EmployeeSimple.MiddleName)},
-                    @{nameof(EmployeeSimple.OfficePhone)},
-                    @{nameof(EmployeeSimple.Title)}
-                )&quot;,
+                    (
+                        CellPhone,
+                        EmployeeClassificationKey,
+                        FirstName,
+                        LastName,
+                        MiddleName,
+                        OfficePhone,
+                        Title
+                    )
+                    VALUES (
+                        @{nameof(EmployeeSimple.CellPhone)},
+                        @{nameof(EmployeeSimple.EmployeeClassificationKey)},
+                        @{nameof(EmployeeSimple.FirstName)},
+                        @{nameof(EmployeeSimple.LastName)},
+                        @{nameof(EmployeeSimple.MiddleName)},
+                        @{nameof(EmployeeSimple.OfficePhone)},
+                        @{nameof(EmployeeSimple.Title)}
+                    )&quot;,
                 param: employees[0],
                 onExecute: (int? result, IDbExecutionModel em) =&gt;
                 {

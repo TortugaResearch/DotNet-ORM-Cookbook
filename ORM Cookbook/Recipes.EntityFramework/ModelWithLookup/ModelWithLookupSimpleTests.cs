@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.EntityFramework.Entities;
+﻿using Recipes.EntityFramework.Entities;
 using Recipes.ModelWithLookup;
 
-namespace Recipes.EntityFramework.ModelWithLookup
+namespace Recipes.EntityFramework.ModelWithLookup;
+
+[TestClass]
+public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<Employee>
 {
-    [TestClass]
-    public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<Employee>
+    protected override IModelWithLookupSimpleScenario<Employee> GetScenario()
     {
-        protected override IModelWithLookupSimpleScenario<Employee> GetScenario()
-        {
-            return new ModelWithLookupSimpleScenario(Setup.DBContextFactory);
-        }
+        return new ModelWithLookupSimpleScenario(Setup.DBContextFactory);
     }
 }

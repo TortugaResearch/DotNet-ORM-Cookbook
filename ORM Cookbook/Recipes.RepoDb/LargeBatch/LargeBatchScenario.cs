@@ -2,41 +2,37 @@
 using Recipes.LargeBatch;
 using Recipes.RepoDB.Models;
 using RepoDb;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using RDB = RepoDb;
 
-namespace Recipes.RepoDB.LargeBatch
+namespace Recipes.RepoDB.LargeBatch;
+
+public class LargeBatchScenario : BaseRepository<EmployeeSimple, SqlConnection>, ILargeBatchScenario<EmployeeSimple>
 {
-    public class LargeBatchScenario : BaseRepository<EmployeeSimple, SqlConnection>, ILargeBatchScenario<EmployeeSimple>
+    public LargeBatchScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int CountByLastName(string lastName)
     {
-        public LargeBatchScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
+        return Query(e => e.LastName == lastName).Count();
+    }
 
-        public int CountByLastName(string lastName)
-        {
-            return Query(e => e.LastName == lastName).Count();
-        }
+    public int MaximumBatchSize => 2100 / 7;
 
-        public int MaximumBatchSize => 2100 / 7;
+    public void InsertLargeBatch(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void InsertLargeBatch(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+        InsertAll(employees);
+    }
 
-            InsertAll(employees);
-        }
+    public void InsertLargeBatch(IList<EmployeeSimple> employees, int batchSize)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void InsertLargeBatch(IList<EmployeeSimple> employees, int batchSize)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
-
-            InsertAll(employees, batchSize: batchSize);
-        }
+        InsertAll(employees, batchSize: batchSize);
     }
 }

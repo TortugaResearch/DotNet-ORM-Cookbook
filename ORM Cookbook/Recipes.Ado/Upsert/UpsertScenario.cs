@@ -1,18 +1,17 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.Ado.Models;
 using Recipes.Upsert;
-using System;
 
-namespace Recipes.Ado.Upsert
+namespace Recipes.Ado.Upsert;
+
+public class UpsertScenario : SqlServerScenarioBase, IUpsertScenario<Division>
 {
-    public class UpsertScenario : SqlServerScenarioBase, IUpsertScenario<Division>
-    {
-        public UpsertScenario(string connectionString) : base(connectionString)
-        { }
+    public UpsertScenario(string connectionString) : base(connectionString)
+    { }
 
-        public Division GetByKey(int divisionKey)
-        {
-            const string sql = @"SELECT d.DivisionKey,
+    public Division GetByKey(int divisionKey)
+    {
+        const string sql = @"SELECT d.DivisionKey,
        d.DivisionId,
        d.DivisionName,
        d.CreatedDate,
@@ -27,24 +26,24 @@ namespace Recipes.Ado.Upsert
        d.LastReviewCycle,
        d.StartTime FROM HR.Division d WHERE d.DivisionKey = @DivisionKey;";
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue("@DivisionKey", divisionKey);
+            using (var reader = cmd.ExecuteReader())
             {
-                cmd.Parameters.AddWithValue("@DivisionKey", divisionKey);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    reader.Read();
-                    return new Division(reader);
-                }
+                reader.Read();
+                return new Division(reader);
             }
         }
+    }
 
-        public int UpsertByName(Division division)
-        {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-            const string sql = @"MERGE INTO HR.Division target
+        const string sql = @"MERGE INTO HR.Division target
 USING
 (
     VALUES
@@ -89,36 +88,36 @@ WHEN NOT MATCHED THEN
      source.LastReviewCycle, source.StartTime)
 OUTPUT Inserted.DivisionKey;";
 
-            //update audit column
-            division.ModifiedDate = DateTime.UtcNow;
+        //update audit column
+        division.ModifiedDate = DateTime.UtcNow;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@DivisionKey", division.DivisionKey);
-                cmd.Parameters.AddWithValue("@DivisionName", division.DivisionName);
-                cmd.Parameters.AddWithValue("@DivisionId", division.DivisionId);
-                cmd.Parameters.AddWithValue("@ModifiedDate", division.ModifiedDate);
-                cmd.Parameters.AddWithValue("@CreatedByEmployeeKey", division.CreatedByEmployeeKey);
-                cmd.Parameters.AddWithValue("@ModifiedByEmployeeKey", division.ModifiedByEmployeeKey);
-                cmd.Parameters.AddWithValue("@FteBudget", (object?)division.FteBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@SuppliesBudget", (object?)division.SuppliesBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FloorSpaceBudget", (object?)division.FloorSpaceBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@MaxEmployees", (object?)division.MaxEmployees ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@LastReviewCycle", (object?)division.LastReviewCycle ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@StartTime", (object?)division.StartTime ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@SalaryBudget", (object?)division.SalaryBudget ?? DBNull.Value);
-
-                return (int)cmd.ExecuteScalar();
-            }
-        }
-
-        public int UpsertByPrimaryKey(Division division)
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
+            cmd.Parameters.AddWithValue("@DivisionKey", division.DivisionKey);
+            cmd.Parameters.AddWithValue("@DivisionName", division.DivisionName);
+            cmd.Parameters.AddWithValue("@DivisionId", division.DivisionId);
+            cmd.Parameters.AddWithValue("@ModifiedDate", division.ModifiedDate);
+            cmd.Parameters.AddWithValue("@CreatedByEmployeeKey", division.CreatedByEmployeeKey);
+            cmd.Parameters.AddWithValue("@ModifiedByEmployeeKey", division.ModifiedByEmployeeKey);
+            cmd.Parameters.AddWithValue("@FteBudget", (object?)division.FteBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SuppliesBudget", (object?)division.SuppliesBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@FloorSpaceBudget", (object?)division.FloorSpaceBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@MaxEmployees", (object?)division.MaxEmployees ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@LastReviewCycle", (object?)division.LastReviewCycle ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@StartTime", (object?)division.StartTime ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SalaryBudget", (object?)division.SalaryBudget ?? DBNull.Value);
 
-            const string sql = @"MERGE INTO HR.Division target
+            return (int)cmd.ExecuteScalar();
+        }
+    }
+
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
+
+        const string sql = @"MERGE INTO HR.Division target
 USING
 (
     VALUES
@@ -164,28 +163,27 @@ WHEN NOT MATCHED THEN
      source.LastReviewCycle, source.StartTime)
 OUTPUT Inserted.DivisionKey;";
 
-            //update audit column
-            division.ModifiedDate = DateTime.UtcNow;
+        //update audit column
+        division.ModifiedDate = DateTime.UtcNow;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue("@DivisionKey", division.DivisionKey);
-                cmd.Parameters.AddWithValue("@DivisionName", division.DivisionName);
-                cmd.Parameters.AddWithValue("@DivisionId", division.DivisionId);
-                cmd.Parameters.AddWithValue("@ModifiedDate", division.ModifiedDate);
-                cmd.Parameters.AddWithValue("@CreatedByEmployeeKey", division.CreatedByEmployeeKey);
-                cmd.Parameters.AddWithValue("@ModifiedByEmployeeKey", division.ModifiedByEmployeeKey);
-                cmd.Parameters.AddWithValue("@FteBudget", (object?)division.FteBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@SuppliesBudget", (object?)division.SuppliesBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FloorSpaceBudget", (object?)division.FloorSpaceBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@MaxEmployees", (object?)division.MaxEmployees ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@LastReviewCycle", (object?)division.LastReviewCycle ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@StartTime", (object?)division.StartTime ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@SalaryBudget", (object?)division.SalaryBudget ?? DBNull.Value);
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue("@DivisionKey", division.DivisionKey);
+            cmd.Parameters.AddWithValue("@DivisionName", division.DivisionName);
+            cmd.Parameters.AddWithValue("@DivisionId", division.DivisionId);
+            cmd.Parameters.AddWithValue("@ModifiedDate", division.ModifiedDate);
+            cmd.Parameters.AddWithValue("@CreatedByEmployeeKey", division.CreatedByEmployeeKey);
+            cmd.Parameters.AddWithValue("@ModifiedByEmployeeKey", division.ModifiedByEmployeeKey);
+            cmd.Parameters.AddWithValue("@FteBudget", (object?)division.FteBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SuppliesBudget", (object?)division.SuppliesBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@FloorSpaceBudget", (object?)division.FloorSpaceBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@MaxEmployees", (object?)division.MaxEmployees ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@LastReviewCycle", (object?)division.LastReviewCycle ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@StartTime", (object?)division.StartTime ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SalaryBudget", (object?)division.SalaryBudget ?? DBNull.Value);
 
-                return (int)cmd.ExecuteScalar();
-            }
+            return (int)cmd.ExecuteScalar();
         }
     }
 }

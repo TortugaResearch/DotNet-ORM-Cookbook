@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.Models;
+﻿using Recipes.Chain.Models;
 using Recipes.TryCrud;
 
-namespace Recipes.Chain.TryCrud
+namespace Recipes.Chain.TryCrud;
+
+[TestClass]
+public class TryCrudTests : TryCrudTests<EmployeeClassification>
 {
-    [TestClass]
-    public class TryCrudTests : TryCrudTests<EmployeeClassification>
+    protected override ITryCrudScenario<EmployeeClassification> GetScenario()
     {
-        protected override ITryCrudScenario<EmployeeClassification> GetScenario()
-        {
-            return new TryCrudScenario(Setup.PrimaryDataSource);
-        }
+        return new TryCrudScenario(Setup.PrimaryDataSource);
     }
 }

@@ -1,6 +1,5 @@
-﻿namespace Recipes.EntityFrameworkCore.Entities
+﻿namespace Recipes.EntityFrameworkCore.Entities;
+
+public partial class Student : IStudent
 {
-    public partial class Student : IStudent
-    {
-    }
 }

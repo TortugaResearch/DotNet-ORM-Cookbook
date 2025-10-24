@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#if !EFCore5
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.EntityFrameworkCore.Entities;
 using Recipes.MultipleDB;
 using System;
 
-#if !EFCore5
 //This relies on SetColumnName, which was broken in EF Core 5.
 
 namespace Recipes.EntityFrameworkCore.MultipleDB

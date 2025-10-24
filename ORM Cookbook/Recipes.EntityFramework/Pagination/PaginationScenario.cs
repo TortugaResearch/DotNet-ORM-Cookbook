@@ -1,68 +1,64 @@
 ﻿using Recipes.EntityFramework.Entities;
 using Recipes.Pagination;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
-namespace Recipes.EntityFramework.Pagination
+namespace Recipes.EntityFramework.Pagination;
+
+public class PaginationScenario : IPaginationScenario<Employee>
 {
-    public class PaginationScenario : IPaginationScenario<Employee>
+    private Func<OrmCookbookContext> CreateDbContext;
+
+    public PaginationScenario(Func<OrmCookbookContext> dBContextFactory)
     {
-        private Func<OrmCookbookContext> CreateDbContext;
+        CreateDbContext = dBContextFactory;
+    }
 
-        public PaginationScenario(Func<OrmCookbookContext> dBContextFactory)
+    public void InsertBatch(IList<Employee> employees)
+    {
+        using (var context = CreateDbContext())
         {
-            CreateDbContext = dBContextFactory;
+            context.Employee.AddRange(employees);
+            context.SaveChanges();
         }
+    }
 
-        public void InsertBatch(IList<Employee> employees)
+    public IList<Employee> PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(e => e.LastName == lastName)
+                .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
+                .Skip(page * pageSize).Take(pageSize).ToList();
+    }
+
+    [SuppressMessage("Globalization", "CA1307")]
+    public IList<Employee> PaginateWithSkipPast(string lastName, Employee? skipPast, int take)
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
+            if (skipPast == null)
             {
-                context.Employee.AddRange(employees);
-                context.SaveChanges();
-            }
-        }
-
-        public IList<Employee> PaginateWithPageSize(string lastName, int page, int pageSize)
-        {
-            using (var context = CreateDbContext())
                 return context.Employee.Where(e => e.LastName == lastName)
                     .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
-                    .Skip(page * pageSize).Take(pageSize).ToList();
-        }
-
-        [SuppressMessage("Globalization", "CA1307")]
-        public IList<Employee> PaginateWithSkipPast(string lastName, Employee? skipPast, int take)
-        {
-            using (var context = CreateDbContext())
+                    .Take(take).ToList();
+            }
+            else
             {
-                if (skipPast == null)
-                {
-                    return context.Employee.Where(e => e.LastName == lastName)
-                        .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
-                        .Take(take).ToList();
-                }
-                else
-                {
-                    return context.Employee
-                        .Where(e => (e.LastName == lastName) && (
-                            (string.Compare(e.FirstName, skipPast.FirstName) > 0)
-                                || (e.FirstName == skipPast.FirstName && e.EmployeeKey > skipPast.EmployeeKey))
-                            )
-                        .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
-                        .Take(take).ToList();
-                }
+                return context.Employee
+                    .Where(e => (e.LastName == lastName) && (
+                        (string.Compare(e.FirstName, skipPast.FirstName) > 0)
+                            || (e.FirstName == skipPast.FirstName && e.EmployeeKey > skipPast.EmployeeKey))
+                        )
+                    .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
+                    .Take(take).ToList();
             }
         }
+    }
 
-        public IList<Employee> PaginateWithSkipTake(string lastName, int skip, int take)
-        {
-            using (var context = CreateDbContext())
-                return context.Employee.Where(e => e.LastName == lastName)
-                    .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
-                    .Skip(skip).Take(take).ToList();
-        }
+    public IList<Employee> PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        using (var context = CreateDbContext())
+            return context.Employee.Where(e => e.LastName == lastName)
+                .OrderBy(e => e.FirstName).ThenBy(e => e.EmployeeKey)
+                .Skip(skip).Take(take).ToList();
     }
 }

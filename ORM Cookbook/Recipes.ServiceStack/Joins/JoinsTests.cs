@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Joins;
+﻿using Recipes.Joins;
 using Recipes.ServiceStack.Entities;
 
-namespace Recipes.ServiceStack.Joins
+namespace Recipes.ServiceStack.Joins;
+
+[TestClass]
+public class JoinsTests : JoinsTests<EmployeeDetail, Employee>
 {
-    [TestClass]
-    public class JoinsTests : JoinsTests<EmployeeDetail, Employee>
+    protected override IJoinsScenario<EmployeeDetail, Employee> GetScenario()
     {
-        protected override IJoinsScenario<EmployeeDetail, Employee> GetScenario()
-        {
-            return new JoinsScenario(Setup.DbConnectionFactory);
-        }
+        return new JoinsScenario(Setup.DbConnectionFactory);
     }
 }

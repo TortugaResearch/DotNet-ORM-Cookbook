@@ -1,14 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ScalarValue;
+﻿using Recipes.ScalarValue;
 
-namespace Recipes.Ado.ScalarValue
+namespace Recipes.Ado.ScalarValue;
+
+[TestClass]
+public class ScalarValueTests : Recipes.ScalarValue.ScalarValueTests
 {
-    [TestClass]
-    public class ScalarValueTests : Recipes.ScalarValue.ScalarValueTests
+    protected override IScalarValueScenario GetScenario()
     {
-        protected override IScalarValueScenario GetScenario()
-        {
-            return new ScalarValueScenario(Setup.SqlServerConnectionString);
-        }
+        return new ScalarValueScenario(Setup.SqlServerConnectionString);
     }
 }

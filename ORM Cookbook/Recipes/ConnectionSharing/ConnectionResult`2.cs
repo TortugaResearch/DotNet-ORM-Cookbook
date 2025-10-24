@@ -1,33 +1,32 @@
 ﻿using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Recipes.ConnectionSharing
+namespace Recipes.ConnectionSharing;
+
+public class ConnectionResult<TConnection, TState>
+
+where TConnection : DbConnection
 {
-    public class ConnectionResult<TConnection, TState>
-
-    where TConnection : DbConnection
+    public ConnectionResult(TConnection connection, TState state)
     {
-        public ConnectionResult(TConnection connection, TState state)
-        {
-            Connection = connection;
-            State = state;
-        }
+        Connection = connection;
+        State = state;
+    }
 
-        public TConnection Connection { get; set; }
-        public TState State { get; set; }
+    public TConnection Connection { get; set; }
+    public TState State { get; set; }
 
-        public void Deconstruct(out TConnection connection, out TState state)
-        {
-            connection = Connection;
-            state = State;
-        }
+    public void Deconstruct(out TConnection connection, out TState state)
+    {
+        connection = Connection;
+        state = State;
+    }
 
-        [SuppressMessage("Usage", "CA2225")]
-        public static implicit operator ConnectionResult<TConnection, TState>(
-            (TConnection connection, TState state) value)
+    [SuppressMessage("Usage", "CA2225")]
+    public static implicit operator ConnectionResult<TConnection, TState>(
+        (TConnection connection, TState state) value)
 
-        {
-            return new ConnectionResult<TConnection, TState>(value.connection, value.state);
-        }
+    {
+        return new ConnectionResult<TConnection, TState>(value.connection, value.state);
     }
 }

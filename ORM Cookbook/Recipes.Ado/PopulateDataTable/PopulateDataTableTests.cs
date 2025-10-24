@@ -1,14 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.PopulateDataTable;
+﻿using Recipes.PopulateDataTable;
 
-namespace Recipes.Ado.PopulateDataTable
+namespace Recipes.Ado.PopulateDataTable;
+
+[TestClass]
+public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
 {
-    [TestClass]
-    public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
+    protected override IPopulateDataTableScenario GetScenario()
     {
-        protected override IPopulateDataTableScenario GetScenario()
-        {
-            return new PopulateDataTableScenario(Setup.SqlServerConnectionString);
-        }
+        return new PopulateDataTableScenario(Setup.SqlServerConnectionString);
     }
 }

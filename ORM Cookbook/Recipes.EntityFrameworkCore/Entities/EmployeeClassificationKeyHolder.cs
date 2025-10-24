@@ -1,9 +1,6 @@
-using System;
+namespace Recipes.EntityFrameworkCore.Entities;
 
-namespace Recipes.EntityFrameworkCore.Entities
+public class EmployeeClassificationKeyHolder
 {
-    public class EmployeeClassificationKeyHolder
-    {
-        public int EmployeeClassificationKey { get; set; }
-    }
+    public int EmployeeClassificationKey { get; set; }
 }

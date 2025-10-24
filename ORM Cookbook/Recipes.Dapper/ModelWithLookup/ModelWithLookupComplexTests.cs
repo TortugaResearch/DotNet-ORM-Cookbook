@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Dapper.Models;
+﻿using Recipes.Dapper.Models;
 using Recipes.ModelWithLookup;
 
-namespace Recipes.Dapper.ModelWithLookup
+namespace Recipes.Dapper.ModelWithLookup;
+
+[TestClass]
+public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeComplex>
 {
-    [TestClass]
-    public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeComplex>
+    protected override IModelWithLookupComplexScenario<EmployeeComplex> GetScenario()
     {
-        protected override IModelWithLookupComplexScenario<EmployeeComplex> GetScenario()
-        {
-            return new ModelWithLookupComplexScenario(Setup.SqlServerConnectionString);
-        }
+        return new ModelWithLookupComplexScenario(Setup.SqlServerConnectionString);
     }
 }

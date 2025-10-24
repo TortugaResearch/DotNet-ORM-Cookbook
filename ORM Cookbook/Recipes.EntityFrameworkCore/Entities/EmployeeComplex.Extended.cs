@@ -1,12 +1,11 @@
-﻿namespace Recipes.EntityFrameworkCore.Entities
+﻿namespace Recipes.EntityFrameworkCore.Entities;
+
+//Used for linking the entity to the test framework. Not part of the recipe.
+partial class Employee : IEmployeeComplex
 {
-    //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class Employee : IEmployeeComplex
+    IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
     {
-        IReadOnlyEmployeeClassification? IEmployeeComplex.EmployeeClassification
-        {
-            get => EmployeeClassificationKeyNavigation;
-            set => EmployeeClassificationKeyNavigation = (EmployeeClassification?)value;
-        }
+        get => EmployeeClassificationKeyNavigation;
+        set => EmployeeClassificationKeyNavigation = (EmployeeClassification?)value;
     }
 }

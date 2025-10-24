@@ -1,41 +1,39 @@
 ﻿using DbConnector.Core;
 using Recipes.DbConnector.Models;
 using Recipes.RowCount;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
-namespace Recipes.DbConnector.RowCount
+namespace Recipes.DbConnector.RowCount;
+
+public class RowCountScenario : ScenarioBase, IRowCountScenario<EmployeeSimple>
 {
-    public class RowCountScenario : ScenarioBase, IRowCountScenario<EmployeeSimple>
+    public RowCountScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int EmployeeCount(string lastName)
     {
-        public RowCountScenario(string connectionString) : base(connectionString)
-        { }
+        const string sql = "SELECT COUNT(*) FROM HR.Employee e WHERE e.LastName = @lastName";
 
-        public int EmployeeCount(string lastName)
-        {
-            const string sql = "SELECT COUNT(*) FROM HR.Employee e WHERE e.LastName = @lastName";
+        return DbConnector.Scalar<int>(sql, new { lastName }).Execute();
+    }
 
-            return DbConnector.Scalar<int>(sql, new { lastName }).Execute();
-        }
+    public int EmployeeCount()
+    {
+        const string sql = "SELECT COUNT(*) FROM HR.Employee e";
 
-        public int EmployeeCount()
-        {
-            const string sql = "SELECT COUNT(*) FROM HR.Employee e";
+        return DbConnector.Scalar<int>(sql).Execute();
+    }
 
-            return DbConnector.Scalar<int>(sql).Execute();
-        }
+    public void InsertBatch(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void InsertBatch(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
-
-            //Best approach for unlimited inserts since SQL server has parameter amount restrictions
-            //https://docs.microsoft.com/en-us/sql/sql-server/maximum-capacity-specifications-for-sql-server?redirectedfrom=MSDN&view=sql-server-ver15
-            DbConnector.Build<int?>(
-                    sql: @$"INSERT INTO {EmployeeSimple.TableName}
+        //Best approach for unlimited inserts since SQL server has parameter amount restrictions
+        //https://docs.microsoft.com/en-us/sql/sql-server/maximum-capacity-specifications-for-sql-server?redirectedfrom=MSDN&view=sql-server-ver15
+        DbConnector.Build<int?>(
+                sql: @$"INSERT INTO {EmployeeSimple.TableName}
                     (
                         CellPhone,
                         EmployeeClassificationKey,
@@ -44,7 +42,7 @@ namespace Recipes.DbConnector.RowCount
                         MiddleName,
                         OfficePhone,
                         Title
-                    ) 
+                    )
                     VALUES (
                         @{nameof(EmployeeSimple.CellPhone)},
                         @{nameof(EmployeeSimple.EmployeeClassificationKey)},
@@ -54,36 +52,35 @@ namespace Recipes.DbConnector.RowCount
                         @{nameof(EmployeeSimple.OfficePhone)},
                         @{nameof(EmployeeSimple.Title)}
                     )",
-                    param: employees[0],
-                    onExecute: (int? result, IDbExecutionModel em) =>
+                param: employees[0],
+                onExecute: (int? result, IDbExecutionModel em) =>
+                {
+                    //Set the command
+                    DbCommand command = em.Command;
+
+                    //Execute first row.
+                    em.NumberOfRowsAffected = command.ExecuteNonQuery();
+
+                    //Set and execute remaining rows.
+                    for (int i = 1; i < employees.Count; i++)
                     {
-                        //Set the command
-                        DbCommand command = em.Command;
+                        var emp = employees[i];
 
-                        //Execute first row.
-                        em.NumberOfRowsAffected = command.ExecuteNonQuery();
+                        command.Parameters[nameof(EmployeeSimple.CellPhone)].Value = emp.CellPhone ?? (object)DBNull.Value;
+                        command.Parameters[nameof(EmployeeSimple.EmployeeClassificationKey)].Value = emp.EmployeeClassificationKey;
+                        command.Parameters[nameof(EmployeeSimple.FirstName)].Value = emp.FirstName ?? (object)DBNull.Value;
+                        command.Parameters[nameof(EmployeeSimple.LastName)].Value = emp.LastName ?? (object)DBNull.Value;
+                        command.Parameters[nameof(EmployeeSimple.MiddleName)].Value = emp.MiddleName ?? (object)DBNull.Value;
+                        command.Parameters[nameof(EmployeeSimple.OfficePhone)].Value = emp.OfficePhone ?? (object)DBNull.Value;
+                        command.Parameters[nameof(EmployeeSimple.Title)].Value = emp.Title ?? (object)DBNull.Value;
 
-                        //Set and execute remaining rows.
-                        for (int i = 1; i < employees.Count; i++)
-                        {
-                            var emp = employees[i];
-
-                            command.Parameters[nameof(EmployeeSimple.CellPhone)].Value = emp.CellPhone ?? (object)DBNull.Value;
-                            command.Parameters[nameof(EmployeeSimple.EmployeeClassificationKey)].Value = emp.EmployeeClassificationKey;
-                            command.Parameters[nameof(EmployeeSimple.FirstName)].Value = emp.FirstName ?? (object)DBNull.Value;
-                            command.Parameters[nameof(EmployeeSimple.LastName)].Value = emp.LastName ?? (object)DBNull.Value;
-                            command.Parameters[nameof(EmployeeSimple.MiddleName)].Value = emp.MiddleName ?? (object)DBNull.Value;
-                            command.Parameters[nameof(EmployeeSimple.OfficePhone)].Value = emp.OfficePhone ?? (object)DBNull.Value;
-                            command.Parameters[nameof(EmployeeSimple.Title)].Value = emp.Title ?? (object)DBNull.Value;
-
-                            em.NumberOfRowsAffected += command.ExecuteNonQuery();
-                        }
-
-                        return em.NumberOfRowsAffected;
+                        em.NumberOfRowsAffected += command.ExecuteNonQuery();
                     }
-                )
-                .WithIsolationLevel(IsolationLevel.ReadCommitted)//Use a transaction
-                .Execute();
-        }
+
+                    return em.NumberOfRowsAffected;
+                }
+            )
+            .WithIsolationLevel(IsolationLevel.ReadCommitted)//Use a transaction
+            .Execute();
     }
 }

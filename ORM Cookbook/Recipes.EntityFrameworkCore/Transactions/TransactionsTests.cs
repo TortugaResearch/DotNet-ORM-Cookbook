@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.EntityFrameworkCore.Entities;
+﻿using Recipes.EntityFrameworkCore.Entities;
 using Recipes.Transactions;
 
 namespace Recipes.EntityFrameworkCore.Transactions

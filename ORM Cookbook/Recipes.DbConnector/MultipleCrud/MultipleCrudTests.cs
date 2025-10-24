@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.DbConnector.Models;
+﻿using Recipes.DbConnector.Models;
 using Recipes.MultipleCrud;
 
-namespace Recipes.DbConnector.MultipleCrud
+namespace Recipes.DbConnector.MultipleCrud;
+
+[TestClass]
+public class MultipleCrudTests : MultipleCrudTests<EmployeeSimple>
 {
-    [TestClass]
-    public class MultipleCrudTests : MultipleCrudTests<EmployeeSimple>
+    protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
     {
-        protected override IMultipleCrudScenario<EmployeeSimple> GetScenario()
-        {
-            return new MultipleCrudScenario(Setup.SqlServerConnectionString);
-        }
+        return new MultipleCrudScenario(Setup.SqlServerConnectionString);
     }
 }

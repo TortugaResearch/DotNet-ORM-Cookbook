@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ServiceStack.Entities;
+﻿using Recipes.ServiceStack.Entities;
 using Recipes.Views;
 
-namespace Recipes.ServiceStack.Views
+namespace Recipes.ServiceStack.Views;
+
+[TestClass]
+public class ViewsTests : ViewsTests<EmployeeDetail, Employee>
 {
-    [TestClass]
-    public class ViewsTests : ViewsTests<EmployeeDetail, Employee>
+    protected override IViewsScenario<EmployeeDetail, Employee> GetScenario()
     {
-        protected override IViewsScenario<EmployeeDetail, Employee> GetScenario()
-        {
-            return new ViewsScenario(Setup.DbConnectionFactory);
-        }
+        return new ViewsScenario(Setup.DbConnectionFactory);
     }
 }

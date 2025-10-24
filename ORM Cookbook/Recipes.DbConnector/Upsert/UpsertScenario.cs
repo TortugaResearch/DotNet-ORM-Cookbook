@@ -1,17 +1,16 @@
 ﻿using Recipes.DbConnector.Models;
 using Recipes.Upsert;
-using System;
 
-namespace Recipes.DbConnector.Upsert
+namespace Recipes.DbConnector.Upsert;
+
+public class UpsertScenario : ScenarioBase, IUpsertScenario<Division>
 {
-    public class UpsertScenario : ScenarioBase, IUpsertScenario<Division>
-    {
-        public UpsertScenario(string connectionString) : base(connectionString)
-        { }
+    public UpsertScenario(string connectionString) : base(connectionString)
+    { }
 
-        public Division GetByKey(int divisionKey)
-        {
-            const string sql = @"SELECT d.DivisionKey,
+    public Division GetByKey(int divisionKey)
+    {
+        const string sql = @"SELECT d.DivisionKey,
                d.DivisionId,
                d.DivisionName,
                d.CreatedDate,
@@ -26,15 +25,15 @@ namespace Recipes.DbConnector.Upsert
                d.LastReviewCycle,
                d.StartTime FROM HR.Division d WHERE d.DivisionKey = @divisionKey;";
 
-            return DbConnector.ReadSingle<Division>(sql, new { divisionKey }).Execute();
-        }
+        return DbConnector.ReadSingle<Division>(sql, new { divisionKey }).Execute();
+    }
 
-        public int UpsertByName(Division division)
-        {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-            const string sql = @"MERGE INTO HR.Division target
+        const string sql = @"MERGE INTO HR.Division target
                 USING
                 (
                     VALUES
@@ -79,20 +78,20 @@ namespace Recipes.DbConnector.Upsert
                      source.LastReviewCycle, source.StartTime)
                 OUTPUT Inserted.DivisionKey;";
 
-            //update audit column
-            var utcNow = DateTime.UtcNow;
-            division.CreatedDate = utcNow;
-            division.ModifiedDate = utcNow;
+        //update audit column
+        var utcNow = DateTime.UtcNow;
+        division.CreatedDate = utcNow;
+        division.ModifiedDate = utcNow;
 
-            return DbConnector.Scalar<int>(sql, division).Execute();
-        }
+        return DbConnector.Scalar<int>(sql, division).Execute();
+    }
 
-        public int UpsertByPrimaryKey(Division division)
-        {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-            const string sql = @"MERGE INTO HR.Division target
+        const string sql = @"MERGE INTO HR.Division target
                 USING
                 (
                     VALUES
@@ -138,12 +137,11 @@ namespace Recipes.DbConnector.Upsert
                      source.LastReviewCycle, source.StartTime)
                 OUTPUT Inserted.DivisionKey;";
 
-            //update audit column
-            var utcNow = DateTime.UtcNow;
-            division.CreatedDate = utcNow;
-            division.ModifiedDate = utcNow;
+        //update audit column
+        var utcNow = DateTime.UtcNow;
+        division.CreatedDate = utcNow;
+        division.ModifiedDate = utcNow;
 
-            return DbConnector.Scalar<int>(sql, division).Execute();
-        }
+        return DbConnector.Scalar<int>(sql, division).Execute();
     }
 }

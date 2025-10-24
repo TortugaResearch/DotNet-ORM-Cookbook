@@ -153,9 +153,9 @@
     {
         const string sql =
             @&quot;SELECT c.name FROM sys.columns c
-                INNER JOIN sys.tables t ON c.object_id = t.object_id
-                INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
-                WHERE s.name = @SchemaName AND t.name = @TableName&quot;;
+                    INNER JOIN sys.tables t ON c.object_id = t.object_id
+                    INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
+                    WHERE s.name = @SchemaName AND t.name = @TableName&quot;;
 
         var result = new List&lt;string&gt;();
         using (var con = OpenConnection())
@@ -176,9 +176,9 @@
     {
         const string sql =
             @&quot;SELECT c.name FROM sys.columns c
-                INNER JOIN sys.views v ON c.object_id = v.object_id
-                INNER JOIN sys.schemas s ON v.schema_id = s.schema_id
-                WHERE s.name = @SchemaName AND v.name = @ViewName&quot;;
+                    INNER JOIN sys.views v ON c.object_id = v.object_id
+                    INNER JOIN sys.schemas s ON v.schema_id = s.schema_id
+                    WHERE s.name = @SchemaName AND v.name = @ViewName&quot;;
 
         var result = new List&lt;string&gt;();
         using (var con = OpenConnection())
@@ -283,9 +283,9 @@
     {
         const string sql =
             @&quot;SELECT c.name FROM sys.columns c
-                INNER JOIN sys.tables t ON c.object_id = t.object_id
-                INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
-                WHERE s.name = @SchemaName AND t.name = @TableName&quot;;
+                    INNER JOIN sys.tables t ON c.object_id = t.object_id
+                    INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
+                    WHERE s.name = @SchemaName AND t.name = @TableName&quot;;
 
         using (var con = OpenConnection())
             return con.Query&lt;string&gt;(sql, new { schemaName, tableName }).ToList();
@@ -295,9 +295,9 @@
     {
         const string sql =
             @&quot;SELECT c.name FROM sys.columns c
-                INNER JOIN sys.views v ON c.object_id = v.object_id
-                INNER JOIN sys.schemas s ON v.schema_id = s.schema_id
-                WHERE s.name = @SchemaName AND v.name = @ViewName&quot;;
+                    INNER JOIN sys.views v ON c.object_id = v.object_id
+                    INNER JOIN sys.schemas s ON v.schema_id = s.schema_id
+                    WHERE s.name = @SchemaName AND v.name = @ViewName&quot;;
 
         using (var con = OpenConnection())
             return con.Query&lt;string&gt;(sql, new { schemaName, viewName }).ToList();

@@ -160,14 +160,14 @@
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>This code demonstrates the MERGE syntax.</p>
-<pre><code class="cs">    public class UpsertScenario : SqlServerScenarioBase, IUpsertScenario&lt;Division&gt;
-    {
-        public UpsertScenario(string connectionString) : base(connectionString)
-        { }
+<pre><code class="cs">public class UpsertScenario : SqlServerScenarioBase, IUpsertScenario&lt;Division&gt;
+{
+    public UpsertScenario(string connectionString) : base(connectionString)
+    { }
 
-        public Division GetByKey(int divisionKey)
-        {
-            const string sql = @&quot;SELECT d.DivisionKey,
+    public Division GetByKey(int divisionKey)
+    {
+        const string sql = @&quot;SELECT d.DivisionKey,
        d.DivisionId,
        d.DivisionName,
        d.CreatedDate,
@@ -182,24 +182,24 @@
        d.LastReviewCycle,
        d.StartTime FROM HR.Division d WHERE d.DivisionKey = @DivisionKey;&quot;;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
+            using (var reader = cmd.ExecuteReader())
             {
-                cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, divisionKey);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    reader.Read();
-                    return new Division(reader);
-                }
+                reader.Read();
+                return new Division(reader);
             }
         }
+    }
 
-        public int UpsertByName(Division division)
-        {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
 
-            const string sql = @&quot;MERGE INTO HR.Division target
+        const string sql = @&quot;MERGE INTO HR.Division target
 USING
 (
     VALUES
@@ -244,36 +244,36 @@ WHEN NOT MATCHED THEN
      source.LastReviewCycle, source.StartTime)
 OUTPUT Inserted.DivisionKey;&quot;;
 
-            //update audit column
-            division.ModifiedDate = DateTime.UtcNow;
+        //update audit column
+        division.ModifiedDate = DateTime.UtcNow;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, division.DivisionKey);
-                cmd.Parameters.AddWithValue(&quot;@DivisionName&quot;, division.DivisionName);
-                cmd.Parameters.AddWithValue(&quot;@DivisionId&quot;, division.DivisionId);
-                cmd.Parameters.AddWithValue(&quot;@ModifiedDate&quot;, division.ModifiedDate);
-                cmd.Parameters.AddWithValue(&quot;@CreatedByEmployeeKey&quot;, division.CreatedByEmployeeKey);
-                cmd.Parameters.AddWithValue(&quot;@ModifiedByEmployeeKey&quot;, division.ModifiedByEmployeeKey);
-                cmd.Parameters.AddWithValue(&quot;@FteBudget&quot;, (object?)division.FteBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@SuppliesBudget&quot;, (object?)division.SuppliesBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@FloorSpaceBudget&quot;, (object?)division.FloorSpaceBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@MaxEmployees&quot;, (object?)division.MaxEmployees ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@LastReviewCycle&quot;, (object?)division.LastReviewCycle ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@StartTime&quot;, (object?)division.StartTime ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@SalaryBudget&quot;, (object?)division.SalaryBudget ?? DBNull.Value);
-
-                return (int)cmd.ExecuteScalar();
-            }
-        }
-
-        public int UpsertByPrimaryKey(Division division)
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, division.DivisionKey);
+            cmd.Parameters.AddWithValue(&quot;@DivisionName&quot;, division.DivisionName);
+            cmd.Parameters.AddWithValue(&quot;@DivisionId&quot;, division.DivisionId);
+            cmd.Parameters.AddWithValue(&quot;@ModifiedDate&quot;, division.ModifiedDate);
+            cmd.Parameters.AddWithValue(&quot;@CreatedByEmployeeKey&quot;, division.CreatedByEmployeeKey);
+            cmd.Parameters.AddWithValue(&quot;@ModifiedByEmployeeKey&quot;, division.ModifiedByEmployeeKey);
+            cmd.Parameters.AddWithValue(&quot;@FteBudget&quot;, (object?)division.FteBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@SuppliesBudget&quot;, (object?)division.SuppliesBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@FloorSpaceBudget&quot;, (object?)division.FloorSpaceBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@MaxEmployees&quot;, (object?)division.MaxEmployees ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@LastReviewCycle&quot;, (object?)division.LastReviewCycle ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@StartTime&quot;, (object?)division.StartTime ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@SalaryBudget&quot;, (object?)division.SalaryBudget ?? DBNull.Value);
 
-            const string sql = @&quot;MERGE INTO HR.Division target
+            return (int)cmd.ExecuteScalar();
+        }
+    }
+
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+
+        const string sql = @&quot;MERGE INTO HR.Division target
 USING
 (
     VALUES
@@ -319,30 +319,30 @@ WHEN NOT MATCHED THEN
      source.LastReviewCycle, source.StartTime)
 OUTPUT Inserted.DivisionKey;&quot;;
 
-            //update audit column
-            division.ModifiedDate = DateTime.UtcNow;
+        //update audit column
+        division.ModifiedDate = DateTime.UtcNow;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, division.DivisionKey);
-                cmd.Parameters.AddWithValue(&quot;@DivisionName&quot;, division.DivisionName);
-                cmd.Parameters.AddWithValue(&quot;@DivisionId&quot;, division.DivisionId);
-                cmd.Parameters.AddWithValue(&quot;@ModifiedDate&quot;, division.ModifiedDate);
-                cmd.Parameters.AddWithValue(&quot;@CreatedByEmployeeKey&quot;, division.CreatedByEmployeeKey);
-                cmd.Parameters.AddWithValue(&quot;@ModifiedByEmployeeKey&quot;, division.ModifiedByEmployeeKey);
-                cmd.Parameters.AddWithValue(&quot;@FteBudget&quot;, (object?)division.FteBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@SuppliesBudget&quot;, (object?)division.SuppliesBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@FloorSpaceBudget&quot;, (object?)division.FloorSpaceBudget ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@MaxEmployees&quot;, (object?)division.MaxEmployees ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@LastReviewCycle&quot;, (object?)division.LastReviewCycle ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@StartTime&quot;, (object?)division.StartTime ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@SalaryBudget&quot;, (object?)division.SalaryBudget ?? DBNull.Value);
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@DivisionKey&quot;, division.DivisionKey);
+            cmd.Parameters.AddWithValue(&quot;@DivisionName&quot;, division.DivisionName);
+            cmd.Parameters.AddWithValue(&quot;@DivisionId&quot;, division.DivisionId);
+            cmd.Parameters.AddWithValue(&quot;@ModifiedDate&quot;, division.ModifiedDate);
+            cmd.Parameters.AddWithValue(&quot;@CreatedByEmployeeKey&quot;, division.CreatedByEmployeeKey);
+            cmd.Parameters.AddWithValue(&quot;@ModifiedByEmployeeKey&quot;, division.ModifiedByEmployeeKey);
+            cmd.Parameters.AddWithValue(&quot;@FteBudget&quot;, (object?)division.FteBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@SuppliesBudget&quot;, (object?)division.SuppliesBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@FloorSpaceBudget&quot;, (object?)division.FloorSpaceBudget ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@MaxEmployees&quot;, (object?)division.MaxEmployees ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@LastReviewCycle&quot;, (object?)division.LastReviewCycle ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@StartTime&quot;, (object?)division.StartTime ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@SalaryBudget&quot;, (object?)division.SalaryBudget ?? DBNull.Value);
 
-                return (int)cmd.ExecuteScalar();
-            }
+            return (int)cmd.ExecuteScalar();
         }
     }
+}
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
@@ -380,14 +380,14 @@ OUTPUT Inserted.DivisionKey;&quot;;
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class UpsertScenario : ScenarioBase, IUpsertScenario&lt;Division&gt;
-    {
-        public UpsertScenario(string connectionString) : base(connectionString)
-        { }
+<pre><code class="cs">public class UpsertScenario : ScenarioBase, IUpsertScenario&lt;Division&gt;
+{
+    public UpsertScenario(string connectionString) : base(connectionString)
+    { }
 
-        public Division GetByKey(int divisionKey)
-        {
-            const string sql = @&quot;SELECT d.DivisionKey,
+    public Division GetByKey(int divisionKey)
+    {
+        const string sql = @&quot;SELECT d.DivisionKey,
        d.DivisionId,
        d.DivisionName,
        d.CreatedDate,
@@ -401,16 +401,16 @@ OUTPUT Inserted.DivisionKey;&quot;;
        d.MaxEmployees,
        d.LastReviewCycle,
        d.StartTime FROM HR.Division d WHERE d.DivisionKey = @DivisionKey;&quot;;
-            using (var con = OpenConnection())
-                return con.QuerySingle&lt;Division&gt;(sql, new { divisionKey });
-        }
+        using (var con = OpenConnection())
+            return con.QuerySingle&lt;Division&gt;(sql, new { divisionKey });
+    }
 
-        public int UpsertByName(Division division)
-        {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+    public int UpsertByName(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
 
-            const string sql = @&quot;MERGE INTO HR.Division target
+        const string sql = @&quot;MERGE INTO HR.Division target
 USING
 (
     VALUES
@@ -455,19 +455,19 @@ WHEN NOT MATCHED THEN
      source.LastReviewCycle, source.StartTime)
 OUTPUT Inserted.DivisionKey;&quot;;
 
-            //update audit column
-            division.ModifiedDate = DateTime.UtcNow;
+        //update audit column
+        division.ModifiedDate = DateTime.UtcNow;
 
-            using (var con = OpenConnection())
-                return con.ExecuteScalar&lt;int&gt;(sql, division);
-        }
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int&gt;(sql, division);
+    }
 
-        public int UpsertByPrimaryKey(Division division)
-        {
-            if (division == null)
-                throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
+    public int UpsertByPrimaryKey(Division division)
+    {
+        if (division == null)
+            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
 
-            const string sql = @&quot;MERGE INTO HR.Division target
+        const string sql = @&quot;MERGE INTO HR.Division target
 USING
 (
     VALUES
@@ -513,13 +513,13 @@ WHEN NOT MATCHED THEN
      source.LastReviewCycle, source.StartTime)
 OUTPUT Inserted.DivisionKey;&quot;;
 
-            //update audit column
-            division.ModifiedDate = DateTime.UtcNow;
+        //update audit column
+        division.ModifiedDate = DateTime.UtcNow;
 
-            using (var con = OpenConnection())
-                return con.ExecuteScalar&lt;int&gt;(sql, division);
-        }
+        using (var con = OpenConnection())
+            return con.ExecuteScalar&lt;int&gt;(sql, division);
     }
+}
 </code></pre>
 
 <h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
@@ -531,19 +531,19 @@ OUTPUT Inserted.DivisionKey;&quot;;
     public Division GetByKey(int divisionKey)
     {
         const string sql = @&quot;SELECT d.DivisionKey,
-           d.DivisionId,
-           d.DivisionName,
-           d.CreatedDate,
-           d.ModifiedDate,
-           d.CreatedByEmployeeKey,
-           d.ModifiedByEmployeeKey,
-           d.SalaryBudget,
-           d.FteBudget,
-           d.SuppliesBudget,
-           d.FloorSpaceBudget,
-           d.MaxEmployees,
-           d.LastReviewCycle,
-           d.StartTime FROM HR.Division d WHERE d.DivisionKey = @divisionKey;&quot;;
+               d.DivisionId,
+               d.DivisionName,
+               d.CreatedDate,
+               d.ModifiedDate,
+               d.CreatedByEmployeeKey,
+               d.ModifiedByEmployeeKey,
+               d.SalaryBudget,
+               d.FteBudget,
+               d.SuppliesBudget,
+               d.FloorSpaceBudget,
+               d.MaxEmployees,
+               d.LastReviewCycle,
+               d.StartTime FROM HR.Division d WHERE d.DivisionKey = @divisionKey;&quot;;
 
         return DbConnector.ReadSingle&lt;Division&gt;(sql, new { divisionKey }).Execute();
     }
@@ -554,49 +554,49 @@ OUTPUT Inserted.DivisionKey;&quot;;
             throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
 
         const string sql = @&quot;MERGE INTO HR.Division target
-            USING
-            (
-                VALUES
-                    (@DivisionKey, @DivisionId, @DivisionName, @ModifiedDate, @CreatedByEmployeeKey,
-                     @ModifiedByEmployeeKey, @SalaryBudget, @FteBudget, @SuppliesBudget, @FloorSpaceBudget, @MaxEmployees,
-                     @LastReviewCycle, @StartTime
-                    )
-            ) source (DivisionKey, DivisionId, DivisionName, ModifiedDate, CreatedByEmployeeKey,
-                      ModifiedByEmployeeKey, SalaryBudget, FteBudget, SuppliesBudget, FloorSpaceBudget, MaxEmployees,
-                      LastReviewCycle, StartTime
-                     )
-            ON target.DivisionName = source.DivisionName
-            WHEN MATCHED THEN
-                UPDATE SET DivisionId = source.DivisionId,
-                           ModifiedDate = source.ModifiedDate,
-                           ModifiedByEmployeeKey = source.ModifiedByEmployeeKey,
-                           SalaryBudget = source.SalaryBudget,
-                           FteBudget = source.FteBudget,
-                           SuppliesBudget = source.SuppliesBudget,
-                           FloorSpaceBudget = source.FloorSpaceBudget,
-                           MaxEmployees = source.MaxEmployees,
-                           LastReviewCycle = source.LastReviewCycle,
-                           StartTime = source.StartTime
-            WHEN NOT MATCHED THEN
-                INSERT
+                USING
                 (
-                    DivisionId,
-                    DivisionName,
-                    CreatedByEmployeeKey,
-                    ModifiedByEmployeeKey,
-                    SalaryBudget,
-                    FteBudget,
-                    SuppliesBudget,
-                    FloorSpaceBudget,
-                    MaxEmployees,
-                    LastReviewCycle,
-                    StartTime
-                )
-                VALUES
-                (source.DivisionId, source.DivisionName, source.CreatedByEmployeeKey, source.ModifiedByEmployeeKey,
-                 source.SalaryBudget, source.FteBudget, source.SuppliesBudget, source.FloorSpaceBudget, source.MaxEmployees,
-                 source.LastReviewCycle, source.StartTime)
-            OUTPUT Inserted.DivisionKey;&quot;;
+                    VALUES
+                        (@DivisionKey, @DivisionId, @DivisionName, @ModifiedDate, @CreatedByEmployeeKey,
+                         @ModifiedByEmployeeKey, @SalaryBudget, @FteBudget, @SuppliesBudget, @FloorSpaceBudget, @MaxEmployees,
+                         @LastReviewCycle, @StartTime
+                        )
+                ) source (DivisionKey, DivisionId, DivisionName, ModifiedDate, CreatedByEmployeeKey,
+                          ModifiedByEmployeeKey, SalaryBudget, FteBudget, SuppliesBudget, FloorSpaceBudget, MaxEmployees,
+                          LastReviewCycle, StartTime
+                         )
+                ON target.DivisionName = source.DivisionName
+                WHEN MATCHED THEN
+                    UPDATE SET DivisionId = source.DivisionId,
+                               ModifiedDate = source.ModifiedDate,
+                               ModifiedByEmployeeKey = source.ModifiedByEmployeeKey,
+                               SalaryBudget = source.SalaryBudget,
+                               FteBudget = source.FteBudget,
+                               SuppliesBudget = source.SuppliesBudget,
+                               FloorSpaceBudget = source.FloorSpaceBudget,
+                               MaxEmployees = source.MaxEmployees,
+                               LastReviewCycle = source.LastReviewCycle,
+                               StartTime = source.StartTime
+                WHEN NOT MATCHED THEN
+                    INSERT
+                    (
+                        DivisionId,
+                        DivisionName,
+                        CreatedByEmployeeKey,
+                        ModifiedByEmployeeKey,
+                        SalaryBudget,
+                        FteBudget,
+                        SuppliesBudget,
+                        FloorSpaceBudget,
+                        MaxEmployees,
+                        LastReviewCycle,
+                        StartTime
+                    )
+                    VALUES
+                    (source.DivisionId, source.DivisionName, source.CreatedByEmployeeKey, source.ModifiedByEmployeeKey,
+                     source.SalaryBudget, source.FteBudget, source.SuppliesBudget, source.FloorSpaceBudget, source.MaxEmployees,
+                     source.LastReviewCycle, source.StartTime)
+                OUTPUT Inserted.DivisionKey;&quot;;
 
         //update audit column
         var utcNow = DateTime.UtcNow;
@@ -612,50 +612,50 @@ OUTPUT Inserted.DivisionKey;&quot;;
             throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
 
         const string sql = @&quot;MERGE INTO HR.Division target
-            USING
-            (
-                VALUES
-                    (@DivisionKey, @DivisionId, @DivisionName, @ModifiedDate, @CreatedByEmployeeKey,
-                     @ModifiedByEmployeeKey, @SalaryBudget, @FteBudget, @SuppliesBudget, @FloorSpaceBudget, @MaxEmployees,
-                     @LastReviewCycle, @StartTime
-                    )
-            ) source (DivisionKey, DivisionId, DivisionName, ModifiedDate, CreatedByEmployeeKey,
-                      ModifiedByEmployeeKey, SalaryBudget, FteBudget, SuppliesBudget, FloorSpaceBudget, MaxEmployees,
-                      LastReviewCycle, StartTime
-                     )
-            ON target.DivisionKey = source.DivisionKey
-            WHEN MATCHED THEN
-                UPDATE SET DivisionId = source.DivisionId,
-                           DivisionName = source.DivisionName,
-                           ModifiedDate = source.ModifiedDate,
-                           ModifiedByEmployeeKey = source.ModifiedByEmployeeKey,
-                           SalaryBudget = source.SalaryBudget,
-                           FteBudget = source.FteBudget,
-                           SuppliesBudget = source.SuppliesBudget,
-                           FloorSpaceBudget = source.FloorSpaceBudget,
-                           MaxEmployees = source.MaxEmployees,
-                           LastReviewCycle = source.LastReviewCycle,
-                           StartTime = source.StartTime
-            WHEN NOT MATCHED THEN
-                INSERT
+                USING
                 (
-                    DivisionId,
-                    DivisionName,
-                    CreatedByEmployeeKey,
-                    ModifiedByEmployeeKey,
-                    SalaryBudget,
-                    FteBudget,
-                    SuppliesBudget,
-                    FloorSpaceBudget,
-                    MaxEmployees,
-                    LastReviewCycle,
-                    StartTime
-                )
-                VALUES
-                (source.DivisionId, source.DivisionName, source.CreatedByEmployeeKey, source.ModifiedByEmployeeKey,
-                 source.SalaryBudget, source.FteBudget, source.SuppliesBudget, source.FloorSpaceBudget, source.MaxEmployees,
-                 source.LastReviewCycle, source.StartTime)
-            OUTPUT Inserted.DivisionKey;&quot;;
+                    VALUES
+                        (@DivisionKey, @DivisionId, @DivisionName, @ModifiedDate, @CreatedByEmployeeKey,
+                         @ModifiedByEmployeeKey, @SalaryBudget, @FteBudget, @SuppliesBudget, @FloorSpaceBudget, @MaxEmployees,
+                         @LastReviewCycle, @StartTime
+                        )
+                ) source (DivisionKey, DivisionId, DivisionName, ModifiedDate, CreatedByEmployeeKey,
+                          ModifiedByEmployeeKey, SalaryBudget, FteBudget, SuppliesBudget, FloorSpaceBudget, MaxEmployees,
+                          LastReviewCycle, StartTime
+                         )
+                ON target.DivisionKey = source.DivisionKey
+                WHEN MATCHED THEN
+                    UPDATE SET DivisionId = source.DivisionId,
+                               DivisionName = source.DivisionName,
+                               ModifiedDate = source.ModifiedDate,
+                               ModifiedByEmployeeKey = source.ModifiedByEmployeeKey,
+                               SalaryBudget = source.SalaryBudget,
+                               FteBudget = source.FteBudget,
+                               SuppliesBudget = source.SuppliesBudget,
+                               FloorSpaceBudget = source.FloorSpaceBudget,
+                               MaxEmployees = source.MaxEmployees,
+                               LastReviewCycle = source.LastReviewCycle,
+                               StartTime = source.StartTime
+                WHEN NOT MATCHED THEN
+                    INSERT
+                    (
+                        DivisionId,
+                        DivisionName,
+                        CreatedByEmployeeKey,
+                        ModifiedByEmployeeKey,
+                        SalaryBudget,
+                        FteBudget,
+                        SuppliesBudget,
+                        FloorSpaceBudget,
+                        MaxEmployees,
+                        LastReviewCycle,
+                        StartTime
+                    )
+                    VALUES
+                    (source.DivisionId, source.DivisionName, source.CreatedByEmployeeKey, source.ModifiedByEmployeeKey,
+                     source.SalaryBudget, source.FteBudget, source.SuppliesBudget, source.FloorSpaceBudget, source.MaxEmployees,
+                     source.LastReviewCycle, source.StartTime)
+                OUTPUT Inserted.DivisionKey;&quot;;
 
         //update audit column
         var utcNow = DateTime.UtcNow;

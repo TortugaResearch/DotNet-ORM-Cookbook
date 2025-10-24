@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.DbConnector.Models;
+﻿using Recipes.DbConnector.Models;
 using Recipes.RowCount;
 
-namespace Recipes.DbConnector.RowCount
+namespace Recipes.DbConnector.RowCount;
+
+[TestClass]
+public class RowCountTests : RowCountTests<EmployeeSimple>
 {
-    [TestClass]
-    public class RowCountTests : RowCountTests<EmployeeSimple>
+    protected override IRowCountScenario<EmployeeSimple> GetScenario()
     {
-        protected override IRowCountScenario<EmployeeSimple> GetScenario()
-        {
-            return new RowCountScenario(Setup.SqlServerConnectionString);
-        }
+        return new RowCountScenario(Setup.SqlServerConnectionString);
     }
 }

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.DbConnector.Models;
+﻿using Recipes.DbConnector.Models;
 using Recipes.DynamicSorting;
 
-namespace Recipes.DbConnector.DynamicSorting
+namespace Recipes.DbConnector.DynamicSorting;
+
+[TestClass]
+public class DynamicSortingTests : DynamicSortingTests<EmployeeSimple>
 {
-    [TestClass]
-    public class DynamicSortingTests : DynamicSortingTests<EmployeeSimple>
+    protected override IDynamicSortingScenario<EmployeeSimple> GetScenario()
     {
-        protected override IDynamicSortingScenario<EmployeeSimple> GetScenario()
-        {
-            return new DynamicSortingScenario(Setup.SqlServerConnectionString);
-        }
+        return new DynamicSortingScenario(Setup.SqlServerConnectionString);
     }
 }

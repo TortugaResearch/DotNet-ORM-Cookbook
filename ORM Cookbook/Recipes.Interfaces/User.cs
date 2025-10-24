@@ -1,9 +1,6 @@
-using System;
+namespace Recipes;
 
-namespace Recipes
+public class User
 {
-    public class User
-    {
-        public int UserKey { get; set; }
-    }
+    public int UserKey { get; set; }
 }

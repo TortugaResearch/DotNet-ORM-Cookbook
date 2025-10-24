@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Recipes.BasicStoredProc;
 using Recipes.EntityFrameworkCore.Entities;
-using Recipes.BasicStoredProc;
 
-namespace Recipes.EntityFrameworkCore.BasicStoredProc
+namespace Recipes.EntityFrameworkCore.BasicStoredProc;
+
+[TestClass]
+public class BasicStoredProcTests : BasicStoredProcTests<EmployeeClassification, EmployeeClassificationWithCount>
 {
-    [TestClass]
-    public class BasicStoredProcTests : BasicStoredProcTests<EmployeeClassification, EmployeeClassificationWithCount>
+    protected override IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount> GetScenario()
     {
-        protected override IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount> GetScenario()
-        {
-            return new BasicStoredProcScenario(Setup.DBContextFactory);
-        }
+        return new BasicStoredProcScenario(Setup.DBContextFactory);
     }
 }

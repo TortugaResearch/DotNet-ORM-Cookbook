@@ -320,12 +320,12 @@
         {
             DatabaseType.SqlServer =&gt;
                 @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;,
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;,
             DatabaseType.PostgreSql =&gt;
                 @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    VALUES(@EmployeeClassificationName )
-                    RETURNING EmployeeClassificationKey&quot;,
+                        VALUES(@EmployeeClassificationName )
+                        RETURNING EmployeeClassificationKey&quot;,
             _ =&gt; throw new NotImplementedException()
         };
 

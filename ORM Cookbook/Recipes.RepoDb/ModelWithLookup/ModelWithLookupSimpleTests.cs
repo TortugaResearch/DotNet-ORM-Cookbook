@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ModelWithLookup;
+﻿using Recipes.ModelWithLookup;
 using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDB.ModelWithLookup
+namespace Recipes.RepoDB.ModelWithLookup;
+
+[TestClass]
+public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<EmployeeSimple>
 {
-    [TestClass]
-    public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<EmployeeSimple>
+    protected override IModelWithLookupSimpleScenario<EmployeeSimple> GetScenario()
     {
-        protected override IModelWithLookupSimpleScenario<EmployeeSimple> GetScenario()
-        {
-            return new ModelWithLookupSimpleScenario(Setup.ConnectionString);
-        }
+        return new ModelWithLookupSimpleScenario(Setup.ConnectionString);
     }
 }

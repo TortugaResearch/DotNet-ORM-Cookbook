@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Recipes.EntityFrameworkCore.Entities;
 using Recipes.SoftDelete;
-using System;
 
 namespace Recipes.EntityFrameworkCore.SoftDelete
 {

@@ -1,12 +1,8 @@
-using Microsoft.Data.SqlClient;
-using System;
+namespace Recipes.Dapper.Models;
 
-namespace Recipes.Dapper.Models
+public class EmployeeClassificationWithCount : IEmployeeClassificationWithCount
 {
-    public class EmployeeClassificationWithCount : IEmployeeClassificationWithCount
-    {
-        public int EmployeeClassificationKey { get; set; }
-        public string? EmployeeClassificationName { get; set; }
-        public int EmployeeCount { get; set; }
-    }
+    public int EmployeeClassificationKey { get; set; }
+    public string? EmployeeClassificationName { get; set; }
+    public int EmployeeCount { get; set; }
 }

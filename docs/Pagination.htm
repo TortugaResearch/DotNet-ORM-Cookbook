@@ -177,48 +177,48 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class PaginationScenario : SqlServerScenarioBase, IPaginationScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class PaginationScenario : SqlServerScenarioBase, IPaginationScenario&lt;EmployeeSimple&gt;
+{
+    public PaginationScenario(string connectionString) : base(connectionString)
+    { }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
     {
-        public PaginationScenario(string connectionString) : base(connectionString)
-        { }
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-            var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
+        var sql = new StringBuilder(@&quot;INSERT INTO HR.Employee
 (FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
 VALUES &quot;);
 
+        for (var i = 0; i &lt; employees.Count; i++)
+        {
+            if (i != 0)
+                sql.AppendLine(&quot;,&quot;);
+            sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+        }
+        sql.AppendLine(&quot;;&quot;);
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql.ToString(), con))
+        {
             for (var i = 0; i &lt; employees.Count; i++)
             {
-                if (i != 0)
-                    sql.AppendLine(&quot;,&quot;);
-                sql.Append($&quot;(@FirstName_{i}, @MiddleName_{i}, @LastName_{i}, @Title_{i}, @OfficePhone_{i}, @CellPhone_{i}, @EmployeeClassificationKey_{i})&quot;);
+                cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
+                cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
+                cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
+                cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
             }
-            sql.AppendLine(&quot;;&quot;);
-
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql.ToString(), con))
-            {
-                for (var i = 0; i &lt; employees.Count; i++)
-                {
-                    cmd.Parameters.AddWithValue($&quot;@FirstName_{i}&quot;, employees[i].FirstName);
-                    cmd.Parameters.AddWithValue($&quot;@MiddleName_{i}&quot;, (object?)employees[i].MiddleName ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@LastName_{i}&quot;, employees[i].LastName);
-                    cmd.Parameters.AddWithValue($&quot;@Title_{i}&quot;, (object?)employees[i].Title ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@OfficePhone_{i}&quot;, (object?)employees[i].OfficePhone ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@CellPhone_{i}&quot;, (object?)employees[i].CellPhone ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue($&quot;@EmployeeClassificationKey_{i}&quot;, employees[i].EmployeeClassificationKey);
-                }
-                cmd.ExecuteNonQuery();
-            }
+            cmd.ExecuteNonQuery();
         }
+    }
 
-        public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
-        {
-            const string sql = @&quot;SELECT e.EmployeeKey,
+    public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -231,28 +231,28 @@ WHERE e.LastName = @LastName
 ORDER BY e.FirstName,
          e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            var skip = page * pageSize;
+        var skip = page * pageSize;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
-                cmd.Parameters.AddWithValue(&quot;@Skip&quot;, skip);
-                cmd.Parameters.AddWithValue(&quot;@Take&quot;, pageSize);
-
-                var results = new List&lt;EmployeeSimple&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeSimple(reader));
-
-                return results;
-            }
-        }
-
-        public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            const string sqlA = @&quot;SELECT e.EmployeeKey,
+            cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+            cmd.Parameters.AddWithValue(&quot;@Skip&quot;, skip);
+            cmd.Parameters.AddWithValue(&quot;@Take&quot;, pageSize);
+
+            var results = new List&lt;EmployeeSimple&gt;();
+
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(new EmployeeSimple(reader));
+
+            return results;
+        }
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+    {
+        const string sqlA = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -266,7 +266,7 @@ ORDER BY e.FirstName,
          e.EmployeeKey
 OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            const string sqlB = @&quot;SELECT e.EmployeeKey,
+        const string sqlB = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -289,32 +289,32 @@ ORDER BY e.FirstName,
          e.EmployeeKey
 OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            var sql = (skipPast == null) ? sqlA : sqlB;
+        var sql = (skipPast == null) ? sqlA : sqlB;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
-                cmd.Parameters.AddWithValue(&quot;@Take&quot;, take);
-                if (skipPast != null)
-                {
-                    cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, skipPast.FirstName);
-                    cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, skipPast.EmployeeKey);
-                }
-
-                var results = new List&lt;EmployeeSimple&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeSimple(reader));
-
-                return results;
-            }
-        }
-
-        public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            const string sql = @&quot;SELECT e.EmployeeKey,
+            cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+            cmd.Parameters.AddWithValue(&quot;@Take&quot;, take);
+            if (skipPast != null)
+            {
+                cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, skipPast.FirstName);
+                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, skipPast.EmployeeKey);
+            }
+
+            var results = new List&lt;EmployeeSimple&gt;();
+
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(new EmployeeSimple(reader));
+
+            return results;
+        }
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -327,23 +327,23 @@ WHERE e.LastName = @LastName
 ORDER BY e.FirstName,
          e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
-                cmd.Parameters.AddWithValue(&quot;@Skip&quot;, skip);
-                cmd.Parameters.AddWithValue(&quot;@Take&quot;, take);
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+            cmd.Parameters.AddWithValue(&quot;@Skip&quot;, skip);
+            cmd.Parameters.AddWithValue(&quot;@Take&quot;, take);
 
-                var results = new List&lt;EmployeeSimple&gt;();
+            var results = new List&lt;EmployeeSimple&gt;();
 
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeSimple(reader));
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(new EmployeeSimple(reader));
 
-                return results;
-            }
+            return results;
         }
     }
+}
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
@@ -396,23 +396,23 @@ ORDER BY e.FirstName,
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class PaginationScenario : ScenarioBase, IPaginationScenario&lt;EmployeeSimple&gt;
+<pre><code class="cs">public class PaginationScenario : ScenarioBase, IPaginationScenario&lt;EmployeeSimple&gt;
+{
+    public PaginationScenario(string connectionString) : base(connectionString)
+    { }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
     {
-        public PaginationScenario(string connectionString) : base(connectionString)
-        { }
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+        using (var con = OpenConnection())
+            con.Insert(employees);
+    }
 
-            using (var con = OpenConnection())
-                con.Insert(employees);
-        }
-
-        public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
-        {
-            const string sql = @&quot;SELECT e.EmployeeKey,
+    public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -425,13 +425,13 @@ WHERE e.LastName = @LastName
 ORDER BY e.FirstName,
          e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName, Skip = page * pageSize, Take = pageSize }).ToList();
-        }
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName, Skip = page * pageSize, Take = pageSize }).ToList();
+    }
 
-        public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
-        {
-            const string sqlA = @&quot;SELECT e.EmployeeKey,
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
+    {
+        const string sqlA = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -445,7 +445,7 @@ ORDER BY e.FirstName,
          e.EmployeeKey
 OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            const string sqlB = @&quot;SELECT e.EmployeeKey,
+        const string sqlB = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -468,26 +468,26 @@ ORDER BY e.FirstName,
          e.EmployeeKey
 OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            string sql;
-            object param;
-            if (skipPast == null)
-            {
-                sql = sqlA;
-                param = new { lastName, take };
-            }
-            else
-            {
-                sql = sqlB;
-                param = new { lastName, take, skipPast.FirstName, skipPast.EmployeeKey };
-            }
-
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeSimple&gt;(sql, param).ToList();
+        string sql;
+        object param;
+        if (skipPast == null)
+        {
+            sql = sqlA;
+            param = new { lastName, take };
+        }
+        else
+        {
+            sql = sqlB;
+            param = new { lastName, take, skipPast.FirstName, skipPast.EmployeeKey };
         }
 
-        public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
-        {
-            const string sql = @&quot;SELECT e.EmployeeKey,
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeSimple&gt;(sql, param).ToList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey,
        e.FirstName,
        e.MiddleName,
        e.LastName,
@@ -500,10 +500,10 @@ WHERE e.LastName = @LastName
 ORDER BY e.FirstName,
          e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
-            using (var con = OpenConnection())
-                return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName, skip, take }).ToList();
-        }
+        using (var con = OpenConnection())
+            return con.Query&lt;EmployeeSimple&gt;(sql, new { lastName, skip, take }).ToList();
     }
+}
 </code></pre>
 
 <h2 id="dbconnector">DbConnector<a class="headerlink" href="#dbconnector" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
@@ -521,24 +521,24 @@ ORDER BY e.FirstName,
         //https://docs.microsoft.com/en-us/sql/sql-server/maximum-capacity-specifications-for-sql-server?redirectedfrom=MSDN&amp;view=sql-server-ver15
         DbConnector.Build&lt;int?&gt;(
                 sql: @$&quot;INSERT INTO {EmployeeSimple.TableName}
-                (
-                    CellPhone,
-                    EmployeeClassificationKey,
-                    FirstName,
-                    LastName,
-                    MiddleName,
-                    OfficePhone,
-                    Title
-                ) 
-                VALUES (
-                    @{nameof(EmployeeSimple.CellPhone)},
-                    @{nameof(EmployeeSimple.EmployeeClassificationKey)},
-                    @{nameof(EmployeeSimple.FirstName)},
-                    @{nameof(EmployeeSimple.LastName)},
-                    @{nameof(EmployeeSimple.MiddleName)},
-                    @{nameof(EmployeeSimple.OfficePhone)},
-                    @{nameof(EmployeeSimple.Title)}
-                )&quot;,
+                    (
+                        CellPhone,
+                        EmployeeClassificationKey,
+                        FirstName,
+                        LastName,
+                        MiddleName,
+                        OfficePhone,
+                        Title
+                    )
+                    VALUES (
+                        @{nameof(EmployeeSimple.CellPhone)},
+                        @{nameof(EmployeeSimple.EmployeeClassificationKey)},
+                        @{nameof(EmployeeSimple.FirstName)},
+                        @{nameof(EmployeeSimple.LastName)},
+                        @{nameof(EmployeeSimple.MiddleName)},
+                        @{nameof(EmployeeSimple.OfficePhone)},
+                        @{nameof(EmployeeSimple.Title)}
+                    )&quot;,
                 param: employees[0],
                 onExecute: (int? result, IDbExecutionModel em) =&gt;
                 {
@@ -574,17 +574,17 @@ ORDER BY e.FirstName,
     public IList&lt;EmployeeSimple&gt; PaginateWithPageSize(string lastName, int page, int pageSize)
     {
         const string sql = @&quot;SELECT e.EmployeeKey,
-               e.FirstName,
-               e.MiddleName,
-               e.LastName,
-               e.Title,
-               e.OfficePhone,
-               e.CellPhone,
-               e.EmployeeClassificationKey
-        FROM HR.Employee e
-        WHERE e.LastName = @LastName
-        ORDER BY e.FirstName,
-                 e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+                   e.FirstName,
+                   e.MiddleName,
+                   e.LastName,
+                   e.Title,
+                   e.OfficePhone,
+                   e.CellPhone,
+                   e.EmployeeClassificationKey
+            FROM HR.Employee e
+            WHERE e.LastName = @LastName
+            ORDER BY e.FirstName,
+                     e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
         return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { LastName = lastName, Skip = page * pageSize, Take = pageSize }).Execute();
     }
@@ -592,41 +592,41 @@ ORDER BY e.FirstName,
     public IList&lt;EmployeeSimple&gt; PaginateWithSkipPast(string lastName, EmployeeSimple? skipPast, int take)
     {
         const string sqlA = @&quot;SELECT e.EmployeeKey,
-                e.FirstName,
-                e.MiddleName,
-                e.LastName,
-                e.Title,
-                e.OfficePhone,
-                e.CellPhone,
-                e.EmployeeClassificationKey
-        FROM HR.Employee e
-        WHERE (e.LastName = @LastName)
-        ORDER BY e.FirstName,
-                    e.EmployeeKey
-        OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+                    e.FirstName,
+                    e.MiddleName,
+                    e.LastName,
+                    e.Title,
+                    e.OfficePhone,
+                    e.CellPhone,
+                    e.EmployeeClassificationKey
+            FROM HR.Employee e
+            WHERE (e.LastName = @LastName)
+            ORDER BY e.FirstName,
+                        e.EmployeeKey
+            OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
         const string sqlB = @&quot;SELECT e.EmployeeKey,
-                e.FirstName,
-                e.MiddleName,
-                e.LastName,
-                e.Title,
-                e.OfficePhone,
-                e.CellPhone,
-                e.EmployeeClassificationKey
-        FROM HR.Employee e
-        WHERE (e.LastName = @LastName)
-                AND
-                (
-                    (e.FirstName &gt; @FirstName)
-                    OR
+                    e.FirstName,
+                    e.MiddleName,
+                    e.LastName,
+                    e.Title,
+                    e.OfficePhone,
+                    e.CellPhone,
+                    e.EmployeeClassificationKey
+            FROM HR.Employee e
+            WHERE (e.LastName = @LastName)
+                    AND
                     (
-                        e.FirstName = @FirstName
-                        AND e.EmployeeKey &gt; @EmployeeKey
+                        (e.FirstName &gt; @FirstName)
+                        OR
+                        (
+                            e.FirstName = @FirstName
+                            AND e.EmployeeKey &gt; @EmployeeKey
+                        )
                     )
-                )
-        ORDER BY e.FirstName,
-                    e.EmployeeKey
-        OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
+            ORDER BY e.FirstName,
+                        e.EmployeeKey
+            OFFSET 0 ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
         string sql;
         object param;
@@ -647,18 +647,17 @@ ORDER BY e.FirstName,
     public IList&lt;EmployeeSimple&gt; PaginateWithSkipTake(string lastName, int skip, int take)
     {
         const string sql = @&quot;SELECT e.EmployeeKey,
-               e.FirstName,
-               e.MiddleName,
-               e.LastName,
-               e.Title,
-               e.OfficePhone,
-               e.CellPhone,
-               e.EmployeeClassificationKey
-        FROM HR.Employee e
-        WHERE e.LastName = @LastName
-        ORDER BY e.FirstName,
-                 e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
-
+                   e.FirstName,
+                   e.MiddleName,
+                   e.LastName,
+                   e.Title,
+                   e.OfficePhone,
+                   e.CellPhone,
+                   e.EmployeeClassificationKey
+            FROM HR.Employee e
+            WHERE e.LastName = @LastName
+            ORDER BY e.FirstName,
+                     e.EmployeeKey OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;&quot;;
 
         return DbConnector.ReadToList&lt;EmployeeSimple&gt;(sql, new { LastName = lastName, Skip = skip, Take = take }).Execute();
     }

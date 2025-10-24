@@ -1,103 +1,99 @@
 ﻿using Recipes.EntityFramework.Entities;
 using Recipes.SingleModelCrud;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Recipes.EntityFramework.SingleModelCrud
+namespace Recipes.EntityFramework.SingleModelCrud;
+
+public class SingleModelCrudScenario : ISingleModelCrudScenario<EmployeeClassification>
 {
-    public class SingleModelCrudScenario : ISingleModelCrudScenario<EmployeeClassification>
+    private Func<OrmCookbookContext> CreateDbContext;
+
+    public SingleModelCrudScenario(Func<OrmCookbookContext> dBContextFactory)
     {
-        private Func<OrmCookbookContext> CreateDbContext;
+        CreateDbContext = dBContextFactory;
+    }
 
-        public SingleModelCrudScenario(Func<OrmCookbookContext> dBContextFactory)
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            CreateDbContext = dBContextFactory;
+            context.EmployeeClassification.Add(classification);
+            context.SaveChanges();
+            return classification.EmployeeClassificationKey;
         }
+    }
 
-        public int Create(EmployeeClassification classification)
+    public virtual void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
             {
-                context.EmployeeClassification.Add(classification);
+                context.EmployeeClassification.Remove(temp);
                 context.SaveChanges();
-                return classification.EmployeeClassificationKey;
             }
         }
+    }
 
-        public virtual void Delete(EmployeeClassification classification)
+    public virtual void DeleteByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
+            //Find the row you wish to delete
+            var temp = context.EmployeeClassification.Find(employeeClassificationKey);
+            if (temp != null)
             {
-                //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                if (temp != null)
-                {
-                    context.EmployeeClassification.Remove(temp);
-                    context.SaveChanges();
-                }
+                context.EmployeeClassification.Remove(temp);
+                context.SaveChanges();
             }
         }
+    }
 
-        public virtual void DeleteByKey(int employeeClassificationKey)
+    public EmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
-            {
-                //Find the row you wish to delete
-                var temp = context.EmployeeClassification.Find(employeeClassificationKey);
-                if (temp != null)
-                {
-                    context.EmployeeClassification.Remove(temp);
-                    context.SaveChanges();
-                }
-            }
+            return context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
         }
+    }
 
-        public EmployeeClassification? FindByName(string employeeClassificationName)
+    public IList<EmployeeClassification> GetAll()
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
-            {
-                return context.EmployeeClassification.Where(ec => ec.EmployeeClassificationName == employeeClassificationName).SingleOrDefault();
-            }
+            return context.EmployeeClassification.ToList();
         }
+    }
 
-        public IList<EmployeeClassification> GetAll()
+    public EmployeeClassification GetByKey(int employeeClassificationKey)
+    {
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
-            {
-                return context.EmployeeClassification.ToList();
-            }
+            return context.EmployeeClassification.Find(employeeClassificationKey);
         }
+    }
 
-        public EmployeeClassification GetByKey(int employeeClassificationKey)
+    public virtual void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        using (var context = CreateDbContext())
         {
-            using (var context = CreateDbContext())
+            //Get a fresh copy of the row from the database
+            var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
+            if (temp != null)
             {
-                return context.EmployeeClassification.Find(employeeClassificationKey);
-            }
-        }
-
-        public virtual void Update(EmployeeClassification classification)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            using (var context = CreateDbContext())
-            {
-                //Get a fresh copy of the row from the database
-                var temp = context.EmployeeClassification.Find(classification.EmployeeClassificationKey);
-                if (temp != null)
-                {
-                    //Copy the changed fields
-                    temp.EmployeeClassificationName = classification.EmployeeClassificationName;
-                    context.SaveChanges();
-                }
+                //Copy the changed fields
+                temp.EmployeeClassificationName = classification.EmployeeClassificationName;
+                context.SaveChanges();
             }
         }
     }

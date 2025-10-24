@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
+﻿namespace Recipes.DiscoverTablesAndColumns;
 
-namespace Recipes.DiscoverTablesAndColumns
+public interface IDiscoverTablesAndColumnsScenario
 {
-    public interface IDiscoverTablesAndColumnsScenario
-    {
-        IList<string> ListColumnsInTable(string schemaName, string tableName);
+    IList<string> ListColumnsInTable(string schemaName, string tableName);
 
-        IList<string> ListColumnsInView(string schemaName, string viewName);
+    IList<string> ListColumnsInView(string schemaName, string viewName);
 
-        IList<string> ListTables();
+    IList<string> ListTables();
 
-        IList<string> ListViews();
-    }
+    IList<string> ListViews();
 }

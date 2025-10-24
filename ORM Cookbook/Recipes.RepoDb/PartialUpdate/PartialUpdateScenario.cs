@@ -1,62 +1,60 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.PartialUpdate;
 using Recipes.RepoDB.Models;
-using RDB = RepoDb;
 using RepoDb;
-using System;
-using System.Linq;
 
-namespace Recipes.RepoDB.PartialUpdate
+using RDB = RepoDb;
+
+namespace Recipes.RepoDB.PartialUpdate;
+
+public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlConnection>,
+    IPartialUpdateScenario<EmployeeClassification>
 {
-    public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-        IPartialUpdateScenario<EmployeeClassification>
+    public PartialUpdateScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public int Create(EmployeeClassification classification)
     {
-        public PartialUpdateScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        public int Create(EmployeeClassification classification)
+        return Insert<int>(classification);
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        return Query(employeeClassificationKey).FirstOrDefault();
+    }
+
+    public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
+    {
+        if (updateMessage == null)
+            throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
+
+        using (var connection = CreateConnection(true))
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            return Insert<int>(classification);
+            connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
         }
+    }
 
-        public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
+    {
+        if (updateMessage == null)
+            throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
+
+        using (var connection = CreateConnection(true))
         {
-            return Query(employeeClassificationKey).FirstOrDefault();
+            connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
         }
+    }
 
-        public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
+    public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
+    {
+        using (var connection = CreateConnection(true))
         {
-            if (updateMessage == null)
-                throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
-
-            using (var connection = CreateConnection(true))
-            {
-                connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
-            }
-        }
-
-        public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
-        {
-            if (updateMessage == null)
-                throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
-
-            using (var connection = CreateConnection(true))
-            {
-                connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
-            }
-        }
-
-        public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
-        {
-            using (var connection = CreateConnection(true))
-            {
-                connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(),
-                    new { employeeClassificationKey, isExempt, isEmployee });
-            }
+            connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(),
+                new { employeeClassificationKey, isExempt, isEmployee });
         }
     }
 }

@@ -209,8 +209,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -281,8 +281,8 @@
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -305,8 +305,8 @@
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -329,8 +329,8 @@
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -353,8 +353,8 @@
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -380,8 +380,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -400,8 +400,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         using (var cmd = new SqlCommand(sql, con))
@@ -568,8 +568,8 @@
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
             return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName });
@@ -578,8 +578,8 @@
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = OpenConnection())
             return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName });
@@ -588,8 +588,8 @@
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
             return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
@@ -598,8 +598,8 @@
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
             return con.QuerySingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
@@ -611,8 +611,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
         {
@@ -628,8 +628,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = OpenConnection())
             return 1 == con.Execute(sql, classification);
@@ -653,16 +653,16 @@
         return DbConnector.Scalar&lt;int&gt;(
         @&quot;INSERT INTO &quot; + EmployeeClassification.TableName
         + @&quot;(
-                EmployeeClassificationName,
-                IsEmployee,
-                IsExempt
-            ) 
-            OUTPUT Inserted.EmployeeClassificationKey
-            VALUES (
-                @EmployeeClassificationName,
-                @IsEmployee,
-                @IsExempt
-            )&quot;
+                    EmployeeClassificationName,
+                    IsEmployee,
+                    IsExempt
+                )
+                OUTPUT Inserted.EmployeeClassificationKey
+                VALUES (
+                    @EmployeeClassificationName,
+                    @IsEmployee,
+                    @IsExempt
+                )&quot;
         , classification)
         .Execute();
     }
@@ -708,9 +708,8 @@
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
-
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
 
         return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName }).Execute();
     }
@@ -718,9 +717,8 @@
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
-
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
 
         return DbConnector.ReadSingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName }).Execute();
     }
@@ -728,9 +726,8 @@
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
-
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
 
         return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
     }
@@ -738,9 +735,8 @@
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
-
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
 
         return DbConnector.ReadSingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
     }
@@ -751,8 +747,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         var rowCount = DbConnector.NonQuery(sql, classification).Execute();
         if (rowCount != 1)
@@ -765,8 +761,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         return 1 == DbConnector.NonQuery(sql, classification).Execute();
     }

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ServiceStack.Entities;
+﻿using Recipes.ServiceStack.Entities;
 using Recipes.SingleModelCrudAsync;
 
-namespace Recipes.ServiceStack.SingleModelCrudAsync
+namespace Recipes.ServiceStack.SingleModelCrudAsync;
+
+[TestClass]
+public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
 {
-    [TestClass]
-    public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
+    protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
     {
-        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
-        {
-            return new SingleModelCrudAsyncScenario(Setup.DbConnectionFactory);
-        }
+        return new SingleModelCrudAsyncScenario(Setup.DbConnectionFactory);
     }
 }

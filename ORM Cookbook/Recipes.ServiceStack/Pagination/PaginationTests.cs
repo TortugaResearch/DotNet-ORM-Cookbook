@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Pagination;
+﻿using Recipes.Pagination;
 using Recipes.ServiceStack.Entities;
 
-namespace Recipes.ServiceStack.Pagination
+namespace Recipes.ServiceStack.Pagination;
+
+[TestClass]
+public class PaginationTests : PaginationTests<Employee>
 {
-    [TestClass]
-    public class PaginationTests : PaginationTests<Employee>
+    protected override IPaginationScenario<Employee> GetScenario()
     {
-        protected override IPaginationScenario<Employee> GetScenario()
-        {
-            return new PaginationScenario(Setup.DbConnectionFactory);
-        }
+        return new PaginationScenario(Setup.DbConnectionFactory);
     }
 }

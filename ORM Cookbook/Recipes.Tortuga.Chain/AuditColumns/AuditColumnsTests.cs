@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.AuditColumns;
+﻿using Recipes.AuditColumns;
 using Recipes.Chain.Models;
 
-namespace Recipes.Chain.AuditColumns
+namespace Recipes.Chain.AuditColumns;
+
+[TestClass]
+public class AuditColumnsTests : AuditColumnsTests<Department>
 {
-    [TestClass]
-    public class AuditColumnsTests : AuditColumnsTests<Department>
+    protected override IAuditColumnsScenario<Department> GetScenario()
     {
-        protected override IAuditColumnsScenario<Department> GetScenario()
-        {
-            return new AuditColumnsScenario(Setup.PrimaryDataSource);
-        }
+        return new AuditColumnsScenario(Setup.PrimaryDataSource);
     }
 }

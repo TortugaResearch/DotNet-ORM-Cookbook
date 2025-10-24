@@ -167,173 +167,173 @@
 </code></pre>
 
 <h2 id="ado.net">ADO.NET<a class="headerlink" href="#ado.net" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">    public class JoinsScenario : SqlServerScenarioBase, IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+<pre><code class="cs">public class JoinsScenario : SqlServerScenarioBase, IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    public JoinsScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int Create(EmployeeSimple employee)
     {
-        public JoinsScenario(string connectionString) : base(connectionString)
-        { }
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        public int Create(EmployeeSimple employee)
-        {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-
-            const string sql = @&quot;INSERT INTO HR.Employee
+        const string sql = @&quot;INSERT INTO HR.Employee
 (FirstName, MiddleName, LastName, Title, OfficePhone, CellPhone, EmployeeClassificationKey)
 OUTPUT Inserted.EmployeeKey
 VALUES
 (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @EmployeeClassificationKey);&quot;;
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, employee.FirstName);
-                cmd.Parameters.AddWithValue(&quot;@MiddleName&quot;, (object?)employee.MiddleName ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, employee.LastName);
-                cmd.Parameters.AddWithValue(&quot;@Title&quot;, (object?)employee.Title ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@OfficePhone&quot;, (object?)employee.OfficePhone ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@CellPhone&quot;, (object?)employee.CellPhone ?? DBNull.Value);
-                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employee.EmployeeClassificationKey);
-
-                return (int)cmd.ExecuteScalar();
-            }
-        }
-
-        public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+            cmd.Parameters.AddWithValue(&quot;@FirstName&quot;, employee.FirstName);
+            cmd.Parameters.AddWithValue(&quot;@MiddleName&quot;, (object?)employee.MiddleName ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@LastName&quot;, employee.LastName);
+            cmd.Parameters.AddWithValue(&quot;@Title&quot;, (object?)employee.Title ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@OfficePhone&quot;, (object?)employee.OfficePhone ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@CellPhone&quot;, (object?)employee.CellPhone ?? DBNull.Value);
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employee.EmployeeClassificationKey);
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
-
-                var results = new List&lt;EmployeeDetail&gt;();
-
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeDetail(reader));
-
-                return results;
-            }
+            return (int)cmd.ExecuteScalar();
         }
+    }
 
-        public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
+            var results = new List&lt;EmployeeDetail&gt;();
 
-                var results = new List&lt;EmployeeDetail&gt;();
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(new EmployeeDetail(reader));
 
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        results.Add(new EmployeeDetail(reader));
-
-                return results;
-            }
+            return results;
         }
+    }
 
-        public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
+            cmd.Parameters.AddWithValue(&quot;@LastName&quot;, lastName);
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employeeKey);
+            var results = new List&lt;EmployeeDetail&gt;();
 
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                        return new EmployeeDetail(reader);
-                    else
-                        return null;
-                }
-            }
+            using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
+                    results.Add(new EmployeeDetail(reader));
+
+            return results;
         }
+    }
 
-        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
         {
-            const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+            cmd.Parameters.AddWithValue(&quot;@EmployeeKey&quot;, employeeKey);
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+            using (var reader = cmd.ExecuteReader())
             {
-                cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                        return new EmployeeClassification(reader);
-                    else
-                        return null;
-                }
+                if (reader.Read())
+                    return new EmployeeDetail(reader);
+                else
+                    return null;
             }
         }
     }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
+
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue(&quot;@EmployeeClassificationKey&quot;, employeeClassificationKey);
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                    return new EmployeeClassification(reader);
+                else
+                    return null;
+            }
+        }
+    }
+}
 </code></pre>
 
 <h2 id="chain">Chain<a class="headerlink" href="#chain" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>Chain doesn't natively support joins, so raw SQL (or a view) has to be used as a fallback. </p>
-<pre><code class="cs">    public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+<pre><code class="cs">public class JoinsScenario : IJoinsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    readonly SqlServerDataSource m_DataSource;
+
+    public JoinsScenario(SqlServerDataSource dataSource)
     {
-        readonly SqlServerDataSource m_DataSource;
+        m_DataSource = dataSource;
+    }
 
-        public JoinsScenario(SqlServerDataSource dataSource)
-        {
-            m_DataSource = dataSource;
-        }
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        public int Create(EmployeeSimple employee)
-        {
-            if (employee == null)
-                throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        return m_DataSource.Insert(employee).ToInt32().Execute();
+    }
 
-            return m_DataSource.Insert(employee).ToInt32().Execute();
-        }
-
-        public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
-        {
-            const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone,
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone,
 e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
 FROM HR.Employee e
 INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey
 WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
 
-            return m_DataSource.Sql(sql, new { employeeClassificationKey }).ToCollection&lt;EmployeeDetail&gt;().Execute();
-        }
+        return m_DataSource.Sql(sql, new { employeeClassificationKey }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+    }
 
-        public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
 &quot;e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee &quot; +
 &quot;FROM HR.Employee e &quot; +
 &quot;INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey &quot; +
 &quot;WHERE e.LastName = @LastName&quot;;
 
-            return m_DataSource.Sql(sql, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
-        }
+        return m_DataSource.Sql(sql, new { lastName }).ToCollection&lt;EmployeeDetail&gt;().Execute();
+    }
 
-        public EmployeeDetail? GetByEmployeeKey(int employeeKey)
-        {
-            const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, &quot; +
 &quot;e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee &quot; +
 &quot;FROM HR.Employee e &quot; +
 &quot;INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey &quot; +
 &quot;WHERE e.EmployeeKey = @EmployeeKey&quot;;
 
-            return m_DataSource.Sql(sql, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
-        }
-
-        public IEmployeeClassification? GetClassification(int employeeClassificationKey)
-        {
-            return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationKey })
-                .ToObject&lt;EmployeeClassification&gt;().Execute();
-        }
+        return m_DataSource.Sql(sql, new { employeeKey }).ToObjectOrNull&lt;EmployeeDetail&gt;().Execute();
     }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        return m_DataSource.From&lt;EmployeeClassification&gt;(new { employeeClassificationKey })
+            .ToObject&lt;EmployeeClassification&gt;().Execute();
+    }
+}
 </code></pre>
 
 <h2 id="dapper">Dapper<a class="headerlink" href="#dapper" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
@@ -400,61 +400,61 @@ WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
 
         return DbConnector.Scalar&lt;int&gt;(
             @$&quot;INSERT INTO {EmployeeSimple.TableName}
-                (
-                    CellPhone,
-                    EmployeeClassificationKey,
-                    FirstName,
-                    LastName,
-                    MiddleName,
-                    OfficePhone,
-                    Title
-                ) 
-                OUTPUT Inserted.EmployeeKey
-                VALUES (
-                    @{nameof(EmployeeSimple.CellPhone)},
-                    @{nameof(EmployeeSimple.EmployeeClassificationKey)},
-                    @{nameof(EmployeeSimple.FirstName)},
-                    @{nameof(EmployeeSimple.LastName)},
-                    @{nameof(EmployeeSimple.MiddleName)},
-                    @{nameof(EmployeeSimple.OfficePhone)},
-                    @{nameof(EmployeeSimple.Title)}
-                )&quot;
+                    (
+                        CellPhone,
+                        EmployeeClassificationKey,
+                        FirstName,
+                        LastName,
+                        MiddleName,
+                        OfficePhone,
+                        Title
+                    )
+                    OUTPUT Inserted.EmployeeKey
+                    VALUES (
+                        @{nameof(EmployeeSimple.CellPhone)},
+                        @{nameof(EmployeeSimple.EmployeeClassificationKey)},
+                        @{nameof(EmployeeSimple.FirstName)},
+                        @{nameof(EmployeeSimple.LastName)},
+                        @{nameof(EmployeeSimple.MiddleName)},
+                        @{nameof(EmployeeSimple.OfficePhone)},
+                        @{nameof(EmployeeSimple.Title)}
+                    )&quot;
             , employee)
             .Execute();
     }
 
     public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
     {
-        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee 
-        FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey 
-        WHERE e.EmployeeClassificationKey = @employeeClassificationKey&quot;;
+        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+            FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey
+            WHERE e.EmployeeClassificationKey = @employeeClassificationKey&quot;;
 
         return DbConnector.ReadToList&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).Execute();
     }
 
     public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
     {
-        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee 
-        FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey 
-        WHERE e.LastName = @lastName&quot;;
+        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+            FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey
+            WHERE e.LastName = @lastName&quot;;
 
         return DbConnector.ReadToList&lt;EmployeeDetail&gt;(sql, new { lastName }).Execute();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
-        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee 
-        FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey 
-        WHERE e.EmployeeKey = @employeeKey&quot;;
+        const string sql = @&quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+            FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey
+            WHERE e.EmployeeKey = @employeeKey&quot;;
 
         return DbConnector.ReadSingleOrDefault&lt;EmployeeDetail&gt;(sql, new { employeeKey }).Execute();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee 
-        FROM HR.EmployeeClassification ec 
-        WHERE EmployeeClassificationKey = @employeeClassificationKey&quot;;
+        const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee
+            FROM HR.EmployeeClassification ec
+            WHERE EmployeeClassificationKey = @employeeClassificationKey&quot;;
 
         return DbConnector.ReadSingleOrDefault&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
     }

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.EntityFrameworkCore.Entities;
+﻿using Recipes.EntityFrameworkCore.Entities;
 using Recipes.Joins;
 
-namespace Recipes.EntityFrameworkCore.Joins
+namespace Recipes.EntityFrameworkCore.Joins;
+
+[TestClass]
+public class JoinsTests : JoinsTests<EmployeeDetail, Employee>
 {
-    [TestClass]
-    public class JoinsTests : JoinsTests<EmployeeDetail, Employee>
+    protected override IJoinsScenario<EmployeeDetail, Employee> GetScenario()
     {
-        protected override IJoinsScenario<EmployeeDetail, Employee> GetScenario()
-        {
-            return new JoinsScenario(Setup.DBContextFactory);
-        }
+        return new JoinsScenario(Setup.DBContextFactory);
     }
 }

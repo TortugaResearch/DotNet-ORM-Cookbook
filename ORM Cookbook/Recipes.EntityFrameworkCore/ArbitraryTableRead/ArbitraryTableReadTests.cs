@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ArbitraryTableRead;
+﻿using Recipes.ArbitraryTableRead;
 using System.Data;
 
-namespace Recipes.EntityFrameworkCore.ArbitraryTableRead
+namespace Recipes.EntityFrameworkCore.ArbitraryTableRead;
+
+[TestClass]
+public class ArbitraryTableReadTests : ArbitraryTableReadTests<DataTable>
 {
-    [TestClass]
-    public class ArbitraryTableReadTests : ArbitraryTableReadTests<DataTable>
+    protected override IArbitraryTableReadScenario<DataTable> GetScenario()
     {
-        protected override IArbitraryTableReadScenario<DataTable> GetScenario()
-        {
-            return new ArbitraryTableReadScenario(Setup.DBContextFactory);
-        }
+        return new ArbitraryTableReadScenario(Setup.DBContextFactory);
     }
 }

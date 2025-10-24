@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Dapper.Models;
+﻿using Recipes.Dapper.Models;
 using Recipes.SingleModelCrudAsync;
 
-namespace Recipes.Dapper.SingleModelCrudAsync
+namespace Recipes.Dapper.SingleModelCrudAsync;
+
+[TestClass]
+public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
 {
-    [TestClass]
-    public class SingleModelCrudAsyncTests : SingleModelCrudAsyncTests<EmployeeClassification>
+    protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
     {
-        protected override ISingleModelCrudAsyncScenario<EmployeeClassification> GetScenario()
-        {
-            return new SingleModelCrudAsyncScenario(Setup.SqlServerConnectionString);
-        }
+        return new SingleModelCrudAsyncScenario(Setup.SqlServerConnectionString);
     }
 }

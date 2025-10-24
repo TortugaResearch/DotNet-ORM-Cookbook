@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.RepoDB.Models;
+﻿using Recipes.RepoDB.Models;
 using Recipes.RowCount;
 
 namespace Recipes.RepoDB.RowCount

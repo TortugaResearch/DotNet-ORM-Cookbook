@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.Models;
+﻿using Recipes.Chain.Models;
 using Recipes.RowCount;
 
-namespace Recipes.Chain.RowCount
+namespace Recipes.Chain.RowCount;
+
+[TestClass]
+public class RowCountTests : RowCountTests<EmployeeSimple>
 {
-    [TestClass]
-    public class RowCountTests : RowCountTests<EmployeeSimple>
+    protected override IRowCountScenario<EmployeeSimple> GetScenario()
     {
-        protected override IRowCountScenario<EmployeeSimple> GetScenario()
-        {
-            return new RowCountScenario(Setup.PrimaryDataSource);
-        }
+        return new RowCountScenario(Setup.PrimaryDataSource);
     }
 }

@@ -1,8 +1,5 @@
 ﻿using Recipes.EntityFrameworkCore.Entities;
 using Recipes.SingleColumn;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Recipes.EntityFrameworkCore.SingleColumn
 {

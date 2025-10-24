@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.LargeBatch;
+﻿using Recipes.LargeBatch;
 using Recipes.RepoDB.Models;
 
-namespace Recipes.RepoDB.LargeBatch
+namespace Recipes.RepoDB.LargeBatch;
+
+[TestClass]
+public class LargeBatchTests : LargeBatchTests<EmployeeSimple>
 {
-    [TestClass]
-    public class LargeBatchTests : LargeBatchTests<EmployeeSimple>
+    protected override ILargeBatchScenario<EmployeeSimple> GetScenario()
     {
-        protected override ILargeBatchScenario<EmployeeSimple> GetScenario()
-        {
-            return new LargeBatchScenario(Setup.ConnectionString);
-        }
+        return new LargeBatchScenario(Setup.ConnectionString);
     }
 }

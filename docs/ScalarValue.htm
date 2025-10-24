@@ -343,7 +343,7 @@
             return con.ExecuteScalar&lt;int?&gt;(sql, new { divisionName });
     }
 
-    public string GetDivisionName(int divisionKey)
+    public string? GetDivisionName(int divisionKey)
     {
         var sql = &quot;SELECT DivisionName FROM HR.Division WHERE DivisionKey = @DivisionKey;&quot;;
         using (var con = OpenConnection())

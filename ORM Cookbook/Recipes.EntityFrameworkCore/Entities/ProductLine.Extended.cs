@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
+﻿namespace Recipes.EntityFrameworkCore.Entities;
 
-namespace Recipes.EntityFrameworkCore.Entities
+//Used for linking the entity to the test framework. Not part of the recipe.
+partial class ProductLine : IProductLine<Product>
 {
-    //Used for linking the entity to the test framework. Not part of the recipe.
-    partial class ProductLine : IProductLine<Product>
-    {
-        ICollection<Product> IProductLine<Product>.Products => Products;
-    }
+    ICollection<Product> IProductLine<Product>.Products => Products;
 }

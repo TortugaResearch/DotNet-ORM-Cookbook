@@ -3,85 +3,81 @@ using Recipes.MultipleCrud;
 using Recipes.RepoDB.Models;
 using RepoDb;
 using RepoDb.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using RDB = RepoDb;
 
-namespace Recipes.RepoDB.MultipleCrud
+namespace Recipes.RepoDB.MultipleCrud;
+
+public class MultipleCrudScenario : BaseRepository<EmployeeSimple, SqlConnection>,
+    IMultipleCrudScenario<EmployeeSimple>
 {
-    public class MultipleCrudScenario : BaseRepository<EmployeeSimple, SqlConnection>,
-        IMultipleCrudScenario<EmployeeSimple>
+    public MultipleCrudScenario(string connectionString)
+        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
+    { }
+
+    public void DeleteBatch(IList<EmployeeSimple> employees)
     {
-        public MultipleCrudScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void DeleteBatch(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+        var keys = employees.Select(e => e.EmployeeKey).AsList();
+        Delete(e => keys.Contains(e.EmployeeKey));
+    }
 
-            var keys = employees.Select(e => e.EmployeeKey).AsList();
-            Delete(e => keys.Contains(e.EmployeeKey));
-        }
+    public void DeleteBatchByKey(IList<int> employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($"{nameof(employeeKeys)} is null or empty.", nameof(employeeKeys));
 
-        public void DeleteBatchByKey(IList<int> employeeKeys)
-        {
-            if (employeeKeys == null || employeeKeys.Count == 0)
-                throw new ArgumentException($"{nameof(employeeKeys)} is null or empty.", nameof(employeeKeys));
+        Delete(e => employeeKeys.Contains(e.EmployeeKey));
+    }
 
-            Delete(e => employeeKeys.Contains(e.EmployeeKey));
-        }
+    public IList<EmployeeSimple> FindByLastName(string lastName)
+    {
+        return Query(e => e.LastName == lastName).AsList();
+    }
 
-        public IList<EmployeeSimple> FindByLastName(string lastName)
-        {
-            return Query(e => e.LastName == lastName).AsList();
-        }
+    public void InsertBatch(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void InsertBatch(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+        InsertAll(employees);
+    }
 
-            InsertAll(employees);
-        }
+    public IList<int> InsertBatchReturnKeys(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public IList<int> InsertBatchReturnKeys(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+        InsertAll(employees);
 
-            InsertAll(employees);
+        return employees.Select(e => e.EmployeeKey).AsList();
+    }
 
-            return employees.Select(e => e.EmployeeKey).AsList();
-        }
+    public IList<EmployeeSimple> InsertBatchReturnRows(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public IList<EmployeeSimple> InsertBatchReturnRows(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+        InsertAll(employees);
 
-            InsertAll(employees);
+        return employees;
+    }
 
-            return employees;
-        }
+    public void InsertBatchWithRefresh(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void InsertBatchWithRefresh(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
+        InsertAll(employees);
+    }
 
-            InsertAll(employees);
-        }
+    public void UpdateBatch(IList<EmployeeSimple> employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        public void UpdateBatch(IList<EmployeeSimple> employees)
-        {
-            if (employees == null || employees.Count == 0)
-                throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
-
-            UpdateAll(employees);
-        }
+        UpdateAll(employees);
     }
 }

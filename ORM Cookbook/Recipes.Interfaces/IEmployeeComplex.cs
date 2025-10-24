@@ -1,14 +1,13 @@
-namespace Recipes
+namespace Recipes;
+
+public interface IEmployeeComplex
 {
-    public interface IEmployeeComplex
-    {
-        string? CellPhone { get; set; }
-        IReadOnlyEmployeeClassification? EmployeeClassification { get; set; }
-        int EmployeeKey { get; set; }
-        string? FirstName { get; set; }
-        string? LastName { get; set; }
-        string? MiddleName { get; set; }
-        string? OfficePhone { get; set; }
-        string? Title { get; set; }
-    }
+    string? CellPhone { get; set; }
+    IReadOnlyEmployeeClassification? EmployeeClassification { get; set; }
+    int EmployeeKey { get; set; }
+    string? FirstName { get; set; }
+    string? LastName { get; set; }
+    string? MiddleName { get; set; }
+    string? OfficePhone { get; set; }
+    string? Title { get; set; }
 }

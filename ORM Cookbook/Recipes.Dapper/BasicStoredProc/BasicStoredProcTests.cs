@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Recipes.BasicStoredProc;
 using Recipes.Dapper.Models;
-using Recipes.BasicStoredProc;
 
-namespace Recipes.Dapper.BasicStoredProc
+namespace Recipes.Dapper.BasicStoredProc;
+
+[TestClass]
+public class BasicStoredProcTests : BasicStoredProcTests<EmployeeClassification, EmployeeClassificationWithCount>
 {
-    [TestClass]
-    public class BasicStoredProcTests : BasicStoredProcTests<EmployeeClassification, EmployeeClassificationWithCount>
+    protected override IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount> GetScenario()
     {
-        protected override IBasicStoredProcScenario<EmployeeClassification, EmployeeClassificationWithCount> GetScenario()
-        {
-            return new BasicStoredProcScenario(Setup.SqlServerConnectionString);
-        }
+        return new BasicStoredProcScenario(Setup.SqlServerConnectionString);
     }
 }

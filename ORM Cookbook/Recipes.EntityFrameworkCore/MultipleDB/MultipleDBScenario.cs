@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#if !EFCore5
+using Microsoft.EntityFrameworkCore;
 using Recipes.EntityFrameworkCore.Entities;
 using Recipes.MultipleDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#if !EFCore5
 //This relies on SetColumnName, which was broken in EF Core 5.
 
 namespace Recipes.EntityFrameworkCore.MultipleDB

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Ado.Models;
+﻿using Recipes.Ado.Models;
 using Recipes.ModelWithLookup;
 
-namespace Recipes.Ado.ModelWithLookup
+namespace Recipes.Ado.ModelWithLookup;
+
+[TestClass]
+public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<EmployeeSimple>
 {
-    [TestClass]
-    public class ModelWithLookupSimpleTests : ModelWithLookupSimpleTests<EmployeeSimple>
+    protected override IModelWithLookupSimpleScenario<EmployeeSimple> GetScenario()
     {
-        protected override IModelWithLookupSimpleScenario<EmployeeSimple> GetScenario()
-        {
-            return new ModelWithLookupSimpleScenario(Setup.SqlServerConnectionString);
-        }
+        return new ModelWithLookupSimpleScenario(Setup.SqlServerConnectionString);
     }
 }

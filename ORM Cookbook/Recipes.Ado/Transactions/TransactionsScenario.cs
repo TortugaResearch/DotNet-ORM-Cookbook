@@ -1,87 +1,85 @@
 ﻿using Microsoft.Data.SqlClient;
 using Recipes.Ado.Models;
 using Recipes.Transactions;
-using System;
 using System.Data;
 
-namespace Recipes.Ado.Transactions
+namespace Recipes.Ado.Transactions;
+
+public class TransactionsScenario : SqlServerScenarioBase, ITransactionsScenario<EmployeeClassification>
 {
-    public class TransactionsScenario : SqlServerScenarioBase, ITransactionsScenario<EmployeeClassification>
+    public TransactionsScenario(string connectionString) : base(connectionString)
+    { }
+
+    public int Create(EmployeeClassification classification, bool shouldRollBack)
     {
-        public TransactionsScenario(string connectionString) : base(connectionString)
-        { }
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        public int Create(EmployeeClassification classification, bool shouldRollBack)
-        {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
-
-            const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+        const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
                         OUTPUT Inserted.EmployeeClassificationKey
                         VALUES(@EmployeeClassificationName )";
 
-            using (var con = OpenConnection())
-            using (var trans = con.BeginTransaction())
-            using (var cmd = new SqlCommand(sql, con, trans))
-            {
-                cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
-                var result = (int)cmd.ExecuteScalar();
-
-                if (shouldRollBack)
-                    trans.Rollback();
-                else
-                    trans.Commit();
-
-                return result;
-            }
-        }
-
-        public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+        using (var con = OpenConnection())
+        using (var trans = con.BeginTransaction())
+        using (var cmd = new SqlCommand(sql, con, trans))
         {
-            if (classification == null)
-                throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+            cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
+            var result = (int)cmd.ExecuteScalar();
 
-            const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
+            if (shouldRollBack)
+                trans.Rollback();
+            else
+                trans.Commit();
+
+            return result;
+        }
+    }
+
+    public int CreateWithIsolationLevel(EmployeeClassification classification, bool shouldRollBack, IsolationLevel isolationLevel)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
+
+        const string sql = @"INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
                         OUTPUT Inserted.EmployeeClassificationKey
                         VALUES(@EmployeeClassificationName )";
 
-            using (var con = OpenConnection())
-            using (var trans = con.BeginTransaction(isolationLevel))
-            using (var cmd = new SqlCommand(sql, con, trans))
-            {
-                cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
-                var result = (int)cmd.ExecuteScalar();
-
-                if (shouldRollBack)
-                    trans.Rollback();
-                else
-                    trans.Commit();
-
-                return result;
-            }
-        }
-
-        public EmployeeClassification? GetByKey(int employeeClassificationKey)
+        using (var con = OpenConnection())
+        using (var trans = con.BeginTransaction(isolationLevel))
+        using (var cmd = new SqlCommand(sql, con, trans))
         {
-            const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
+            cmd.Parameters.AddWithValue("@EmployeeClassificationName", classification.EmployeeClassificationName);
+            var result = (int)cmd.ExecuteScalar();
+
+            if (shouldRollBack)
+                trans.Rollback();
+            else
+                trans.Commit();
+
+            return result;
+        }
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        const string sql = @"SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
                         FROM HR.EmployeeClassification ec
                         WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;";
 
-            using (var con = OpenConnection())
-            using (var cmd = new SqlCommand(sql, con))
+        using (var con = OpenConnection())
+        using (var cmd = new SqlCommand(sql, con))
+        {
+            cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
+            using (var reader = cmd.ExecuteReader())
             {
-                cmd.Parameters.AddWithValue("@EmployeeClassificationKey", employeeClassificationKey);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (!reader.Read())
-                        return null;
+                if (!reader.Read())
+                    return null;
 
-                    return new EmployeeClassification()
-                    {
-                        EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal("EmployeeClassificationKey")),
-                        EmployeeClassificationName = reader.GetString(reader.GetOrdinal("EmployeeClassificationName"))
-                    };
-                }
+                return new EmployeeClassification()
+                {
+                    EmployeeClassificationKey = reader.GetInt32(reader.GetOrdinal("EmployeeClassificationKey")),
+                    EmployeeClassificationName = reader.GetString(reader.GetOrdinal("EmployeeClassificationName"))
+                };
             }
         }
     }

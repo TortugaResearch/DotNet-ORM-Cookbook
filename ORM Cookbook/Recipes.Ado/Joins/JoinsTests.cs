@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Ado.Models;
+﻿using Recipes.Ado.Models;
 using Recipes.Joins;
 
-namespace Recipes.Ado.Joins
+namespace Recipes.Ado.Joins;
+
+[TestClass]
+public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
 {
-    [TestClass]
-    public class JoinsTests : JoinsTests<EmployeeDetail, EmployeeSimple>
+    protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
     {
-        protected override IJoinsScenario<EmployeeDetail, EmployeeSimple> GetScenario()
-        {
-            return new JoinsScenario(Setup.SqlServerConnectionString);
-        }
+        return new JoinsScenario(Setup.SqlServerConnectionString);
     }
 }

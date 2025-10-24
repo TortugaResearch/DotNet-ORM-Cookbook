@@ -167,8 +167,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
         using (var cmd = new SqlCommand(sql, con))
@@ -208,8 +208,8 @@
     public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
         using (var cmd = new SqlCommand(sql, con))
@@ -254,8 +254,8 @@
     public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
         const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
         using (var cmd = new SqlCommand(sql, con))
@@ -281,8 +281,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         const string sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
         using (var cmd = new SqlCommand(sql, con))
@@ -365,8 +365,8 @@
 <pre><code class="cs">virtual public EmployeeClassification? GetByKey(int employeeClassificationKey)
 {
     var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                FROM HR.EmployeeClassification ec
-                WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = OpenConnection())
         return con.QuerySingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey });
@@ -377,8 +377,8 @@
 <pre><code class="cs">virtual public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
 {
     var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                FROM HR.EmployeeClassification ec
-                WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
     using (var con = await OpenConnectionAsync().ConfigureAwait(false))
         return await con.QuerySingleAsync&lt;EmployeeClassification&gt;(
@@ -399,8 +399,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             return await con.ExecuteScalarAsync&lt;int&gt;(sql, classification).ConfigureAwait(false);
@@ -428,8 +428,8 @@
     public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @EmployeeClassificationName;&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             return await con.QuerySingleAsync&lt;EmployeeClassification&gt;(
@@ -447,8 +447,8 @@
     virtual public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             return await con.QuerySingleAsync&lt;EmployeeClassification&gt;(
@@ -461,8 +461,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         using (var con = await OpenConnectionAsync().ConfigureAwait(false))
             await con.ExecuteAsync(sql, classification).ConfigureAwait(false);
@@ -529,8 +529,8 @@
 <pre><code class="cs">public EmployeeClassification? GetByKey(int employeeClassificationKey)
 {
     const string sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                FROM HR.EmployeeClassification ec
-                WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
 
     return DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).Execute();
 }
@@ -540,8 +540,8 @@
 <pre><code class="cs">public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
 {
     var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                FROM HR.EmployeeClassification ec
-                WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+                    FROM HR.EmployeeClassification ec
+                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
 
     return await DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey })
                             .ExecuteAsync(token: cancellationToken)
@@ -562,8 +562,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;INSERT INTO HR.EmployeeClassification (EmployeeClassificationName)
-                    OUTPUT Inserted.EmployeeClassificationKey
-                    VALUES(@EmployeeClassificationName )&quot;;
+                        OUTPUT Inserted.EmployeeClassificationKey
+                        VALUES(@EmployeeClassificationName )&quot;;
 
         return await DbConnector.Scalar&lt;int&gt;(sql, classification)
                     .ExecuteAsync()
@@ -594,8 +594,8 @@
     public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
     {
         var sql = @&quot;SELECT  ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationName = @employeeClassificationName;&quot;;
 
         return await DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationName })
                                 .ExecuteAsync(token: cancellationToken)
@@ -614,8 +614,8 @@
     public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
         var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName
-                    FROM HR.EmployeeClassification ec
-                    WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
+                        FROM HR.EmployeeClassification ec
+                        WHERE ec.EmployeeClassificationKey = @employeeClassificationKey;&quot;;
 
         return await DbConnector.ReadSingle&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey })
                                 .ExecuteAsync(token: cancellationToken)
@@ -628,8 +628,8 @@
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
         var sql = @&quot;UPDATE HR.EmployeeClassification
-                    SET EmployeeClassificationName = @EmployeeClassificationName
-                    WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
+                        SET EmployeeClassificationName = @EmployeeClassificationName
+                        WHERE EmployeeClassificationKey = @EmployeeClassificationKey;&quot;;
 
         await DbConnector.NonQuery(sql, classification)
                          .ExecuteAsync()

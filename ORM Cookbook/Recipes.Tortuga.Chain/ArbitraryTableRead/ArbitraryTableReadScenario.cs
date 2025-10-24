@@ -1,38 +1,36 @@
 ﻿using Recipes.ArbitraryTableRead;
-using System.Collections.Generic;
 using System.Data;
 using Tortuga.Chain;
 
-namespace Recipes.Chain.ArbitraryTableRead
+namespace Recipes.Chain.ArbitraryTableRead;
+
+public class ArbitraryTableReadScenario : IArbitraryTableReadScenario<DataTable>
 {
-    public class ArbitraryTableReadScenario : IArbitraryTableReadScenario<DataTable>
+    readonly SqlServerDataSource m_DataSource;
+
+    public ArbitraryTableReadScenario(SqlServerDataSource dataSource)
     {
-        readonly SqlServerDataSource m_DataSource;
-
-        public ArbitraryTableReadScenario(SqlServerDataSource dataSource)
-        {
-            m_DataSource = dataSource;
-        }
-
-        public DataTable GetAll(string schemaName, string tableName)
-        {
-            return m_DataSource.From(schemaName + "." + tableName).ToDataTable().Execute();
-        }
+        m_DataSource = dataSource;
     }
 
-    public class ArbitraryTableReadScenario2 : IArbitraryTableReadScenario<IReadOnlyList<IReadOnlyDictionary<string, object?>>>
+    public DataTable GetAll(string schemaName, string tableName)
     {
-        readonly SqlServerDataSource m_DataSource;
+        return m_DataSource.From(schemaName + "." + tableName).ToDataTable().Execute();
+    }
+}
 
-        public ArbitraryTableReadScenario2(SqlServerDataSource dataSource)
-        {
-            m_DataSource = dataSource;
-        }
+public class ArbitraryTableReadScenario2 : IArbitraryTableReadScenario<IReadOnlyList<IReadOnlyDictionary<string, object?>>>
+{
+    readonly SqlServerDataSource m_DataSource;
 
-        //This version returns a lightweight object known as a "Table". It is an alternative to .NET's DataTable.
-        public IReadOnlyList<IReadOnlyDictionary<string, object?>> GetAll(string schemaName, string tableName)
-        {
-            return m_DataSource.From(schemaName + "." + tableName).ToTable().Execute().Rows;
-        }
+    public ArbitraryTableReadScenario2(SqlServerDataSource dataSource)
+    {
+        m_DataSource = dataSource;
+    }
+
+    //This version returns a lightweight object known as a "Table". It is an alternative to .NET's DataTable.
+    public IReadOnlyList<IReadOnlyDictionary<string, object?>> GetAll(string schemaName, string tableName)
+    {
+        return m_DataSource.From(schemaName + "." + tableName).ToTable().Execute().Rows;
     }
 }

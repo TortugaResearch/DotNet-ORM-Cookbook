@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Recipes.EntityFrameworkCore.Entities;
 
-namespace Recipes.EntityFrameworkCore.Entities
+public interface IAuditableEntity
 {
-    public interface IAuditableEntity
-    {
-        DateTime? CreatedDate { get; set; }
-        DateTime? ModifiedDate { get; set; }
-        int? CreatedByEmployeeKey { get; set; }
-        int? ModifiedByEmployeeKey { get; set; }
-    }
+    DateTime? CreatedDate { get; set; }
+    DateTime? ModifiedDate { get; set; }
+    int? CreatedByEmployeeKey { get; set; }
+    int? ModifiedByEmployeeKey { get; set; }
 }

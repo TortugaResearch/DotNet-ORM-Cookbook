@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.ModelWithChildren;
+﻿using Recipes.ModelWithChildren;
 using Recipes.ServiceStack.Entities;
 
-namespace Recipes.ServiceStack.ModelWithChildren
+namespace Recipes.ServiceStack.ModelWithChildren;
+
+[TestClass]
+public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLine, Product>
 {
-    [TestClass]
-    public class ModelWithChildrenTests : ModelWithChildrenTests<ProductLine, Product>
+    protected override IModelWithChildrenScenario<ProductLine, Product> GetScenario()
     {
-        protected override IModelWithChildrenScenario<ProductLine, Product> GetScenario()
-        {
-            return new ModelWithChildrenScenario(Setup.DbConnectionFactory);
-        }
+        return new ModelWithChildrenScenario(Setup.DbConnectionFactory);
     }
 }

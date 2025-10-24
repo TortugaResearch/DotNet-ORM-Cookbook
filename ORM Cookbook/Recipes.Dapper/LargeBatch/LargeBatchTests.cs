@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Dapper.Models;
+﻿using Recipes.Dapper.Models;
 using Recipes.LargeBatch;
 
-namespace Recipes.Dapper.LargeBatch
+namespace Recipes.Dapper.LargeBatch;
+
+[TestClass]
+public class LargeBatchTests : LargeBatchTests<EmployeeSimple>
 {
-    [TestClass]
-    public class LargeBatchTests : LargeBatchTests<EmployeeSimple>
+    protected override ILargeBatchScenario<EmployeeSimple> GetScenario()
     {
-        protected override ILargeBatchScenario<EmployeeSimple> GetScenario()
-        {
-            return new LargeBatchScenario(Setup.SqlServerConnectionString);
-        }
+        return new LargeBatchScenario(Setup.SqlServerConnectionString);
     }
 }

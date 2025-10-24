@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.Models;
+﻿using Recipes.Chain.Models;
 using Recipes.Pagination;
 
-namespace Recipes.Chain.Pagination
+namespace Recipes.Chain.Pagination;
+
+[TestClass]
+public class PaginationTests : PaginationTests<EmployeeSimple>
 {
-    [TestClass]
-    public class PaginationTests : PaginationTests<EmployeeSimple>
+    protected override IPaginationScenario<EmployeeSimple> GetScenario()
     {
-        protected override IPaginationScenario<EmployeeSimple> GetScenario()
-        {
-            return new PaginationScenario(Setup.PrimaryDataSource);
-        }
+        return new PaginationScenario(Setup.PrimaryDataSource);
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recipes.EntityFrameworkCore.Entities;
 using Recipes.EntityFrameworkCore.Entities.Conventions;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+
+[assembly: DoNotParallelize]
 
 namespace Recipes.EntityFrameworkCore
 {
@@ -30,8 +28,8 @@ namespace Recipes.EntityFrameworkCore
         public static void AssemblyInit(TestContext context)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build();
-            SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"];
-            PostgreSqlConnectionString = configuration.GetSection("ConnectionStrings")["PostgreSqlTestDatabase"];
+            SqlServerConnectionString = configuration.GetSection("ConnectionStrings")["SqlServerTestDatabase"]!;
+            PostgreSqlConnectionString = configuration.GetSection("ConnectionStrings")["PostgreSqlTestDatabase"]!;
 
             {
                 var options = new DbContextOptionsBuilder<OrmCookbookContext>().UseSqlServer(SqlServerConnectionString).Options;
@@ -122,6 +120,5 @@ namespace Recipes.EntityFrameworkCore
             }
         }
 #endif
-
     }
 }

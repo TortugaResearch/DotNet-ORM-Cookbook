@@ -1,18 +1,17 @@
 ﻿using System.Data;
 
-namespace Recipes.PopulateDataTable
+namespace Recipes.PopulateDataTable;
+
+public interface IPopulateDataTableScenario
+
 {
-    public interface IPopulateDataTableScenario
+    /// <summary>
+    /// Gets a filtered list of EmployeeClassification rows.
+    /// </summary>
+    DataTable FindByFlags(bool isExempt, bool isEmployee);
 
-    {
-        /// <summary>
-        /// Gets a filtered list of EmployeeClassification rows.
-        /// </summary>
-        DataTable FindByFlags(bool isExempt, bool isEmployee);
-
-        /// <summary>
-        /// Gets all EmployeeClassification rows.
-        /// </summary>
-        DataTable GetAll();
-    }
+    /// <summary>
+    /// Gets all EmployeeClassification rows.
+    /// </summary>
+    DataTable GetAll();
 }

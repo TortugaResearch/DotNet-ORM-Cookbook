@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Chain.Models;
+﻿using Recipes.Chain.Models;
 using Recipes.ModelWithLookup;
 
-namespace Recipes.Chain.ModelWithLookup
+namespace Recipes.Chain.ModelWithLookup;
+
+[TestClass]
+public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeComplex>
 {
-    [TestClass]
-    public class ModelWithLookupComplexTests : ModelWithLookupComplexTests<EmployeeComplex>
+    protected override IModelWithLookupComplexScenario<EmployeeComplex> GetScenario()
     {
-        protected override IModelWithLookupComplexScenario<EmployeeComplex> GetScenario()
-        {
-            return new ModelWithLookupComplexScenario(Setup.PrimaryDataSource);
-        }
+        return new ModelWithLookupComplexScenario(Setup.PrimaryDataSource);
     }
 }

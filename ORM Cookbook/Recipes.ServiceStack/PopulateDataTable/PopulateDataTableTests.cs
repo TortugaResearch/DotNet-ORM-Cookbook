@@ -1,23 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.PopulateDataTable;
+﻿using Recipes.PopulateDataTable;
 
-namespace Recipes.ServiceStack.PopulateDataTable
+namespace Recipes.ServiceStack.PopulateDataTable;
+
+[TestClass]
+public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
 {
-    [TestClass]
-    public class PopulateDataTableTests : Recipes.PopulateDataTable.PopulateDataTableTests
+    protected override IPopulateDataTableScenario GetScenario()
     {
-        protected override IPopulateDataTableScenario GetScenario()
-        {
-            return new PopulateDataTableScenario(Setup.DbConnectionFactory);
-        }
+        return new PopulateDataTableScenario(Setup.DbConnectionFactory);
     }
+}
 
-    [TestClass]
-    public class PopulateDataTableTests2 : Recipes.PopulateDataTable.PopulateDataTableTests
+[TestClass]
+public class PopulateDataTableTests2 : Recipes.PopulateDataTable.PopulateDataTableTests
+{
+    protected override IPopulateDataTableScenario GetScenario()
     {
-        protected override IPopulateDataTableScenario GetScenario()
-        {
-            return new PopulateDataTableScenario2(Setup.DbConnectionFactory);
-        }
+        return new PopulateDataTableScenario2(Setup.DbConnectionFactory);
     }
 }

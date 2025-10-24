@@ -1,24 +1,19 @@
-﻿
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.DbConnector.Models;
+﻿using Recipes.DbConnector.Models;
 using Recipes.MultipleDB;
-using System;
 
-namespace Recipes.DbConnector.MultipleDB
+namespace Recipes.DbConnector.MultipleDB;
+
+[TestClass]
+public class MultipleDBTests : MultipleDBTests<EmployeeClassification>
 {
-    [TestClass]
-    public class MultipleDBTests : MultipleDBTests<EmployeeClassification>
+    protected override IMultipleDBScenario<EmployeeClassification> GetScenario(DatabaseType databaseType)
     {
-        protected override IMultipleDBScenario<EmployeeClassification> GetScenario(DatabaseType databaseType)
+        var connectionString = databaseType switch
         {
-            var connectionString = databaseType switch
-            {
-                DatabaseType.SqlServer => Setup.SqlServerConnectionString,
-                DatabaseType.PostgreSql => Setup.PostgreSqlConnectionString,
-                _ => throw new NotImplementedException()
-            };
-            return new MultipleDBScenario(connectionString, databaseType);
-        }
+            DatabaseType.SqlServer => Setup.SqlServerConnectionString,
+            DatabaseType.PostgreSql => Setup.PostgreSqlConnectionString,
+            _ => throw new NotImplementedException()
+        };
+        return new MultipleDBScenario(connectionString, databaseType);
     }
 }
-

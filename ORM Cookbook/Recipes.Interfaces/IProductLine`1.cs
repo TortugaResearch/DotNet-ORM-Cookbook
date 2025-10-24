@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
+﻿namespace Recipes;
 
-namespace Recipes
+public interface IProductLine<TProduct>
+    where TProduct : IProduct
 {
-    public interface IProductLine<TProduct>
-        where TProduct : IProduct
-    {
-        int ProductLineKey { get; set; }
+    int ProductLineKey { get; set; }
 
-        string? ProductLineName { get; set; }
+    string? ProductLineName { get; set; }
 
-        ICollection<TProduct> Products { get; }
-    }
+    ICollection<TProduct> Products { get; }
 }

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Recipes.Dapper.Models;
+﻿using Recipes.Dapper.Models;
 using Recipes.Pagination;
 
-namespace Recipes.Dapper.Pagination
+namespace Recipes.Dapper.Pagination;
+
+[TestClass]
+public class PaginationTests : PaginationTests<EmployeeSimple>
 {
-    [TestClass]
-    public class PaginationTests : PaginationTests<EmployeeSimple>
+    protected override IPaginationScenario<EmployeeSimple> GetScenario()
     {
-        protected override IPaginationScenario<EmployeeSimple> GetScenario()
-        {
-            return new PaginationScenario(Setup.SqlServerConnectionString);
-        }
+        return new PaginationScenario(Setup.SqlServerConnectionString);
     }
 }
