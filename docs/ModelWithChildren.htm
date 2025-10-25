@@ -1930,12 +1930,13 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var key = repository.Insert&lt;ProductLine, int&gt;(productLine);
-        productLine.ApplyKeys();
-        repository.InsertAll(productLine.Products);
-        return key;
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var key = repository.Insert&lt;ProductLine, int&gt;(productLine);
+            productLine.ApplyKeys();
+            repository.InsertAll(productLine.Products);
+            return key;
+        }
     }
 
     private void ExecuteDelete(int productLineKey)
@@ -1943,9 +1944,8 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         var sql = @&quot;DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
                 DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey;&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.ExecuteNonQuery(sql, new { productLineKey });
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.ExecuteNonQuery(sql, new { productLineKey });
     }
 
     public void Delete(ProductLine productLine)
@@ -1963,44 +1963,48 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
 
     private void FetchProducts(IEnumerable&lt;ProductLine&gt; productLines)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var keys = productLines.Select(e =&gt; e.ProductLineKey).AsList();
-        repository.Query&lt;Product&gt;(e =&gt; keys.Contains(e.ProductLineKey))
-            .AsList()
-            .ForEach(p =&gt;
-                productLines.First(e =&gt; e.ProductLineKey == p.ProductLineKey).Products.Add(p));
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var keys = productLines.Select(e =&gt; e.ProductLineKey).AsList();
+            repository.Query&lt;Product&gt;(e =&gt; keys.Contains(e.ProductLineKey))
+                .AsList()
+                .ForEach(p =&gt;
+                    productLines.First(e =&gt; e.ProductLineKey == p.ProductLineKey).Products.Add(p));
+        }
     }
 
     public IList&lt;ProductLine&gt; FindByName(string productLineName, bool includeProducts)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var lines = repository.Query&lt;ProductLine&gt;(e =&gt; e.ProductLineName == productLineName);
-        if (includeProducts)
-            FetchProducts(lines);
-        return lines.AsList();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var lines = repository.Query&lt;ProductLine&gt;(e =&gt; e.ProductLineName == productLineName);
+            if (includeProducts)
+                FetchProducts(lines);
+            return lines.AsList();
+        }
     }
 
     public IList&lt;ProductLine&gt; GetAll(bool includeProducts)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var lines = repository.QueryAll&lt;ProductLine&gt;();
-        if (includeProducts)
-            FetchProducts(lines);
-        return lines.AsList();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var lines = repository.QueryAll&lt;ProductLine&gt;();
+            if (includeProducts)
+                FetchProducts(lines);
+            return lines.AsList();
+        }
     }
 
     public ProductLine? GetByKey(int productLineKey, bool includeProducts)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var line = repository.Query&lt;ProductLine&gt;(productLineKey).FirstOrDefault();
-        if (includeProducts &amp;&amp; null != line)
-            line.Products.AddRange(
-                repository.Query&lt;Product&gt;(e =&gt; e.ProductLineKey == line.ProductLineKey));
-        return line;
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var line = repository.Query&lt;ProductLine&gt;(productLineKey).FirstOrDefault();
+            if (includeProducts &amp;&amp; null != line)
+                line.Products.AddRange(
+                    repository.Query&lt;Product&gt;(e =&gt; e.ProductLineKey == line.ProductLineKey));
+            return line;
+        }
     }
 
     public void Update(ProductLine productLine)
@@ -2008,9 +2012,8 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.Update(productLine);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.Update(productLine);
     }
 
     public void Update(Product product)
@@ -2018,9 +2021,8 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         if (product == null)
             throw new ArgumentNullException(nameof(product), $&quot;{nameof(product)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.Update(product);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.Update(product);
     }
 
     public void UpdateGraph(ProductLine productLine)
@@ -2028,12 +2030,13 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            productLine.ApplyKeys();
 
-        productLine.ApplyKeys();
-
-        repository.Update(productLine);
-        repository.MergeAll(productLine.Products);
+            repository.Update(productLine);
+            repository.MergeAll(productLine.Products);
+        }
     }
 
     public void UpdateGraphWithChildDeletes(ProductLine productLine)
@@ -2041,21 +2044,22 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            productLine.ApplyKeys();
 
-        productLine.ApplyKeys();
+            var products = repository.Query&lt;Product&gt;(p =&gt; p.ProductLineKey == productLine.ProductLineKey);
+            var originalProductKeys = products
+                .Select(p =&gt; p.ProductKey);
+            var currentProductKeys = productLine
+                .Products
+                .Select(e =&gt; e.ProductKey);
+            var productKeysToRemove = originalProductKeys
+                .Except(currentProductKeys)
+                .AsList();
 
-        var products = repository.Query&lt;Product&gt;(p =&gt; p.ProductLineKey == productLine.ProductLineKey);
-        var originalProductKeys = products
-            .Select(p =&gt; p.ProductKey);
-        var currentProductKeys = productLine
-            .Products
-            .Select(e =&gt; e.ProductKey);
-        var productKeysToRemove = originalProductKeys
-            .Except(currentProductKeys)
-            .AsList();
-
-        UpdateGraphWithDeletes(productLine, productKeysToRemove);
+            UpdateGraphWithDeletes(productLine, productKeysToRemove);
+        }
     }
 
     public void UpdateGraphWithDeletes(ProductLine productLine, IList&lt;int&gt; productKeysToRemove)
@@ -2063,17 +2067,18 @@ var uow = new UnitOfWork2(new List&lt;UnitOfWorkBlockType&gt;()
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $&quot;{nameof(productLine)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            productLine.ApplyKeys();
 
-        productLine.ApplyKeys();
+            repository.Update(productLine);
 
-        repository.Update(productLine);
+            if (productKeysToRemove?.Any() == true)
+                repository.Delete&lt;Product&gt;(e =&gt; productKeysToRemove.Contains(e.ProductKey));
 
-        if (productKeysToRemove?.Any() == true)
-            repository.Delete&lt;Product&gt;(e =&gt; productKeysToRemove.Contains(e.ProductKey));
-
-        if (productLine.Products?.Any() == true)
-            repository.MergeAll(productLine.Products);
+            if (productLine.Products?.Any() == true)
+                repository.MergeAll(productLine.Products);
+        }
     }
 }
 </code></pre>

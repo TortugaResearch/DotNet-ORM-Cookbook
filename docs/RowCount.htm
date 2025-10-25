@@ -541,15 +541,13 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
 
     public int EmployeeCount(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return (int)repository.Count(e =&gt; e.LastName == lastName);
     }
 
     public int EmployeeCount()
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return (int)repository.CountAll();
     }
 
@@ -558,8 +556,7 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.InsertAll(employees);
     }
 }

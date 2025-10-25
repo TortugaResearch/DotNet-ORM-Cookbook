@@ -19,31 +19,27 @@ public class SortingScenario : ISortingScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.InsertAll(employees);
     }
 
     public IList<EmployeeSimple> SortByFirstName(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(x => x.LastName == lastName)
             .OrderBy(x => x.FirstName).AsList();
     }
 
     public IList<EmployeeSimple> SortByMiddleNameDescFirstName(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(x => x.LastName == lastName)
             .OrderByDescending(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
     }
 
     public IList<EmployeeSimple> SortByMiddleNameFirstName(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(x => x.LastName == lastName)
             .OrderBy(x => x.MiddleName).ThenBy(x => x.FirstName).AsList();
     }

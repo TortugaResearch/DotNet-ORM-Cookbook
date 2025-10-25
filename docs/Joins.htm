@@ -1094,45 +1094,40 @@ has been created which is the same projection as the one in the queries in the n
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Insert&lt;EmployeeSimple, int&gt;(employee);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Insert&lt;EmployeeSimple, int&gt;(employee);
     }
 
     public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
     {
         const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).AsList();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { employeeClassificationKey }).AsList();
     }
 
     public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
     {
         const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.LastName = @LastName&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { lastName }).AsList();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { lastName }).AsList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
         const string sql = &quot;SELECT e.EmployeeKey, e.FirstName, e.MiddleName, e.LastName, e.Title, e.OfficePhone, e.CellPhone, e.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.Employee e INNER JOIN HR.EmployeeClassification ec ON e.EmployeeClassificationKey = ec.EmployeeClassificationKey WHERE e.EmployeeKey = @EmployeeKey&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { employeeKey }).FirstOrDefault();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.ExecuteQuery&lt;EmployeeDetail&gt;(sql, new { employeeKey }).FirstOrDefault();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
         const string sql = &quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE EmployeeClassificationKey = @EmployeeClassificationKey&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.ExecuteQuery&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).FirstOrDefault();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.ExecuteQuery&lt;EmployeeClassification&gt;(sql, new { employeeClassificationKey }).FirstOrDefault();
     }
 }
 </code></pre>

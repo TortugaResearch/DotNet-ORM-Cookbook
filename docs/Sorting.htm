@@ -453,8 +453,7 @@
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByFirstName(string lastName)
 {
-    using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+    using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
     return repository.Query(x =&gt; x.LastName == lastName)
         .OrderBy(x =&gt; x.FirstName).AsList();
 }
@@ -462,8 +461,7 @@
 
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameDescFirstName(string lastName)
 {
-    using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+    using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
     return repository.Query(x =&gt; x.LastName == lastName)
         .OrderByDescending(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).AsList();
 }
@@ -471,8 +469,7 @@
 
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortByMiddleNameFirstName(string lastName)
 {
-    using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+    using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
     return repository.Query(x =&gt; x.LastName == lastName)
         .OrderBy(x =&gt; x.MiddleName).ThenBy(x =&gt; x.FirstName).AsList();
 }

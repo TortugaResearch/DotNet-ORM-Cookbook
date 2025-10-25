@@ -496,21 +496,23 @@ public IList&lt;EmployeeEntity&gt; SortBy(string lastName, string sortByColumnA,
 <p>Columns to be sorted by are passed in as a collection of <code>OrderField</code> objects. They checked against the list of columns at runtime to prevent SQL injection attacks. </p>
 <pre><code class="cs">public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumn, bool isDescending)
 {
-    using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-    var sort = new[] { new OrderField(sortByColumn, isDescending ? Order.Descending : Order.Ascending) };
-    return repository.Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+    using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+    {
+        var sort = new[] { new OrderField(sortByColumn, isDescending ? Order.Descending : Order.Ascending) };
+        return repository.Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+    }
 }
 
 public IList&lt;EmployeeSimple&gt; SortBy(string lastName, string sortByColumnA, bool isDescendingA, string sortByColumnB, bool isDescendingB)
 {
-    using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-    var sort = new[] {
-        new OrderField(sortByColumnA, isDescendingA ? Order.Descending : Order.Ascending),
-        new OrderField(sortByColumnB, isDescendingB ? Order.Descending : Order.Ascending)
-    };
-    return repository.Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+    using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+    {
+        var sort = new[] {
+            new OrderField(sortByColumnA, isDescendingA ? Order.Descending : Order.Ascending),
+            new OrderField(sortByColumnB, isDescendingB ? Order.Descending : Order.Ascending)
+           };
+        return repository.Query(x =&gt; x.LastName == lastName, orderBy: sort).AsList();
+    }
 }
 </code></pre>
 

@@ -16,8 +16,7 @@ public class UpsertScenario : IUpsertScenario<Division>
 
     public Division? GetByKey(int divisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
     }
 
@@ -26,8 +25,7 @@ public class UpsertScenario : IUpsertScenario<Division>
         if (division == null)
             throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Merge<int>(division, qualifiers: Field.From("DivisionName"));
     }
 
@@ -36,8 +34,7 @@ public class UpsertScenario : IUpsertScenario<Division>
         if (division == null)
             throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Merge<int>(division, qualifiers: Field.From("DivisionKey"));
     }
 }

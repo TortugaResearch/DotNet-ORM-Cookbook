@@ -736,8 +736,7 @@
     {
         var sql = &quot;SELECT DivisionKey FROM [HR].[Division] WHERE (DivisionName = @DivisionName);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;int?&gt;(sql, new { divisionName });
     }
 
@@ -745,8 +744,7 @@
     {
         var sql = &quot;SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;string&gt;(sql, new { divisionKey });
     }
 
@@ -754,8 +752,7 @@
     {
         var sql = &quot;SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;string&gt;(sql, new { divisionKey });
     }
 
@@ -763,8 +760,7 @@
     {
         var sql = &quot;SELECT LastReviewCycle FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;DateTimeOffset?&gt;(sql, new { divisionKey });
     }
 
@@ -772,8 +768,7 @@
     {
         var sql = &quot;SELECT MaxEmployees FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;int?&gt;(sql, new { divisionKey });
     }
 
@@ -781,8 +776,7 @@
     {
         var sql = &quot;SELECT ModifiedDate FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;DateTime&gt;(sql, new { divisionKey });
     }
 
@@ -790,8 +784,7 @@
     {
         var sql = &quot;SELECT SalaryBudget FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;decimal?&gt;(sql, new { divisionKey });
     }
 
@@ -799,8 +792,7 @@
     {
         var sql = &quot;SELECT StartTime FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);&quot;;
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar&lt;TimeSpan?&gt;(sql, new { divisionKey });
     }
 }

@@ -19,15 +19,13 @@ public class PartialUpdateScenario : IPartialUpdateScenario<EmployeeClassificati
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Insert<int>(classification);
     }
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(employeeClassificationKey).FirstOrDefault();
     }
 
@@ -36,8 +34,7 @@ public class PartialUpdateScenario : IPartialUpdateScenario<EmployeeClassificati
         if (updateMessage == null)
             throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         using (var connection = repository.CreateConnection(true))
         {
             connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
@@ -49,8 +46,7 @@ public class PartialUpdateScenario : IPartialUpdateScenario<EmployeeClassificati
         if (updateMessage == null)
             throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         using (var connection = repository.CreateConnection(true))
         {
             connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
@@ -59,8 +55,7 @@ public class PartialUpdateScenario : IPartialUpdateScenario<EmployeeClassificati
 
     public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         using (var connection = repository.CreateConnection(true))
         {
             connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(),

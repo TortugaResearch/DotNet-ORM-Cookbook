@@ -19,8 +19,7 @@ namespace Recipes.RepoDB.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+            using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
             return repository.Insert<int>(classification);
         }
 
@@ -29,38 +28,33 @@ namespace Recipes.RepoDB.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+            using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
             repository.Delete(classification);
         }
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+            using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
             repository.Delete(employeeClassificationKey);
         }
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
         {
-            using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+            using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
             return repository.Query(e => e.EmployeeClassificationName == employeeClassificationName)
                 .FirstOrDefault();
         }
 
         public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
         {
-            using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+            using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
             return repository.QueryAll()
                 .ToImmutableList();
         }
 
         public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+            using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
             return repository.Query(employeeClassificationKey)
                 .FirstOrDefault();
         }
@@ -70,8 +64,7 @@ namespace Recipes.RepoDB.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+            using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
             repository.Update(classification);
         }
     }

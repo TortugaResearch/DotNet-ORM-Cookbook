@@ -723,50 +723,43 @@
 
     public List&lt;int&gt; GetDivisionKeys(int maxDivisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.DivisionKey).ToList();
     }
 
     public List&lt;string&gt; GetDivisionNames(int maxDivisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.DivisionName!).ToList();
     }
 
     public List&lt;DateTimeOffset?&gt; GetLastReviewCycles(int maxDivisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.LastReviewCycle).ToList();
     }
 
     public List&lt;int?&gt; GetMaxEmployees(int maxDivisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.MaxEmployees).ToList();
     }
 
     public List&lt;DateTime&gt; GetModifiedDates(int maxDivisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.ModifiedDate).ToList();
     }
 
     public List&lt;decimal?&gt; GetSalaryBudgets(int maxDivisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.SalaryBudget).ToList();
     }
 
     public List&lt;TimeSpan?&gt; GetStartTimes(int maxDivisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey &lt;= maxDivisionKey).Select(d =&gt; d.StartTime).ToList();
     }
 }

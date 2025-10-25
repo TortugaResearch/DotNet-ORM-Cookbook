@@ -1540,25 +1540,24 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Insert&lt;int&gt;(classification);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Insert&lt;int&gt;(classification);
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var rowCount = repository.Delete(employeeClassificationKey);
-        if (rowCount != 1)
-            throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var rowCount = repository.Delete(employeeClassificationKey);
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {employeeClassificationKey}.&quot;);
+        }
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return 1 == repository.Delete(employeeClassificationKey);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return 1 == repository.Delete(employeeClassificationKey);
     }
 
     public void DeleteOrException(EmployeeClassification classification)
@@ -1566,11 +1565,12 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var rowCount = repository.Delete(classification);
-        if (rowCount != 1)
-            throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var rowCount = repository.Delete(classification);
+            if (rowCount != 1)
+                throw new DataException($&quot;No row was found for key {classification.EmployeeClassificationKey}.&quot;);
+        }
     }
 
     public bool DeleteWithStatus(EmployeeClassification classification)
@@ -1578,61 +1578,60 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return 1 == repository.Delete(classification);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return 1 == repository.Delete(classification);
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var entity = repository.Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+            if (null == entity)
+                throw new DataException($&quot;Message&quot;);
 
-        var entity = repository.Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
-        if (null == entity)
-            throw new DataException($&quot;Message&quot;);
-
-        return entity;
+            return entity;
+        }
     }
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var entity = repository.Query(employeeClassificationKey).FirstOrDefault();
+            if (null == entity)
+                throw new DataException($&quot;Message&quot;);
 
-        var entity = repository.Query(employeeClassificationKey).FirstOrDefault();
-        if (null == entity)
-            throw new DataException($&quot;Message&quot;);
-
-        return entity;
+            return entity;
+        }
     }
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Query(employeeClassificationKey).FirstOrDefault();
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Query(employeeClassificationKey).FirstOrDefault();
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var rowCount = repository.Update(classification);
-        if (rowCount != 1)
-            throw new DataException($&quot;Message&quot;);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var rowCount = repository.Update(classification);
+            if (rowCount != 1)
+                throw new DataException($&quot;Message&quot;);
+        }
     }
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return 1 == repository.Update(classification);
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return 1 == repository.Update(classification);
     }
 }
 </code></pre>

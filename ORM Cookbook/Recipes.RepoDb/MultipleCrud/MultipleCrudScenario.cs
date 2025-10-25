@@ -20,10 +20,11 @@ public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var keys = employees.Select(e => e.EmployeeKey).AsList();
-        repository.Delete(e => keys.Contains(e.EmployeeKey));
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var keys = employees.Select(e => e.EmployeeKey).AsList();
+            repository.Delete(e => keys.Contains(e.EmployeeKey));
+        }
     }
 
     public void DeleteBatchByKey(IList<int> employeeKeys)
@@ -31,16 +32,14 @@ public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
         if (employeeKeys == null || employeeKeys.Count == 0)
             throw new ArgumentException($"{nameof(employeeKeys)} is null or empty.", nameof(employeeKeys));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.Delete(e => employeeKeys.Contains(e.EmployeeKey));
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.Delete(e => employeeKeys.Contains(e.EmployeeKey));
     }
 
     public IList<EmployeeSimple> FindByLastName(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Query(e => e.LastName == lastName).AsList();
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Query(e => e.LastName == lastName).AsList();
     }
 
     public void InsertBatch(IList<EmployeeSimple> employees)
@@ -48,9 +47,8 @@ public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
     }
 
     public IList<int> InsertBatchReturnKeys(IList<EmployeeSimple> employees)
@@ -58,9 +56,8 @@ public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
 
         return employees.Select(e => e.EmployeeKey).AsList();
     }
@@ -70,9 +67,8 @@ public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
 
         return employees;
     }
@@ -82,9 +78,8 @@ public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
     }
 
     public void UpdateBatch(IList<EmployeeSimple> employees)
@@ -92,8 +87,7 @@ public class MultipleCrudScenario : IMultipleCrudScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.UpdateAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.UpdateAll(employees);
     }
 }

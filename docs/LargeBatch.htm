@@ -695,8 +695,7 @@ public void BulkInsert(DataTable employees)
 
     public int CountByLastName(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.LastName == lastName).Count();
     }
 
@@ -707,8 +706,7 @@ public void BulkInsert(DataTable employees)
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.InsertAll(employees);
     }
 
@@ -717,8 +715,7 @@ public void BulkInsert(DataTable employees)
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.InsertAll(employees, batchSize: batchSize);
     }
 }

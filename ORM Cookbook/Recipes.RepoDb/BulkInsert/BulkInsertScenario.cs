@@ -19,8 +19,7 @@ public class BulkInsertScenario : IBulkInsertScenario<EmployeeSimple>
 
     public int CountByLastName(string lastName)
     {
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return (int)repository.Count<EmployeeSimple>(e => e.LastName == lastName);
     }
 
@@ -29,8 +28,7 @@ public class BulkInsertScenario : IBulkInsertScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         repository.BulkInsert(employees);
     }
 
@@ -39,8 +37,7 @@ public class BulkInsertScenario : IBulkInsertScenario<EmployeeSimple>
         if (employees == null)
             throw new ArgumentNullException(nameof(employees), $"{nameof(employees)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         repository.BulkInsert<EmployeeSimple>(employees, rowState: DataRowState.Added);
     }
 }

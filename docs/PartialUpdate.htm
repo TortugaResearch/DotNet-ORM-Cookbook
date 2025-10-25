@@ -589,8 +589,7 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
-    using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+    using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
     using (var connection = repository.CreateConnection(true))
     {
         connection.Update(ClassMappedNameCache.Get&lt;EmployeeClassification&gt;(), updateMessage);
@@ -602,8 +601,7 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
     if (updateMessage == null)
         throw new ArgumentNullException(nameof(updateMessage), $&quot;{nameof(updateMessage)} is null.&quot;);
 
-    using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+    using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
     using (var connection = repository.CreateConnection(true))
     {
         connection.Update(ClassMappedNameCache.Get&lt;EmployeeClassification&gt;(), updateMessage);
@@ -613,8 +611,7 @@ public void UpdateWithObject(EmployeeClassificationFlagsUpdater updateMessage)
 
 <pre><code class="cs">public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
 {
-    using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+    using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
     using (var connection = repository.CreateConnection(true))
     {
         connection.Update(ClassMappedNameCache.Get&lt;EmployeeClassification&gt;(),

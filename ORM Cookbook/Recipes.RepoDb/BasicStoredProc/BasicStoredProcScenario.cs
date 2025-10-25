@@ -19,10 +19,9 @@ public class BasicStoredProcScenario : IBasicStoredProcScenario<EmployeeClassifi
 
     public IList<EmployeeClassificationWithCount> CountEmployeesByClassification()
     {
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.ExecuteQuery<EmployeeClassificationWithCount>("[HR].[CountEmployeesByClassification]",
-            commandType: CommandType.StoredProcedure).AsList();
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.ExecuteQuery<EmployeeClassificationWithCount>("[HR].[CountEmployeesByClassification]",
+                commandType: CommandType.StoredProcedure).AsList();
     }
 
     public int CreateEmployeeClassification(EmployeeClassification employeeClassification)
@@ -31,8 +30,7 @@ public class BasicStoredProcScenario : IBasicStoredProcScenario<EmployeeClassifi
             throw new ArgumentNullException(nameof(employeeClassification),
                 $"{nameof(employeeClassification)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-        return repository.ExecuteScalar<int>("[HR].[CreateEmployeeClassification]", new
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance)) return repository.ExecuteScalar<int>("[HR].[CreateEmployeeClassification]", new
         {
             employeeClassification.EmployeeClassificationName,
             employeeClassification.IsExempt,
@@ -42,15 +40,13 @@ public class BasicStoredProcScenario : IBasicStoredProcScenario<EmployeeClassifi
 
     public IList<EmployeeClassification> GetEmployeeClassifications()
     {
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-        return repository.ExecuteQuery<EmployeeClassification>("[HR].[GetEmployeeClassifications]",
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance)) return repository.ExecuteQuery<EmployeeClassification>("[HR].[GetEmployeeClassifications]",
             commandType: CommandType.StoredProcedure).AsList();
     }
 
     public EmployeeClassification? GetEmployeeClassifications(int employeeClassificationKey)
     {
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-        return repository.ExecuteQuery<EmployeeClassification>("[HR].[GetEmployeeClassifications]",
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance)) return repository.ExecuteQuery<EmployeeClassification>("[HR].[GetEmployeeClassifications]",
             new { EmployeeClassificationKey = employeeClassificationKey },
             commandType: CommandType.StoredProcedure).FirstOrDefault();
     }

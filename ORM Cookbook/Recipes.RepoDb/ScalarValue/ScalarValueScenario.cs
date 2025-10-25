@@ -18,8 +18,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT DivisionKey FROM [HR].[Division] WHERE (DivisionName = @DivisionName);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<int?>(sql, new { divisionName });
     }
 
@@ -27,8 +26,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<string>(sql, new { divisionKey });
     }
 
@@ -36,8 +34,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT DivisionName FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<string>(sql, new { divisionKey });
     }
 
@@ -45,8 +42,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT LastReviewCycle FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<DateTimeOffset?>(sql, new { divisionKey });
     }
 
@@ -54,8 +50,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT MaxEmployees FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<int?>(sql, new { divisionKey });
     }
 
@@ -63,8 +58,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT ModifiedDate FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<DateTime>(sql, new { divisionKey });
     }
 
@@ -72,8 +66,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT SalaryBudget FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<decimal?>(sql, new { divisionKey });
     }
 
@@ -81,8 +74,7 @@ public class ScalarValueScenario : IScalarValueScenario
     {
         var sql = "SELECT StartTime FROM [HR].[Division] WHERE (DivisionKey = @DivisionKey);";
 
-        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.ExecuteScalar<TimeSpan?>(sql, new { divisionKey });
     }
 }

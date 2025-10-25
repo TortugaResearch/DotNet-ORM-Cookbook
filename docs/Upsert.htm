@@ -1171,8 +1171,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
 
     public Division? GetByKey(int divisionKey)
     {
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
     }
 
@@ -1181,8 +1180,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
         if (division == null)
             throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
 
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Merge&lt;int&gt;(division, qualifiers: Field.From(&quot;DivisionName&quot;));
     }
 
@@ -1191,8 +1189,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
         if (division == null)
             throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
 
-        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Merge&lt;int&gt;(division, qualifiers: Field.From(&quot;DivisionKey&quot;));
     }
 }

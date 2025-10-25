@@ -766,36 +766,31 @@ POCOs however these aren't able to participate in entity relationships.</p>
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Insert&lt;EmployeeSimple, int&gt;(employee);
     }
 
     public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeClassificationKey == employeeClassificationKey).AsList();
     }
 
     public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query&lt;EmployeeDetail&gt;(e =&gt; e.LastName == lastName).AsList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeKey == employeeKey).FirstOrDefault();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
     }
 }

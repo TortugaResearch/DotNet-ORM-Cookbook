@@ -16,8 +16,7 @@ public class LargeBatchScenario : ILargeBatchScenario<EmployeeSimple>
 
     public int CountByLastName(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e => e.LastName == lastName).Count();
     }
 
@@ -28,8 +27,7 @@ public class LargeBatchScenario : ILargeBatchScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.InsertAll(employees);
     }
 
@@ -38,8 +36,7 @@ public class LargeBatchScenario : ILargeBatchScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.InsertAll(employees, batchSize: batchSize);
     }
 }

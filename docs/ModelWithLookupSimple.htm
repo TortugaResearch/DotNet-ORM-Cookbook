@@ -985,8 +985,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Insert&lt;EmployeeSimple, int&gt;(employee);
     }
 
@@ -995,43 +994,37 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         repository.Delete(employee);
     }
 
     public void DeleteByKey(int employeeKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         repository.Delete&lt;EmployeeSimple&gt;(employeeKey);
     }
 
     public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query&lt;EmployeeSimple&gt;(e =&gt; e.LastName == lastName).AsList();
     }
 
     public IList&lt;EmployeeSimple&gt; GetAll()
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.QueryAll&lt;EmployeeSimple&gt;().AsList();
     }
 
     public EmployeeSimple? GetByKey(int employeeKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query&lt;EmployeeSimple&gt;(employeeKey).FirstOrDefault();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
     }
 
@@ -1040,8 +1033,7 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         repository.Update(employee);
     }
 }

@@ -1328,8 +1328,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Insert&lt;int&gt;(classification);
     }
 
@@ -1338,38 +1337,33 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.Delete(classification);
     }
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.Delete(employeeClassificationKey);
     }
 
     public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
     {
-        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
             .FirstOrDefault();
     }
 
     public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
     {
-        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.QueryAll()
             .ToImmutableList();
     }
 
     public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return repository.Query(employeeClassificationKey)
             .FirstOrDefault();
     }
@@ -1379,8 +1373,7 @@ public class EmployeeClassification : IEmployeeClassification
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.Update(classification);
     }
 }

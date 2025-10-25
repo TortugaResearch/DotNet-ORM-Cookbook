@@ -1587,10 +1587,11 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var keys = employees.Select(e =&gt; e.EmployeeKey).AsList();
-        repository.Delete(e =&gt; keys.Contains(e.EmployeeKey));
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+        {
+            var keys = employees.Select(e =&gt; e.EmployeeKey).AsList();
+            repository.Delete(e =&gt; keys.Contains(e.EmployeeKey));
+        }
     }
 
     public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
@@ -1598,16 +1599,14 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employeeKeys == null || employeeKeys.Count == 0)
             throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.Delete(e =&gt; employeeKeys.Contains(e.EmployeeKey));
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.Delete(e =&gt; employeeKeys.Contains(e.EmployeeKey));
     }
 
     public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Query(e =&gt; e.LastName == lastName).AsList();
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Query(e =&gt; e.LastName == lastName).AsList();
     }
 
     public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
@@ -1615,9 +1614,8 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
     }
 
     public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
@@ -1625,9 +1623,8 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
 
         return employees.Select(e =&gt; e.EmployeeKey).AsList();
     }
@@ -1637,9 +1634,8 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
 
         return employees;
     }
@@ -1649,9 +1645,8 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.InsertAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.InsertAll(employees);
     }
 
     public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
@@ -1659,9 +1654,8 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.UpdateAll(employees);
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.UpdateAll(employees);
     }
 }
 </code></pre>

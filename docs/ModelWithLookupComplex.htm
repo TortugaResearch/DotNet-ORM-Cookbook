@@ -1098,9 +1098,8 @@ partial class EmployeeComplex : IEmployeeComplex
         if (employee.EmployeeClassification == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Insert&lt;EmployeeComplex, int&gt;(employee);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Insert&lt;EmployeeComplex, int&gt;(employee);
     }
 
     public void Delete(EmployeeComplex employee)
@@ -1108,49 +1107,45 @@ partial class EmployeeComplex : IEmployeeComplex
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.Delete(employee);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.Delete(employee);
     }
 
     public void DeleteByKey(int employeeKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.Delete&lt;EmployeeComplex&gt;(employeeKey);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.Delete&lt;EmployeeComplex&gt;(employeeKey);
     }
 
     public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Query&lt;EmployeeComplex&gt;(e =&gt; e.LastName == lastName).AsList();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Query&lt;EmployeeComplex&gt;(e =&gt; e.LastName == lastName).AsList();
     }
 
     public IList&lt;EmployeeComplex&gt; GetAll()
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.QueryAll&lt;EmployeeComplex&gt;().AsList();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.QueryAll&lt;EmployeeComplex&gt;().AsList();
     }
 
     public EmployeeComplex? GetByKey(int employeeKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        var employee = repository.Query&lt;EmployeeComplex&gt;(employeeKey).FirstOrDefault();
-        if (employee != null)
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
         {
-            employee.EmployeeClassification = repository.Query&lt;EmployeeClassification&gt;(employee.EmployeeClassificationKey).FirstOrDefault();
+            var employee = repository.Query&lt;EmployeeComplex&gt;(employeeKey).FirstOrDefault();
+            if (employee != null)
+            {
+                employee.EmployeeClassification = repository.Query&lt;EmployeeClassification&gt;(employee.EmployeeClassificationKey).FirstOrDefault();
+            }
+            return employee;
         }
-        return employee;
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        return repository.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            return repository.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
     }
 
     public void Update(EmployeeComplex employee)
@@ -1160,9 +1155,8 @@ partial class EmployeeComplex : IEmployeeComplex
         if (employee.EmployeeClassification == null)
             throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
 
-        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
-
-        repository.Update(employee);
+        using (var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance))
+            repository.Update(employee);
     }
 }
 </code></pre>

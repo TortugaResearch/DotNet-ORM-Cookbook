@@ -15,15 +15,13 @@ public class RowCountScenario : IRowCountScenario<EmployeeSimple>
 
     public int EmployeeCount(string lastName)
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return (int)repository.Count(e => e.LastName == lastName);
     }
 
     public int EmployeeCount()
     {
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return (int)repository.CountAll();
     }
 
@@ -32,8 +30,7 @@ public class RowCountScenario : IRowCountScenario<EmployeeSimple>
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance))
         repository.InsertAll(employees);
     }
 }

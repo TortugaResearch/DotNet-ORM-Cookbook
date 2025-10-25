@@ -1148,8 +1148,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return await repository.InsertAsync&lt;int&gt;(classification).ConfigureAwait(false);
     }
 
@@ -1158,37 +1157,32 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         await repository.DeleteAsync(classification).ConfigureAwait(false);
     }
 
     public async Task DeleteByKeyAsync(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         await repository.DeleteAsync(employeeClassificationKey).ConfigureAwait(false);
     }
 
     public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return (await repository.QueryAsync(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
             .ConfigureAwait(false)).FirstOrDefault();
     }
 
     public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return (await repository.QueryAllAsync().ConfigureAwait(false)).AsList();
     }
 
     public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         return (await repository.QueryAsync(employeeClassificationKey).ConfigureAwait(false)).FirstOrDefault();
     }
 
@@ -1197,8 +1191,7 @@
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
 
-        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
-
+        using (var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance))
         await repository.UpdateAsync(classification).ConfigureAwait(false);
     }
 }
