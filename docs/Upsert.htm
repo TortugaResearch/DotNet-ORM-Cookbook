@@ -1160,34 +1160,7 @@ OUTPUT Inserted.DivisionKey;&quot;;
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class UpsertScenario : BaseRepository&lt;Division, SqlConnection&gt;,
-    IUpsertScenario&lt;Division&gt;
-{
-    public UpsertScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
-    public Division? GetByKey(int divisionKey)
-    {
-        return Query(e =&gt; e.DivisionKey == divisionKey).FirstOrDefault();
-    }
-
-    public int UpsertByName(Division division)
-    {
-        if (division == null)
-            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
-
-        return Merge&lt;int&gt;(division, qualifiers: Field.From(&quot;DivisionName&quot;));
-    }
-
-    public int UpsertByPrimaryKey(Division division)
-    {
-        if (division == null)
-            throw new ArgumentNullException(nameof(division), $&quot;{nameof(division)} is null.&quot;);
-
-        return Merge&lt;int&gt;(division, qualifiers: Field.From(&quot;DivisionKey&quot;));
-    }
-}
+<pre><code class="cs">public class UpsertScenario(
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

@@ -8,19 +8,17 @@ using RDB = RepoDb;
 
 namespace Recipes.RepoDB.Immutable
 {
-    public class ImmutableScenario : BaseRepository<ReadOnlyEmployeeClassification, SqlConnection>,
+    public class ImmutableScenario(string connectionString) :
         IImmutableScenario<ReadOnlyEmployeeClassification>
     {
-        public ImmutableScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
-
         public int Create(ReadOnlyEmployeeClassification classification)
         {
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            return Insert<int>(classification);
+            using var repository = new ReadOnlyEmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+            return repository.Insert<int>(classification);
         }
 
         public void Delete(ReadOnlyEmployeeClassification classification)
@@ -28,29 +26,39 @@ namespace Recipes.RepoDB.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            base.Delete(classification);
+            using var repository = new ReadOnlyEmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+            repository.Delete(classification);
         }
 
         public void DeleteByKey(int employeeClassificationKey)
         {
-            Delete(employeeClassificationKey);
+            using var repository = new ReadOnlyEmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+            repository.Delete(employeeClassificationKey);
         }
 
         public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
         {
-            return Query(e => e.EmployeeClassificationName == employeeClassificationName)
+            using var repository = new ReadOnlyEmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+            return repository.Query(e => e.EmployeeClassificationName == employeeClassificationName)
                 .FirstOrDefault();
         }
 
         public IReadOnlyList<ReadOnlyEmployeeClassification> GetAll()
         {
-            return QueryAll()
+            using var repository = new ReadOnlyEmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+            return repository.QueryAll()
                 .ToImmutableList();
         }
 
         public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
         {
-            return Query(employeeClassificationKey)
+            using var repository = new ReadOnlyEmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+            return repository.Query(employeeClassificationKey)
                 .FirstOrDefault();
         }
 
@@ -59,7 +67,9 @@ namespace Recipes.RepoDB.Immutable
             if (classification == null)
                 throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-            base.Update(classification);
+            using var repository = new ReadOnlyEmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+            repository.Update(classification);
         }
     }
 }

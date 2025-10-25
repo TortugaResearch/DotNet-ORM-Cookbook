@@ -684,35 +684,7 @@ public void BulkInsert(DataTable employees)
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>No changes are needed. </p>
-<pre><code class="cs">public class LargeBatchScenario : BaseRepository&lt;EmployeeSimple, SqlConnection&gt;, ILargeBatchScenario&lt;EmployeeSimple&gt;
-{
-    public LargeBatchScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
-    public int CountByLastName(string lastName)
-    {
-        return Query(e =&gt; e.LastName == lastName).Count();
-    }
-
-    public int MaximumBatchSize =&gt; 2100 / 7;
-
-    public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees)
-    {
-        if (employees == null || employees.Count == 0)
-            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-        InsertAll(employees);
-    }
-
-    public void InsertLargeBatch(IList&lt;EmployeeSimple&gt; employees, int batchSize)
-    {
-        if (employees == null || employees.Count == 0)
-            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
-
-        InsertAll(employees, batchSize: batchSize);
-    }
-}
+<pre><code class="cs">public class LargeBatchScenario(
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

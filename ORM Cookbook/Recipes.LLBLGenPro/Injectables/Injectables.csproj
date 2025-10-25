@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
     <ItemGroup>
 		<PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.12.1" />

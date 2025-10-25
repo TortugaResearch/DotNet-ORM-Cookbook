@@ -8,21 +8,18 @@ using RDB = RepoDb;
 
 namespace Recipes.RepoDB.Transactions;
 
-public class TransactionsScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-    ITransactionsScenario<EmployeeClassification>
+public class TransactionsScenario(string connectionString) : ITransactionsScenario<EmployeeClassification>
 {
-    public TransactionsScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public int Create(EmployeeClassification classification, bool shouldRollBack)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        using (var transaction = CreateConnection().EnsureOpen().BeginTransaction())
+        var repository = new EmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        using (var transaction = repository.CreateConnection().EnsureOpen().BeginTransaction())
         {
-            var result = Insert<int>(classification, transaction: transaction);
+            var result = repository.Insert<int>(classification, transaction: transaction);
 
             if (shouldRollBack)
                 transaction.Rollback();
@@ -38,9 +35,11 @@ public class TransactionsScenario : BaseRepository<EmployeeClassification, SqlCo
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        using (var transaction = CreateConnection().EnsureOpen().BeginTransaction(isolationLevel))
+        var repository = new EmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        using (var transaction = repository.CreateConnection().EnsureOpen().BeginTransaction(isolationLevel))
         {
-            var result = Insert<int>(classification, transaction: transaction);
+            var result = repository.Insert<int>(classification, transaction: transaction);
 
             if (shouldRollBack)
                 transaction.Rollback();
@@ -53,6 +52,8 @@ public class TransactionsScenario : BaseRepository<EmployeeClassification, SqlCo
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return Query(e => e.EmployeeClassificationKey == employeeClassificationKey).FirstOrDefault();
+        var repository = new EmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query(e => e.EmployeeClassificationKey == employeeClassificationKey).FirstOrDefault();
     }
 }

@@ -1,38 +1,36 @@
-﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDB.Models;
+﻿using Recipes.RepoDB.Models;
 using Recipes.TryCrud;
-using RepoDb;
+using RepoDb.Enumerations;
 using System.Data;
-
-using RDB = RepoDb;
 
 namespace Recipes.RepoDB.TryCrud;
 
-public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-    ITryCrudScenario<EmployeeClassification>
+public class TryCrudScenario(string connectionString) : ITryCrudScenario<EmployeeClassification>
 {
-    public TryCrudScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public int Create(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        return Insert<int>(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert<int>(classification);
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        var rowCount = Delete(employeeClassificationKey);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        var rowCount = repository.Delete(employeeClassificationKey);
         if (rowCount != 1)
             throw new DataException($"No row was found for key {employeeClassificationKey}.");
     }
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        return 1 == Delete(employeeClassificationKey);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return 1 == repository.Delete(employeeClassificationKey);
     }
 
     public void DeleteOrException(EmployeeClassification classification)
@@ -40,7 +38,9 @@ public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnect
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        var rowCount = Delete(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        var rowCount = repository.Delete(classification);
         if (rowCount != 1)
             throw new DataException($"No row was found for key {classification.EmployeeClassificationKey}.");
     }
@@ -50,12 +50,16 @@ public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnect
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        return 1 == Delete(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return 1 == repository.Delete(classification);
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        var entity = Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        var entity = repository.Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
         if (null == entity)
             throw new DataException($"Message");
 
@@ -64,12 +68,16 @@ public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnect
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        var entity = Query(employeeClassificationKey).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        var entity = repository.Query(employeeClassificationKey).FirstOrDefault();
         if (null == entity)
             throw new DataException($"Message");
 
@@ -78,18 +86,24 @@ public class TryCrudScenario : BaseRepository<EmployeeClassification, SqlConnect
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        return Query(employeeClassificationKey).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(employeeClassificationKey).FirstOrDefault();
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        var rowCount = Update(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        var rowCount = repository.Update(classification);
         if (rowCount != 1)
             throw new DataException($"Message");
     }
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        return 1 == Update(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return 1 == repository.Update(classification);
     }
 }

@@ -1082,71 +1082,7 @@ partial class EmployeeComplex : IEmployeeComplex
 }
 </code></pre>
 
-<pre><code class="cs">public class ModelWithLookupComplexScenario : DbRepository&lt;SqlConnection&gt;,
-    IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
-{
-    public ModelWithLookupComplexScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
-    public int Create(EmployeeComplex employee)
-    {
-        if (employee == null)
-            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-        if (employee.EmployeeClassification == null)
-            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
-
-        return Insert&lt;EmployeeComplex, int&gt;(employee);
-    }
-
-    public void Delete(EmployeeComplex employee)
-    {
-        if (employee == null)
-            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-
-        base.Delete(employee);
-    }
-
-    public void DeleteByKey(int employeeKey)
-    {
-        Delete&lt;EmployeeComplex&gt;(employeeKey);
-    }
-
-    public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
-    {
-        return Query&lt;EmployeeComplex&gt;(e =&gt; e.LastName == lastName).AsList();
-    }
-
-    public IList&lt;EmployeeComplex&gt; GetAll()
-    {
-        return QueryAll&lt;EmployeeComplex&gt;().AsList();
-    }
-
-    public EmployeeComplex? GetByKey(int employeeKey)
-    {
-        var employee = Query&lt;EmployeeComplex&gt;(employeeKey).FirstOrDefault();
-        if (employee != null)
-        {
-            employee.EmployeeClassification = Query&lt;EmployeeClassification&gt;(employee.EmployeeClassificationKey).FirstOrDefault();
-        }
-        return employee;
-    }
-
-    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
-    {
-        return Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
-    }
-
-    public void Update(EmployeeComplex employee)
-    {
-        if (employee == null)
-            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
-        if (employee.EmployeeClassification == null)
-            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
-
-        base.Update(employee);
-    }
-}
+<pre><code class="cs">public class ModelWithLookupComplexScenario(
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

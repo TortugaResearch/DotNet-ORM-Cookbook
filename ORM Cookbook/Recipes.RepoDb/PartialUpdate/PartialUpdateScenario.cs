@@ -2,29 +2,29 @@
 using Recipes.PartialUpdate;
 using Recipes.RepoDB.Models;
 using RepoDb;
+using RepoDb.Enumerations;
 
 using RDB = RepoDb;
 
 namespace Recipes.RepoDB.PartialUpdate;
 
-public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-    IPartialUpdateScenario<EmployeeClassification>
+public class PartialUpdateScenario(string connectionString) : IPartialUpdateScenario<EmployeeClassification>
 {
-    public PartialUpdateScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public int Create(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        return Insert<int>(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert<int>(classification);
     }
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return Query(employeeClassificationKey).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(employeeClassificationKey).FirstOrDefault();
     }
 
     public void UpdateWithObject(EmployeeClassificationNameUpdater updateMessage)
@@ -32,7 +32,9 @@ public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlC
         if (updateMessage == null)
             throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-        using (var connection = CreateConnection(true))
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        using (var connection = repository.CreateConnection(true))
         {
             connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
         }
@@ -43,7 +45,9 @@ public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlC
         if (updateMessage == null)
             throw new ArgumentNullException(nameof(updateMessage), $"{nameof(updateMessage)} is null.");
 
-        using (var connection = CreateConnection(true))
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        using (var connection = repository.CreateConnection(true))
         {
             connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(), updateMessage);
         }
@@ -51,7 +55,9 @@ public class PartialUpdateScenario : BaseRepository<EmployeeClassification, SqlC
 
     public void UpdateWithSeparateParameters(int employeeClassificationKey, bool isExempt, bool isEmployee)
     {
-        using (var connection = CreateConnection(true))
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        using (var connection = repository.CreateConnection(true))
         {
             connection.Update(ClassMappedNameCache.Get<EmployeeClassification>(),
                 new { employeeClassificationKey, isExempt, isEmployee });

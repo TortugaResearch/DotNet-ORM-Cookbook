@@ -1,26 +1,20 @@
-﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDB.Models;
+﻿using Recipes.RepoDB.Models;
 using Recipes.SingleModelCrud;
-using RepoDb;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
-
-using RDB = RepoDb;
 
 namespace Recipes.RepoDB.SingleModelCrud;
 
-public class SingleModelCrudScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-    ISingleModelCrudScenario<EmployeeClassification>
+public class SingleModelCrudScenario(string connectionString) : ISingleModelCrudScenario<EmployeeClassification>
 {
-    public SingleModelCrudScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public int Create(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        return Insert<int>(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert<int>(classification);
     }
 
     public void Delete(EmployeeClassification classification)
@@ -28,27 +22,37 @@ public class SingleModelCrudScenario : BaseRepository<EmployeeClassification, Sq
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        base.Delete(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(classification);
     }
 
     public void DeleteByKey(int employeeClassificationKey)
     {
-        Delete(employeeClassificationKey);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(employeeClassificationKey);
     }
 
     public EmployeeClassification? FindByName(string employeeClassificationName)
     {
-        return Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
     }
 
     public IList<EmployeeClassification> GetAll()
     {
-        return QueryAll().AsList();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.QueryAll().AsList();
     }
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        return Query(employeeClassificationKey).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(employeeClassificationKey).FirstOrDefault();
     }
 
     public void Update(EmployeeClassification classification)
@@ -56,6 +60,8 @@ public class SingleModelCrudScenario : BaseRepository<EmployeeClassification, Sq
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        base.Update(classification);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        repository.Update(classification);
     }
 }

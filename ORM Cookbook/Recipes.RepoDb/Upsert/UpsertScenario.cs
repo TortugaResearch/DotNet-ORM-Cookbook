@@ -1,22 +1,17 @@
-﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDB.Models;
+﻿using Recipes.RepoDB.Models;
 using Recipes.Upsert;
 using RepoDb;
-
-using RDB = RepoDb;
+using RepoDb.Enumerations;
 
 namespace Recipes.RepoDB.Upsert;
 
-public class UpsertScenario : BaseRepository<Division, SqlConnection>,
-    IUpsertScenario<Division>
+public class UpsertScenario(string connectionString) : IUpsertScenario<Division>
 {
-    public UpsertScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public Division? GetByKey(int divisionKey)
     {
-        return Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
+        using var repository = new DivisionRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
     }
 
     public int UpsertByName(Division division)
@@ -24,7 +19,9 @@ public class UpsertScenario : BaseRepository<Division, SqlConnection>,
         if (division == null)
             throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-        return Merge<int>(division, qualifiers: Field.From("DivisionName"));
+        using var repository = new DivisionRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Merge<int>(division, qualifiers: Field.From("DivisionName"));
     }
 
     public int UpsertByPrimaryKey(Division division)
@@ -32,6 +29,8 @@ public class UpsertScenario : BaseRepository<Division, SqlConnection>,
         if (division == null)
             throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-        return Merge<int>(division, qualifiers: Field.From("DivisionKey"));
+        using var repository = new DivisionRepository(connectionString, ConnectionPersistency.Instance);
+
+        return repository.Merge<int>(division, qualifiers: Field.From("DivisionKey"));
     }
 }

@@ -661,50 +661,7 @@ public class DataTableResultTransformer : IResultTransformer
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<p>In RepoDb, the <code>DataTable.Load</code> can be provided with an <code>IDataReader</code> object from <code>ExecuteReader</code> method.</p>
-<pre><code class="cs">public class PopulateDataTableScenario : IPopulateDataTableScenario
-{
-    readonly string m_ConnectionString;
-
-    public PopulateDataTableScenario(string connectionString)
-    {
-        m_ConnectionString = connectionString;
-    }
-
-    public DataTable FindByFlags(bool isExempt, bool isEmployee)
-    {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec WHERE ec.IsExempt = @IsExempt AND ec.IsEmployee = @IsEmployee;&quot;;
-        var table = new DataTable();
-
-        using (var connection = new SqlConnection(m_ConnectionString))
-        {
-            using (var reader = connection.ExecuteReader(sql, new { isExempt, isEmployee }))
-            {
-                table.Load(reader);
-            }
-        }
-
-        return table;
-    }
-
-    public DataTable GetAll()
-    {
-        var sql = @&quot;SELECT ec.EmployeeClassificationKey, ec.EmployeeClassificationName, ec.IsExempt, ec.IsEmployee FROM HR.EmployeeClassification ec;&quot;;
-        var table = new DataTable();
-
-        using (var connection = new SqlConnection(m_ConnectionString))
-        {
-            using (var reader = connection.ExecuteReader(sql))
-            {
-                table.Load(reader);
-            }
-        }
-
-        return table;
-    }
-}
-</code></pre>
-
+<p>RepoDb does not natively support sorting by strings.</p>
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <pre><code class="cs">public class PopulateDataTableScenario : IPopulateDataTableScenario
 {

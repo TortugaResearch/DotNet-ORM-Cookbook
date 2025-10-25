@@ -8,19 +8,16 @@ using RDB = RepoDb;
 
 namespace Recipes.RepoDB.ModelWithLookup;
 
-public class ModelWithLookupSimpleScenario : DbRepository<SqlConnection>,
-    IModelWithLookupSimpleScenario<EmployeeSimple>
+public class ModelWithLookupSimpleScenario(string connectionString) : IModelWithLookupSimpleScenario<EmployeeSimple>
 {
-    public ModelWithLookupSimpleScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public int Create(EmployeeSimple employee)
     {
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
 
-        return Insert<EmployeeSimple, int>(employee);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Insert<EmployeeSimple, int>(employee);
     }
 
     public void Delete(EmployeeSimple employee)
@@ -28,32 +25,44 @@ public class ModelWithLookupSimpleScenario : DbRepository<SqlConnection>,
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
 
-        base.Delete(employee);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        repository.Delete(employee);
     }
 
     public void DeleteByKey(int employeeKey)
     {
-        Delete<EmployeeSimple>(employeeKey);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        repository.Delete<EmployeeSimple>(employeeKey);
     }
 
     public IList<EmployeeSimple> FindByLastName(string lastName)
     {
-        return Query<EmployeeSimple>(e => e.LastName == lastName).AsList();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query<EmployeeSimple>(e => e.LastName == lastName).AsList();
     }
 
     public IList<EmployeeSimple> GetAll()
     {
-        return QueryAll<EmployeeSimple>().AsList();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.QueryAll<EmployeeSimple>().AsList();
     }
 
     public EmployeeSimple? GetByKey(int employeeKey)
     {
-        return Query<EmployeeSimple>(employeeKey).FirstOrDefault();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query<EmployeeSimple>(employeeKey).FirstOrDefault();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
     }
 
     public void Update(EmployeeSimple employee)
@@ -61,6 +70,8 @@ public class ModelWithLookupSimpleScenario : DbRepository<SqlConnection>,
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
 
-        base.Update(employee);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        repository.Update(employee);
     }
 }

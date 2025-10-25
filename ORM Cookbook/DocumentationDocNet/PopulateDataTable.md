@@ -72,9 +72,7 @@ Note that inline SQL must be used inconjunction with the `IResultTransformer`.
 
 ## RepoDb
 
-In RepoDb, the `DataTable.Load` can be provided with an `IDataReader` object from `ExecuteReader` method.
-
-@snippet cs [..\Recipes.RepoDb\PopulateDataTable\PopulateDataTableScenario.cs] PopulateDataTableScenario
+RepoDb does not natively support sorting by strings.
 
 ## ServiceStack
 

@@ -4,17 +4,17 @@ using Recipes.RepoDB.Models;
 using RepoDb;
 using System.Data;
 
+using RDB = RepoDb;
+
 namespace Recipes.RepoDB.BulkInsert;
 
-public class BulkInsertScenario : DbRepository<SqlConnection>,
-    IBulkInsertScenario<EmployeeSimple>
+public class BulkInsertScenario(string connectionString) : IBulkInsertScenario<EmployeeSimple>
 {
-    public BulkInsertScenario(string connectionString) : base(connectionString)
-    { }
-
     public int CountByLastName(string lastName)
     {
-        return (int)Count<EmployeeSimple>(e => e.LastName == lastName);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return (int)repository.Count<EmployeeSimple>(e => e.LastName == lastName);
     }
 
     public void BulkInsert(IList<EmployeeSimple> employees)
@@ -22,7 +22,9 @@ public class BulkInsertScenario : DbRepository<SqlConnection>,
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        this.BulkInsert<EmployeeSimple>(employees);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        repository.BulkInsert(employees);
     }
 
     public void BulkInsert(DataTable employees)
@@ -30,6 +32,8 @@ public class BulkInsertScenario : DbRepository<SqlConnection>,
         if (employees == null)
             throw new ArgumentNullException(nameof(employees), $"{nameof(employees)} is null.");
 
-        this.BulkInsert<EmployeeSimple>(employees, rowState: DataRowState.Added);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        repository.BulkInsert<EmployeeSimple>(employees, rowState: DataRowState.Added);
     }
 }

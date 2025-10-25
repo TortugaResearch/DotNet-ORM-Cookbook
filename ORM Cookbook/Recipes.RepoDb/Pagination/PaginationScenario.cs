@@ -1,28 +1,25 @@
-﻿using Microsoft.Data.SqlClient;
-using Recipes.Pagination;
+﻿using Recipes.Pagination;
 using Recipes.RepoDB.Models;
-using RDB = RepoDb;
 using RepoDb;
+
 using RepoDb.Enumerations;
+
 using RepoDb.Extensions;
-using System;
-using System.Collections.Generic;
+
+using RDB = RepoDb;
 
 namespace Recipes.RepoDB.Pagination
 {
-    public class PaginationScenario : BaseRepository<EmployeeSimple, SqlConnection>,
-        IPaginationScenario<EmployeeSimple>
+    public class PaginationScenario(string connectionString) : IPaginationScenario<EmployeeSimple>
     {
-        public PaginationScenario(string connectionString)
-            : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-        { }
-
         public void InsertBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            InsertAll(employees);
+            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+
+            repository.InsertAll(employees);
         }
 
         public IList<EmployeeSimple> PaginateWithPageSize(string lastName, int page, int pageSize)
@@ -33,7 +30,9 @@ namespace Recipes.RepoDB.Pagination
                 EmployeeKey = Order.Ascending
             });
 
-            return BatchQuery(page,
+            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+
+            return repository.BatchQuery(page,
                 pageSize,
                 orderBy,
                 e => e.LastName == lastName).AsList();
@@ -48,6 +47,8 @@ namespace Recipes.RepoDB.Pagination
             });
             var page = 0;
 
+            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+
             if (skipPast != null)
             {
                 var lastNameField = new QueryField("LastName", lastName);
@@ -60,14 +61,14 @@ namespace Recipes.RepoDB.Pagination
                 var group = new QueryGroup(lastNameField,
                     new QueryGroup(firstNameField.AsEnumerable(),
                         firstNameAndEmployeeKeyFields.AsEnumerable(), Conjunction.Or));
-                return BatchQuery(page,
+                return repository.BatchQuery(page,
                     take,
                     orderBy,
                     group).AsList();
             }
             else
             {
-                return BatchQuery(page,
+                return repository.BatchQuery(page,
                     take,
                     orderBy,
                     e => e.LastName == lastName).AsList();
@@ -76,6 +77,8 @@ namespace Recipes.RepoDB.Pagination
 
         public IList<EmployeeSimple> PaginateWithSkipTake(string lastName, int skip, int take)
         {
+            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+
             var orderBy = OrderField.Parse(new
             {
                 FirstName = Order.Ascending,
@@ -83,7 +86,7 @@ namespace Recipes.RepoDB.Pagination
             });
             var page = skip / take;
 
-            return BatchQuery(page,
+            return repository.BatchQuery(page,
                 take,
                 orderBy,
                 e => e.LastName == lastName).AsList();

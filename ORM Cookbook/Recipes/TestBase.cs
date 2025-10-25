@@ -89,4 +89,9 @@ public abstract class TestBase
 
         Assert.Fail("An exception was expected but not thrown.");
     }
+
+    protected void TryDispose(object repository)
+    {
+        (repository as IDisposable)?.Dispose();
+    }
 }

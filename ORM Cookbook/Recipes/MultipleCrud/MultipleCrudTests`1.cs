@@ -13,6 +13,7 @@ public abstract class MultipleCrudTests<TEmployeeSimple> : TestBase
     public void DeleteBatch()
     {
         var repository = GetScenario();
+        using IDisposable disposable = (repository as IDisposable);
 
         var batchKey = Guid.NewGuid().ToString();
         var originals = BuildEmployees(RowCount, batchKey);

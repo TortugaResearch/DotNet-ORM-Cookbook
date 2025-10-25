@@ -308,7 +308,9 @@ public void BulkInsert(DataTable employees)
     if (employees == null || employees.Count == 0)
         throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
 
-    this.BulkInsert&lt;EmployeeSimple&gt;(employees);
+    using var repository = new DbRepository&lt;SqlConnection&gt;(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+    repository.BulkInsert(employees);
 }
 
 public void BulkInsert(DataTable employees)
@@ -316,7 +318,9 @@ public void BulkInsert(DataTable employees)
     if (employees == null)
         throw new ArgumentNullException(nameof(employees), $&quot;{nameof(employees)} is null.&quot;);
 
-    this.BulkInsert&lt;EmployeeSimple&gt;(employees, rowState: DataRowState.Added);
+    using var repository = new DbRepository&lt;SqlConnection&gt;(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+    repository.BulkInsert&lt;EmployeeSimple&gt;(employees, rowState: DataRowState.Added);
 }
 </code></pre>
 

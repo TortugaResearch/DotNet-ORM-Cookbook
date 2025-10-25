@@ -8,38 +8,43 @@ using RDB = RepoDb;
 
 namespace Recipes.RepoDB.Views;
 
-public class ViewsScenario : DbRepository<SqlConnection>,
-    IViewsScenario<EmployeeDetail, EmployeeSimple>
+public class ViewsScenario(string connectionString) : IViewsScenario<EmployeeDetail, EmployeeSimple>
 {
-    public ViewsScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public int Create(EmployeeSimple employee)
     {
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
 
-        return Insert<EmployeeSimple, int>(employee);
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Insert<EmployeeSimple, int>(employee);
     }
 
     public IList<EmployeeDetail> FindByEmployeeClassificationKey(int employeeClassificationKey)
     {
-        return Query<EmployeeDetail>(e => e.EmployeeClassificationKey == employeeClassificationKey).AsList();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query<EmployeeDetail>(e => e.EmployeeClassificationKey == employeeClassificationKey).AsList();
     }
 
     public IList<EmployeeDetail> FindByLastName(string lastName)
     {
-        return Query<EmployeeDetail>(e => e.LastName == lastName).AsList();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query<EmployeeDetail>(e => e.LastName == lastName).AsList();
     }
 
     public EmployeeDetail? GetByEmployeeKey(int employeeKey)
     {
-        return Query<EmployeeDetail>(e => e.EmployeeKey == employeeKey).FirstOrDefault();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query<EmployeeDetail>(e => e.EmployeeKey == employeeKey).FirstOrDefault();
     }
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        return Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
+        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return repository.Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
     }
 }

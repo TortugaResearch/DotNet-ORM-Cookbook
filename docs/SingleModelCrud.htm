@@ -1446,57 +1446,7 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <p>The repository resembles Dapper, but with far less SQL.</p>
-<pre><code class="cs">public class SingleModelCrudScenario : BaseRepository&lt;EmployeeClassification, SqlConnection&gt;,
-    ISingleModelCrudScenario&lt;EmployeeClassification&gt;
-{
-    public SingleModelCrudScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
-    public int Create(EmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        return Insert&lt;int&gt;(classification);
-    }
-
-    public void Delete(EmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        base.Delete(classification);
-    }
-
-    public void DeleteByKey(int employeeClassificationKey)
-    {
-        Delete(employeeClassificationKey);
-    }
-
-    public EmployeeClassification? FindByName(string employeeClassificationName)
-    {
-        return Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
-    }
-
-    public IList&lt;EmployeeClassification&gt; GetAll()
-    {
-        return QueryAll().AsList();
-    }
-
-    public EmployeeClassification? GetByKey(int employeeClassificationKey)
-    {
-        return Query(employeeClassificationKey).FirstOrDefault();
-    }
-
-    public void Update(EmployeeClassification classification)
-    {
-        if (classification == null)
-            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
-
-        base.Update(classification);
-    }
-}
+<pre><code class="cs">public class SingleModelCrudScenario(
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

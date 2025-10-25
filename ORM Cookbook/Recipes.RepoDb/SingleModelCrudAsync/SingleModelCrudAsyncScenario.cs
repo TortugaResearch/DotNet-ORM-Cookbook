@@ -2,25 +2,23 @@
 using Recipes.RepoDB.Models;
 using Recipes.SingleModelCrudAsync;
 using RepoDb;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 
 using RDB = RepoDb;
 
 namespace Recipes.RepoDB.SingleModelCrudAsync;
 
-public class SingleModelCrudAsyncScenario : BaseRepository<EmployeeClassification, SqlConnection>,
-    ISingleModelCrudAsyncScenario<EmployeeClassification>
+public class SingleModelCrudAsyncScenario(string connectionString) : ISingleModelCrudAsyncScenario<EmployeeClassification>
 {
-    public SingleModelCrudAsyncScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public async Task<int> CreateAsync(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        return await InsertAsync<int>(classification).ConfigureAwait(false);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return await repository.InsertAsync<int>(classification).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(EmployeeClassification classification)
@@ -28,28 +26,38 @@ public class SingleModelCrudAsyncScenario : BaseRepository<EmployeeClassificatio
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        await base.DeleteAsync(classification).ConfigureAwait(false);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        await repository.DeleteAsync(classification).ConfigureAwait(false);
     }
 
     public async Task DeleteByKeyAsync(int employeeClassificationKey)
     {
-        await DeleteAsync(employeeClassificationKey).ConfigureAwait(false);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        await repository.DeleteAsync(employeeClassificationKey).ConfigureAwait(false);
     }
 
     public async Task<EmployeeClassification?> FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
     {
-        return (await QueryAsync(e => e.EmployeeClassificationName == employeeClassificationName)
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return (await repository.QueryAsync(e => e.EmployeeClassificationName == employeeClassificationName)
             .ConfigureAwait(false)).FirstOrDefault();
     }
 
     public async Task<IList<EmployeeClassification>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return (await QueryAllAsync().ConfigureAwait(false)).AsList();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return (await repository.QueryAllAsync().ConfigureAwait(false)).AsList();
     }
 
     public async Task<EmployeeClassification?> GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
     {
-        return (await QueryAsync(employeeClassificationKey).ConfigureAwait(false)).FirstOrDefault();
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        return (await repository.QueryAsync(employeeClassificationKey).ConfigureAwait(false)).FirstOrDefault();
     }
 
     public async Task UpdateAsync(EmployeeClassification classification)
@@ -57,6 +65,8 @@ public class SingleModelCrudAsyncScenario : BaseRepository<EmployeeClassificatio
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        await base.UpdateAsync(classification).ConfigureAwait(false);
+        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+
+        await repository.UpdateAsync(classification).ConfigureAwait(false);
     }
 }

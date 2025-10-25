@@ -1,27 +1,24 @@
-﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDB.Models;
+﻿using Recipes.RepoDB.Models;
 using Recipes.RowCount;
-using RepoDb;
 
 using RDB = RepoDb;
 
 namespace Recipes.RepoDB.RowCount;
 
-public class RowCountScenario : BaseRepository<EmployeeSimple, SqlConnection>,
-    IRowCountScenario<EmployeeSimple>
+public class RowCountScenario(string connectionString) : IRowCountScenario<EmployeeSimple>
 {
-    public RowCountScenario(string connectionString)
-        : base(connectionString, RDB.Enumerations.ConnectionPersistency.Instance)
-    { }
-
     public int EmployeeCount(string lastName)
     {
-        return (int)Count(e => e.LastName == lastName);
+        using var repository = new EmployeeSimpleRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return (int)repository.Count(e => e.LastName == lastName);
     }
 
     public int EmployeeCount()
     {
-        return (int)CountAll();
+        using var repository = new EmployeeSimpleRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        return (int)repository.CountAll();
     }
 
     public void InsertBatch(IList<EmployeeSimple> employees)
@@ -29,6 +26,8 @@ public class RowCountScenario : BaseRepository<EmployeeSimple, SqlConnection>,
         if (employees == null || employees.Count == 0)
             throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-        InsertAll(employees);
+        using var repository = new EmployeeSimpleRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+
+        repository.InsertAll(employees);
     }
 }
