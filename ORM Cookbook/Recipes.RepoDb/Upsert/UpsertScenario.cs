@@ -5,11 +5,18 @@ using RepoDb.Enumerations;
 
 namespace Recipes.RepoDB.Upsert;
 
-public class UpsertScenario(string connectionString) : IUpsertScenario<Division>
+public class UpsertScenario : IUpsertScenario<Division>
 {
+    readonly string m_ConnectionString;
+
+    public UpsertScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
     public Division? GetByKey(int divisionKey)
     {
-        using var repository = new DivisionRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Query(e => e.DivisionKey == divisionKey).FirstOrDefault();
     }
@@ -19,7 +26,7 @@ public class UpsertScenario(string connectionString) : IUpsertScenario<Division>
         if (division == null)
             throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-        using var repository = new DivisionRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Merge<int>(division, qualifiers: Field.From("DivisionName"));
     }
@@ -29,7 +36,7 @@ public class UpsertScenario(string connectionString) : IUpsertScenario<Division>
         if (division == null)
             throw new ArgumentNullException(nameof(division), $"{nameof(division)} is null.");
 
-        using var repository = new DivisionRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new DivisionRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Merge<int>(division, qualifiers: Field.From("DivisionKey"));
     }

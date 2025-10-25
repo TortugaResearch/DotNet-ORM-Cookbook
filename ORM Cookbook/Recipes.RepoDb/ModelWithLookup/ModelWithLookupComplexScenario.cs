@@ -4,13 +4,19 @@ using Recipes.RepoDb.Models;
 using Recipes.RepoDB.Models;
 using RepoDb;
 using RepoDb.Extensions;
-
-using RDB = RepoDb;
+using RepoDb.Enumerations;
 
 namespace Recipes.RepoDB.ModelWithLookup;
 
-public class ModelWithLookupComplexScenario(string connectionString) : IModelWithLookupComplexScenario<EmployeeComplex>
+public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario<EmployeeComplex>
 {
+    readonly string m_ConnectionString;
+
+    public ModelWithLookupComplexScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
     public int Create(EmployeeComplex employee)
     {
         if (employee == null)
@@ -18,7 +24,7 @@ public class ModelWithLookupComplexScenario(string connectionString) : IModelWit
         if (employee.EmployeeClassification == null)
             throw new ArgumentNullException(nameof(employee), $"{nameof(employee.EmployeeClassification)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Insert<EmployeeComplex, int>(employee);
     }
@@ -28,35 +34,35 @@ public class ModelWithLookupComplexScenario(string connectionString) : IModelWit
         if (employee == null)
             throw new ArgumentNullException(nameof(employee), $"{nameof(employee)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         repository.Delete(employee);
     }
 
     public void DeleteByKey(int employeeKey)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         repository.Delete<EmployeeComplex>(employeeKey);
     }
 
     public IList<EmployeeComplex> FindByLastName(string lastName)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Query<EmployeeComplex>(e => e.LastName == lastName).AsList();
     }
 
     public IList<EmployeeComplex> GetAll()
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.QueryAll<EmployeeComplex>().AsList();
     }
 
     public EmployeeComplex? GetByKey(int employeeKey)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         var employee = repository.Query<EmployeeComplex>(employeeKey).FirstOrDefault();
         if (employee != null)
@@ -68,7 +74,7 @@ public class ModelWithLookupComplexScenario(string connectionString) : IModelWit
 
     public IEmployeeClassification? GetClassification(int employeeClassificationKey)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Query<EmployeeClassification>(employeeClassificationKey).FirstOrDefault();
     }
@@ -80,7 +86,7 @@ public class ModelWithLookupComplexScenario(string connectionString) : IModelWit
         if (employee.EmployeeClassification == null)
             throw new ArgumentNullException(nameof(employee), $"{nameof(employee.EmployeeClassification)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         repository.Update(employee);
     }

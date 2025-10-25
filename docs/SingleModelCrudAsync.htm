@@ -1134,7 +1134,74 @@
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>With RepoDb, the only changes are to add <code>await</code>, <code>Async</code>, and <code>.ConfigureAwait(false)</code> to the appropriate places. </p>
-<pre><code class="cs">public class SingleModelCrudAsyncScenario(
+<pre><code class="cs">public class SingleModelCrudAsyncScenario : ISingleModelCrudAsyncScenario&lt;EmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+
+    public SingleModelCrudAsyncScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public async Task&lt;int&gt; CreateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return await repository.InsertAsync&lt;int&gt;(classification).ConfigureAwait(false);
+    }
+
+    public async Task DeleteAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        await repository.DeleteAsync(classification).ConfigureAwait(false);
+    }
+
+    public async Task DeleteByKeyAsync(int employeeClassificationKey)
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        await repository.DeleteAsync(employeeClassificationKey).ConfigureAwait(false);
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; FindByNameAsync(string employeeClassificationName, CancellationToken cancellationToken = default)
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return (await repository.QueryAsync(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
+            .ConfigureAwait(false)).FirstOrDefault();
+    }
+
+    public async Task&lt;IList&lt;EmployeeClassification&gt;&gt; GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return (await repository.QueryAllAsync().ConfigureAwait(false)).AsList();
+    }
+
+    public async Task&lt;EmployeeClassification?&gt; GetByKeyAsync(int employeeClassificationKey, CancellationToken cancellationToken = default)
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return (await repository.QueryAsync(employeeClassificationKey).ConfigureAwait(false)).FirstOrDefault();
+    }
+
+    public async Task UpdateAsync(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        await repository.UpdateAsync(classification).ConfigureAwait(false);
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

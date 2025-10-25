@@ -971,7 +971,80 @@ WHERE EmployeeKey = @EmployeeKey;&quot;;
 <h2 id="nhibernate">NHibernate<a class="headerlink" href="#nhibernate" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class ModelWithLookupSimpleScenario(
+<pre><code class="cs">public class ModelWithLookupSimpleScenario : IModelWithLookupSimpleScenario&lt;EmployeeSimple&gt;
+{
+    readonly string m_ConnectionString;
+
+    public ModelWithLookupSimpleScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert&lt;EmployeeSimple, int&gt;(employee);
+    }
+
+    public void Delete(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(employee);
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete&lt;EmployeeSimple&gt;(employeeKey);
+    }
+
+    public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeSimple&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; GetAll()
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.QueryAll&lt;EmployeeSimple&gt;().AsList();
+    }
+
+    public EmployeeSimple? GetByKey(int employeeKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeSimple&gt;(employeeKey).FirstOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+    }
+
+    public void Update(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Update(employee);
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

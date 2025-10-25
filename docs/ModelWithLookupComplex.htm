@@ -1082,7 +1082,89 @@ partial class EmployeeComplex : IEmployeeComplex
 }
 </code></pre>
 
-<pre><code class="cs">public class ModelWithLookupComplexScenario(
+<pre><code class="cs">public class ModelWithLookupComplexScenario : IModelWithLookupComplexScenario&lt;EmployeeComplex&gt;
+{
+    readonly string m_ConnectionString;
+
+    public ModelWithLookupComplexScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert&lt;EmployeeComplex, int&gt;(employee);
+    }
+
+    public void Delete(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(employee);
+    }
+
+    public void DeleteByKey(int employeeKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete&lt;EmployeeComplex&gt;(employeeKey);
+    }
+
+    public IList&lt;EmployeeComplex&gt; FindByLastName(string lastName)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeComplex&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public IList&lt;EmployeeComplex&gt; GetAll()
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.QueryAll&lt;EmployeeComplex&gt;().AsList();
+    }
+
+    public EmployeeComplex? GetByKey(int employeeKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        var employee = repository.Query&lt;EmployeeComplex&gt;(employeeKey).FirstOrDefault();
+        if (employee != null)
+        {
+            employee.EmployeeClassification = repository.Query&lt;EmployeeClassification&gt;(employee.EmployeeClassificationKey).FirstOrDefault();
+        }
+        return employee;
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+    }
+
+    public void Update(EmployeeComplex employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+        if (employee.EmployeeClassification == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee.EmployeeClassification)} is null.&quot;);
+
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Update(employee);
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

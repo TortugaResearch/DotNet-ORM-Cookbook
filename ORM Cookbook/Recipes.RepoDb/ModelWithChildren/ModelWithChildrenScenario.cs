@@ -3,19 +3,25 @@ using Recipes.ModelWithChildren;
 using Recipes.RepoDB.Models;
 using RepoDb;
 using RepoDb.Extensions;
-
-using RDB = RepoDb;
+using RepoDb.Enumerations;
 
 namespace Recipes.RepoDB.ModelWithChildren;
 
-public class ModelWithChildrenScenario(string connectionString) : IModelWithChildrenScenario<ProductLine, Product>
+public class ModelWithChildrenScenario : IModelWithChildrenScenario<ProductLine, Product>
 {
+    readonly string m_ConnectionString;
+
+    public ModelWithChildrenScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
     public int Create(ProductLine productLine)
     {
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         var key = repository.Insert<ProductLine, int>(productLine);
         productLine.ApplyKeys();
@@ -28,7 +34,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
         var sql = @"DELETE FROM Production.Product WHERE ProductLineKey = @ProductLineKey;
                 DELETE FROM Production.ProductLine WHERE ProductLineKey = @ProductLineKey;";
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         repository.ExecuteNonQuery(sql, new { productLineKey });
     }
@@ -48,7 +54,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
 
     private void FetchProducts(IEnumerable<ProductLine> productLines)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         var keys = productLines.Select(e => e.ProductLineKey).AsList();
         repository.Query<Product>(e => keys.Contains(e.ProductLineKey))
@@ -59,7 +65,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
 
     public IList<ProductLine> FindByName(string productLineName, bool includeProducts)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         var lines = repository.Query<ProductLine>(e => e.ProductLineName == productLineName);
         if (includeProducts)
@@ -69,7 +75,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
 
     public IList<ProductLine> GetAll(bool includeProducts)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         var lines = repository.QueryAll<ProductLine>();
         if (includeProducts)
@@ -79,7 +85,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
 
     public ProductLine? GetByKey(int productLineKey, bool includeProducts)
     {
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         var line = repository.Query<ProductLine>(productLineKey).FirstOrDefault();
         if (includeProducts && null != line)
@@ -93,7 +99,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         repository.Update(productLine);
     }
@@ -103,7 +109,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
         if (product == null)
             throw new ArgumentNullException(nameof(product), $"{nameof(product)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         repository.Update(product);
     }
@@ -113,7 +119,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         productLine.ApplyKeys();
 
@@ -126,7 +132,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         productLine.ApplyKeys();
 
@@ -148,7 +154,7 @@ public class ModelWithChildrenScenario(string connectionString) : IModelWithChil
         if (productLine == null)
             throw new ArgumentNullException(nameof(productLine), $"{nameof(productLine)} is null.");
 
-        using var repository = new DbRepository<SqlConnection>(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        using var repository = new DbRepository<SqlConnection>(m_ConnectionString, ConnectionPersistency.Instance);
 
         productLine.ApplyKeys();
 

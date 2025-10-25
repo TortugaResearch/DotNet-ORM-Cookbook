@@ -1314,7 +1314,76 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <p>Below is the <em>immutable repository</em>.</p>
-<pre><code class="cs">public class ImmutableScenario(
+<pre><code class="cs">public class ImmutableScenario : IImmutableScenario&lt;ReadOnlyEmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+
+    public ImmutableScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert&lt;int&gt;(classification);
+    }
+
+    public void Delete(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(classification);
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(employeeClassificationKey);
+    }
+
+    public ReadOnlyEmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName)
+            .FirstOrDefault();
+    }
+
+    public IReadOnlyList&lt;ReadOnlyEmployeeClassification&gt; GetAll()
+    {
+        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.QueryAll()
+            .ToImmutableList();
+    }
+
+    public ReadOnlyEmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(employeeClassificationKey)
+            .FirstOrDefault();
+    }
+
+    public void Update(ReadOnlyEmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new ReadOnlyEmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Update(classification);
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

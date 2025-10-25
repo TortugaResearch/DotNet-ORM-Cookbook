@@ -752,7 +752,53 @@ POCOs however these aren't able to participate in entity relationships.</p>
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class ViewsScenario(
+<pre><code class="cs">public class ViewsScenario : IViewsScenario&lt;EmployeeDetail, EmployeeSimple&gt;
+{
+    readonly string m_ConnectionString;
+
+    public ViewsScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeSimple employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), $&quot;{nameof(employee)} is null.&quot;);
+
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert&lt;EmployeeSimple, int&gt;(employee);
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByEmployeeClassificationKey(int employeeClassificationKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeClassificationKey == employeeClassificationKey).AsList();
+    }
+
+    public IList&lt;EmployeeDetail&gt; FindByLastName(string lastName)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeDetail&gt;(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public EmployeeDetail? GetByEmployeeKey(int employeeKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeDetail&gt;(e =&gt; e.EmployeeKey == employeeKey).FirstOrDefault();
+    }
+
+    public IEmployeeClassification? GetClassification(int employeeClassificationKey)
+    {
+        using var repository = new DbRepository&lt;SqlConnection&gt;(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query&lt;EmployeeClassification&gt;(employeeClassificationKey).FirstOrDefault();
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

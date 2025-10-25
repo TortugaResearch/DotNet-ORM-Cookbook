@@ -1,21 +1,26 @@
-﻿using Microsoft.Data.SqlClient;
-using Recipes.RepoDB.Models;
+﻿using Recipes.RepoDB.Models;
 using Recipes.Transactions;
 using RepoDb;
+using RepoDb.Enumerations;
 using System.Data;
-
-using RDB = RepoDb;
 
 namespace Recipes.RepoDB.Transactions;
 
-public class TransactionsScenario(string connectionString) : ITransactionsScenario<EmployeeClassification>
+public class TransactionsScenario : ITransactionsScenario<EmployeeClassification>
 {
+    readonly string m_ConnectionString;
+
+    public TransactionsScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
     public int Create(EmployeeClassification classification, bool shouldRollBack)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        var repository = new EmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         using (var transaction = repository.CreateConnection().EnsureOpen().BeginTransaction())
         {
@@ -35,7 +40,7 @@ public class TransactionsScenario(string connectionString) : ITransactionsScenar
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        var repository = new EmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         using (var transaction = repository.CreateConnection().EnsureOpen().BeginTransaction(isolationLevel))
         {
@@ -52,7 +57,7 @@ public class TransactionsScenario(string connectionString) : ITransactionsScenar
 
     public EmployeeClassification? GetByKey(int employeeClassificationKey)
     {
-        var repository = new EmployeeClassificationRepository(connectionString, RDB.Enumerations.ConnectionPersistency.Instance);
+        var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Query(e => e.EmployeeClassificationKey == employeeClassificationKey).FirstOrDefault();
     }

@@ -1,23 +1,26 @@
 ﻿using Recipes.Pagination;
 using Recipes.RepoDB.Models;
 using RepoDb;
-
 using RepoDb.Enumerations;
-
 using RepoDb.Extensions;
-
-using RDB = RepoDb;
 
 namespace Recipes.RepoDB.Pagination
 {
-    public class PaginationScenario(string connectionString) : IPaginationScenario<EmployeeSimple>
+    public class PaginationScenario : IPaginationScenario<EmployeeSimple>
     {
+        readonly string m_ConnectionString;
+
+        public PaginationScenario(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
+
         public void InsertBatch(IList<EmployeeSimple> employees)
         {
             if (employees == null || employees.Count == 0)
                 throw new ArgumentException($"{nameof(employees)} is null or empty.", nameof(employees));
 
-            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+            using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
             repository.InsertAll(employees);
         }
@@ -30,7 +33,7 @@ namespace Recipes.RepoDB.Pagination
                 EmployeeKey = Order.Ascending
             });
 
-            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+            using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
             return repository.BatchQuery(page,
                 pageSize,
@@ -47,7 +50,7 @@ namespace Recipes.RepoDB.Pagination
             });
             var page = 0;
 
-            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+            using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
             if (skipPast != null)
             {
@@ -77,7 +80,7 @@ namespace Recipes.RepoDB.Pagination
 
         public IList<EmployeeSimple> PaginateWithSkipTake(string lastName, int skip, int take)
         {
-            using var repository = new EmployeeSimpleRepository(connectionString, ConnectionPersistency.Instance);
+            using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
             var orderBy = OrderField.Parse(new
             {

@@ -5,21 +5,28 @@ using System.Data;
 
 namespace Recipes.RepoDB.TryCrud;
 
-public class TryCrudScenario(string connectionString) : ITryCrudScenario<EmployeeClassification>
+public class TryCrudScenario : ITryCrudScenario<EmployeeClassification>
 {
+    readonly string m_ConnectionString;
+
+    public TryCrudScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
     public int Create(EmployeeClassification classification)
     {
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Insert<int>(classification);
     }
 
     public void DeleteByKeyOrException(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         var rowCount = repository.Delete(employeeClassificationKey);
         if (rowCount != 1)
@@ -28,7 +35,7 @@ public class TryCrudScenario(string connectionString) : ITryCrudScenario<Employe
 
     public bool DeleteByKeyWithStatus(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return 1 == repository.Delete(employeeClassificationKey);
     }
@@ -38,7 +45,7 @@ public class TryCrudScenario(string connectionString) : ITryCrudScenario<Employe
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         var rowCount = repository.Delete(classification);
         if (rowCount != 1)
@@ -50,14 +57,14 @@ public class TryCrudScenario(string connectionString) : ITryCrudScenario<Employe
         if (classification == null)
             throw new ArgumentNullException(nameof(classification), $"{nameof(classification)} is null.");
 
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return 1 == repository.Delete(classification);
     }
 
     public EmployeeClassification FindByNameOrException(string employeeClassificationName)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         var entity = repository.Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
         if (null == entity)
@@ -68,14 +75,14 @@ public class TryCrudScenario(string connectionString) : ITryCrudScenario<Employe
 
     public EmployeeClassification? FindByNameOrNull(string employeeClassificationName)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Query(e => e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
     }
 
     public EmployeeClassification GetByKeyOrException(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         var entity = repository.Query(employeeClassificationKey).FirstOrDefault();
         if (null == entity)
@@ -86,14 +93,14 @@ public class TryCrudScenario(string connectionString) : ITryCrudScenario<Employe
 
     public EmployeeClassification? GetByKeyOrNull(int employeeClassificationKey)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return repository.Query(employeeClassificationKey).FirstOrDefault();
     }
 
     public void UpdateOrException(EmployeeClassification classification)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         var rowCount = repository.Update(classification);
         if (rowCount != 1)
@@ -102,7 +109,7 @@ public class TryCrudScenario(string connectionString) : ITryCrudScenario<Employe
 
     public bool UpdateWithStatus(EmployeeClassification classification)
     {
-        using var repository = new EmployeeClassificationRepository(connectionString, ConnectionPersistency.Instance);
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
 
         return 1 == repository.Update(classification);
     }

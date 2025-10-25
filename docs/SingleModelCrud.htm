@@ -1446,7 +1446,73 @@ public class EmployeeClassification : IEmployeeClassification
 </code></pre>
 
 <p>The repository resembles Dapper, but with far less SQL.</p>
-<pre><code class="cs">public class SingleModelCrudScenario(
+<pre><code class="cs">public class SingleModelCrudScenario : ISingleModelCrudScenario&lt;EmployeeClassification&gt;
+{
+    readonly string m_ConnectionString;
+
+    public SingleModelCrudScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int Create(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Insert&lt;int&gt;(classification);
+    }
+
+    public void Delete(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(classification);
+    }
+
+    public void DeleteByKey(int employeeClassificationKey)
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(employeeClassificationKey);
+    }
+
+    public EmployeeClassification? FindByName(string employeeClassificationName)
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(e =&gt; e.EmployeeClassificationName == employeeClassificationName).FirstOrDefault();
+    }
+
+    public IList&lt;EmployeeClassification&gt; GetAll()
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.QueryAll().AsList();
+    }
+
+    public EmployeeClassification? GetByKey(int employeeClassificationKey)
+    {
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(employeeClassificationKey).FirstOrDefault();
+    }
+
+    public void Update(EmployeeClassification classification)
+    {
+        if (classification == null)
+            throw new ArgumentNullException(nameof(classification), $&quot;{nameof(classification)} is null.&quot;);
+
+        using var repository = new EmployeeClassificationRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Update(classification);
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

@@ -530,7 +530,39 @@ VALUES (@FirstName, @MiddleName, @LastName, @Title, @OfficePhone, @CellPhone, @E
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class RowCountScenario(
+<pre><code class="cs">public class RowCountScenario : IRowCountScenario&lt;EmployeeSimple&gt;
+{
+    readonly string m_ConnectionString;
+
+    public RowCountScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public int EmployeeCount(string lastName)
+    {
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return (int)repository.Count(e =&gt; e.LastName == lastName);
+    }
+
+    public int EmployeeCount()
+    {
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return (int)repository.CountAll();
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.InsertAll(employees);
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>

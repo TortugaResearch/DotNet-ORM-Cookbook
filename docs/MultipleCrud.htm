@@ -1573,7 +1573,97 @@ WHERE EmployeeKey = @EmployeeKey_{i};&quot;);
 </code></pre>
 
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
-<pre><code class="cs">public class MultipleCrudScenario(
+<pre><code class="cs">public class MultipleCrudScenario : IMultipleCrudScenario&lt;EmployeeSimple&gt;
+{
+    private readonly string m_ConnectionString;
+
+    public MultipleCrudScenario(string connectionString)
+    {
+        m_ConnectionString = connectionString;
+    }
+
+    public void DeleteBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        var keys = employees.Select(e =&gt; e.EmployeeKey).AsList();
+        repository.Delete(e =&gt; keys.Contains(e.EmployeeKey));
+    }
+
+    public void DeleteBatchByKey(IList&lt;int&gt; employeeKeys)
+    {
+        if (employeeKeys == null || employeeKeys.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employeeKeys)} is null or empty.&quot;, nameof(employeeKeys));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.Delete(e =&gt; employeeKeys.Contains(e.EmployeeKey));
+    }
+
+    public IList&lt;EmployeeSimple&gt; FindByLastName(string lastName)
+    {
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        return repository.Query(e =&gt; e.LastName == lastName).AsList();
+    }
+
+    public void InsertBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.InsertAll(employees);
+    }
+
+    public IList&lt;int&gt; InsertBatchReturnKeys(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.InsertAll(employees);
+
+        return employees.Select(e =&gt; e.EmployeeKey).AsList();
+    }
+
+    public IList&lt;EmployeeSimple&gt; InsertBatchReturnRows(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.InsertAll(employees);
+
+        return employees;
+    }
+
+    public void InsertBatchWithRefresh(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.InsertAll(employees);
+    }
+
+    public void UpdateBatch(IList&lt;EmployeeSimple&gt; employees)
+    {
+        if (employees == null || employees.Count == 0)
+            throw new ArgumentException($&quot;{nameof(employees)} is null or empty.&quot;, nameof(employees));
+
+        using var repository = new EmployeeSimpleRepository(m_ConnectionString, ConnectionPersistency.Instance);
+
+        repository.UpdateAll(employees);
+    }
+}
 </code></pre>
 
 <h2 id="servicestack">ServiceStack<a class="headerlink" href="#servicestack" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
