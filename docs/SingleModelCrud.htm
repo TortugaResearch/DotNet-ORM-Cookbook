@@ -61,6 +61,10 @@
 
 <li class="tocentry"><a href="#nhibernate">NHibernate</a></li>
 
+<li class="tocentry"><a href="#npoco">NPoco</a></li>
+
+<li class="tocentry"><a href="#petapoco">PetaPoco</a></li>
+
 <li class="tocentry"><a href="#repodb">RepoDb</a></li>
 
 <li class="tocentry"><a href="#servicestack">ServiceStack</a></li>
@@ -1410,6 +1414,10 @@ public partial class EmployeeClassification
 </code></pre>
 
 <p>The rules on when you need to call <code>Flush</code> are complex. In some cases it will be called for you implicitly, but as a general rule you need to invoke it before leaving a block that includes modifications.</p>
+<h2 id="npoco">NPoco<a class="headerlink" href="#npoco" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
+<h2 id="petapoco">PetaPoco<a class="headerlink" href="#petapoco" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>TODO</p>
 <h2 id="repodb">RepoDb<a class="headerlink" href="#repodb" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
 <p>When calling the <em>raw-SQL</em> operations, just like <em>Dapper</em>, RepoDB requires annotations on the classes. These are specific to RepoDb, you cannot use the standard <code>Table</code>, <code>Column</code>, and <code>Key</code> attributes from .NET.</p>
 <pre><code class="cs">[Map(&quot;[HR].[EmployeeClassification]&quot;)]

@@ -74,6 +74,14 @@ For partial deletes, ensure that you are using `cascade="all-delete-orphan"`. Ot
 
 @snippet cs [..\Recipes.NHibernate\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\ModelWithChildren\ModelWithChildrenScenario.cs] ModelWithChildrenScenario

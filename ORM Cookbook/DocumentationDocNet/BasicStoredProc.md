@@ -70,6 +70,14 @@ To use stored procedures that return a resultset, a class is needed to receive t
 
 TODO
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\BasicStoredProc\BasicStoredProcScenario.cs] BasicStoredProcScenario

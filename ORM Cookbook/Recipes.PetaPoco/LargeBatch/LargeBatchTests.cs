@@ -1,0 +1,13 @@
+﻿using Recipes.PetaPoco.Models;
+using Recipes.LargeBatch;
+
+namespace Recipes.PetaPoco.LargeBatch;
+
+[TestClass]
+public class LargeBatchTests : LargeBatchTests<EmployeeSimple>
+{
+    protected override ILargeBatchScenario<EmployeeSimple> GetScenario()
+    {
+        return new LargeBatchScenario(Setup.SqlServerConnectionString);
+    }
+}

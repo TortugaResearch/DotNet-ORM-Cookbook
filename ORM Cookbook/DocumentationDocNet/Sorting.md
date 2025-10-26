@@ -84,6 +84,14 @@ Columns to be sorted by are passed in as strings, but checked against the list o
 
 @snippet cs [..\Recipes.NHibernate\Sorting\SortingScenario.cs] SortByMiddleNameFirstName
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\Sorting\SortingScenario.cs] SortByFirstName

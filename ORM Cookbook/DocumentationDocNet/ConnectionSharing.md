@@ -59,6 +59,14 @@ or use System.Transactions' TransactionScope for multi-connection transactions.
 
 TODO
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 TODO

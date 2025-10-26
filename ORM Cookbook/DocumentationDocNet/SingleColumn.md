@@ -46,6 +46,14 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 TODO
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\SingleColumn\SingleColumnScenario.cs] SingleColumnScenario

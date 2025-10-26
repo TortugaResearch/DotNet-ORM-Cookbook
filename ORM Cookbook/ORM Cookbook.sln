@@ -58,6 +58,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Injectables", "Recipes.LLBL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.DbConnector", "Recipes.DbConnector\Recipes.DbConnector.csproj", "{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.NPoco", "Recipes.NPoco\Recipes.NPoco.csproj", "{F4DA0214-515B-1B8F-476B-12B693646F7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.PetaPoco", "Recipes.PetaPoco\Recipes.PetaPoco.csproj", "{0029DBC6-81CA-3D60-94E7-6922DE9BB307}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,6 +146,14 @@ Global
 		{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{359BD788-9AE0-4F4B-9EB1-193D8714F3CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4DA0214-515B-1B8F-476B-12B693646F7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4DA0214-515B-1B8F-476B-12B693646F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4DA0214-515B-1B8F-476B-12B693646F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4DA0214-515B-1B8F-476B-12B693646F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0029DBC6-81CA-3D60-94E7-6922DE9BB307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0029DBC6-81CA-3D60-94E7-6922DE9BB307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0029DBC6-81CA-3D60-94E7-6922DE9BB307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0029DBC6-81CA-3D60-94E7-6922DE9BB307}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

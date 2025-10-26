@@ -61,6 +61,14 @@ In NHibernate, views require a unique ID column. They must also be configured as
 
 @snippet cs [..\Recipes.NHibernate\Views\ViewsScenario.cs] ViewsScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\Views\ViewsScenario.cs] ViewsScenario

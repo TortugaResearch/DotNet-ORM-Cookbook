@@ -68,6 +68,14 @@ While the transaction is open, all operations are automatically associated with 
 
 @snippet cs [..\Recipes.NHibernate\Transactions\TransactionsScenario.cs] TransactionsScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 Simply call the `BeginTransaction()` method of the `DbConnection` object and pass the instance of `DbTransaction` when you are calling any of the operations.

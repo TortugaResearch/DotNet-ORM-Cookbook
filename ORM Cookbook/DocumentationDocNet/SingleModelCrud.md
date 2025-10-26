@@ -154,6 +154,14 @@ Finally there is the repository itself.
 
 The rules on when you need to call `Flush` are complex. In some cases it will be called for you implicitly, but as a general rule you need to invoke it before leaving a block that includes modifications.
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 When calling the *raw-SQL* operations, just like *Dapper*, RepoDB requires annotations on the classes. These are specific to RepoDb, you cannot use the standard `Table`, `Column`, and `Key` attributes from .NET.

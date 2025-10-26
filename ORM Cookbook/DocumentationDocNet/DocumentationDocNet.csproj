@@ -53,6 +53,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ArbitraryTableRead.md" />
+    <None Include="NPoco.md" />
+    <None Include="PetaPoco.md" />
     <None Include="DiscoverTablesAndColumns.md" />
     <None Include="DbConnector.md" />
     <None Include="MultipleDB.md" />

@@ -50,6 +50,14 @@ In some cases you'll need to catch a `StaleStateException` as there is no TryUpd
 
 @snippet cs [..\Recipes.NHibernate\TryCrud\TryCrudScenario.cs] TryCrudScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\TryCrud\TryCrudScenario.cs] TryCrudScenario

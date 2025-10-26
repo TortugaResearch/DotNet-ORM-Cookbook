@@ -44,6 +44,14 @@ In ADO.NET, `ExecuteScalar` returns the first column of the first row in the res
 
 @snippet cs [..\Recipes.NHibernate\RowCount\RowCountScenario.cs] RowCountScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\RowCount\RowCountScenario.cs] RowCountScenario

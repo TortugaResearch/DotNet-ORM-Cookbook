@@ -125,6 +125,14 @@ With NHibernate, the only changes are to add `await`, `async`, and `.ConfigureAw
 
 @snippet cs [../Recipes.NHibernate/SingleModelCrudAsync/SingleModelCrudAsyncScenario.cs] SingleModelCrudAsyncScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 With RepoDb, the only changes are to add `await`, `Async`, and `.ConfigureAwait(false)` to the appropriate places. 

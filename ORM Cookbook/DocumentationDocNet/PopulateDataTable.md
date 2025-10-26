@@ -70,6 +70,14 @@ Note that inline SQL must be used inconjunction with the `IResultTransformer`.
 
 @snippet cs [..\Recipes.NHibernate\PopulateDataTable\PopulateDataTableScenario.cs] PopulateDataTableScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 RepoDb does not natively support sorting by strings.

@@ -60,6 +60,14 @@ LLBLGen Pro does not have support for bulk inserts.
 
 NHibernate does not have support for bulk inserts.
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\BulkInsert\BulkInsertScenario.cs] BulkInsert

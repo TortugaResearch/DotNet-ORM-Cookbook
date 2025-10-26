@@ -54,6 +54,14 @@ NHibernate doesn't directly support an atomic upsert, so often a read must proce
 
 @snippet cs [..\Recipes.NHibernate\Upsert\UpsertScenario.cs] UpsertScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\Upsert\UpsertScenario.cs] UpsertScenario

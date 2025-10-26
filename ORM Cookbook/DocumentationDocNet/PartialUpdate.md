@@ -71,6 +71,14 @@ To perform a partial update, first fetch a record and then modify it.
 
 @snippet cs [..\Recipes.NHibernate\PartialUpdate\PartialUpdateScenario.cs] UpdateWithSeparateParameters
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 In RepoDb, you can either do the following.

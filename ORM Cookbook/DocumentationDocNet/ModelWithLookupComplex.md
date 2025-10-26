@@ -77,6 +77,14 @@ only entity classes.
 
 TODO
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 RepoDb does not support representing FK's as child objects for create/update operations. The FK must be exposed via the parent object.

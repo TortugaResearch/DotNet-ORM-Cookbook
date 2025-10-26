@@ -48,6 +48,14 @@ Keyset pagination is a technique where the previous result is used to determine 
 
 @snippet cs [..\Recipes.NHibernate\Pagination\PaginationScenario.cs] PaginationScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\Pagination\PaginationScenario.cs] PaginationScenario

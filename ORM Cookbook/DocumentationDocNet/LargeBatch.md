@@ -82,6 +82,14 @@ No changes are needed.
 
 @snippet cs [..\Recipes.NHibernate\LargeBatch\LargeBatchScenario.cs] LargeBatchScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 No changes are needed. 

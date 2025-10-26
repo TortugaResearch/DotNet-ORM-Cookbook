@@ -58,6 +58,14 @@ TODO
 
 @snippet cs [..\Recipes.NHibernate\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\MultipleCrud\MultipleCrudScenario.cs] MultipleCrudScenario

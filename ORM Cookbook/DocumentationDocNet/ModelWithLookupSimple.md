@@ -48,6 +48,14 @@ TODO
 
 TODO
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 @snippet cs [..\Recipes.RepoDb\ModelWithLookup\ModelWithLookupSimpleScenario.cs] ModelWithLookupSimpleScenario

@@ -69,6 +69,14 @@ is illustrated in the code below in the first method. The second method shows th
 
 NHibernate does not support sorting by strings.
 
+## NPoco
+
+TODO
+
+## PetaPoco
+
+TODO
+
 ## RepoDb
 
 Columns to be sorted by are passed in as a collection of `OrderField` objects. They checked against the list of columns at runtime to prevent SQL injection attacks. 
